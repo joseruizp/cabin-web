@@ -1,0 +1,133 @@
+.sedes-div {
+border-radius: 15px;
+    width: 245px;
+    padding-top: 69px;
+    border: 1px solid;
+    margin: 8px;
+    float: left;
+    position: relative;
+    height: 250px;
+}
+
+.sedes-div h2 {
+	font-size: 30px;
+    font-family: times, Times New Roman, times-roman, georgia, serif;
+    color: #444;
+    font-weight: bold;
+    text-align: center;
+}
+
+.equipos-div {
+	border-radius: 15px;
+	width: 245px;
+    padding: 8px;
+    border: 1px solid;
+    margin: 8px;
+    float: left;
+}
+
+.equipos-ul {
+	width: 210px; 
+	height: 269px; 
+	overflow: auto;
+	list-style: none;
+	text-align: left;
+	margin: 0 10px;
+    padding: 5px 0 0 0;
+    margin-right: 10px;
+    scrollbar-face-color: #367CD2;
+    scrollbar-shadow-color: #FFFFFF;
+    scrollbar-highlight-color: #FFFFFF;
+    scrollbar-3dlight-color: #FFFFFF;
+    scrollbar-darkshadow-color: #FFFFFF;
+    scrollbar-track-color: #FFFFFF;
+    scrollbar-arrow-color: #FFFFFF;
+}
+
+.equipos-ul li{
+	border-radius: 10px;
+	margin: 0 5px 4px 5px;
+    font-size: 1.2em;
+    cursor: move;
+    padding-left: 7px
+}
+
+/* Let's get this party started */
+.equipos-ul::-webkit-scrollbar {
+    width: 5px;
+}
+ 
+/* Track */
+.equipos-ul::-webkit-scrollbar-track {
+    -webkit-box-shadow: inset 0 0 6px #F5F5F5; 
+    -webkit-border-radius: 10px;
+    border-radius: 10px;
+}
+ 
+/* Handle */
+.equipos-ul::-webkit-scrollbar-thumb {
+    -webkit-border-radius: 10px;
+    border-radius: 10px;
+    background: #F0F8FF; 
+    -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.5); 
+}
+
+.equipo-activo {
+	border: 1px solid #228B22;
+    background: #228B22 url("images/ui-bg_glass_75_e6e6e6_1x400.png") 50% 50% repeat-x;
+    font-weight: normal;
+    color: #FFF;
+}
+
+.plus {
+	background:url(../images/plus-icon.png);
+	width: 20px;
+	height: 20px; 
+	display: block;
+	float:right;
+	cursor: pointer;
+	opacity:0.5;
+	transition: 1s ease;
+}
+
+.plus:hover{
+	opacity:1;
+	transition: 1s ease;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+.multiple-div {
+	border-radius: 15px;
+	width: 100%;
+    padding: 8px;
+    border: 1px solid;
+    margin: 8px;
+    float: left;
+}
+
+.multipe-box {
+    overflow:hidden;
+    padding:0;
+	width:100%;
+}
+.select-multiple {
+	padding:0;
+	padding-left:1px;
+	border:none;
+	background-color:#eee;
+	width:100%;
+    height:200px;
+    overflow: hidden;
+}
+.option-multiple {
+	height:100px;
+	width:100px;
+	border:1px solid #000;
+	background-color:white;
+	margin-left:-1px;
+	display:inline-block;
+    float: left;
+}

@@ -1,0 +1,559 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<!--<![endif]-->
+	<head>
+		<meta charset="utf-8"/>
+		<title>Cabinas</title>
+		<meta name="description" content="Responsive HTML5 Template"/>
+		<meta name="author" content="webthemez"/>
+
+		<!-- Mobile Meta -->
+		<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+
+		<!-- Favicon -->
+		<link rel="shortcut icon" th:href="@{images/favicon.ico}"/>
+ 
+		<link th:href="@{bootstrap/css/bootstrap.css}" rel="stylesheet"/> 
+		<link th:href="@{fonts/font-awesome/css/font-awesome.css}" rel="stylesheet"/> 
+		<link th:href="@{css/animations.css}" rel="stylesheet"/> 
+		<link th:href="@{css/style.css}" rel="stylesheet"/> 
+		<link th:href="@{plugins/jquery-ui-1.11.4.custom/jquery-ui.min.css}" rel="stylesheet"/>
+		<link th:href="@{plugins/jquery.mCustomScrollbar.min.css}" rel="stylesheet"/>
+		<link th:href="@{plugins/ng-table/ng-table.min.css}" rel="stylesheet"/>
+		<link th:href="@{css/custom.css}" rel="stylesheet"/>
+	</head>
+
+	<body class="no-trans">
+		<!-- scrollToTop --> 
+		<div class="scrollToTop"><i class="icon-up-open-big"></i></div>
+
+		<!-- header start --> 
+		<header class="header fixed clearfix navbar navbar-fixed-top">
+			<div class="container">
+				<div class="row">
+					<div class="col-md-4">
+
+						<!-- header-left start --> 
+						<div class="header-left">
+
+							<!-- logo -->
+							<div class="logo smooth-scroll">
+								<a href="#banner"><img id="logo" th:src="@{images/logo.png}" alt="Worthy"></img></a>
+							</div>
+
+							<!-- name-and-slogan -->
+							<div class="logo-section smooth-scroll">
+								<div class="brand"><a href="#banner">Cabinas</a></div>								
+							</div>
+
+						</div>
+						<!-- header-left end -->
+
+					</div>
+					<div class="col-md-8">
+
+						<!-- header-right start --> 
+						<div class="header-right">
+
+							<!-- main-navigation start --> 
+							<div class="main-navigation animated">
+
+								<!-- navbar start --> 
+								<nav class="navbar navbar-default" role="navigation">
+									<div class="container-fluid">
+
+										<!-- Toggle get grouped for better mobile display -->
+										<div class="navbar-header">
+											<button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar-collapse-1">
+												<span class="sr-only">Toggle navigation</span>
+												<span class="icon-bar"></span>
+												<span class="icon-bar"></span>
+												<span class="icon-bar"></span>
+											</button>
+										</div>
+
+										<!-- Collect the nav links, forms, and other content for toggling -->
+										<div class="collapse navbar-collapse scrollspy smooth-scroll" id="navbar-collapse-1">
+											<ul class="nav navbar-nav navbar-right">
+												<li class="active"><a href="#sedes">Sedes</a></li>
+												<li class="active"><a href="#nuevaSede">Nueva Sede</a></li>
+												<li class="active"><a href="#nuevaTarifa">Tarifas</a></li>
+												<li class="active"><a href="#puntos">Puntos</a></li>
+												<li class="active"><a href="#niveles">Niveles</a></li>
+												<li class="active"><a href="#premios">Premios</a></li>
+											</ul>
+										</div>
+
+									</div>
+								</nav>
+								<!-- navbar end -->
+
+							</div>
+							<!-- main-navigation end -->
+
+						</div>
+						<!-- header-right end -->
+
+					</div>
+				</div>
+			</div>
+		</header>
+		<!-- header end -->
+
+		<!-- banner start --> 
+		<div id="sedes">
+			<div class="container">
+				<br/>
+				<br/>
+				<br/>
+				<br/>
+				<div class="row">
+					<div class="col-md-12" style="margin-top: 40px">
+						<h1 id="tituloEquipos" class="title text-center">Todas las <span>Sedes</span></h1>
+						<p class="lead text-center">Lorem ipsum dolor sit amet, consectetur adipisicing elit. laudantium culpa tenetur.</p>
+					</div>
+				</div>
+				<div class="row" style="margin-left: 90px">
+					<div class="sedes-div">
+						<h2>SEDE UNI</h2>
+					</div>
+					<div class="sedes-div">
+						<h2>SEDE SAN ISIDRO</h2>
+					</div>
+					<div class="sedes-div">
+						<h2>SEDE MIRAFLORES</h2>
+					</div>
+					<div class="sedes-div">
+						<h2>SEDE CENTRO</h2>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!-- banner end -->
+		
+		<!-- banner start --> 
+		<div id="nuevaSede">
+			<div class="container">
+				<br/>
+				<div class="row">
+					<div class="col-md-12" style="margin-top: 40px">
+						<h1 id="tituloEquipos" class="title text-center">Nueva <span>Sede</span></h1>
+						<p class="lead text-center">Lorem ipsum dolor sit amet, consectetur adipisicing elit. laudantium culpa tenetur.</p>
+					</div>
+				</div>
+				<div class="row" style="margin-left: 110px; margin-right: 110px">
+					<form class="form-horizontal" role="form" id="form-tarifa">
+						<input type="hidden" id="idSede"/>
+						<div class="form-group">
+							<label class="control-label col-sm-2" for="name">Nombre:</label>
+							<div class="col-sm-10">
+								<input class="form-control" id="name"
+									placeholder="Nombre Sede"/>
+							</div>
+						</div>
+						<div class="form-group">
+							<label class="control-label col-sm-2" for="address">Direccion:</label>
+							<div class="col-sm-10">
+								<input class="form-control" id="address"
+									placeholder="Direccion"/>
+							</div>
+						</div>
+						<div class="form-group">
+							<div class="col-sm-offset-5 col-sm-7">
+								<button id="btnSede" type="submit" class="btn btn-default">Nueva Sede</button>
+							</div>
+						</div>
+					</form>
+				</div>
+				<div class="space"></div>
+			    <div role="tabpanel" class="table-responsive" id="listaSedesDiv">
+			        <table ng-table="tableParams" class="table table-striped">
+			            <thead>
+			                <tr>
+			                	<th>Código</th>
+			                    <th>Nombre</th>
+			                    <th>Direccion</th>
+			                    <th>Nro Equipos</th>
+			                    <th>Nro Consolas</th>			                    
+			                </tr>
+			            </thead>
+			            <tbody>
+			                <tr>
+			                    <td>&nbsp;</td>
+			                    <td>&nbsp;</td>
+			                    <td>&nbsp;</td>
+			                    <td>&nbsp;</td>
+			                    <td>&nbsp;</td>
+			                </tr>
+			            </tbody>
+			        </table>
+			    </div>
+			</div>
+		</div>
+		<!-- banner end -->
+
+		<!-- section start -->
+		<div id="nuevaTarifa">
+			<div class="container">
+				<br /> <br /> <br />
+				<div class="row">
+					<div class="col-md-12">
+						<h1 id="about" class="title text-center">
+							Nueva <span>Tarifa</span>
+						</h1>
+						<p class="lead text-center">Lorem ipsum dolor sit amet,
+							consectetur adipisicing elit. laudantium culpa tenetur.</p>
+						<div class="space"></div>
+						<div class="row">
+							<form class="form-horizontal" role="form" style="margin-left: 170px" id="form-tarifa">
+								<div class="form-group">
+									<label class="control-label col-md-2" for="email">Dias:</label>
+									<div class="col-md-3">
+										<div class="button-group">
+											<button type="button" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown">
+												Seleccionar <span class="caret"></span>
+											</button>
+											<ul class="dropdown-menu" id="daysMenu">
+												<li><a href="#" class="small" data-value="Mon"
+													tabIndex="-1"><input type="checkbox" />&nbsp;Lunes</a></li>
+												<li><a href="#" class="small" data-value="Tue"
+													tabIndex="-1"><input type="checkbox" />&nbsp;Martes</a></li>
+												<li><a href="#" class="small" data-value="Wed"
+													tabIndex="-1"><input type="checkbox" />&nbsp;Miercoles</a></li>
+												<li><a href="#" class="small" data-value="Thu"
+													tabIndex="-1"><input type="checkbox" />&nbsp;Jueves</a></li>
+												<li><a href="#" class="small" data-value="Fri"
+													tabIndex="-1"><input type="checkbox" />&nbsp;Viernes</a></li>
+												<li><a href="#" class="small" data-value="Sat"
+													tabIndex="-1"><input type="checkbox" />&nbsp;Sabado</a></li>
+												<li><a href="#" class="small" data-value="Sun"
+													tabIndex="-1"><input type="checkbox" />&nbsp;Domingo</a></li>
+											</ul>
+										</div>
+									</div>
+									<label class="control-label col-md-2" for="email">Precio:</label>
+									<div class="col-md-3">
+										<input class="form-control" id="price" placeholder="Precio"/>
+									</div>
+								</div>
+								<div class="form-group">
+									<label class="control-label col-md-2" for="email">Hora Inicio:</label>
+									<div class="col-md-3">
+										<input class="form-control" id="startTime" placeholder="Hora Inicio"/>
+									</div>
+									<label class="control-label col-md-2" for="email">Hora Fin:</label>
+									<div class="col-md-3">
+										<input class="form-control" id="endTime" placeholder="Hora Fin"/>
+									</div>
+								</div>
+								<div class="form-group">
+									<label class="control-label col-md-2" for="email">Fracion Minima:</label>
+									<div class="col-md-3">
+										<input class="form-control" id="minFraction" placeholder="Fracion Minima"/>
+									</div>
+								</div>
+								<div class="form-group">
+									<div class="col-sm-offset-4 col-md-6">
+										<button type="submit" class="btn btn-default">Nueva
+											Tarifa</button>
+									</div>
+								</div>
+							</form>
+						</div>
+						<div class="space"></div>
+					    <div role="tabpanel" class="table-responsive" id="listaCentrosDiv">
+					        <table ng-table="tableParams" class="table table-striped">
+					            <thead>
+					                <tr>
+					                    <th>Codigo</th>
+					                    <th>Nombre</th>
+					                    <th>Dias</th>
+					                    <th>Precio</th>
+					                    <th>Hora Inicio</th>
+					                    <th>Hora Fin</th>
+					                    <th>Minima Fraccion</th>
+					                </tr>
+					            </thead>
+					            <tbody>
+					                <tr>
+					                    <td>&nbsp;</td>
+					                    <td>&nbsp;</td>
+					                    <td>&nbsp;</td>
+					                    <td>&nbsp;</td>
+					                    <td>&nbsp;</td>
+					                    <td>&nbsp;</td>
+					                    <td>&nbsp;</td>
+					                </tr>
+					            </tbody>
+					        </table>
+					    </div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!-- section end -->
+		
+		<!-- banner start --> 
+		<div id="puntos">
+			<div class="container">
+				<br/>
+				<div class="row">
+					<div class="col-md-12" style="margin-top: 40px">
+						<h1 id="tituloEquipos" class="title text-center">Regla de <span>Puntos</span></h1>
+						<p class="lead text-center">Lorem ipsum dolor sit amet, consectetur adipisicing elit. laudantium culpa tenetur.</p>
+					</div>
+				</div>
+				<div class="row" style="margin-left: 110px; margin-right: 110px">
+					<form class="form-horizontal" role="form">
+						<div class="form-group">
+							<label class="control-label col-sm-2" for="email">Nombre:</label>
+							<div class="col-sm-10">
+								<input class="form-control" id="headquarter"
+									placeholder="Nombre Sede"/>
+							</div>
+						</div>
+						<div class="form-group">
+							<label class="control-label col-sm-2" for="pwd">Tipo:</label>
+							<div class="col-sm-10">
+								<input class="form-control" id="address"
+									placeholder="Direccion"/>
+							</div>
+						</div>
+						<div class="form-group">
+							<label class="control-label col-sm-2" for="pwd">Fraccion de Recarga:</label>
+							<div class="col-sm-10">
+								<input class="form-control" id="numberPcs"
+									placeholder="Numero de Equipos"/>
+							</div>
+						</div>
+						<div class="form-group">
+							<label class="control-label col-sm-2" for="pwd">Puntos a Otorgar:</label>
+							<div class="col-sm-10">
+								<input class="form-control" id="numberConsoles"
+									placeholder="Numero de Consolas"/>
+							</div>
+						</div>
+						<div class="form-group">
+							<label class="control-label col-sm-2" for="pwd">Estado:</label>
+							<div class="col-sm-10">
+								<input class="form-control" id="numberConsoles"
+									placeholder="Numero de Consolas"/>
+							</div>
+						</div>
+						<div class="form-group">
+							<div class="col-sm-offset-5 col-sm-7">
+								<button type="submit" class="btn btn-default">Nueva Regla</button>
+							</div>
+						</div>
+					</form>
+				</div>
+				<div class="space"></div>
+			    <div role="tabpanel" class="table-responsive" id="listaPuntosDiv">
+			        <table ng-table="tableParams" class="table table-striped">
+			            <thead>
+			                <tr>
+			                    <th>Codigo</th>
+			                    <th>Nombre</th>
+			                    <th>Tipo</th>
+			                    <th>Fraccion de recarga</th>
+			                    <th>Puntos a otorgar</th>
+			                    <th>Estado</th>			                    
+			                </tr>
+			            </thead>
+			            <tbody>
+			                <tr>			                    
+			                    <td>&nbsp;</td>
+			                    <td>&nbsp;</td>
+			                    <td>&nbsp;</td>
+			                    <td>&nbsp;</td>
+			                    <td>&nbsp;</td>
+			                    <td>&nbsp;</td>
+			                </tr>
+			            </tbody>
+			        </table>
+			    </div>
+			</div>
+		</div>
+		<!-- banner end -->
+		
+		<!-- banner start --> 
+		<div id="niveles">
+			<div class="container">
+				<br/>
+				<div class="row">
+					<div class="col-md-12" style="margin-top: 40px">
+						<h1 id="tituloEquipos" class="title text-center">Crear <span>Niveles</span></h1>
+						<p class="lead text-center">Lorem ipsum dolor sit amet, consectetur adipisicing elit. laudantium culpa tenetur.</p>
+					</div>
+				</div>
+				<div class="row" style="margin-left: 110px; margin-right: 110px">
+					<form class="form-horizontal" role="form">
+						<div class="form-group">
+							<label class="control-label col-sm-2" for="email">Nombre:</label>
+							<div class="col-sm-10">
+								<input class="form-control" id="headquarter"
+									placeholder="Nombre Sede"/>
+							</div>
+						</div>
+						<div class="form-group">
+							<label class="control-label col-sm-2" for="pwd">Puntos Inicial:</label>
+							<div class="col-sm-10">
+								<input class="form-control" id="address"
+									placeholder="Direccion"/>
+							</div>
+						</div>
+						<div class="form-group">
+							<label class="control-label col-sm-2" for="pwd">Puntos Final:</label>
+							<div class="col-sm-10">
+								<input class="form-control" id="numberPcs"
+									placeholder="Numero de Equipos"/>
+							</div>
+						</div>
+						<div class="form-group">
+							<label class="control-label col-sm-2" for="pwd">Pregunta:</label>
+							<div class="col-sm-10">
+								<input class="form-control" id="numberConsoles"
+									placeholder="Numero de Consolas"/>
+							</div>
+						</div>
+						<div class="form-group">
+							<div class="col-sm-offset-5 col-sm-7">
+								<button type="submit" class="btn btn-default">Nuevo Nivel</button>
+							</div>
+						</div>
+					</form>
+				</div>
+				<div class="space"></div>
+			    <div role="tabpanel" class="table-responsive" id="listaNivelesDiv">
+			        <table ng-table="tableParams" class="table table-striped">
+			            <thead>
+			                <tr>
+			                    <th>Codigo</th>
+			                    <th>Nombre</th>
+			                    <th>Puntos inicial</th>
+			                    <th>Puntos final</th>
+			                    <th>Pregunta</th>			                    			                    
+			                </tr>
+			            </thead>
+			            <tbody>
+			                <tr>
+			                    <td>&nbsp;</td>
+			                    <td>&nbsp;</td>
+			                    <td>&nbsp;</td>
+			                    <td>&nbsp;</td>
+			                    <td>&nbsp;</td>
+			                </tr>
+			            </tbody>
+			        </table>
+			    </div>
+			</div>
+		</div>
+		<!-- banner end -->
+		
+		<!-- banner start --> 
+		<div id="premios">
+			<div class="container">
+				<br/>
+				<div class="row">
+					<div class="col-md-12" style="margin-top: 40px">
+						<h1 id="tituloEquipos" class="title text-center">Regla de <span>Premios</span></h1>
+						<p class="lead text-center">Lorem ipsum dolor sit amet, consectetur adipisicing elit. laudantium culpa tenetur.</p>
+					</div>
+				</div>
+				<div class="row" style="margin-left: 110px; margin-right: 110px">
+					<form class="form-horizontal" role="form">
+						<div class="form-group">
+							<label class="control-label col-sm-2" for="email">Nombre:</label>
+							<div class="col-sm-10">
+								<input class="form-control" id="headquarter"
+									placeholder="Nombre Sede"/>
+							</div>
+						</div>
+						<div class="form-group">
+							<label class="control-label col-sm-2" for="pwd">Cantidad de Puntos:</label>
+							<div class="col-sm-10">
+								<input class="form-control" id="address"
+									placeholder="Direccion"/>
+							</div>
+						</div>
+						<div class="form-group">
+							<label class="control-label col-sm-2" for="pwd">Puntos Final:</label>
+							<div class="col-sm-10">
+								<input class="form-control" id="numberPcs"
+									placeholder="Numero de Equipos"/>
+							</div>
+						</div>
+						<div class="form-group">
+							<label class="control-label col-sm-2" for="pwd">Fraccion de Saldo:</label>
+							<div class="col-sm-10">
+								<input class="form-control" id="numberConsoles"
+									placeholder="Numero de Consolas"/>
+							</div>
+						</div>
+						<div class="form-group">
+							<div class="col-sm-offset-5 col-sm-7">
+								<button type="submit" class="btn btn-default">Nuevo Premio</button>
+							</div>
+						</div>
+					</form>
+				</div>
+				<div class="space"></div>
+			    <div role="tabpanel" class="table-responsive" id="listaPremiosDiv">
+			        <table ng-table="tableParams" class="table table-striped">
+			            <thead>
+			                <tr>
+			                    <th>Codigo</th>
+			                    <th>Nombre</th>
+			                    <th>Cantidad puntos</th>
+			                    <th>Puntos final</th>
+			                    <th>Fraccion de saldo</th>			                    			                    
+			                </tr>
+			            </thead>
+			            <tbody>
+			                <tr>
+			                    <td>&nbsp;</td>
+			                    <td>&nbsp;</td>
+			                    <td>&nbsp;</td>
+			                    <td>&nbsp;</td>
+			                    <td>&nbsp;</td>
+			                </tr>
+			            </tbody>
+			        </table>
+			    </div>
+			</div>
+		</div>
+		<!-- banner end -->
+		
+		<!-- footer start --> 
+		<footer id="footer">
+
+			<!-- .subfooter start --> 
+			<div class="subfooter">
+				<div class="container">
+					<div class="row">
+						<div class="col-md-12">
+							<p class="text-center">Copyright © 2015 Template by <a target="_blank" href="http://webthemez.com">webthemez.com</a>.</p>
+						</div>
+					</div>
+				</div>
+			</div>
+			<!-- .subfooter end -->
+
+		</footer>
+		<!-- footer end -->
+
+		<!-- JavaScript --> 
+		<script type="text/javascript" th:src="@{plugins/jquery.min.js}"></script>
+		<script type="text/javascript" th:src="@{bootstrap/js/bootstrap.min.js}"></script>
+		<script type="text/javascript" th:src="@{plugins/modernizr.js}"></script>
+		<script type="text/javascript" th:src="@{plugins/isotope/isotope.pkgd.min.js}"></script>
+		<script type="text/javascript" th:src="@{plugins/jquery.backstretch.min.js}"></script>
+		<script type="text/javascript" th:src="@{plugins/jquery.appear.js}"></script>
+		<script type="text/javascript" th:src="@{plugins/jquery-ui-1.11.4.custom/jquery-ui.min.js}"></script>
+		<script type="text/javascript" th:src="@{plugins/jquery.mCustomScrollbar.concat.min.js}"></script>
+		<script type="text/javascript" th:src="@{plugins/ng-table/ng-table.min.js}"></script>
+		<!-- Custom Scripts -->
+		<script type="text/javascript" th:src="@{js/custom.js}"></script>
+		<script type="text/javascript" th:src="@{js/home.js}"></script>
+	</body>
+</html>

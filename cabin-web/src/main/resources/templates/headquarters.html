@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<!--<![endif]-->
+	<head>
+		<meta charset="utf-8"/>
+		<title>Cabinas</title>
+		<meta name="description" content="Responsive HTML5 Template"/>
+		<meta name="author" content="webthemez"/>
+
+		<!-- Mobile Meta -->
+		<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+
+		<!-- Favicon -->
+		<link rel="shortcut icon" th:href="@{images/favicon.ico}"/>
+ 
+		<link th:href="@{bootstrap/css/bootstrap.css}" rel="stylesheet"/> 
+		<link th:href="@{fonts/font-awesome/css/font-awesome.css}" rel="stylesheet"/> 
+		<link th:href="@{css/animations.css}" rel="stylesheet"/> 
+		<link th:href="@{css/style.css}" rel="stylesheet"/> 
+		<link th:href="@{plugins/jquery-ui-1.11.4.custom/jquery-ui.min.css}" rel="stylesheet"/>
+		<link th:href="@{plugins/jquery.mCustomScrollbar.min.css}" rel="stylesheet"/>
+		<link th:href="@{css/custom.css}" rel="stylesheet"/>
+	</head>
+
+	<body class="no-trans">
+		<!-- scrollToTop --> 
+		<div class="scrollToTop"><i class="icon-up-open-big"></i></div>
+
+		<!-- header start --> 
+		<header class="header fixed clearfix navbar navbar-fixed-top">
+			<div class="container">
+				<div class="row">
+					<div class="col-md-4">
+
+						<!-- header-left start --> 
+						<div class="header-left">
+
+							<!-- logo -->
+							<div class="logo smooth-scroll">
+								<a href="#banner"><img id="logo" th:src="@{images/logo.png}" alt="Worthy"></img></a>
+							</div>
+
+							<!-- name-and-slogan -->
+							<div class="logo-section smooth-scroll">
+								<div class="brand"><a href="#banner">Sede: Local UNI</a></div>								
+							</div>
+
+						</div>
+						<!-- header-left end -->
+
+					</div>
+					<div class="col-md-8">
+
+						<!-- header-right start --> 
+						<div class="header-right">
+
+							<!-- main-navigation start --> 
+							<div class="main-navigation animated">
+
+								<!-- navbar start --> 
+								<nav class="navbar navbar-default" role="navigation">
+									<div class="container-fluid">
+
+										<!-- Toggle get grouped for better mobile display -->
+										<div class="navbar-header">
+											<button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar-collapse-1">
+												<span class="sr-only">Toggle navigation</span>
+												<span class="icon-bar"></span>
+												<span class="icon-bar"></span>
+												<span class="icon-bar"></span>
+											</button>
+										</div>
+
+										<!-- Collect the nav links, forms, and other content for toggling -->
+										<div class="collapse navbar-collapse scrollspy smooth-scroll" id="navbar-collapse-1">
+											<ul class="nav navbar-nav navbar-right">
+												<li class="active"><a href="#equipos">Equipos</a></li>
+												<li class="active"><a href="#consolas">Consolas</a></li>
+												<li><a href="#tarifas">Tarifas</a></li>
+												<li><a href="#datosGenerales">Datos Generales</a></li>
+											</ul>
+										</div>
+
+									</div>
+								</nav>
+								<!-- navbar end -->
+
+							</div>
+							<!-- main-navigation end -->
+
+						</div>
+						<!-- header-right end -->
+
+					</div>
+				</div>
+			</div>
+		</header>
+		<!-- header end -->
+
+		<!-- banner start --> 
+		<div id="equipos">
+			<div class="container">
+				<br/>
+				<br/>
+				<br/>
+				<br/>
+				<div class="row">
+					<div class="col-md-12" style="margin-top: 40px">
+						<h1 id="tituloEquipos" class="title text-center">Definicion de <span>Equipos</span></h1>
+						<p class="lead text-center">Lorem ipsum dolor sit amet, consectetur adipisicing elit. laudantium culpa tenetur.</p>
+					</div>
+				</div>
+				<div class="row" style="margin-left: 90px">
+					<div class="equipos-div">
+						<div>
+							<label>DEFAULT</label>
+							<span class="plus"></span>
+						</div>
+						<ul id="default-equipos" class="equipos-ul connectedSortable">
+							<li class="equipo-activo">PC 1</li>
+							<li class="ui-state-default">PC 2</li>
+							<li class="ui-state-default">PC 3</li>
+							<li class="equipo-activo">PC 4</li>
+							<li class="equipo-activo">PC 5</li>
+							<li class="equipo-activo">PC 6</li>
+							<li class="equipo-activo">PC 7</li>
+							<li class="ui-state-default">PC 8</li>
+							<li class="ui-state-default">PC 9</li>
+							<li class="equipo-activo">PC 10</li>
+							<li class="equipo-activo">PC 11</li>
+							<li class="ui-state-default">PC 12</li>
+							<li class="equipo-activo">PC 13</li>
+							<li class="equipo-activo">PC 14</li>
+							<li class="equipo-activo">PC 15</li>
+						</ul>
+					</div>
+					<div class="equipos-div">
+						<div>
+							<label>VIP</label>
+							<span class="plus"></span>
+						</div>
+						<ul id="vip-equipos" class="equipos-ul connectedSortable">
+						</ul>
+					</div>
+					<div class="equipos-div">
+						<div>
+							<label>Mantenimiento</label>
+							<span class="plus"></span>
+						</div>
+						<ul id="mantenimiento-equipos" class="equipos-ul connectedSortable">
+						</ul>
+					</div>
+					<div class="equipos-div">
+						<div>
+							<label>Nuevo Grupo</label>
+							<span class="plus"></span>
+						</div>
+						<ul id="nuevo-grupo-equipos" class="equipos-ul connectedSortable">
+						</ul>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!-- banner end -->
+		
+		<!-- banner start --> 
+		<div id="consolas">
+			<div class="container">
+				<br/>
+				<div class="row">
+					<div class="col-md-12" style="margin-top: 40px">
+						<h1 id="tituloEquipos" class="title text-center">Definicion de <span>Consolas</span></h1>
+						<p class="lead text-center">Lorem ipsum dolor sit amet, consectetur adipisicing elit. laudantium culpa tenetur.</p>
+					</div>
+				</div>
+				<div class="row" style="margin-left: 90px">
+					<div class="equipos-div">
+						<div>
+							<label>DEFAULT</label>
+							<span class="plus"></span>
+						</div>
+						<ul id="default-consolas" class="equipos-ul connectedSortable">
+							<li class="ui-state-default">PS 1</li>
+							<li class="equipo-activo">PS 2</li>
+							<li class="ui-state-default">PS 3</li>
+							<li class="equipo-activo">PS 4</li>
+							<li class="equipo-activo">PS 5</li>
+							<li class="ui-state-default">PS 6</li>
+							<li class="ui-state-default">PS 7</li>
+							<li class="ui-state-default">PS 8</li>
+							<li class="ui-state-default">PS 9</li>
+							<li class="equipo-activo">PS 10</li>
+							<li class="equipo-activo">PS 11</li>
+							<li class="equipo-activo">PS 12</li>
+							<li class="ui-state-default">PS 13</li>
+							<li class="ui-state-default">PS 14</li>
+							<li class="ui-state-default">PC 15</li>
+						</ul>
+					</div>
+					<div class="equipos-div">
+						<div>
+							<label>VIP</label>
+							<span class="plus"></span>
+						</div>
+						<ul id="vip-consolas" class="equipos-ul connectedSortable">
+						</ul>
+					</div>
+					<div class="equipos-div">
+						<div>
+							<label>Mantenimiento</label>
+							<span class="plus"></span>
+						</div>
+						<ul id="mantenimiento-consolas" class="equipos-ul connectedSortable">
+						</ul>
+					</div>
+					<div class="equipos-div">
+						<div>
+							<label>Nuevo Grupo</label>
+							<span class="plus"></span>
+						</div>
+						<ul id="nuevo-grupo-consolas" class="equipos-ul connectedSortable">
+						</ul>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!-- banner end -->
+
+		<!-- section start --> 
+		<div id="tarifas">
+			<div class="container">
+				<br/>
+				<br/>
+				<br/>
+				<div class="row">
+					<div class="col-md-12">
+						<h1 id="about" class="title text-center">Definicion de <span>Tarifas</span></h1>
+						<p class="lead text-center">Lorem ipsum dolor sit amet, consectetur adipisicing elit. laudantium culpa tenetur.</p>
+						<div class="space"></div>
+						<div class="row">
+							<form class="form-horizontal" role="form" style="margin-left: 170px">
+								<div class="form-group">
+									<label class="control-label col-md-3" for="email"><b>EQUIPOS</b></label>
+									<label class="control-label col-md-5" for="email"><b>CONSOLAS</b></label>
+								</div>
+								<div class="form-group">
+									<label class="control-label col-md-2" for="email">Default:</label>
+									<div class="col-md-3">
+										<div class="dropdown">
+											<button class="btn btn-primary dropdown-toggle" type="button"
+												data-toggle="dropdown">
+												Seleccionar <span class="caret"></span>
+											</button>
+											<ul class="dropdown-menu">
+												<li><a href="#">HTML</a></li>
+												<li><a href="#">CSS</a></li>
+												<li><a href="#">JavaScript</a></li>
+											</ul>
+										</div>
+									</div>
+									<label class="control-label col-md-2" for="email">Default:</label>
+									<div class="col-md-3">
+										<div class="dropdown">
+											<button class="btn btn-primary dropdown-toggle" type="button"
+												data-toggle="dropdown">
+												Seleccionar <span class="caret"></span>
+											</button>
+											<ul class="dropdown-menu">
+												<li><a href="#">HTML</a></li>
+												<li><a href="#">CSS</a></li>
+												<li><a href="#">JavaScript</a></li>
+											</ul>
+										</div>
+									</div>
+								</div>
+								<div class="form-group">
+									<label class="control-label col-md-2" for="email">VIP:</label>
+									<div class="col-md-3">
+										<div class="dropdown">
+											<button class="btn btn-primary dropdown-toggle" type="button"
+												data-toggle="dropdown">
+												Seleccionar <span class="caret"></span>
+											</button>
+											<ul class="dropdown-menu">
+												<li><a href="#">HTML</a></li>
+												<li><a href="#">CSS</a></li>
+												<li><a href="#">JavaScript</a></li>
+											</ul>
+										</div>
+									</div>
+									<label class="control-label col-md-2" for="email">VIP:</label>
+									<div class="col-md-3">
+										<div class="dropdown">
+											<button class="btn btn-primary dropdown-toggle" type="button"
+												data-toggle="dropdown">
+												Seleccionar <span class="caret"></span>
+											</button>
+											<ul class="dropdown-menu">
+												<li><a href="#">HTML</a></li>
+												<li><a href="#">CSS</a></li>
+												<li><a href="#">JavaScript</a></li>
+											</ul>
+										</div>
+									</div>
+								</div>
+								<div class="form-group">
+									<label class="control-label col-md-2" for="email">Mantenimiento:</label>
+									<div class="col-md-3">
+										<div class="dropdown">
+											<button class="btn btn-primary dropdown-toggle" type="button"
+												data-toggle="dropdown">
+												Seleccionar <span class="caret"></span>
+											</button>
+											<ul class="dropdown-menu">
+												<li><a href="#">HTML</a></li>
+												<li><a href="#">CSS</a></li>
+												<li><a href="#">JavaScript</a></li>
+											</ul>
+										</div>
+									</div>
+									<label class="control-label col-md-2" for="email">Mantenimiento:</label>
+									<div class="col-md-3">
+										<div class="dropdown">
+											<button class="btn btn-primary dropdown-toggle" type="button"
+												data-toggle="dropdown">
+												Seleccionar <span class="caret"></span>
+											</button>
+											<ul class="dropdown-menu">
+												<li><a href="#">HTML</a></li>
+												<li><a href="#">CSS</a></li>
+												<li><a href="#">JavaScript</a></li>
+											</ul>
+										</div>
+									</div>
+								</div>
+								<div class="form-group">
+									<label class="control-label col-md-2" for="email">Nuevo Grupo:</label>
+									<div class="col-md-3">
+										<div class="dropdown">
+											<button class="btn btn-primary dropdown-toggle" type="button"
+												data-toggle="dropdown">
+												Seleccionar <span class="caret"></span>
+											</button>
+											<ul class="dropdown-menu">
+												<li><a href="#">HTML</a></li>
+												<li><a href="#">CSS</a></li>
+												<li><a href="#">JavaScript</a></li>
+											</ul>
+										</div>
+									</div>
+									<label class="control-label col-md-2" for="email">Nuevo Grupo:</label>
+									<div class="col-md-3">
+										<div class="dropdown">
+											<button class="btn btn-primary dropdown-toggle" type="button"
+												data-toggle="dropdown">
+												Seleccionar <span class="caret"></span>
+											</button>
+											<ul class="dropdown-menu">
+												<li><a href="#">HTML</a></li>
+												<li><a href="#">CSS</a></li>
+												<li><a href="#">JavaScript</a></li>
+											</ul>
+										</div>
+									</div>
+								</div>
+							<div class="form-group">
+								<div class="col-sm-offset-4 col-md-6">
+									<button type="submit" class="btn btn-default">Nueva Tarifa</button>
+								</div>
+							</div>
+						</form>
+						</div>
+						<div class="space"></div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!-- section end -->
+		
+		<!-- banner start --> 
+		<div id="datosGenerales" class="banner">
+			<div class="banner-image"></div>
+			<div class="banner-caption">
+				<div class="container">
+					<div class="row">
+						<div class="col-md-12">
+							<h1 id="about" class="title text-center">Datos <span>Generales</span></h1>
+							<p class="lead text-center">Lorem ipsum dolor sit amet, consectetur adipisicing elit. laudantium culpa tenetur.</p>
+							<div class="space"></div>
+							<div class="row">
+								<form class="form-horizontal" role="form" style="margin-left: 170px">
+									<div class="form-group">
+										<label class="control-label col-md-4" for="email"><b>Nombre Sede</b></label>
+										<label class="control-label col-md-2" for="email">Sede UNI</label>
+									</div>
+									<div class="form-group">
+										<label class="control-label col-md-4" for="email"><b>Direccion</b></label>
+										<label class="control-label col-md-2" for="email">XXXX</label>
+									</div>
+								</form>
+							</div>
+							<div class="space"></div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!-- banner end -->
+ 
+		<!-- footer start --> 
+		<footer id="footer">
+
+			<!-- .subfooter start --> 
+			<div class="subfooter">
+				<div class="container">
+					<div class="row">
+						<div class="col-md-12">
+							<p class="text-center">Copyright © 2015 Template by <a target="_blank" href="http://webthemez.com">webthemez.com</a>.</p>
+						</div>
+					</div>
+				</div>
+			</div>
+			<!-- .subfooter end -->
+
+		</footer>
+		<!-- footer end -->
+
+		<!-- JavaScript --> 
+		<script type="text/javascript" th:src="@{plugins/jquery.min.js}"></script>
+		<script type="text/javascript" th:src="@{bootstrap/js/bootstrap.min.js}"></script>
+		<script type="text/javascript" th:src="@{plugins/modernizr.js}"></script>
+		<script type="text/javascript" th:src="@{plugins/isotope/isotope.pkgd.min.js}"></script>
+		<script type="text/javascript" th:src="@{plugins/jquery.backstretch.min.js}"></script>
+		<script type="text/javascript" th:src="@{plugins/jquery.appear.js}"></script>
+		<script type="text/javascript" th:src="@{plugins/jquery-ui-1.11.4.custom/jquery-ui.min.js}"></script>
+		<script type="text/javascript" th:src="@{plugins/jquery.mCustomScrollbar.concat.min.js}"></script>
+
+		<!-- Custom Scripts -->
+		<script type="text/javascript" th:src="@{js/custom.js}"></script>
+
+	</body>
+</html>
