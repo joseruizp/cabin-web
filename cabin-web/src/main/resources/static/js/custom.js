@@ -117,6 +117,7 @@
 	      connectWith: ".connectedSortable"
 	    }).disableSelection();
 		
+		/*
 	    var daysSelected = [];
 
 	    $( '#daysMenu a' ).on( 'click', function( event ) {
@@ -138,6 +139,7 @@
 		    console.log( daysSelected );
 		    return false;
         });
+        */
 
 	}); // End document ready
 })(this.jQuery);

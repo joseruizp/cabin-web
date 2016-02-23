@@ -18,8 +18,8 @@
 		<link th:href="@{css/animations.css}" rel="stylesheet"/> 
 		<link th:href="@{css/style.css}" rel="stylesheet"/> 
 		<link th:href="@{plugins/jquery-ui-1.11.4.custom/jquery-ui.min.css}" rel="stylesheet"/>
-		<link th:href="@{plugins/jquery.mCustomScrollbar.min.css}" rel="stylesheet"/>
-		<link th:href="@{plugins/ng-table/ng-table.min.css}" rel="stylesheet"/>
+		<link th:href="@{plugins/jquery.mCustomScrollbar.min.css}" rel="stylesheet"/>		
+		<link th:href="@{plugins/dataTables/css/jquery.dataTables.css}" rel="stylesheet"/>
 		<link th:href="@{css/custom.css}" rel="stylesheet"/>
 	</head>
 
@@ -106,27 +106,7 @@
 				<br/>
 				<br/>
 				<br/>
-				<br/>
-				<div class="row">
-					<div class="col-md-12" style="margin-top: 40px">
-						<h1 id="tituloEquipos" class="title text-center">Todas las <span>Sedes</span></h1>
-						<p class="lead text-center">Lorem ipsum dolor sit amet, consectetur adipisicing elit. laudantium culpa tenetur.</p>
-					</div>
-				</div>
-				<div class="row" style="margin-left: 90px">
-					<div class="sedes-div">
-						<h2>SEDE UNI</h2>
-					</div>
-					<div class="sedes-div">
-						<h2>SEDE SAN ISIDRO</h2>
-					</div>
-					<div class="sedes-div">
-						<h2>SEDE MIRAFLORES</h2>
-					</div>
-					<div class="sedes-div">
-						<h2>SEDE CENTRO</h2>
-					</div>
-				</div>
+				<br/>				
 			</div>
 		</div>
 		<!-- banner end -->
@@ -142,20 +122,20 @@
 					</div>
 				</div>
 				<div class="row" style="margin-left: 110px; margin-right: 110px">
-					<form class="form-horizontal" role="form" id="form-tarifa">
-						<input type="hidden" id="idSede"/>
+					<form class="form-horizontal" role="form" id="form-sede">
+						<input type="hidden" id="idSede" value=""/>
 						<div class="form-group">
 							<label class="control-label col-sm-2" for="name">Nombre:</label>
 							<div class="col-sm-10">
 								<input class="form-control" id="name"
-									placeholder="Nombre Sede"/>
+									placeholder="Nombre Sede" maxlength="20"/>
 							</div>
 						</div>
 						<div class="form-group">
 							<label class="control-label col-sm-2" for="address">Direccion:</label>
 							<div class="col-sm-10">
 								<input class="form-control" id="address"
-									placeholder="Direccion"/>
+									placeholder="Direccion" maxlength="200"/>
 							</div>
 						</div>
 						<div class="form-group">
@@ -164,27 +144,22 @@
 							</div>
 						</div>
 					</form>
+					<div id="sedeValidation" class="alert alert-danger" style="display:none"></div>
 				</div>
 				<div class="space"></div>
 			    <div role="tabpanel" class="table-responsive" id="listaSedesDiv">
-			        <table ng-table="tableParams" class="table table-striped">
+			        <table id="sedeTbl" class="table table-striped display">
 			            <thead>
-			                <tr>
+			                <tr>	                				                	
 			                	<th>Código</th>
 			                    <th>Nombre</th>
 			                    <th>Direccion</th>
 			                    <th>Nro Equipos</th>
 			                    <th>Nro Consolas</th>			                    
+			                    <th colspan="3">Opciones</th>			                    
 			                </tr>
 			            </thead>
-			            <tbody>
-			                <tr>
-			                    <td>&nbsp;</td>
-			                    <td>&nbsp;</td>
-			                    <td>&nbsp;</td>
-			                    <td>&nbsp;</td>
-			                    <td>&nbsp;</td>
-			                </tr>
+			            <tbody>			                
 			            </tbody>
 			        </table>
 			    </div>
@@ -206,6 +181,17 @@
 						<div class="space"></div>
 						<div class="row">
 							<form class="form-horizontal" role="form" style="margin-left: 170px" id="form-tarifa">
+								<input type="hidden" id="idTarifa" value=""/>
+								<div class="form-group">
+									<label class="control-label col-md-2" for="descriptionTarifa">Descripcion:</label>
+									<div class="col-md-3">
+										<input class="form-control" id="descriptionTarifa" placeholder="Descripcion" maxlength="45"/>
+									</div>
+									<label class="control-label col-md-2" for="minFraction">Fracion Minima:</label>
+									<div class="col-md-3">
+										<input class="form-control" id="minFraction" placeholder="Fracion Minima" maxlength="6"/>
+									</div>
+								</div>
 								<div class="form-group">
 									<label class="control-label col-md-2" for="email">Dias:</label>
 									<div class="col-md-3">
@@ -214,76 +200,63 @@
 												Seleccionar <span class="caret"></span>
 											</button>
 											<ul class="dropdown-menu" id="daysMenu">
-												<li><a href="#" class="small" data-value="Mon"
-													tabIndex="-1"><input type="checkbox" />&nbsp;Lunes</a></li>
-												<li><a href="#" class="small" data-value="Tue"
-													tabIndex="-1"><input type="checkbox" />&nbsp;Martes</a></li>
-												<li><a href="#" class="small" data-value="Wed"
-													tabIndex="-1"><input type="checkbox" />&nbsp;Miercoles</a></li>
-												<li><a href="#" class="small" data-value="Thu"
-													tabIndex="-1"><input type="checkbox" />&nbsp;Jueves</a></li>
-												<li><a href="#" class="small" data-value="Fri"
-													tabIndex="-1"><input type="checkbox" />&nbsp;Viernes</a></li>
-												<li><a href="#" class="small" data-value="Sat"
-													tabIndex="-1"><input type="checkbox" />&nbsp;Sabado</a></li>
-												<li><a href="#" class="small" data-value="Sun"
-													tabIndex="-1"><input type="checkbox" />&nbsp;Domingo</a></li>
+												<li><a href="#" class="small" data-value="Lun"
+													tabIndex="-1"><input id="checkboxLun" class="checkboxTarifa" type="checkbox" />&nbsp;Lunes</a></li>
+												<li><a href="#" class="small" data-value="Mar"
+													tabIndex="-1"><input id="checkboxMar" class="checkboxTarifa" type="checkbox" />&nbsp;Martes</a></li>
+												<li><a href="#" class="small" data-value="Mie"
+													tabIndex="-1"><input id="checkboxMie" class="checkboxTarifa" type="checkbox" />&nbsp;Miercoles</a></li>
+												<li><a href="#" class="small" data-value="Jue"
+													tabIndex="-1"><input id="checkboxJue" class="checkboxTarifa" type="checkbox" />&nbsp;Jueves</a></li>
+												<li><a href="#" class="small" data-value="Vie"
+													tabIndex="-1"><input id="checkboxVie" class="checkboxTarifa" type="checkbox" />&nbsp;Viernes</a></li>
+												<li><a href="#" class="small" data-value="Sab"
+													tabIndex="-1"><input id="checkboxSab" class="checkboxTarifa" type="checkbox" />&nbsp;Sabado</a></li>
+												<li><a href="#" class="small" data-value="Dom"
+													tabIndex="-1"><input id="checkboxDom" class="checkboxTarifa" type="checkbox" />&nbsp;Domingo</a></li>
 											</ul>
 										</div>
 									</div>
-									<label class="control-label col-md-2" for="email">Precio:</label>
+									<label class="control-label col-md-2" for="price">Precio:</label>
 									<div class="col-md-3">
-										<input class="form-control" id="price" placeholder="Precio"/>
+										<input class="form-control" id="price" placeholder="Precio" maxlength="6"/>
 									</div>
 								</div>
 								<div class="form-group">
-									<label class="control-label col-md-2" for="email">Hora Inicio:</label>
+									<label class="control-label col-md-2" for="startTime">Hora Inicio:</label>
 									<div class="col-md-3">
-										<input class="form-control" id="startTime" placeholder="Hora Inicio"/>
+										<input class="form-control" id="startTime" placeholder="Hora Inicio hh:mm" maxlength="5"/>
 									</div>
-									<label class="control-label col-md-2" for="email">Hora Fin:</label>
+									<label class="control-label col-md-2" for="endTime">Hora Fin:</label>
 									<div class="col-md-3">
-										<input class="form-control" id="endTime" placeholder="Hora Fin"/>
+										<input class="form-control" id="endTime" placeholder="Hora Fin hh:mm" maxlength="5"/>
 									</div>
-								</div>
-								<div class="form-group">
-									<label class="control-label col-md-2" for="email">Fracion Minima:</label>
-									<div class="col-md-3">
-										<input class="form-control" id="minFraction" placeholder="Fracion Minima"/>
-									</div>
-								</div>
+								</div>								
 								<div class="form-group">
 									<div class="col-sm-offset-4 col-md-6">
-										<button type="submit" class="btn btn-default">Nueva
+										<button id="btnTarifa" type="submit" class="btn btn-default">Nueva
 											Tarifa</button>
 									</div>
 								</div>
 							</form>
+							<div id="tarifaValidation" class="alert alert-danger" style="display:none"></div>
 						</div>
 						<div class="space"></div>
-					    <div role="tabpanel" class="table-responsive" id="listaCentrosDiv">
-					        <table ng-table="tableParams" class="table table-striped">
+					    <div role="tabpanel" class="table-responsive" id="listaTarifasDiv">
+					        <table id="tarifaTbl" class="table table-striped display">
 					            <thead>
 					                <tr>
 					                    <th>Codigo</th>
-					                    <th>Nombre</th>
+					                    <th>Description</th>
 					                    <th>Dias</th>
 					                    <th>Precio</th>
 					                    <th>Hora Inicio</th>
 					                    <th>Hora Fin</th>
-					                    <th>Minima Fraccion</th>
+					                    <th >Minima Fraccion</th>
+					                    <th colspan="2" >Opciones</th>
 					                </tr>
 					            </thead>
 					            <tbody>
-					                <tr>
-					                    <td>&nbsp;</td>
-					                    <td>&nbsp;</td>
-					                    <td>&nbsp;</td>
-					                    <td>&nbsp;</td>
-					                    <td>&nbsp;</td>
-					                    <td>&nbsp;</td>
-					                    <td>&nbsp;</td>
-					                </tr>
 					            </tbody>
 					        </table>
 					    </div>
@@ -304,71 +277,78 @@
 					</div>
 				</div>
 				<div class="row" style="margin-left: 110px; margin-right: 110px">
-					<form class="form-horizontal" role="form">
+					<form class="form-horizontal" role="form" id="form-regla">
+						<input type="hidden" id="idRegla" value=""/>
 						<div class="form-group">
-							<label class="control-label col-sm-2" for="email">Nombre:</label>
+							<label class="control-label col-sm-2" for="nameReglaPunt">Nombre:</label>
 							<div class="col-sm-10">
-								<input class="form-control" id="headquarter"
-									placeholder="Nombre Sede"/>
+								<input class="form-control" id="nameReglaPunt"
+									placeholder="Nombre" maxlength="20"/>
+							</div>
+						</div>						
+						<div class="form-group">
+							<label class="control-label col-sm-2" for="rechargingFraction">Fraccion de Recarga:</label>
+							<div class="col-sm-10">
+								<input class="form-control" id="rechargingFraction"
+									placeholder="Fraccion de Recarga" maxlength="7"/>
 							</div>
 						</div>
 						<div class="form-group">
-							<label class="control-label col-sm-2" for="pwd">Tipo:</label>
+							<label class="control-label col-sm-2" for="pointsReglaPunt">Puntos a Otorgar:</label>
 							<div class="col-sm-10">
-								<input class="form-control" id="address"
-									placeholder="Direccion"/>
+								<input class="form-control" id="pointsReglaPunt"
+									placeholder="Puntos a Otorfar" maxlength="6"/>
 							</div>
 						</div>
-						<div class="form-group">
-							<label class="control-label col-sm-2" for="pwd">Fraccion de Recarga:</label>
-							<div class="col-sm-10">
-								<input class="form-control" id="numberPcs"
-									placeholder="Numero de Equipos"/>
+						<div class="form-group">							
+							<label class="control-label col-sm-2" for="regla_nivel">Nivel:</label>
+							<div class="col-sm-4">
+								<div class="dropdown">
+									<button class="btn btn-primary dropdown-toggle" type="button"
+										data-toggle="dropdown">
+										Seleccionar <span class="caret"></span>
+									</button>
+									<ul id="regla_nivel" class="dropdown-menu">																													
+									</ul>
+								</div>
 							</div>
-						</div>
-						<div class="form-group">
-							<label class="control-label col-sm-2" for="pwd">Puntos a Otorgar:</label>
-							<div class="col-sm-10">
-								<input class="form-control" id="numberConsoles"
-									placeholder="Numero de Consolas"/>
-							</div>
-						</div>
-						<div class="form-group">
-							<label class="control-label col-sm-2" for="pwd">Estado:</label>
-							<div class="col-sm-10">
-								<input class="form-control" id="numberConsoles"
-									placeholder="Numero de Consolas"/>
+							<label class="control-label col-sm-2" for="status">Estado:</label>
+							<div class="col-sm-4">
+								<div class="dropdown">
+									<button class="btn btn-primary dropdown-toggle" type="button"
+										data-toggle="dropdown">
+										Seleccionar <span class="caret"></span>
+									</button>
+									<ul id="status" class="dropdown-menu">
+										<li><a href="/" onclick="return false;">Activo</a></li>
+										<li><a href="/" onclick="return false;">Inactivo</a></li>
+									</ul>
+								</div>
 							</div>
 						</div>
 						<div class="form-group">
 							<div class="col-sm-offset-5 col-sm-7">
-								<button type="submit" class="btn btn-default">Nueva Regla</button>
+								<button id="btnRegla" type="submit" class="btn btn-default">Nueva Regla de Puntos</button>
 							</div>
 						</div>
 					</form>
+					<div id="reglaValidation" class="alert alert-danger" style="display:none"></div>
 				</div>
 				<div class="space"></div>
-			    <div role="tabpanel" class="table-responsive" id="listaPuntosDiv">
-			        <table ng-table="tableParams" class="table table-striped">
+			    <div role="tabpanel" class="table-responsive" id="listaReglasDiv">
+			        <table id="reglaTbl" class="table table-striped display">
 			            <thead>
 			                <tr>
 			                    <th>Codigo</th>
 			                    <th>Nombre</th>
-			                    <th>Tipo</th>
 			                    <th>Fraccion de recarga</th>
 			                    <th>Puntos a otorgar</th>
+			                    <th>Nivel</th>
 			                    <th>Estado</th>			                    
+			                    <th colspan="2" >Opciones</th>
 			                </tr>
 			            </thead>
 			            <tbody>
-			                <tr>			                    
-			                    <td>&nbsp;</td>
-			                    <td>&nbsp;</td>
-			                    <td>&nbsp;</td>
-			                    <td>&nbsp;</td>
-			                    <td>&nbsp;</td>
-			                    <td>&nbsp;</td>
-			                </tr>
 			            </tbody>
 			        </table>
 			    </div>
@@ -387,45 +367,47 @@
 					</div>
 				</div>
 				<div class="row" style="margin-left: 110px; margin-right: 110px">
-					<form class="form-horizontal" role="form">
+					<form id="form-nivel" class="form-horizontal" role="form">
+						<input type="hidden" id="idNivel" value=""/>
 						<div class="form-group">
-							<label class="control-label col-sm-2" for="email">Nombre:</label>
+							<label class="control-label col-sm-2" for="nameNivel">Nombre:</label>
 							<div class="col-sm-10">
-								<input class="form-control" id="headquarter"
-									placeholder="Nombre Sede"/>
+								<input class="form-control" id="nameNivel"
+									placeholder="Nombre" maxlength="20"/>
 							</div>
 						</div>
 						<div class="form-group">
-							<label class="control-label col-sm-2" for="pwd">Puntos Inicial:</label>
+							<label class="control-label col-sm-2" for="initialPoints">Puntos Inicial:</label>
 							<div class="col-sm-10">
-								<input class="form-control" id="address"
-									placeholder="Direccion"/>
+								<input class="form-control" id="initialPoints"
+									placeholder="Puntos Inicial" maxlength="6"/>
 							</div>
 						</div>
 						<div class="form-group">
-							<label class="control-label col-sm-2" for="pwd">Puntos Final:</label>
+							<label class="control-label col-sm-2" for="finalPoints">Puntos Final:</label>
 							<div class="col-sm-10">
-								<input class="form-control" id="numberPcs"
-									placeholder="Numero de Equipos"/>
+								<input class="form-control" id="finalPoints"
+									placeholder="Puntos Final" maxlength="6"/>
 							</div>
 						</div>
 						<div class="form-group">
-							<label class="control-label col-sm-2" for="pwd">Pregunta:</label>
+							<label class="control-label col-sm-2" for="question">Pregunta:</label>
 							<div class="col-sm-10">
-								<input class="form-control" id="numberConsoles"
-									placeholder="Numero de Consolas"/>
+								<input class="form-control" id="question"
+									placeholder="Pregunta" maxlength="100" />
 							</div>
 						</div>
 						<div class="form-group">
 							<div class="col-sm-offset-5 col-sm-7">
-								<button type="submit" class="btn btn-default">Nuevo Nivel</button>
+								<button id="btnNivel" type="submit" class="btn btn-default">Nuevo Nivel</button>
 							</div>
 						</div>
 					</form>
+					<div id="nivelValidation" class="alert alert-danger" style="display:none"></div>
 				</div>
 				<div class="space"></div>
 			    <div role="tabpanel" class="table-responsive" id="listaNivelesDiv">
-			        <table ng-table="tableParams" class="table table-striped">
+			        <table id="nivelTbl" class="table table-striped display">
 			            <thead>
 			                <tr>
 			                    <th>Codigo</th>
@@ -433,16 +415,10 @@
 			                    <th>Puntos inicial</th>
 			                    <th>Puntos final</th>
 			                    <th>Pregunta</th>			                    			                    
+			                    <th colspan="2">Opciones</th>
 			                </tr>
 			            </thead>
 			            <tbody>
-			                <tr>
-			                    <td>&nbsp;</td>
-			                    <td>&nbsp;</td>
-			                    <td>&nbsp;</td>
-			                    <td>&nbsp;</td>
-			                    <td>&nbsp;</td>
-			                </tr>
 			            </tbody>
 			        </table>
 			    </div>
@@ -461,69 +437,59 @@
 					</div>
 				</div>
 				<div class="row" style="margin-left: 110px; margin-right: 110px">
-					<form class="form-horizontal" role="form">
+					<form id="form-premio" class="form-horizontal" role="form">
+						<input type="hidden" id="idPremio" value=""/>
 						<div class="form-group">
-							<label class="control-label col-sm-2" for="email">Nombre:</label>
+							<label class="control-label col-sm-2" for="namePrize">Nombre:</label>
 							<div class="col-sm-10">
-								<input class="form-control" id="headquarter"
-									placeholder="Nombre Sede"/>
+								<input class="form-control" id="namePrize"
+									placeholder="Nombre Premio" maxlength="20" />
 							</div>
 						</div>
 						<div class="form-group">
-							<label class="control-label col-sm-2" for="pwd">Cantidad de Puntos:</label>
+							<label class="control-label col-sm-2" for="pointsPrize">Cantidad de Puntos:</label>
 							<div class="col-sm-10">
-								<input class="form-control" id="address"
-									placeholder="Direccion"/>
+								<input class="form-control" id="pointsPrize"
+									placeholder="Cantidad de Puntos" maxlength="11"/>
 							</div>
-						</div>
+						</div>						
 						<div class="form-group">
-							<label class="control-label col-sm-2" for="pwd">Puntos Final:</label>
+							<label class="control-label col-sm-2" for="balanceFraction">Fraccion de Saldo:</label>
 							<div class="col-sm-10">
-								<input class="form-control" id="numberPcs"
-									placeholder="Numero de Equipos"/>
-							</div>
-						</div>
-						<div class="form-group">
-							<label class="control-label col-sm-2" for="pwd">Fraccion de Saldo:</label>
-							<div class="col-sm-10">
-								<input class="form-control" id="numberConsoles"
-									placeholder="Numero de Consolas"/>
+								<input class="form-control" id="balanceFraction"
+									placeholder="Fraccion de Saldo" maxlength="11"/>
 							</div>
 						</div>
 						<div class="form-group">
 							<div class="col-sm-offset-5 col-sm-7">
-								<button type="submit" class="btn btn-default">Nuevo Premio</button>
+								<button id="btnPremio" type="submit" class="btn btn-default">Nuevo Premio</button>
 							</div>
 						</div>
 					</form>
+					<div id="premioValidation" class="alert alert-danger" style="display:none"></div>
 				</div>
 				<div class="space"></div>
 			    <div role="tabpanel" class="table-responsive" id="listaPremiosDiv">
-			        <table ng-table="tableParams" class="table table-striped">
+			        <table id="premioTbl" class="table table-striped display">
 			            <thead>
 			                <tr>
 			                    <th>Codigo</th>
 			                    <th>Nombre</th>
 			                    <th>Cantidad puntos</th>
-			                    <th>Puntos final</th>
 			                    <th>Fraccion de saldo</th>			                    			                    
+			                    <th colspan="2">Opciones</th>
 			                </tr>
 			            </thead>
 			            <tbody>
-			                <tr>
-			                    <td>&nbsp;</td>
-			                    <td>&nbsp;</td>
-			                    <td>&nbsp;</td>
-			                    <td>&nbsp;</td>
-			                    <td>&nbsp;</td>
-			                </tr>
 			            </tbody>
 			        </table>
 			    </div>
 			</div>
 		</div>
 		<!-- banner end -->
-		
+		<br/><br/><br/>
+		<br/><br/><br/>
+		<div id="dialog-confirm"></div>
 		<!-- footer start --> 
 		<footer id="footer">
 
@@ -549,9 +515,10 @@
 		<script type="text/javascript" th:src="@{plugins/isotope/isotope.pkgd.min.js}"></script>
 		<script type="text/javascript" th:src="@{plugins/jquery.backstretch.min.js}"></script>
 		<script type="text/javascript" th:src="@{plugins/jquery.appear.js}"></script>
-		<script type="text/javascript" th:src="@{plugins/jquery-ui-1.11.4.custom/jquery-ui.min.js}"></script>
+		<script type="text/javascript" th:src="@{plugins/jquery-ui-1.11.4.custom/jquery-ui.min.js}"></script>		
 		<script type="text/javascript" th:src="@{plugins/jquery.mCustomScrollbar.concat.min.js}"></script>
 		<script type="text/javascript" th:src="@{plugins/ng-table/ng-table.min.js}"></script>
+		<script type="text/javascript" th:src="@{plugins/dataTables/js/jquery.dataTables.js}"></script>
 		<!-- Custom Scripts -->
 		<script type="text/javascript" th:src="@{js/custom.js}"></script>
 		<script type="text/javascript" th:src="@{js/home.js}"></script>

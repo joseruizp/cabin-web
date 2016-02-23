@@ -19,6 +19,39 @@ public class Level implements Serializable {
 
 	@Column(name = "nombre", length = 20)
 	private String name;
+	
+	@Column(name = "puntos_inicial")
+	private Integer initialPoints;	
+
+	@Column(name = "puntos_final")
+	private Integer finalPoints;
+
+	@Column(name = "pregunta", length = 20)
+	private String question;
+
+	public Integer getInitialPoints() {
+		return initialPoints;
+	}
+
+	public void setInitialPoints(Integer initialPoints) {
+		this.initialPoints = initialPoints;
+	}
+
+	public Integer getFinalPoints() {
+		return finalPoints;
+	}
+
+	public void setFinalPoints(Integer finalPoints) {
+		this.finalPoints = finalPoints;
+	}
+
+	public String getQuestion() {
+		return question;
+	}
+
+	public void setQuestion(String question) {
+		this.question = question;
+	}
 
 	public Long getId() {
 		return id;

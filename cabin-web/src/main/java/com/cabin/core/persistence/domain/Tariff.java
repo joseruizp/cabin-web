@@ -1,6 +1,7 @@
 package com.cabin.core.persistence.domain;
 
 import java.io.Serializable;
+import java.util.Calendar;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -17,14 +18,64 @@ public class Tariff implements Serializable {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long id;
 
-	@Column(name = "nombre", length = 20)
-	private String name;
-
 	@Column(name = "fraccion_minima")
 	private Double minimumFraction;
+	
+	@Column(name = "precio_hora")
+	private Double price;
+	
+	@Column(name = "hora_inicio")
+	private Calendar startTime;
 
-	@Column(name = "fraccion_fija")
-	private Double fixedFraction;
+	@Column(name = "hora_fin")
+	private Calendar endTime;
+	
+	@Column(name = "dias")
+	private String days;
+		
+	@Column(name = "descripcion")
+	private String description;
+
+
+	public String getDescription() {
+		return description;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
+	}
+
+	public Double getPrice() {
+		return price;
+	}
+
+	public void setPrice(Double price) {
+		this.price = price;
+	}
+
+	public Calendar getStartTime() {
+		return startTime;
+	}
+
+	public void setStartTime(Calendar startTime) {
+		this.startTime = startTime;
+	}
+
+	public Calendar getEndTime() {
+		return endTime;
+	}
+
+	public void setEndTime(Calendar endTime) {
+		this.endTime = endTime;
+	}
+
+	public String getDays() {
+		return days;
+	}
+
+	public void setDays(String days) {
+		this.days = days;
+	}
 
 	public Long getId() {
 		return id;
@@ -33,15 +84,7 @@ public class Tariff implements Serializable {
 	public void setId(Long id) {
 		this.id = id;
 	}
-
-	public String getName() {
-		return name;
-	}
-
-	public void setName(String name) {
-		this.name = name;
-	}
-
+	
 	public Double getMinimumFraction() {
 		return minimumFraction;
 	}
@@ -50,12 +93,5 @@ public class Tariff implements Serializable {
 		this.minimumFraction = minimumFraction;
 	}
 
-	public Double getFixedFraction() {
-		return fixedFraction;
-	}
-
-	public void setFixedFraction(Double fixedFraction) {
-		this.fixedFraction = fixedFraction;
-	}
 
 }

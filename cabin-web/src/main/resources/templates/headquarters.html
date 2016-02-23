@@ -42,7 +42,7 @@
 
 							<!-- name-and-slogan -->
 							<div class="logo-section smooth-scroll">
-								<div class="brand"><a href="#banner">Sede: Local UNI</a></div>								
+								<div class="brand"><a href="#banner" th:text="${headquarter.name}" th:unless="${headquarter.name == null}"></a></div>								
 							</div>
 
 						</div>

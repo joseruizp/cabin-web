@@ -7,6 +7,8 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 
 @Entity(name = "regla_puntuacion")
 public class PunctuationRule implements Serializable {
@@ -20,11 +22,28 @@ public class PunctuationRule implements Serializable {
 	@Column(name = "nombre", length = 100)
 	private String name;
 
-	@Column(name = "importe")
-	private Double amount;
+	@Column(name = "fraccion_recarga")
+	private Double rechargingFraction;
 
 	@Column(name = "puntos")
 	private Integer points;
+
+	@ManyToOne
+	@JoinColumn(name = "id_estado")
+	private Status status;
+	
+	@ManyToOne
+	@JoinColumn(name = "id_nivel")
+	private Level level;
+	
+	
+	public Level getLevel() {
+		return level;
+	}
+
+	public void setLevel(Level level) {
+		this.level = level;
+	}
 
 	public Long getId() {
 		return id;
@@ -42,12 +61,12 @@ public class PunctuationRule implements Serializable {
 		this.name = name;
 	}
 
-	public Double getAmount() {
-		return amount;
+	public Double getRechargingFraction() {
+		return rechargingFraction;
 	}
 
-	public void setAmount(Double amount) {
-		this.amount = amount;
+	public void setRechargingFraction(Double rechargingFraction) {
+		this.rechargingFraction = rechargingFraction;
 	}
 
 	public Integer getPoints() {
@@ -57,5 +76,13 @@ public class PunctuationRule implements Serializable {
 	public void setPoints(Integer points) {
 		this.points = points;
 	}
+
+	 public Status getStatus() {
+	    return status;
+	 }
+
+	 public void setStatus(Status status) {
+	    this.status = status;
+	 }
 
 }
