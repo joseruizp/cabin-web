@@ -31,6 +31,11 @@ $(".login").submit(function() {
 	return false;
 });
 
+function newUser(){
+	var hostname = window.location.protocol + "//" + window.location.host;	
+	window.location.href = hostname + "/cabin-web/newUser";
+}
+
 $("#loginBtn").click(function() {
 	var email = $("#email").val();
 	var password = $("#password").val();
