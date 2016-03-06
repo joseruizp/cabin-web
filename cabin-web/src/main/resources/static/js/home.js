@@ -259,11 +259,14 @@ function fillClientetbl(){
     t.clear();
 	for(i=0; i<size;i++){
 		if ( jQuery.type( clientes[i].birthDate ) === "date" ){ 
-			date = clientes[i].birthDate.toString();
-			date = date.substring(0,10);
+			var day = (clientes[i].birthDate).getDate();
+			var month = (clientes[i].birthDate).getMonth() + 1;
+			var year = (clientes[i].birthDate).getFullYear();
+			date = ""+ day +"-"+month+"-"+year;
 		}
 		else{
-			date = clientes[i].birthDate.substring(0, 10);
+			var arrayDate = clientes[i].birthDate.substring(0, 10).split("-");
+			date = ""+ arrayDate[2] +"-"+arrayDate[1]+"-"+arrayDate[0];
 		} 
 		t.row.add( [
                 clientes[i].id,
@@ -273,7 +276,7 @@ function fillClientetbl(){
                 date,                
                 clientes[i].balance,
                 clientes[i].points,
-                clientes[i].status,
+                clientes[i].estado,
                 "",
                 "",
         ] ).draw( false );
@@ -1153,7 +1156,7 @@ function fillCliente(idCliente, name, email, gender, birthDate, balance, points)
 		balance: balance,
 		points: points,
 		level: level,
-		status: status,		
+		estado: status,		
 	});
 }
 
@@ -1212,17 +1215,13 @@ function saveCliente(){
 		strUrl += "/" + idUser;	
 		customer.id = idCustomer;		
 		newCliente = 0;
-		if( idStatus == estados[0].id)
-			customer.status = estados[0].name;
-		else
-			customer.status = estados[1].name;
-		if( gender == "Male")
-			customer.gender = "M";
-		else
-			customer.gender = "F";
+		if( idStatus == estados[0].id){
+			customer.estado = estados[0].name; console.log(customer.estado);}
+		else{
+			customer.estado = estados[1].name; }		
 		var length = niveles.length;
 		for ( i = 0; i< length ; i++){
-			if (idNivel == niveles[i].id ){ customer.level = niveles[i].name; break;}
+			if (idNivel == niveles[i].id ){ customer.nivel = niveles[i].name; break;}
 		}
 		clientes.splice(clienteIndex, 1, customer);
 		fillClientetbl();
@@ -1238,6 +1237,7 @@ function saveCliente(){
 	    success: function (data) {
 	    	console.log("Send a user into DB");
 	    	if (idCustomer != ""){
+	    		console.log(strUrl);
 	    		$("#btnCliente").html("Nueva Regla");
 	    		$("#idCliente").attr("value", "");			    		
 	    	}	
@@ -1246,7 +1246,7 @@ function saveCliente(){
 	    	console.log("Error, su solicitud no pudo ser atendida");
 	    },	 
 	    complete: function(xhr) {
-	    	if (idUser == ""){
+	    	if (idCustomer == ""){
 		    	var strLocation = xhr.getResponseHeader('Location');	    	
 		    	var hrefArray = strLocation.split("/");
 		    	idUser = hrefArray[hrefArray.length -1];
@@ -1264,7 +1264,7 @@ function saveCliente(){
 	    url: strUrl,			    
 	    dataType: 'json', 
 	    data: JSON.stringify(customer), 
-	    contentType: 'application/json',
+	    contentType: 'application/json',	    
 	    success: function (data) {
 	    	console.log("Send a user into DB");
 	    },
@@ -1293,7 +1293,7 @@ function saveCliente(){
 	    data: strUrlStatus, 
 	    contentType: 'text/uri-list',
 	    success: function (data) {
-	    	console.log("Se asigno estado a usuario" + idCustomer);
+	    	console.log("Se asigno estado a cliente" + idCustomer);
 	    },
 	    error: function (xhr, status) {	    	
 	    	console.log("Error, su solicitud no pudo ser atendida");
@@ -1354,6 +1354,7 @@ function saveCliente(){
 	    	
 	    }
 	});
+	
 }
 
 function editCliente( code, index ){
@@ -1375,7 +1376,7 @@ function editCliente( code, index ){
 			var date = json.birthDate.substring(0,10);
 			var arrayDate = date.split("-");
 			var birthDate = arrayDate[2]+"/" + arrayDate[1]+"/" + arrayDate[0];
-			$("#bithDateCustomer").val(birthDate);
+			$("#birthDateCustomer").val(birthDate);			
 			$("#idCliente").attr('value', idCliente);
 			$("#btnSede").html("Actualizar Sede");	
 			var genderHtml = $("#genderCustomer li a");
@@ -1393,7 +1394,7 @@ function editCliente( code, index ){
 	    }
 	});	
 	var email, idUser;
-	var strSede = hostname + "/cabin-web/sede/" + code+"/user";
+	var strSede = hostname + "/cabin-web/cliente/" + code+"/user";
 	$.ajax({
 		async:false,
 	    url:strSede,
@@ -1402,6 +1403,7 @@ function editCliente( code, index ){
 	    success: function (json) {
 	    	var hrefArray = json._links.self.href.split("/");
 	    	idUser = hrefArray[hrefArray.length -1];
+	    	console.log("contraseña: " + json.pass);
 	    	$("#passwordCustomer").val(json.pass);	
 	    	$("#confirmPasswordCustomer").val(json.pass);	    	
 	    },
