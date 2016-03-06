@@ -112,18 +112,18 @@
 					<div class="multipe-div">
 						<div class="multipe-box">
 							<select class="select-multiple" multiple="multiple" size="3">
-								<option class="option-multiple">PC 1</option>
-								<option class="option-multiple">PC 2</option>
-								<option class="option-multiple">PC 3</option>
-								<option class="option-multiple">PC 4</option>
-					    		<option class="option-multiple">PC 5</option>
-								<option class="option-multiple">PC 6</option>
-					    		<option class="option-multiple">PC 7</option>
-								<option class="option-multiple">PC 8</option>
-								<option class="option-multiple">PC 9</option>
-								<option class="option-multiple">PC 10</option>
-								<option class="option-multiple">PC 11</option>
-								<option class="option-multiple">PC 12</option>
+								<option class="option-multiple computer-multiple">PC 1</option>
+								<option class="option-multiple computer-multiple">PC 2</option>
+								<option class="option-multiple computer-multiple">PC 3</option>
+								<option class="option-multiple computer-multiple">PC 4</option>
+					    		<option class="option-multiple computer-multiple">PC 5</option>
+								<option class="option-multiple computer-multiple">PC 6</option>
+					    		<option class="option-multiple computer-multiple">PC 7</option>
+								<option class="option-multiple computer-multiple">PC 8</option>
+								<option class="option-multiple computer-multiple">PC 9</option>
+								<option class="option-multiple computer-multiple">PC 10</option>
+								<option class="option-multiple computer-multiple">PC 11</option>
+								<option class="option-multiple computer-multiple">PC 12</option>
 							</select>
 						</div>
 					</div>
@@ -159,18 +159,18 @@
 					<div class="multipe-div">
 						<div class="multipe-box">
 							<select class="select-multiple" multiple="multiple" size="3">
-								<option class="option-multiple">Consola 1</option>
-								<option class="option-multiple">Consola 2</option>
-								<option class="option-multiple">Consola 3</option>
-								<option class="option-multiple">Consola 4</option>
-					    		<option class="option-multiple">Consola 5</option>
-								<option class="option-multiple">Consola 6</option>
-					    		<option class="option-multiple">Consola 7</option>
-								<option class="option-multiple">Consola 8</option>
-								<option class="option-multiple">Consola 9</option>
-								<option class="option-multiple">Consola 10</option>
-								<option class="option-multiple">Consola 11</option>
-								<option class="option-multiple">Consola 12</option>
+								<option class="option-multiple console-multiple">Consola 1</option>
+								<option class="option-multiple console-multiple">Consola 2</option>
+								<option class="option-multiple console-multiple">Consola 3</option>
+								<option class="option-multiple console-multiple">Consola 4</option>
+					    		<option class="option-multiple console-multiple">Consola 5</option>
+								<option class="option-multiple console-multiple">Consola 6</option>
+					    		<option class="option-multiple console-multiple">Consola 7</option>
+								<option class="option-multiple console-multiple">Consola 8</option>
+								<option class="option-multiple console-multiple">Consola 9</option>
+								<option class="option-multiple console-multiple">Consola 10</option>
+								<option class="option-multiple console-multiple">Consola 11</option>
+								<option class="option-multiple console-multiple">Consola 12</option>
 							</select>
 						</div>
 					</div>
@@ -212,7 +212,63 @@
 		</footer>
 		<!-- footer end -->
 
-		<!-- JavaScript --> 
+		<div id="computerDialog" title="Informacion PC" style="display: none;">
+			<div class="col-md-10" style="margin-bottom: 10px">
+				<form class="form-horizontal" role="form" id="form-regla">
+					<input type="hidden" id="idRegla" value=""/>
+					<div class="form-group">
+						<label class="control-label col-md-4">Nombre:</label>
+						<label class="control-label col-md-8" style="text-align: left;">Nombre</label>
+					</div>						
+					<div class="form-group">
+						<label class="control-label col-md-4">IP:</label>
+						<label class="control-label col-md-8" style="text-align: left;">Nombre</label>
+					</div>
+					<div class="form-group">
+						<label class="control-label col-md-4">Serie:</label>
+						<label class="control-label col-md-8" style="text-align: left;">Nombre</label>
+					</div>
+					<div class="form-group">							
+						<label class="control-label col-md-4">MAC:</label>
+						<label class="control-label col-md-8" style="text-align: left;">Nombre</label>
+					</div>
+					<div class="form-group">							
+						<label class="control-label col-md-4">Estado:</label>
+						<label class="control-label col-md-8" style="text-align: left;">Nombre</label>
+					</div>
+					<div class="form-group">							
+						<label class="control-label col-md-4">Grupo:</label>
+						<label class="control-label col-md-8" style="text-align: left;">Nombre</label>
+					</div>
+				</form>
+			</div>
+		</div>
+		
+		<div id="consoleDialog" title="Informacion Consola" style="display: none;">
+			<div class="col-md-10" style="margin-bottom: 10px">
+				<form class="form-horizontal" role="form" id="form-regla">
+					<input type="hidden" id="idRegla" value=""/>
+					<div class="form-group">
+						<label class="control-label col-md-4">Nombre:</label>
+						<label class="control-label col-md-8" style="text-align: left;">Nombre:</label>
+					</div>						
+					<div class="form-group">
+						<label class="control-label col-md-4">IP:</label>
+						<label class="control-label col-md-8" style="text-align: left;">Nombre:</label>
+					</div>
+					<div class="form-group">
+						<label class="control-label col-md-4">Estado:</label>
+						<label class="control-label col-md-8" style="text-align: left;">Nombre:</label>
+					</div>
+					<div class="form-group">							
+						<label class="control-label col-md-4">Grupo:</label>
+						<label class="control-label col-md-8" style="text-align: left;">Nombre:</label>
+					</div>
+				</form>
+			</div>
+		</div>
+
+	<!-- JavaScript --> 
 		<script type="text/javascript" th:src="@{plugins/jquery.min.js}"></script>
 		<script type="text/javascript" th:src="@{bootstrap/js/bootstrap.min.js}"></script>
 		<script type="text/javascript" th:src="@{plugins/modernizr.js}"></script>
