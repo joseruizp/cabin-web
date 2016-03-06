@@ -19,6 +19,37 @@
 -- Table structure for table `cliente`
 --
 
+DROP TABLE IF EXISTS `tipo_documento`;
+CREATE TABLE `tipo_documento` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `nombre` varchar(20) DEFAULT NULL,  
+  PRIMARY KEY (`id`)
+)  ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+
+INSERT INTO `tipo_documento` VALUES (1,'DNI'),(2,'C.E.'),(3,'PASAPORTE'), (4, 'OTRO');
+
+DROP TABLE IF EXISTS `empleado`;
+CREATE TABLE `empleado` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `correo` varchar(80) DEFAULT NULL,
+  `nombre` varchar(100) DEFAULT NULL,
+  `telefono` varchar(15) DEFAULT NULL,
+  `tipo_documento` varchar(2) DEFAULT NULL,
+  `n_documento` varchar(15) DEFAULT NULL,
+  `sexo` varchar(1) DEFAULT NULL,
+  `fecha_nacimiento` date DEFAULT NULL,  
+  `id_estado` bigint(20) DEFAULT NULL,  
+  `id_usuario` bigint(20) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `id_estado` (`id_estado`),
+  KEY `id_usuario` (`id_usuario`),
+  CONSTRAINT `empleado_ibfk_1` FOREIGN KEY (`id_estado`) REFERENCES `estado` (`id`),  
+  CONSTRAINT `empleado_ibfk_2` FOREIGN KEY (`id_usuario`) REFERENCES `usuario` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+
+
 DROP TABLE IF EXISTS `cliente`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
@@ -290,10 +321,17 @@ DROP TABLE IF EXISTS `sede`;
 CREATE TABLE `sede` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
   `nombre` varchar(20) DEFAULT NULL,
-  `direccion` varchar(200) DEFAULT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8;
+  `direccion` varchar(200) DEFAULT NULL,  
+  `id_usuario` bigint(20) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `id_usuario_idx` (`id_usuario`),
+  CONSTRAINT `id_usuario` FOREIGN KEY (`id_usuario`) REFERENCES `usuario` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+)  ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
+
+  
+
+
 
 --
 -- Dumping data for table `sede`
@@ -301,7 +339,7 @@ CREATE TABLE `sede` (
 
 LOCK TABLES `sede` WRITE;
 /*!40000 ALTER TABLE `sede` DISABLE KEYS */;
-INSERT INTO `sede` VALUES (1,'sede UNI 1','av. tupac amaru 1'),(2,'sede prueba 2','direccion prueba 2 edit'),(5,'sede prueba 5','dirección prueba 5 edit');
+INSERT INTO `sede` VALUES (1,'sede UNI 1','av. tupac amaru 1', 1),(2,'sede prueba 2','direccion prueba 2 edit', 1),(5,'sede prueba 5','dirección prueba 5 edit', 1);
 /*!40000 ALTER TABLE `sede` ENABLE KEYS */;
 UNLOCK TABLES;
 

@@ -6,9 +6,9 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.repository.query.Param;
 import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 
-import com.cabin.core.persistence.domain.Client;
+import com.cabin.core.persistence.domain.Employee;
 
-@RepositoryRestResource(collectionResourceRel = "cliente", path = "cliente")
-public interface ClientRepository extends JpaRepository<Client, Long> {
-	public List<Client> findByEmail(@Param("email") String email);
+@RepositoryRestResource(collectionResourceRel = "empleado", path = "empleado")
+public interface EmployeeRepository extends JpaRepository<Employee, Long> {
+	public List<Employee> findByEmail(@Param("email") String email);
 }

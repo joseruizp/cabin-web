@@ -99,7 +99,7 @@ function addUser() {
 	valid = valid && checkRegexp( $("#email"), /^([\w-\.]+@([\w-]+\.)+[\w-]{2,4})?$/i , "El email ingresado no es válido.", userValidation );
 	valid = valid && checkRequired( $("#password"), "Debe ingresar una contraseña.",1, userValidation);
 	valid = valid && checkRegexp( $("#password"), /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?!.*\s).{4,20}$/, "La contraseña debe contener al menos una letra minúscula, una mayúscula, un dígito. Mínimo cuatro caracteres y máximo, viente.", userValidation );
-	valid = valid && checkRequired( $("#confirmPassword"), "Debe ingresar el nombre de usuario.",1, userValidation);
+	valid = valid && checkRequired( $("#confirmPassword"), "Debe confirmar su contraseña.",1, userValidation);
 	valid = valid && checkRegexp( $("#confirmPassword"), /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?!.*\s).{4,20}$/, "La contraseña debe contener al menos una letra minúscula, una mayúscula, un dígito. Mínimo cuatro caracteres y máximo, veinte.", userValidation );
 	valid = valid && checkPassword($("#password"), $("#confirmPassword"), "Las contraseñas no coinciden",  userValidation);
 	
@@ -125,7 +125,7 @@ function saveCustomer(){
 	$( "#confirmPassword" ).val("");
 	$( "#email" ).val("");	$( "#birthDate" ).val("");
 	//$("#numberPcs").val(""); $("#numberConsoles").val("");
-	var genderHtml = $("#status li a");	
+	var genderHtml = $("#gender li a");	
 	var gender = $(genderHtml).parents(".dropdown").find('.btn').val();
 	customer.gender = gender;
 	$(genderHtml).parents(".dropdown").find('.btn').html('Seleccionar <span class="caret"></span>');

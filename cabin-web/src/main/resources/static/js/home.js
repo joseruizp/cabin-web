@@ -2,7 +2,8 @@
  * Author URI:http://webthemez.com
  * License: Creative Commons Attribution 3.0 License (https://creativecommons.org/licenses/by/3.0/)
  */
-estados = [];
+estados = []; tipo_doc = [];
+operarios = []; clientes = [];
 sedes = []; sedeIndex = -1;
 tarifas = []; tarifaIndex = -1;
 reglas = []; reglaIndex = -1;
@@ -10,8 +11,9 @@ niveles = []; nivelIndex = -1;
 premios = []; premioIndex = -1;
 sedeValidation = ""; tarifaValidation = "";
 reglaValidation = ""; nivelValidation = "";
-premioValidation = "";
-daysTarifa = [];
+premioValidation = ""; clienteValidation = "";
+empleadoValidation = ""; clienteIndex = -1;
+daysTarifa = []; empleados = []; empleadoIndex = -1;
 map = {
         "Lun" : 0,
         "Mar" : 1,
@@ -24,14 +26,49 @@ map = {
 
 (function($){
 	$(document).ready(function(){
+		$(".input-group.date").datepicker({
+		    format: "dd/mm/yyyy",
+		    startDate: "01/01/1900", 
+		    language: "es",
+		    autoclose: true,
+		    todayHighlight: true
+		 });	
+		$('.input-group.date').datepicker('setDate',"01/01/2000");
+		
+		$("#genderCustomer li a").click(function(){
+			$(this).parents(".dropdown").find('.btn').html($(this).text() + ' <span class="caret"></span>');
+			var gender = $(this).text();
+			if (gender.toLowerCase() == "male" ){ $(this).parents(".dropdown").find('.btn').val("M");}
+			else{ $(this).parents(".dropdown").find('.btn').val("F"); }
+		});
+		$("#genderEmployee li a").click(function(){
+			$(this).parents(".dropdown").find('.btn').html($(this).text() + ' <span class="caret"></span>');
+			var gender = $(this).text();
+			if (gender.toLowerCase() == "male" ){ $(this).parents(".dropdown").find('.btn').val("M");}
+			else{ $(this).parents(".dropdown").find('.btn').val("F"); }
+		});
 		//Initialize validation divs
 		sedeValidation = $("#sedeValidation");
 		tarifaValidation = $("#tarifaValidation");
 		reglaValidation = $("#reglaValidation");
 		nivelValidation = $("#nivelValidation");
 		premioValidation = $("#premioValidation");
+		clienteValidation = $("#clienteValidation");
+		empleadoValidation = $("#empleadoValidation");		
 		//Select
 		$("#status li a").click(function(){
+			$(this).parents(".dropdown").find('.btn').html($(this).text() + ' <span class="caret"></span>');
+			var status = $(this).text();
+			if (status.toLowerCase() == estados[0].name.toLowerCase() ){ $(this).parents(".dropdown").find('.btn').val(estados[0].id);}
+			else{ $(this).parents(".dropdown").find('.btn').val(estados[1].id); }
+		});
+		$("#statusCustomer li a").click(function(){
+			$(this).parents(".dropdown").find('.btn').html($(this).text() + ' <span class="caret"></span>');
+			var status = $(this).text();
+			if (status.toLowerCase() == estados[0].name.toLowerCase() ){ $(this).parents(".dropdown").find('.btn').val(estados[0].id);}
+			else{ $(this).parents(".dropdown").find('.btn').val(estados[1].id); }
+		});
+		$("#statusEmployee li a").click(function(){
 			$(this).parents(".dropdown").find('.btn').html($(this).text() + ' <span class="caret"></span>');
 			var status = $(this).text();
 			if (status.toLowerCase() == estados[0].name.toLowerCase() ){ $(this).parents(".dropdown").find('.btn').val(estados[0].id);}
@@ -78,12 +115,30 @@ map = {
 			bLengthChange: false,
 			bInfo: false,
 		});
+		$('#clienteTbl').DataTable({			
+			scrollY: 300,
+		    paging: false,
+			ordering: true,
+			searching: false,
+			bLengthChange: false,
+			bInfo: false,
+		});
+		$('#empleadoTbl').DataTable({			
+			scrollY: 300,
+		    paging: false,
+			ordering: true,
+			searching: false,
+			bLengthChange: false,
+			bInfo: false,
+		});
 		fillArraySede();
 		fillArrayTarifa();
 		fillArrayRegla();
 		fillArrayNivel();
 		fillArrayPremio();
 		fillStatus();
+		fillOperarios();
+		fillArrayCliente();
 		//Sede save - update
 		$( "#form-sede" ).submit(function( event ) {
 			event.preventDefault();
@@ -150,7 +205,19 @@ map = {
 				}
 			}
 		});		
-		
+		//Cliente save - update
+		$( "#form-cliente" ).submit(function( event ) {
+			event.preventDefault();
+			if ( addCliente() ){
+				var idCliente = $("#idCliente").attr("value");
+				if (idCliente !== ""){
+					fnOpenEditDialog(6);
+				}
+				else{
+					saveCliente();
+				}
+			}
+		});
 		
 		 $( '#daysMenu a' ).on( 'click', function( event ) {
 		    var $target = $( event.currentTarget ),
@@ -184,6 +251,42 @@ function insideSede ( idSede ) {
 		
 } 
 
+function fillClientetbl(){
+	var size = clientes.length;
+	var j = 0;
+    var t = $('#clienteTbl').DataTable();
+    var date;
+    t.clear();
+	for(i=0; i<size;i++){
+		if ( jQuery.type( clientes[i].birthDate ) === "date" ){ 
+			date = clientes[i].birthDate.toString();
+			date = date.substring(0,10);
+		}
+		else{
+			date = clientes[i].birthDate.substring(0, 10);
+		} 
+		t.row.add( [
+                clientes[i].id,
+                clientes[i].name,
+                clientes[i].email,
+                clientes[i].gender,
+                date,                
+                clientes[i].balance,
+                clientes[i].points,
+                clientes[i].status,
+                "",
+                "",
+        ] ).draw( false );
+	};
+    $('#clienteTbl > tbody  > tr').each(function() {
+	    var edit = "<td><a onclick='editCliente("+ clientes[j].id +","+ j+")'><i class='fa fa-pencil icons' title='Editar'></i></a></td>";
+	    var remove = "<td><a onclick='fnOpenCloseDialog(6, "+ clientes[j].id +","+ j+")'><i class='fa fa-trash icons' title='Eliminar'></i></a></td>";	    
+	    j++; 
+	    var tr = $(this);	    
+	    tr.find('td:last').after(edit); tr.find('td:last').after(remove);
+    });
+}
+
 function fillSedetbl(  ){
 	var size = sedes.length;
 	var j = 0;
@@ -194,6 +297,7 @@ function fillSedetbl(  ){
                 sedes[i].id,
                 sedes[i].name,
                 sedes[i].address,
+                sedes[i].employee,
                 "",
                 "",
         ] ).draw( false );
@@ -211,9 +315,11 @@ function fillSedetbl(  ){
 }
 
 function editSede( code, index ){
-	var strUrl = window.location.protocol + "//" + window.location.host + "/cabin-web/sede/" + code;
+	var hostname = window.location.protocol + "//" + window.location.host;
+	var strUrl = hostname + "/cabin-web/sede/" + code;
 	sedeIndex = index;
 	$.ajax({
+		async:false,
 	    url:strUrl,
 	    crossDomain: true,
 	    dataType: "json",
@@ -230,7 +336,40 @@ function editSede( code, index ){
 	    error: function (xhr, status) {	    	
 	    	console.log("Error, su solicitud no pudo ser atendida");
 	    }
-	});			
+	});
+	var email, idUser;
+	var strSede = hostname + "/cabin-web/sede/" + code+"/user";
+	$.ajax({
+		async:false,
+	    url:strSede,
+	    crossDomain: true,
+	    dataType: "json",
+	    success: function (json) {
+	    	var hrefArray = json._links.self.href.split("/");
+	    	idUser = hrefArray[hrefArray.length -1];
+	    	email = json.name;	    	
+	    },
+	    error: function (xhr, status) {    	
+	    	console.log("Error, su solicitud no pudo ser atendida");
+	    }
+	});	
+	strUrl = hostname + "/cabin-web/empleado/search/findByEmail?email=" + email;
+	$.ajax({
+		async:false,
+	    url:strUrl,
+	    crossDomain: true,
+	    dataType: "json",
+	    success: function (json) {
+	    	$.each(json._embedded.empleado, function(index, value) {
+		    	var operarioHtml = $("#operario li a");
+		    	$(operarioHtml).parents(".dropdown").find('.btn').html(value.name + ' <span class="caret"></span>');
+		    	$(operarioHtml).parents(".dropdown").find('.btn').attr('value', idUser);	    		
+	    	});
+	    },
+	    error: function (xhr, status) {    	
+	    	console.log("Error, su solicitud no pudo ser atendida");
+	    }
+	});
 }
 
 function deleteSede( code, index ){	
@@ -255,15 +394,24 @@ function deleteSede( code, index ){
 function saveSede(){
 	var idSede = $("#idSede").attr("value");
 	console.log("Inside form-tarifa " + idSede);
-	var sede = {}; 
+	var sede = {};  var newSede = 1;
 	sede.name = trim( $( "#name" ).val() );
 	sede.address = trim( $( "#address" ).val() );			
 	$( "#name" ).val("");	$( "#address" ).val("");
+	var operarioHtml = $("#operario li a");	
+	var idUser = $(operarioHtml).parents(".dropdown").find('.btn').val();
+	$(operarioHtml).parents(".dropdown").find('.btn').html('Seleccionar <span class="caret"></span>');
+	$(operarioHtml).parents(".dropdown").find('.btn').val("");	
 	//$("#numberPcs").val(""); $("#numberConsoles").val("");
 	var strUrl = window.location.protocol + "//" + window.location.host + "/cabin-web/sede";			
 	if (idSede !== "") {
 		strUrl += "/" + idSede;
 		sede.id = idSede;
+		newSede = 0;
+		var length = operarios.length;
+		for ( i = 0; i< length ; i++){
+			if (idUser == operarios[i].id ){ sede.employee = operarios[i].name; break;}
+		}		
 		sedes.splice(sedeIndex, 1, sede);
 		fillSedetbl();
 	}						
@@ -283,13 +431,17 @@ function saveSede(){
 	    error: function (xhr, status) {	    	
 	    	console.log("Error, su solicitud no pudo ser atendida");
 	    },
-	    complete: function() {
-	    	if (idSede == ""){
-	    		fillArraySede();
+	    complete: function(xhr) {	    	
+	    	var strLocation = xhr.getResponseHeader('Location');
+	    	if(idSede == ""){
+	    		var hrefArray = strLocation.split("/");
+	    		idSede = hrefArray[hrefArray.length -1];
 	    	}
+	    	associateUser(idSede, idUser, newSede);
 	    }
-	});	
+	});
 }
+
 function fillTarifatbl(  ){
 	var size = tarifas.length;
 	var j = 0; var startTime = ""; var endTime = "";
@@ -838,7 +990,13 @@ function fnOpenCloseDialog(val, code, index) {
 	                	deleteNivel(code, index);
 	                }else if (val == '5'){
 	                	deletePremio(code, index);
-	                }   
+	                }
+	                //else if (val == '6'){
+	                //	deleteCliente(code, index);
+	                //}else if (val == '7'){
+	                //	deleteEmpleado(code, index);
+	                //}  
+	                
 	         	}, "class":"btn btn-default",
 	        },
 	        "2":
@@ -875,7 +1033,12 @@ function fnOpenEditDialog(val) {
 	                	saveNivel();
 	                }else if (val == '5'){
 	                	savePremio();
-	                }                
+	                }else if (val == '6'){
+	                	saveCliente();
+	                }
+	                //else if (val == '7'){
+	                //	saveEmpleado();
+	                //}
 	            }, "class":"btn btn-default",
 	         },
 	         "2":
@@ -952,6 +1115,381 @@ function fillRule(idRegla, name, rechargingFraction, points){
 	});
 }
 
+function fillCliente(idCliente, name, email, gender, birthDate, balance, points){
+	var hostname = window.location.protocol + "//" + window.location.host 
+	var strLevel = hostname + "/cabin-web/cliente/"+idCliente+"/level";
+	var level, status;
+	$.ajax({
+		async:false,
+	    url:strLevel,
+	    crossDomain: true,
+	    dataType: "json",
+	    success: function (json) {
+	    	level = json.name;
+	    },
+	    error: function (xhr, status) {    	
+	    	console.log("Error, su solicitud no pudo ser atendida");
+	    }
+	});
+	var strUrl = hostname + "/cabin-web/cliente/"+idCliente+"/status";
+	$.ajax({
+		async:false,
+	    url:strUrl,
+	    crossDomain: true,
+	    dataType: "json",
+	    success: function (json) {
+	    	status = json.name;
+	    },
+	    error: function (xhr, status) {    	
+	    	console.log("Error, su solicitud no pudo ser atendida");
+	    }
+	});	
+	clientes.push({
+		id: idCliente,
+		name: name,
+		email: email,
+		gender: gender,
+		birthDate: birthDate,
+		balance: balance,
+		points: points,
+		level: level,
+		status: status,		
+	});
+}
+
+function saveCliente(){
+	var hostname = window.location.protocol + "//" + window.location.host;
+	var idCustomer = $("#idCliente").attr("value");
+	console.log("Inside form-cliente " + idCustomer);
+	var customer = {};
+	var user = {}; var newCliente = 1;
+	customer.name = trim( $( "#nameCustomer" ).val() );
+	customer.email = trim( $( "#emailCustomer" ).val() );	
+	var birthDate = trim( $( "#birthDateCustomer" ).val() );
+	var dateArray = birthDate.split("/");
+	var date = new Date(); date.setDate(dateArray[1]);
+	date.setMonth(dateArray[0] - 1); date.setFullYear(dateArray[2]);
+	customer.birthDate = date;
+	customer.balance = trim( $( "#balanceCustomer" ).val() );
+	customer.points = trim( $( "#pointsCustomer" ).val() );;
+	user.pass = trim( $( "#passwordCustomer" ).val() );
+	user.name = trim( $( "#emailCustomer" ).val() );
+	$( "#nameCustomer" ).val(""); $( "#passwordCustomer" ).val("");
+	$( "#confirmPasswordCustomer" ).val("");
+	$( "#emailCustomer" ).val("");	$( "#birthDateCustomer" ).val("");
+	$( "#balanceCustomer" ).val("");$( "#pointsCustomer" ).val("");
+	var genderHtml = $("#genderCustomer li a");	
+	var gender = $(genderHtml).parents(".dropdown").find('.btn').val();
+	customer.gender = gender;
+	var statusHtml = $("#statusCustomer li a");	
+	var idStatus = $(statusHtml).parents(".dropdown").find('.btn').val();
+	var nivelCustomerHtml =  $("#nivelCustomer li a");	
+	var idNivel= $(nivelCustomerHtml).parents(".dropdown").find('.btn').val();
+	customer.gender = gender;
+	$(genderHtml).parents(".dropdown").find('.btn').html('Seleccionar <span class="caret"></span>');
+	$(genderHtml).parents(".dropdown").find('.btn').val("");
+	$(nivelCustomerHtml).parents(".dropdown").find('.btn').html('Seleccionar <span class="caret"></span>');
+	$(nivelCustomerHtml).parents(".dropdown").find('.btn').val("");
+	var idUser;
+	var strUrl = window.location.protocol + "//" + window.location.host + "/cabin-web/usuario";
+	console.log(JSON.stringify(user));
+	
+	if (idCustomer !== "") {
+		var strUsuario = hostname + "/cabin-web/cliente/" + idCustomer+"/user";		
+		$.ajax({
+			async:false,
+		    url:strUsuario,
+		    crossDomain: true,
+		    dataType: "json",
+		    success: function (json) {
+		    	var hrefArray = json._links.self.href.split("/");
+		    	idUser = hrefArray[hrefArray.length -1];		    	    	
+		    },
+		    error: function (xhr, status) {    	
+		    	console.log("Error, su solicitud no pudo ser atendida");
+		    }
+		});	
+		strUrl += "/" + idUser;	
+		customer.id = idCustomer;		
+		newCliente = 0;
+		if( idStatus == estados[0].id)
+			customer.status = estados[0].name;
+		else
+			customer.status = estados[1].name;
+		if( gender == "Male")
+			customer.gender = "M";
+		else
+			customer.gender = "F";
+		var length = niveles.length;
+		for ( i = 0; i< length ; i++){
+			if (idNivel == niveles[i].id ){ customer.level = niveles[i].name; break;}
+		}
+		clientes.splice(clienteIndex, 1, customer);
+		fillClientetbl();
+	}		
+	
+	$.ajax({
+		async: false,
+		type: idCustomer === "" ? "POST" : "PATCH", 
+	    url: strUrl,			    
+	    dataType: 'json', 
+	    data: JSON.stringify(user), 
+	    contentType: 'application/json',
+	    success: function (data) {
+	    	console.log("Send a user into DB");
+	    	if (idCustomer != ""){
+	    		$("#btnCliente").html("Nueva Regla");
+	    		$("#idCliente").attr("value", "");			    		
+	    	}	
+	    },
+	    error: function (xhr, status) {	    	
+	    	console.log("Error, su solicitud no pudo ser atendida");
+	    },	 
+	    complete: function(xhr) {
+	    	if (idUser == ""){
+		    	var strLocation = xhr.getResponseHeader('Location');	    	
+		    	var hrefArray = strLocation.split("/");
+		    	idUser = hrefArray[hrefArray.length -1];
+	    	}
+	    }
+	});		
+	strUrl = window.location.protocol + "//" + window.location.host + "/cabin-web/cliente";
+	if (idCustomer !== "") {
+		strUrl += "/" + idCustomer;	
+	}
+	console.log(JSON.stringify(customer));
+	$.ajax({
+		async: false,
+		type: idCustomer === "" ? "POST" : "PATCH",
+	    url: strUrl,			    
+	    dataType: 'json', 
+	    data: JSON.stringify(customer), 
+	    contentType: 'application/json',
+	    success: function (data) {
+	    	console.log("Send a user into DB");
+	    },
+	    error: function (xhr, status) {	    	
+	    	console.log("Error, su solicitud no pudo ser atendida");
+	    },	 
+	    complete: function(xhr) {	    	
+	    	if(idCustomer == ""){
+	    		var strLocation = xhr.getResponseHeader('Location');
+	    		var hrefArray = strLocation.split("/");
+	    		idCustomer = hrefArray[hrefArray.length -1];
+	    	}	    	
+	    }
+	});	
+	var strUrlStatus = window.location.protocol + "//" + window.location.host + "/cabin-web/estado/" + idStatus;
+	var strUrlNivel = window.location.protocol + "//" + window.location.host + "/cabin-web/nivel/" + idNivel;
+	var strUrlPerfil = window.location.protocol + "//" + window.location.host + "/cabin-web/perfil/" + 3;
+	var strUrlUser = window.location.protocol + "//" + window.location.host + "/cabin-web/usuario/"+idUser;
+	var strUrlCustomer = window.location.protocol + "//" + window.location.host + "/cabin-web/cliente/"+idCustomer+"/status";
+	//Solo para cliente
+	
+	$.ajax({
+		async: false,
+		type: "PUT",
+	    url:strUrlCustomer,			
+	    data: strUrlStatus, 
+	    contentType: 'text/uri-list',
+	    success: function (data) {
+	    	console.log("Se asigno estado a usuario" + idCustomer);
+	    },
+	    error: function (xhr, status) {	    	
+	    	console.log("Error, su solicitud no pudo ser atendida");
+	    },
+	    complete: function () {
+	    	strUrlCustomer = window.location.protocol + "//" + window.location.host + "/cabin-web/cliente/"+idCustomer+"/level";
+	    	$.ajax({
+	    		async: false,
+	    		type: "PUT",
+	    	    url:strUrlCustomer,			
+	    	    data: strUrlNivel, 
+	    	    contentType: 'text/uri-list',
+	    	    success: function (data) {
+	    	    	console.log("Se asigno nivel a cliente " + idCustomer);
+	    	    },
+	    	    error: function (xhr, status) {	    	
+	    	    	console.log("Error, su solicitud no pudo ser atendida");
+	    	    },	    	
+	    	    complete: function(xhr){
+	    	    	strUrlCustomer = window.location.protocol + "//" + window.location.host + "/cabin-web/cliente/"+idCustomer+"/user";
+	    	    	$.ajax({
+	    	    		async: false,
+	    	    		type: "PUT",
+	    	    	    url:strUrlCustomer,			
+	    	    	    data: strUrlUser, 
+	    	    	    contentType: 'text/uri-list',
+	    	    	    success: function (data) {
+	    	    	    	console.log("Se asigno usuario a cliente " + idCustomer);
+	    	    	    },
+	    	    	    error: function (xhr, status) {	    	
+	    	    	    	console.log("Error, su solicitud no pudo ser atendida");
+	    	    	    },
+	    	    	    complete: function(){
+	    	    	    	if (newCliente == 1){			    		
+	    	    	    		fillArrayCliente();
+	    	    	    	}
+	    	    	    }
+	    	    	});
+	    	    }
+	    	});
+	    }
+	});	
+	//Para usuario	
+	strUrlUser = window.location.protocol + "//" + window.location.host + "/cabin-web/usuario/"+idUser+"/profile";	
+	$.ajax({
+		async: false,
+		type: "PUT",
+	    url:strUrlUser,			
+	    data: strUrlPerfil, 
+	    contentType: 'text/uri-list',
+	    success: function (data) {
+	    	console.log("Se asigno perfil a usuario " + idUser);
+	    },
+	    error: function (xhr, status) {	    	
+	    	console.log("Error, su solicitud no pudo ser atendida");
+	    },
+	    complete: function(xhr){
+	    	
+	    }
+	});
+}
+
+function editCliente( code, index ){
+	var hostname = window.location.protocol + "//" + window.location.host;
+	var strUrl = hostname + "/cabin-web/cliente/" + code;
+	clienteIndex = index;
+	$.ajax({
+		async:false,
+	    url:strUrl,
+	    crossDomain: true,
+	    dataType: "json",
+	    success: function (json) {
+	    	var hrefArray = json._links.self.href.split("/");
+	    	var idCliente = hrefArray[hrefArray.length -1];
+	    	$( "#nameCustomer" ).val(json.name);
+			$( "#emailCustomer" ).val(json.email);
+			$( "#balanceCustomer" ).val(json.balance);
+			$( "#pointsCustomer" ).val(json.points);
+			var date = json.birthDate.substring(0,10);
+			var arrayDate = date.split("-");
+			var birthDate = arrayDate[2]+"/" + arrayDate[1]+"/" + arrayDate[0];
+			$("#bithDateCustomer").val(birthDate);
+			$("#idCliente").attr('value', idCliente);
+			$("#btnSede").html("Actualizar Sede");	
+			var genderHtml = $("#genderCustomer li a");
+			if ( json.gender == "M"){
+				genderHtml.parents(".dropdown").find('.btn').html( 'Male <span class="caret"></span>');				
+				genderHtml.parents(".dropdown").find('.btn').val("M");				
+			}
+			else{
+				genderHtml.parents(".dropdown").find('.btn').html( 'Female <span class="caret"></span>');				
+				genderHtml.parents(".dropdown").find('.btn').val("F");
+			}
+	    },
+	    error: function (xhr, status) {	    	
+	    	console.log("Error, su solicitud no pudo ser atendida");
+	    }
+	});	
+	var email, idUser;
+	var strSede = hostname + "/cabin-web/sede/" + code+"/user";
+	$.ajax({
+		async:false,
+	    url:strSede,
+	    crossDomain: true,
+	    dataType: "json",
+	    success: function (json) {
+	    	var hrefArray = json._links.self.href.split("/");
+	    	idUser = hrefArray[hrefArray.length -1];
+	    	$("#passwordCustomer").val(json.pass);	
+	    	$("#confirmPasswordCustomer").val(json.pass);	    	
+	    },
+	    error: function (xhr, status) {    	
+	    	console.log("Error, su solicitud no pudo ser atendida");
+	    }
+	});	
+	strSede = hostname + "/cabin-web/cliente/" + code+"/status";
+	var idStatus;
+	$.ajax({
+		async:false,
+	    url:strSede,
+	    crossDomain: true,
+	    dataType: "json",
+	    success: function (json) {
+	    	var hrefArray = json._links.self.href.split("/");
+	    	idStatus = hrefArray[hrefArray.length -1];
+	    	var statusHtml = $("#statusCustomer li a");			
+			statusHtml.parents(".dropdown").find('.btn').html( json.name +' <span class="caret"></span>');				
+			statusHtml.parents(".dropdown").find('.btn').val( idStatus);
+	    },
+	    error: function (xhr, status) {    	
+	    	console.log("Error, su solicitud no pudo ser atendida");
+	    }
+	});	
+	strSede = hostname + "/cabin-web/cliente/" + code+"/level";
+	var idLevel;
+	$.ajax({
+		async:false,
+	    url:strSede,
+	    crossDomain: true,
+	    dataType: "json",
+	    success: function (json) {
+	    	var hrefArray = json._links.self.href.split("/");
+	    	idLevel = hrefArray[hrefArray.length -1];
+	    	var levelHtml = $("#nivelCustomer li a");			
+	    	levelHtml.parents(".dropdown").find('.btn').html( json.name +' <span class="caret"></span>');				
+	    	levelHtml.parents(".dropdown").find('.btn').val( idLevel);    	
+	    },
+	    error: function (xhr, status) {    	
+	    	console.log("Error, su solicitud no pudo ser atendida");
+	    }
+	});	
+	
+}
+
+function fillSede(idSede, name, address){
+	var hostname = window.location.protocol + "//" + window.location.host 
+	var strSede = hostname + "/cabin-web/sede/"+idSede+"/user";
+	var employee, email;
+	$.ajax({
+		async:false,
+	    url:strSede,
+	    crossDomain: true,
+	    dataType: "json",
+	    success: function (json) {
+	    	email = json.name;
+	    },
+	    error: function (xhr, status) {    	
+	    	console.log("Error, su solicitud no pudo ser atendida");
+	    }
+	});
+	var strUrl = hostname + "/cabin-web/empleado/search/findByEmail?email=" + email;
+	$.ajax({
+		async:false,
+	    url:strUrl,
+	    crossDomain: true,
+	    dataType: "json",
+	    success: function (json) {
+	    	$.each(json._embedded.empleado, function(index, value) {	
+	    		employee = value.name;
+	    	});
+	    },
+	    error: function (xhr, status) {    	
+	    	console.log("Error, su solicitud no pudo ser atendida");
+	    }
+	});
+	console.log("Valor del empleado: " + employee);
+	sedes.push({
+		id: idSede,
+		name: name,
+		address: address,
+		employee: employee,		
+	});
+}
+
+
+
 function fillArraySede(){
 	var length = sedes.length;
 	sedes.splice(0, length);
@@ -964,13 +1502,32 @@ function fillArraySede(){
 	    	$.each(json._embedded.sede, function(index, value) {		    		
 	    		var hrefArray = value._links.self.href.split("/");
 		    	var idSede = hrefArray[hrefArray.length -1];
-				sedes.push({
-					id: idSede,
-					name: value.name,
-					address: value.address
-				});
+		    	fillSede(idSede, value.name, value.address)				
 			});
 	    	fillSedetbl();		    	
+	    },
+	    error: function (xhr, status) {    	
+	    	console.log("Error, su solicitud no pudo ser atendida");
+	    }
+	});	
+}
+
+function fillArrayCliente(){
+	var length = clientes.length;
+	sedes.splice(0, length);
+	var strUrl = window.location.protocol + "//" + window.location.host + "/cabin-web/cliente/";
+	$.ajax({
+	    url:strUrl,
+	    crossDomain: true,
+	    dataType: "json",
+	    success: function (json) {
+	    	$.each(json._embedded.cliente, function(index, value) {		    		
+	    		var hrefArray = value._links.self.href.split("/");
+		    	var idCliente = hrefArray[hrefArray.length -1];
+		    	fillCliente(idCliente, value.name, value.email, 
+		    			value.gender, value.birthDate, value.balance, value.points);				
+			});
+	    	fillClientetbl();		    	
 	    },
 	    error: function (xhr, status) {    	
 	    	console.log("Error, su solicitud no pudo ser atendida");
@@ -1039,7 +1596,8 @@ function fillArrayNivel(){
 	niveles.splice(0, length);
 	var strUrl = window.location.protocol + "//" + window.location.host + "/cabin-web/nivel/";
 	var ulRegla = $("#regla_nivel");
-	var line = "";
+	var ulCustomer = $("#nivelCustomer");
+	var line = ""; 
 	$.ajax({
 	    url:strUrl,
 	    crossDomain: true,
@@ -1048,7 +1606,7 @@ function fillArrayNivel(){
 	    	$.each(json._embedded.nivel, function(index, value) {		    		
 	    		var hrefArray = value._links.self.href.split("/");
 		    	var idNivel = hrefArray[hrefArray.length -1];
-		    	line += "<li><a href='/' onclick='return false;'>"+value.name+"</a></li>";		    	
+		    	line += "<li><a href='/' onclick='return false;'>"+value.name+"</a></li>";
 				niveles.push({
 					id: idNivel,
 					name: value.name,
@@ -1064,6 +1622,7 @@ function fillArrayNivel(){
 	    },
 	    complete: function (){
 	    	ulRegla.html(line);
+	    	ulCustomer.html(line);
 	    }
 	});
 }
@@ -1117,6 +1676,82 @@ function fillStatus( ){
 	});
 }
 
+function fillOperarios( ){
+	var strUrl = window.location.protocol + "//" + window.location.host + "/cabin-web/usuario/";		
+	$.ajax({
+		async: false,
+	    url:strUrl,
+	    crossDomain: true,
+	    dataType: "json",
+	    success: function (json) {
+	    	$.each(json._embedded.usuario, function(index, value) {		    		
+	    		var hrefArray = value._links.self.href.split("/");
+	    		var idUser = hrefArray[hrefArray.length -1];
+	    		var email = value.name;
+	    		console.log("Entro al primer usuario" + idUser + " correo: " + email);
+	    		completeOperario(idUser, email);
+			});	    			    	
+	    },
+	    error: function (xhr, status) {    	
+	    	console.log("Error, su solicitud no pudo ser atendida");
+	    }
+	});
+}
+
+function completeOperario( idUser, email ){
+	var strUrl = window.location.protocol + "//" + window.location.host + "/cabin-web/usuario/"+ idUser + "/profile";		
+	$.ajax({
+		async: false,
+	    url:strUrl,
+	    crossDomain: true,
+	    dataType: "json",
+	    success: function (json) {	    	
+    		var hrefArray = json._links.self.href.split("/");
+    		var idProfile = hrefArray[hrefArray.length -1];
+    		console.log("Entro al profile de id " + idProfile);
+    		if ( idProfile == "1")	    			
+    			completeOperarioName(idUser, email);			   			    	
+	    },
+	    error: function (xhr, status) {    	
+	    	console.log("Error, su solicitud no pudo ser atendida");
+	    }
+	});
+}
+
+function completeOperarioName( idUser, email){
+	var hostname = window.location.protocol + "//" + window.location.host;
+	var strUrl = hostname + "/cabin-web/empleado/search/findByEmail?email=" + email;
+	var ulOperario = $("#operario");
+	var line = "";
+	$.ajax({
+		async: false,
+		type: "GET",
+	    url:strUrl,
+	    crossDomain: true,
+	    dataType: "json",	     
+	    success: function (json) {
+	    	$.each(json._embedded.empleado, function(index, value) {		
+	    		console.log("Entro al empleado x usuario " + value.name );
+	    		operarios.push({
+	    			id : idUser,
+	    			name: value.name
+	    		});
+	    		line += "<li><a href='/' onclick='return false;'>"+value.name+"</a></li>";
+		    	//var operarioHtml = $("#operario");
+		    	//$(operarioHtml).parents(".dropdown").find('.btn').html(value.name + ' <span class="caret"></span>');
+		    	//$(operarioHtml).parents(".dropdown").find('.btn').attr('value', idUser);
+	    	});
+	    },
+	    error: function (xhr, status) {	    	
+	    	console.log("Error, su solicitud no pudo ser atendida");
+	    },
+	    complete: function (){
+	    	ulOperario.html(line);
+	    }
+	});
+		    			
+}
+
 function associateStatus( code, idStatus, idNivel, newRegla ) {
 	var strUrlStatus = window.location.protocol + "//" + window.location.host + "/cabin-web/estado/" + idStatus;
 	var strUrlNivel = window.location.protocol + "//" + window.location.host + "/cabin-web/nivel/" + idNivel;
@@ -1157,6 +1792,30 @@ function associateStatus( code, idStatus, idNivel, newRegla ) {
 	});	
 }
 
+function associateUser( idSede, idUser, newSede){
+	var strUrlUser = window.location.protocol + "//" + window.location.host + "/cabin-web/usuario/" + idUser;
+	var strUrlSede = window.location.protocol + "//" + window.location.host + "/cabin-web/sede/"+idSede+"/user";
+	$.ajax({
+		async: false,
+		type: "PUT",
+	    url:strUrlSede,			
+	    data: strUrlUser, 
+	    contentType: 'text/uri-list',
+	    success: function (data) {
+	    	console.log("Se asigno usuario" + idUser + " a sede " + idSede);
+	    },
+	    error: function (xhr, status) {	    	
+	    	console.log("Error, su solicitud no pudo ser atendida");
+	    },
+	    complete: function () {	    		
+	    	if (newSede === 1){			    		
+	    		fillArraySede();
+	    	}
+	    }
+	});	
+}
+
+
 $(document).on("click", "#regla_nivel li a", function(){
 	console.log("Entro aqui: " + $(this).text() );
 	var level = $(this).text();
@@ -1166,6 +1825,29 @@ $(document).on("click", "#regla_nivel li a", function(){
 	var length = niveles.length;
 	for ( i = 0; i< length ; i++){
 		if (level == niveles[i].name.toLowerCase() ){ $(this).parents(".dropdown").find('.btn').val(niveles[i].id);}
+	}	
+} )
+
+$(document).on("click", "#nivelCustomer li a", function(){
+	console.log("Entro aqui: " + $(this).text() );
+	var level = $(this).text();
+	level = level.toLowerCase();
+	$(this).parents(".dropdown").find('.btn').html($(this).text() + ' <span class="caret"></span>');
+	  //Correr el arreglo paui-state-highlightra ver cual es el id y nombre correo del nivel
+	var length = niveles.length;
+	for ( i = 0; i< length ; i++){
+		if (level == niveles[i].name.toLowerCase() ){ $(this).parents(".dropdown").find('.btn').val(niveles[i].id);}
+	}	
+} )
+
+$(document).on("click", "#operario li a", function(){
+	console.log("Entro aqui: " + $(this).text() );
+	var operario = $(this).text();
+	operario = operario.toLowerCase();
+	$(this).parents(".dropdown").find('.btn').html($(this).text() + ' <span class="caret"></span>');	  
+	var length = operarios.length;
+	for ( i = 0; i< length ; i++){
+		if (operario == operarios[i].name.toLowerCase() ){ $(this).parents(".dropdown").find('.btn').val(operarios[i].id);}
 	}	
 } )
 
@@ -1256,7 +1938,7 @@ function addRegla() {
 	valid = valid && checkRequired( $("#nameReglaPunt"), "Debe ingresar el nombre de la regla de puntuación.",1, reglaValidation);
 	valid = valid && checkRegexp( $("#nameReglaPunt"), /.+/i, "El nombre de la regla de puntación no es válido.",  reglaValidation);	
 	valid = valid && checkRegexp( $("#rechargingFraction"), /^[0-9]\d{0,3}($|\.\d{0,2}$)/i, "Debe ingresar ingresar un monto válido, no mayor de 999.99 soles y de dos decimales.", reglaValidation);	
-	valid = valid && checkRegexp( $("#pointsReglaPunt"), /^[1-9]\d{0,5}$/i, "Debe ingresar una cantidad  de puntos no mayor de 999 999, valor entero.", reglaValidation);
+	valid = valid && checkRegexp( $("#pointsReglaPunt"), /^[0-9]\d{0,5}$/i, "Debe ingresar una cantidad  de puntos no mayor de 999 999, valor entero.", reglaValidation);
 	var statusHtml = $("#status li a");
 	var regla_nivelHtml = $("#regla_nivel li a");	
 	statusHtml = $(statusHtml).parents(".dropdown").find('.btn');
@@ -1272,7 +1954,7 @@ function addNivel() {
 	$("*").removeClass( "ui-state-error");
 	valid = valid && checkRequired( $("#nameNivel"), "Debe ingresar el nombre del nivel.",1, nivelValidation);
 	valid = valid && checkRegexp( $("#nameNivel"), /.+/i, "El nombre ingresado para el nivel no es válido.",  nivelValidation);
-	valid = valid && checkRegexp( $("#initialPoints"), /^[1-9]\d{0,5}$/i, "Debe ingresar una cantidad de puntos no mayor de 999 999, valor entero.", nivelValidation);
+	valid = valid && checkRegexp( $("#initialPoints"), /^[0-9]\d{0,5}$/i, "Debe ingresar una cantidad de puntos no mayor de 999 999, valor entero.", nivelValidation);
 	valid = valid && checkRegexp( $("#finalPoints"), /^[1-9]\d{0,5}$/i, "Debe ingresar una cantidad de puntos no mayor de 999 999, valor entero.", nivelValidation);
 	valid = valid && checkRequired( $("#question"), "Debe ingresar una pregunta.",1, nivelValidation);
 	valid = valid && checkRegexp( $("#question"), /.+/i, "La pregunta ingresada para el nivel no es válida.",  nivelValidation);
@@ -1299,6 +1981,33 @@ function addPremio() {
 	valid = valid && checkRegexp( $("#namePrize"), /.+/i, "El nombre ingresado para el premio no es válido.",  premioValidation);
 	valid = valid && checkRegexp( $("#pointsPrize"), /^[1-9]\d{0,5}$/i, "Debe ingresar una cantidad de puntos no mayor de 999 999, valor entero.", premioValidation);
 	valid = valid && checkRegexp( $("#balanceFraction"), /^[0-9]\d{0,3}($|\.\d{0,2}$)/i, "Debe ingresar ingresar un monto válido, no mayor de 999.99 soles y de dos decimales.", premioValidation);		
+	return valid;
+}
+
+function addCliente() {
+	var valid = true;
+	$("*").removeClass( "ui-state-error");
+	valid = valid && checkRequired( $("#nameCustomer"), "Debe ingresar el nombre del cliente.",1, clienteValidation);
+	valid = valid && checkRegexp( $("#nameCustomer"), /.+/i, "El nombre ingresado no es válido.",  clienteValidation);	
+	valid = valid && checkRequired( $("#birthDateCustomer"), "Debe ingresar la fecha de nacimiento del cliente",1, clienteValidation);	
+	var genderHtml = $("#genderCustomer li a");		
+	genderHtml = $(genderHtml).parents(".dropdown").find('.btn');
+	valid = valid && checkRequired( genderHtml, "Debe seleccionar un género.",1, clienteValidation);	
+	valid = valid && checkRequired($("#emailCustomer"),"Debe ingresar un email.",1, clienteValidation);
+	valid = valid && checkRegexp( $("#emailCustomer"), /^([\w-\.]+@([\w-]+\.)+[\w-]{2,4})?$/i , "El email ingresado no es válido.", clienteValidation );
+	valid = valid && checkRegexp( $("#pointsCustomer"), /^[0-9]\d{0,5}$/i, "Debe ingresar una cantidad de puntos no mayor de 999 999, valor entero.", clienteValidation);
+	valid = valid && checkRegexp( $("#balanceCustomer"), /^[0-9]\d{0,3}($|\.\d{0,2}$)/i, "Debe ingresar ingresar un monto válido, no mayor de 999.99 soles y de dos decimales.", clienteValidation);
+	valid = valid && checkRequired( $("#passwordCustomer"), "Debe ingresar una contraseña.",1, clienteValidation);
+	valid = valid && checkRegexp( $("#passwordCustomer"), /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?!.*\s).{4,20}$/, "La contraseña debe contener al menos una letra minúscula, una mayúscula, un dígito. Mínimo cuatro caracteres y máximo, viente.", clienteValidation );
+	valid = valid && checkRequired( $("#confirmPasswordCustomer"), "Debe confirmar su contraseña.",1, clienteValidation);
+	valid = valid && checkRegexp( $("#confirmPasswordCustomer"), /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?!.*\s).{4,20}$/, "La contraseña debe contener al menos una letra minúscula, una mayúscula, un dígito. Mínimo cuatro caracteres y máximo, veinte.", clienteValidation );
+	valid = valid && checkPassword($("#passwordCustomer"), $("#confirmPasswordCustomer"), "Las contraseñas no coinciden",  clienteValidation);	
+	var nivelCustomerHtml = $("#nivelCustomer li a");	
+	nivelCustomerHtml = $(nivelCustomerHtml).parents(".dropdown").find('.btn');
+	valid = valid && checkRequired( nivelCustomerHtml, "Debe seleccionar un nivel.",1, clienteValidation);
+	var statusHtml = $("#statusCustomer li a");		
+	statusHtml = $(statusHtml).parents(".dropdown").find('.btn');
+	valid = valid && checkRequired( statusHtml, "Debe seleccionar un estado.",1, clienteValidation);
 	return valid;
 }
 
@@ -1329,4 +2038,14 @@ function dateSort() {
              daysTarifa[j] = temp;
          }
      }
+}
+function checkPassword( ps1, ps2, cad, div) {
+	  if ( ps1.val() != ps2.val() ) {
+	    ps1.addClass( "ui-state-error" );
+	    ps2.addClass( "ui-state-error" );
+	    updateTips( cad, div);
+	    return false;
+	  } else {
+	    return true;
+	  }
 }
