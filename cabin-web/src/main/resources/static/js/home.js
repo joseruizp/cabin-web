@@ -139,6 +139,7 @@ map = {
 		fillStatus();
 		fillOperarios();
 		fillArrayCliente();
+		fillArrayEmpleado();
 		//Sede save - update
 		$( "#form-sede" ).submit(function( event ) {
 			event.preventDefault();
@@ -218,6 +219,19 @@ map = {
 				}
 			}
 		});
+		//Empleado save - update
+		$( "#form-empleado" ).submit(function( event ) {
+			event.preventDefault();
+			if ( addEmpleado() ){
+				var idEmpleado = $("#idEmpleado").attr("value");
+				if (idEmpleado !== ""){
+					fnOpenEditDialog(7);
+				}
+				else{
+					saveEmpleado();
+				}
+			}
+		});
 		
 		 $( '#daysMenu a' ).on( 'click', function( event ) {
 		    var $target = $( event.currentTarget ),
@@ -289,6 +303,44 @@ function fillClientetbl(){
 	    tr.find('td:last').after(edit); tr.find('td:last').after(remove);
     });
 }
+
+function fillEmpleadotbl(){
+	var size = empleados.length;
+	var j = 0;
+    var t = $('#empleadoTbl').DataTable();
+    var date;
+    t.clear();
+	for(i=0; i<size;i++){
+		if ( jQuery.type( empleados[i].birthDate ) === "date" ){ 
+			var daclientesy = (empleados[i].birthDate).getDate();
+			var month = (empleados[i].birthDate).getMonth() + 1;
+			var year = (empleados[i].birthDate).getFullYear();
+			date = ""+ day +"-"+month+"-"+year;
+		}
+		else{
+			var arrayDate = empleados[i].birthDate.substring(0, 10).split("-");
+			date = ""+ arrayDate[2] +"-"+arrayDate[1]+"-"+arrayDate[0];
+		} 
+		t.row.add( [
+                empleados[i].id,
+                empleados[i].name,
+                empleados[i].email,
+                empleados[i].gender,
+                date,
+                empleados[i].estado,
+                "",
+                "",
+        ] ).draw( false );
+	};
+    $('#empleadoTbl > tbody  > tr').each(function() {
+	    var edit = "<td><a onclick='editCliente("+ empleados[j].id +","+ j+")'><i class='fa fa-pencil icons' title='Editar'></i></a></td>";
+	    var remove = "<td><a onclick='fnOpenCloseDialog(7, "+ empleados[j].id +","+ j+")'><i class='fa fa-trash icons' title='Eliminar'></i></a></td>";	    
+	    j++; 
+	    var tr = $(this);	    
+	    tr.find('td:last').after(edit); tr.find('td:last').after(remove);
+    });
+}
+
 
 function fillSedetbl(  ){
 	var size = sedes.length;
@@ -1160,6 +1212,33 @@ function fillCliente(idCliente, name, email, gender, birthDate, balance, points)
 	});
 }
 
+function fillEmpleado(idEmpleado, name, email, gender, birthDate){
+	var hostname = window.location.protocol + "//" + window.location.host 
+	var level, status;	
+	var strUrl = hostname + "/cabin-web/cliente/"+idCliente+"/status";
+	$.ajax({
+		async:false,
+	    url:strUrl,
+	    crossDomain: true,
+	    dataType: "json",
+	    success: function (json) {
+	    	status = json.name;
+	    },
+	    error: function (xhr, status) {    	
+	    	console.log("Error, su solicitud no pudo ser atendida");
+	    }
+	});	
+	empleados.push({
+		id: idCliente,
+		name: name,
+		email: email,
+		gender: gender,
+		birthDate: birthDate,
+		estado: status,		
+	});
+}
+
+
 function saveCliente(){
 	var hostname = window.location.protocol + "//" + window.location.host;
 	var idCustomer = $("#idCliente").attr("value");
@@ -1536,6 +1615,32 @@ function fillArrayCliente(){
 	    }
 	});	
 }
+
+
+function fillArrayEmpleado(){
+	var length = empleados.length;
+	sedes.splice(0, length);
+	var strUrl = window.location.protocol + "//" + window.location.host + "/cabin-web/empelado/";
+	$.ajax({
+	    url:strUrl,
+	    crossDomain: true,
+	    dataType: "json",
+	    success: function (json) {
+	    	$.each(json._embedded.empleado, function(index, value) {		    		
+	    		var hrefArray = value._links.self.href.split("/");
+		    	var idEmpleado = hrefArray[hrefArray.length -1];
+		    	fillEmpleado(idEmpleado, value.name, value.email, 
+		    			value.gender, value.birthDate);				
+			});
+	    	fillEmpleadotbl();		    	
+	    },
+	    error: function (xhr, status) {    	
+	    	console.log("Error, su solicitud no pudo ser atendida");
+	    }
+	});	
+}
+
+
 
 function fillArrayTarifa(){
 	var length = tarifas.length;
@@ -2013,6 +2118,29 @@ function addCliente() {
 	return valid;
 }
 
+function addEmpleado() {
+	var valid = true;
+	$("*").removeClass( "ui-state-error");
+	valid = valid && checkRequired( $("#nameEmployee"), "Debe ingresar el nombre del empleado.",1, empleadoValidation);
+	valid = valid && checkRegexp( $("#nameEmployee"), /.+/i, "El nombre ingresado no es válido.",  empleadoValidation);	
+	valid = valid && checkRequired( $("#birthDateEmployee"), "Debe ingresar la fecha de nacimiento del empleado",1, empleadoValidation);	
+	var genderHtml = $("#genderEmployee li a");		
+	genderHtml = $(genderHtml).parents(".dropdown").find('.btn');
+	valid = valid && checkRequired( genderHtml, "Debe seleccionar un género.",1, empleadoValidation);	
+	valid = valid && checkRequired($("#emailEmployee"),"Debe ingresar un email.",1, empleadoValidation);
+	valid = valid && checkRegexp( $("#emailEmployee"), /^([\w-\.]+@([\w-]+\.)+[\w-]{2,4})?$/i , "El email ingresado no es válido.", empleadoValidation );
+	valid = valid && checkRegexp( $("#pointsEmployee"), /^[0-9]\d{0,5}$/i, "Debe ingresar una cantidad de puntos no mayor de 999 999, valor entero.", empleadoValidation);
+	valid = valid && checkRegexp( $("#balanceEmployee"), /^[0-9]\d{0,3}($|\.\d{0,2}$)/i, "Debe ingresar ingresar un monto válido, no mayor de 999.99 soles y de dos decimales.", empleadoValidation);
+	valid = valid && checkRequired( $("#passwordEmployee"), "Debe ingresar una contraseña.",1, empleadoValidation);
+	valid = valid && checkRegexp( $("#passwordEmployee"), /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?!.*\s).{4,20}$/, "La contraseña debe contener al menos una letra minúscula, una mayúscula, un dígito. Mínimo cuatro caracteres y máximo, viente.", empleadoValidation );
+	valid = valid && checkRequired( $("#confirmPasswordEmployee"), "Debe confirmar su contraseña.",1, empleadoValidation);
+	valid = valid && checkRegexp( $("#confirmPasswordEmployee"), /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?!.*\s).{4,20}$/, "La contraseña debe contener al menos una letra minúscula, una mayúscula, un dígito. Mínimo cuatro caracteres y máximo, veinte.", empleadoValidation );
+	valid = valid && checkPassword($("#passwordEmployee"), $("#confirmPasswordEmployee"), "Las contraseñas no coinciden",  empleadoValidation);	
+	var statusHtml = $("#statusEmployee li a");		
+	statusHtml = $(statusHtml).parents(".dropdown").find('.btn');
+	valid = valid && checkRequired( statusHtml, "Debe seleccionar un estado.",1, empleadoValidation);
+	return valid;
+}
 
 function isValidRange(startPoint, endPoint, boundLower, boundUpper){
 	var valid = true;
