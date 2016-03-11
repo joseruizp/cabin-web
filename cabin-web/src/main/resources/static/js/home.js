@@ -2,7 +2,7 @@
  * Author URI:http://webthemez.com
  * License: Creative Commons Attribution 3.0 License (https://creativecommons.org/licenses/by/3.0/)
  */
-estados = []; tipo_doc = []; 
+estados = []; tipo_doc = []; perfiles = []; 
 operarios = []; clientes = [];
 sedes = []; sedeIndex = -1;
 tarifas = []; tarifaIndex = -1;
@@ -138,9 +138,10 @@ map = {
 		fillArrayPremio();
 		fillStatus();
 		fillDocTypes();
+		fillProfiles();
 		fillOperarios();
 		fillArrayCliente();
-		fillArrayEmpleado();
+		fillArrayEmpleado();		
 		//Sede save - update
 		$( "#form-sede" ).submit(function( event ) {
 			event.preventDefault();
@@ -1829,7 +1830,9 @@ function fillStatus( ){
 	});
 }
 function fillDocTypes( ){
-	var strUrl = window.location.protocol + "//" + window.location.host + "/cabin-web/tipo_documento/";		
+	var strUrl = window.location.protocol + "//" + window.location.host + "/cabin-web/tipo_documento/";
+	var ulDocType = $("#docType");
+	var line = "";
 	$.ajax({
 	    url:strUrl,
 	    crossDomain: true,
@@ -1842,13 +1845,52 @@ function fillDocTypes( ){
 					id: idTipoDocumento,
 					name: value.name,					
 				});
+	    		line += "<li><a href='/' onclick='return false;'>"+value.name+"</a></li>";
 			});	    			    	
 	    },
 	    error: function (xhr, status) {    	
 	    	console.log("Error, su solicitud no pudo ser atendida");
+	    },
+	    complete: function (){
+	    	ulDocType.html(line);
 	    }
-	});
+	});	
+	
+	
 }
+
+function fillProfiles( ){
+	var strUrl = window.location.protocol + "//" + window.location.host + "/cabin-web/perfil/";
+	var ulProfileEmployee = $("#profileEmployee");
+	var line = "";
+	$.ajax({
+	    url:strUrl,
+	    crossDomain: true,
+	    dataType: "json",
+	    success: function (json) {
+	    	$.each(json._embedded.perfil, function(index, value) {		    		
+	    		var hrefArray = value._links.self.href.split("/");
+	    		var idPerfil = hrefArray[hrefArray.length -1];
+	    		if ( idPerfil != 3){
+	    			perfiles.push({
+						id: idPerfil,
+						name: value.name,					
+					});
+		    		line += "<li><a href='/' onclick='return false;'>"+value.name+"</a></li>";
+	    		}	    		
+			});	    			    	
+	    },
+	    error: function (xhr, status) {    	
+	    	console.log("Error, su solicitud no pudo ser atendida");
+	    },
+	    complete: function (){
+	    	ulProfileEmployee.html(line);
+	    }
+	});	
+	
+	
+}
+
 
 function fillOperarios( ){
 	var strUrl = window.location.protocol + "//" + window.location.host + "/cabin-web/usuario/";		
@@ -1988,6 +2030,32 @@ function associateUser( idSede, idUser, newSede){
 	    }
 	});	
 }
+
+
+$(document).on("click", "#typeDoc li a", function(){
+	console.log("Entro aqui: " + $(this).text() );
+	var typeDoc = $(this).text();
+	typeDoc = typeDoc.toLowerCase();
+	$(this).parents(".dropdown").find('.btn').html($(this).text() + ' <span class="caret"></span>');
+	  //Correr el arreglo paui-state-highlightra ver cual es el id y nombre correo del nivel
+	var length = tipo_doc.length;
+	for ( i = 0; i< length ; i++){
+		if (typeDoc == tipo_doc[i].name.toLowerCase() ){ $(this).parents(".dropdown").find('.btn').val(tipo_doc[i].id); break;}
+	}	
+} )
+
+
+$(document).on("click", "#profileEmployee li a", function(){
+	console.log("Entro aqui: " + $(this).text() );
+	var profileEmployee = $(this).text();
+	profileEmployee = profileEmployee.toLowerCase();
+	$(this).parents(".dropdown").find('.btn').html($(this).text() + ' <span class="caret"></span>');
+	  //Correr el arreglo paui-state-highlightra ver cual es el id y nombre correo del nivel
+	var length = tipo_doc.length;
+	for ( i = 0; i< length ; i++){
+		if (profileEmployee == tipo_doc[i].name.toLowerCase() ){ $(this).parents(".dropdown").find('.btn').val(tipo_doc[i].id); break;}
+	}	
+} )
 
 
 $(document).on("click", "#regla_nivel li a", function(){
