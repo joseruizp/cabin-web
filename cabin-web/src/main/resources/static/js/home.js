@@ -2,7 +2,7 @@
  * Author URI:http://webthemez.com
  * License: Creative Commons Attribution 3.0 License (https://creativecommons.org/licenses/by/3.0/)
  */
-estados = []; tipo_doc = [];
+estados = []; tipo_doc = []; 
 operarios = []; clientes = [];
 sedes = []; sedeIndex = -1;
 tarifas = []; tarifaIndex = -1;
@@ -137,6 +137,7 @@ map = {
 		fillArrayNivel();
 		fillArrayPremio();
 		fillStatus();
+		fillDocTypes();
 		fillOperarios();
 		fillArrayCliente();
 		fillArrayEmpleado();
@@ -327,6 +328,9 @@ function fillEmpleadotbl(){
                 empleados[i].email,
                 empleados[i].gender,
                 date,
+                empleados[i].docTypeName, 
+                empleados[i].docCode,
+                empleados[i].perfil,
                 empleados[i].estado,
                 "",
                 "",
@@ -1212,10 +1216,10 @@ function fillCliente(idCliente, name, email, gender, birthDate, balance, points)
 	});
 }
 
-function fillEmpleado(idEmpleado, name, email, gender, birthDate){
+function fillEmpleado(idEmpleado, name, email, gender, birthDate, docType, docCode, docName){
 	var hostname = window.location.protocol + "//" + window.location.host 
-	var level, status;	
-	var strUrl = hostname + "/cabin-web/cliente/"+idCliente+"/status";
+	var level, status, profile;	
+	var strUrl = hostname + "/cabin-web/empleado/"+idEmpleado+"/status";
 	$.ajax({
 		async:false,
 	    url:strUrl,
@@ -1228,13 +1232,47 @@ function fillEmpleado(idEmpleado, name, email, gender, birthDate){
 	    	console.log("Error, su solicitud no pudo ser atendida");
 	    }
 	});	
+	var idUser;
+	strUrl = hostname + "/cabin-web/empleado/"+idEmpleado+"/user";
+	$.ajax({
+		async:false,
+	    url:strUrl,
+	    crossDomain: true,
+	    dataType: "json",
+	    success: function (json) {
+	    	var hrefArray = json._links.self.href.split("/");
+	    	idUser = hrefArray[hrefArray.length -1];	
+	    },
+	    error: function (xhr, status) {    	
+	    	console.log("Error, su solicitud no pudo ser atendida");
+	    }
+	});
+	
+	strUrl = hostname + "/cabin-web/usuario/"+idUser+"/profile";
+	$.ajax({
+		async:false,
+	    url:strUrl,
+	    crossDomain: true,
+	    dataType: "json",
+	    success: function (json) {
+	    	profile = json.name;
+	    },
+	    error: function (xhr, status) {    	
+	    	console.log("Error, su solicitud no pudo ser atendida");
+	    }
+	});	
+	
 	empleados.push({
-		id: idCliente,
+		id: idEmpleado,
 		name: name,
 		email: email,
 		gender: gender,
+		docType: docType,
+		docTypeName: docName,
+		docCode: docCode,
 		birthDate: birthDate,
-		estado: status,		
+		estado: status,
+		perfil: profile,		 
 	});
 }
 
@@ -1620,7 +1658,8 @@ function fillArrayCliente(){
 function fillArrayEmpleado(){
 	var length = empleados.length;
 	sedes.splice(0, length);
-	var strUrl = window.location.protocol + "//" + window.location.host + "/cabin-web/empelado/";
+	var strUrl = window.location.protocol + "//" + window.location.host + "/cabin-web/empleado/";
+	var docName;
 	$.ajax({
 	    url:strUrl,
 	    crossDomain: true,
@@ -1629,8 +1668,15 @@ function fillArrayEmpleado(){
 	    	$.each(json._embedded.empleado, function(index, value) {		    		
 	    		var hrefArray = value._links.self.href.split("/");
 		    	var idEmpleado = hrefArray[hrefArray.length -1];
+		    	var length = tipo_doc.length; 
+		    	for ( i = 0; i < length; i++){
+		    		if ( value.docType == tipo_doc[i].id){
+		    			docName = tipo_doc[i].name;
+		    			break;
+		    		}
+		    	}
 		    	fillEmpleado(idEmpleado, value.name, value.email, 
-		    			value.gender, value.birthDate);				
+		    			value.gender, value.birthDate, value.docType, value.docCode, docName);				
 			});
 	    	fillEmpleadotbl();		    	
 	    },
@@ -1773,6 +1819,27 @@ function fillStatus( ){
 	    		var idStatus = hrefArray[hrefArray.length -1];
 	    		estados.push({
 					id: idStatus,
+					name: value.name,					
+				});
+			});	    			    	
+	    },
+	    error: function (xhr, status) {    	
+	    	console.log("Error, su solicitud no pudo ser atendida");
+	    }
+	});
+}
+function fillDocTypes( ){
+	var strUrl = window.location.protocol + "//" + window.location.host + "/cabin-web/tipo_documento/";		
+	$.ajax({
+	    url:strUrl,
+	    crossDomain: true,
+	    dataType: "json",
+	    success: function (json) {
+	    	$.each(json._embedded.tipo_documento, function(index, value) {		    		
+	    		var hrefArray = value._links.self.href.split("/");
+	    		var idTipoDocumento = hrefArray[hrefArray.length -1];
+	    		tipo_doc.push({
+					id: idTipoDocumento,
 					name: value.name,					
 				});
 			});	    			    	
