@@ -338,7 +338,7 @@ function fillEmpleadotbl(){
         ] ).draw( false );
 	};
     $('#empleadoTbl > tbody  > tr').each(function() {
-	    var edit = "<td><a onclick='editCliente("+ empleados[j].id +","+ j+")'><i class='fa fa-pencil icons' title='Editar'></i></a></td>";
+	    var edit = "<td><a onclick='editEmpleado("+ empleados[j].id +","+ j+")'><i class='fa fa-pencil icons' title='Editar'></i></a></td>";
 	    var remove = "<td><a onclick='fnOpenCloseDialog(7, "+ empleados[j].id +","+ j+")'><i class='fa fa-trash icons' title='Eliminar'></i></a></td>";	    
 	    j++; 
 	    var tr = $(this);	    
@@ -985,6 +985,53 @@ function deletePremio( code, index ){
 	    }
 	});			
 }
+
+function deleteCliente( code, index ){
+	var hostname = window.location.protocol + "//" + window.location.host;
+	var strUrlStatus = window.location.protocol + "//" + window.location.host + "/cabin-web/estado/" + 2;
+	var strUrlCustomer = window.location.protocol + "//" + window.location.host + "/cabin-web/cliente/"+code+"/status";
+	//Solo para cliente	
+	$.ajax({
+		async: false,
+		type: "PUT",
+	    url:strUrlCustomer,			
+	    data: strUrlStatus, 
+	    contentType: 'text/uri-list',
+	    success: function (data) {
+	    	console.log("Se asigno estado a cliente" + code);
+	    	clientes[index].estado = "Inactivo";
+	    	fillClientetbl();
+	    },
+	    error: function (xhr, status) {	    	
+	    	console.log("Error, su solicitud no pudo ser atendida");
+	    }	    
+	});	
+	
+}
+
+function deleteEmpleado( code, index ){
+	var hostname = window.location.protocol + "//" + window.location.host;
+	var strUrlStatus = window.location.protocol + "//" + window.location.host + "/cabin-web/estado/" + 2;
+	var strUrlEmployee = window.location.protocol + "//" + window.location.host + "/cabin-web/empleado/"+code+"/status";
+	//Solo para cliente	
+	$.ajax({
+		async: false,
+		type: "PUT",
+	    url:strUrlEmployee,			
+	    data: strUrlStatus, 
+	    contentType: 'text/uri-list',
+	    success: function (data) {
+	    	console.log("Se asigno estado a empleado" + code);
+	    	empleados[index].estado = "Inactivo";
+	    	fillEmpleadotbl();
+	    },
+	    error: function (xhr, status) {	    	
+	    	console.log("Error, su solicitud no pudo ser atendida");
+	    }	    
+	});	
+	
+}
+
 function savePremio(){
 	var idPremio = $("#idPremio").attr("value");
 	console.log("Inside form-premio " + idPremio);
@@ -1050,12 +1097,11 @@ function fnOpenCloseDialog(val, code, index) {
 	                	deleteNivel(code, index);
 	                }else if (val == '5'){
 	                	deletePremio(code, index);
-	                }
-	                //else if (val == '6'){
-	                //	deleteCliente(code, index);
-	                //}else if (val == '7'){
-	                //	deleteEmpleado(code, index);
-	                //}  
+	                }else if (val == '6'){
+	                	deleteCliente(code, index);
+	                }else if (val == '7'){
+	                	deleteEmpleado(code, index);
+	                }  
 	                
 	         	}, "class":"btn btn-default",
 	        },
@@ -1095,10 +1141,9 @@ function fnOpenEditDialog(val) {
 	                	savePremio();
 	                }else if (val == '6'){
 	                	saveCliente();
+	                }else if (val == '7'){
+	                	saveEmpleado();
 	                }
-	                //else if (val == '7'){
-	                //	saveEmpleado();
-	                //}
 	            }, "class":"btn btn-default",
 	         },
 	         "2":
@@ -1496,7 +1541,7 @@ function editCliente( code, index ){
 			var birthDate = arrayDate[2]+"/" + arrayDate[1]+"/" + arrayDate[0];
 			$("#birthDateCustomer").val(birthDate);			
 			$("#idCliente").attr('value', idCliente);
-			$("#btnSede").html("Actualizar Sede");	
+			$("#btnCliente").html("Actualizar Cliente");	
 			var genderHtml = $("#genderCustomer li a");
 			if ( json.gender == "M"){
 				genderHtml.parents(".dropdown").find('.btn').html( 'Male <span class="caret"></span>');				
@@ -1567,6 +1612,112 @@ function editCliente( code, index ){
 	});	
 	
 }
+
+
+function editEmpleado( code, index ){
+	var hostname = window.location.protocol + "//" + window.location.host;
+	var strUrl = hostname + "/cabin-web/empleado/" + code;
+	empleadoIndex = index;
+	$.ajax({
+		async:false,
+	    url:strUrl,
+	    crossDomain: true,
+	    dataType: "json",
+	    success: function (json) {
+	    	var hrefArray = json._links.self.href.split("/");
+	    	var idEmployee = hrefArray[hrefArray.length -1];
+	    	$( "#nameEmployee" ).val(json.name);
+			$( "#emailEmployee" ).val(json.email);
+			$( "#docCode" ).val(json.docCode);			
+			var date = json.birthDate.substring(0,10);
+			var arrayDate = date.split("-");
+			var birthDate = arrayDate[2]+"/" + arrayDate[1]+"/" + arrayDate[0];
+			$("#birthDateEmployee").val(birthDate);			
+			$("#idEmployee").attr('value', idEmployee);
+			$("#btnEmpleado").html("Actualizar Empleado");	
+			var genderHtml = $("#genderEmployee li a");
+			if ( json.gender == "M"){
+				genderHtml.parents(".dropdown").find('.btn').html( 'Male <span class="caret"></span>');				
+				genderHtml.parents(".dropdown").find('.btn').val("M");				
+			}
+			else{
+				genderHtml.parents(".dropdown").find('.btn').html( 'Female <span class="caret"></span>');				
+				genderHtml.parents(".dropdown").find('.btn').val("F");
+			}
+			var docTypeHtml = $("#docType li a");
+			docTypeHtml.parents(".dropdown").find('.btn').val(json.docType);
+			if ( json.docType == 1){
+				docTypeHtml.parents(".dropdown").find('.btn').html( 'DNI <span class="caret"></span>');
+			}else if ( json.docType == 2){
+				docTypeHtml.parents(".dropdown").find('.btn').html( 'RUC <span class="caret"></span>');
+		    }else if ( json.docType == 3){
+				docTypeHtml.parents(".dropdown").find('.btn').html( 'PASAPORTE <span class="caret"></span>');
+			}else if ( json.docType == 4){
+				docTypeHtml.parents(".dropdown").find('.btn').html( 'OTROS <span class="caret"></span>');	
+			}
+	    },
+	    error: function (xhr, status) {	    	
+	    	console.log("Error, su solicitud no pudo ser atendida");
+	    }
+	});	
+	var email, idUser;
+	var strSede = hostname + "/cabin-web/empleado/" + code+"/user";
+	$.ajax({
+		async:false,
+	    url:strSede,
+	    crossDomain: true,
+	    dataType: "json",
+	    success: function (json) {
+	    	var hrefArray = json._links.self.href.split("/");
+	    	idUser = hrefArray[hrefArray.length -1];
+	    	console.log("contraseña: " + json.pass);
+	    	$("#passwordEmployee").val(json.pass);	
+	    	$("#confirmPasswordEmployee").val(json.pass);	    	
+	    },
+	    error: function (xhr, status) {    	
+	    	console.log("Error, su solicitud no pudo ser atendida");
+	    }
+	});	
+	strSede = hostname + "/cabin-web/empleado/" + code+"/status";
+	var idStatus;
+	$.ajax({
+		async:false,
+	    url:strSede,
+	    crossDomain: true,
+	    dataType: "json",
+	    success: function (json) {
+	    	var hrefArray = json._links.self.href.split("/");
+	    	idStatus = hrefArray[hrefArray.length -1];
+	    	var statusHtml = $("#statusEmployee li a");			
+			statusHtml.parents(".dropdown").find('.btn').html( json.name +' <span class="caret"></span>');				
+			statusHtml.parents(".dropdown").find('.btn').val( idStatus);
+	    },
+	    error: function (xhr, status) {    	
+	    	console.log("Error, su solicitud no pudo ser atendida");
+	    }
+	});	
+	strSede = hostname + "/cabin-web/usuario/" + idUser +"/profile";
+	var idProfile;
+	$.ajax({
+		async:false,
+	    url:strSede,
+	    crossDomain: true,
+	    dataType: "json",
+	    success: function (json) {
+	    	var hrefArray = json._links.self.href.split("/");
+	    	idProfile = hrefArray[hrefArray.length -1];
+	    	var profileHtml = $("#profileEmployee li a");			
+	    	profileHtml.parents(".dropdown").find('.btn').html( json.name +' <span class="caret"></span>');				
+	    	profileHtml.parents(".dropdown").find('.btn').val( idProfile );    	
+	    },
+	    error: function (xhr, status) {    	
+	    	console.log("Error, su solicitud no pudo ser atendida");
+	    }
+	});	
+	
+}
+
+
 
 function fillSede(idSede, name, address){
 	var hostname = window.location.protocol + "//" + window.location.host 
@@ -2032,15 +2183,15 @@ function associateUser( idSede, idUser, newSede){
 }
 
 
-$(document).on("click", "#typeDoc li a", function(){
+$(document).on("click", "#docType li a", function(){
 	console.log("Entro aqui: " + $(this).text() );
-	var typeDoc = $(this).text();
-	typeDoc = typeDoc.toLowerCase();
+	var docType = $(this).text();
+	docType = docType.toLowerCase();
 	$(this).parents(".dropdown").find('.btn').html($(this).text() + ' <span class="caret"></span>');
 	  //Correr el arreglo paui-state-highlightra ver cual es el id y nombre correo del nivel
 	var length = tipo_doc.length;
 	for ( i = 0; i< length ; i++){
-		if (typeDoc == tipo_doc[i].name.toLowerCase() ){ $(this).parents(".dropdown").find('.btn').val(tipo_doc[i].id); break;}
+		if (docType == tipo_doc[i].name.toLowerCase() ){ $(this).parents(".dropdown").find('.btn').val(tipo_doc[i].id); break;}
 	}	
 } )
 
@@ -2264,14 +2415,25 @@ function addEmpleado() {
 	valid = valid && checkRequired( genderHtml, "Debe seleccionar un género.",1, empleadoValidation);	
 	valid = valid && checkRequired($("#emailEmployee"),"Debe ingresar un email.",1, empleadoValidation);
 	valid = valid && checkRegexp( $("#emailEmployee"), /^([\w-\.]+@([\w-]+\.)+[\w-]{2,4})?$/i , "El email ingresado no es válido.", empleadoValidation );
-	valid = valid && checkRegexp( $("#pointsEmployee"), /^[0-9]\d{0,5}$/i, "Debe ingresar una cantidad de puntos no mayor de 999 999, valor entero.", empleadoValidation);
-	valid = valid && checkRegexp( $("#balanceEmployee"), /^[0-9]\d{0,3}($|\.\d{0,2}$)/i, "Debe ingresar ingresar un monto válido, no mayor de 999.99 soles y de dos decimales.", empleadoValidation);
+	var docTypeHtml = $("#docType li a");		
+	docTypeHtml = $(docTypeHtml).parents(".dropdown").find('.btn');
+	valid = valid && checkRequired( docTypeHtml, "Debe seleccionar un tipo de documento.",1, empleadoValidation);
+	//valid = valid && checkRegexp( $("#docCode"), /^[0-9]\d{0,15}$/i, "Debe ingresar número de documento correcto", empleadoValidation);
+	if ( $(docTypeHtml).val() == 1) //En caso DNI
+		valid = valid && checkRegexp( $("#docCode"), /^[0-9]\d{7}$/i, "El DNI ingresado no es válido" , empleadoValidation);
+	else if( $(docTypeHtml).val() == 2) //En caso RUC
+		valid = valid && checkRegexp( $("#docCode"), /^[1-9]\d{10}$/i, "El RUC ingresado no es válido", empleadoValidation );
+    else if( $(docTypeHtml).val > 2) //En cualquier otro documento
+    	valid = valid && checkRequired($("#docCode"),"Debe ingresar el número de documento.",1, empleadoValidation);
 	valid = valid && checkRequired( $("#passwordEmployee"), "Debe ingresar una contraseña.",1, empleadoValidation);
 	valid = valid && checkRegexp( $("#passwordEmployee"), /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?!.*\s).{4,20}$/, "La contraseña debe contener al menos una letra minúscula, una mayúscula, un dígito. Mínimo cuatro caracteres y máximo, viente.", empleadoValidation );
 	valid = valid && checkRequired( $("#confirmPasswordEmployee"), "Debe confirmar su contraseña.",1, empleadoValidation);
 	valid = valid && checkRegexp( $("#confirmPasswordEmployee"), /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?!.*\s).{4,20}$/, "La contraseña debe contener al menos una letra minúscula, una mayúscula, un dígito. Mínimo cuatro caracteres y máximo, veinte.", empleadoValidation );
 	valid = valid && checkPassword($("#passwordEmployee"), $("#confirmPasswordEmployee"), "Las contraseñas no coinciden",  empleadoValidation);	
 	var statusHtml = $("#statusEmployee li a");		
+	var profileHtml = $("#profileEmployee li a");		
+	profileHtml = $(profileHtml).parents(".dropdown").find('.btn');
+	valid = valid && checkRequired( profileHtml, "Debe seleccionar un perfil.",1, empleadoValidation);
 	statusHtml = $(statusHtml).parents(".dropdown").find('.btn');
 	valid = valid && checkRequired( statusHtml, "Debe seleccionar un estado.",1, empleadoValidation);
 	return valid;
