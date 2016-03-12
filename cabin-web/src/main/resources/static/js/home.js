@@ -276,9 +276,16 @@ function fillClientetbl(){
 	for(i=0; i<size;i++){
 		if ( jQuery.type( clientes[i].birthDate ) === "date" ){ 
 			var day = (clientes[i].birthDate).getDate();
-			var month = (clientes[i].birthDate).getMonth() + 1;
-			var year = (clientes[i].birthDate).getFullYear();
-			date = ""+ day +"-"+month+"-"+year;
+			var month = (empleados[i].birthDate).getMonth() + 1;
+			var monthStr = "";
+			var year = (empleados[i].birthDate).getFullYear();			
+			if (day.length == 1)
+				day = "0"+day;
+			if (month.toString().length == 1)
+				monthStr = "0"+ month;
+			else
+				monthStr = "" + month;
+			date = ""+ day +"-"+monthStr+"-"+year;
 		}
 		else{
 			var arrayDate = clientes[i].birthDate.substring(0, 10).split("-");
@@ -314,10 +321,17 @@ function fillEmpleadotbl(){
     t.clear();
 	for(i=0; i<size;i++){
 		if ( jQuery.type( empleados[i].birthDate ) === "date" ){ 
-			var daclientesy = (empleados[i].birthDate).getDate();
+			var day = "" + (empleados[i].birthDate).getDate();
 			var month = (empleados[i].birthDate).getMonth() + 1;
-			var year = (empleados[i].birthDate).getFullYear();
-			date = ""+ day +"-"+month+"-"+year;
+			var monthStr = "";
+			var year = (empleados[i].birthDate).getFullYear();			
+			if (day.length == 1)
+				day = "0"+day;
+			if (month.toString().length == 1)
+				monthStr = "0"+ month;
+			else
+				monthStr = "" + month;
+			date = ""+ day +"-"+monthStr+"-"+year;
 		}
 		else{
 			var arrayDate = empleados[i].birthDate.substring(0, 10).split("-");
@@ -1354,6 +1368,8 @@ function saveCliente(){
 	customer.gender = gender;
 	$(genderHtml).parents(".dropdown").find('.btn').html('Seleccionar <span class="caret"></span>');
 	$(genderHtml).parents(".dropdown").find('.btn').val("");
+	$(statusHtml).parents(".dropdown").find('.btn').html('Seleccionar <span class="caret"></span>');
+	$(statusHtml).parents(".dropdown").find('.btn').val("");
 	$(nivelCustomerHtml).parents(".dropdown").find('.btn').html('Seleccionar <span class="caret"></span>');
 	$(nivelCustomerHtml).parents(".dropdown").find('.btn').val("");
 	var idUser;
@@ -1401,7 +1417,7 @@ function saveCliente(){
 	    	console.log("Send a user into DB");
 	    	if (idCustomer != ""){
 	    		console.log(strUrl);
-	    		$("#btnCliente").html("Nueva Regla");
+	    		$("#btnCliente").html("Nuevo Cliente");
 	    		$("#idCliente").attr("value", "");			    		
 	    	}	
 	    },
@@ -1520,6 +1536,204 @@ function saveCliente(){
 	
 }
 
+function saveEmpleado(){
+	var hostname = window.location.protocol + "//" + window.location.host;
+	var idEmpleado = $("#idEmpleado").attr("value");
+	console.log("Inside form-empleado " + idEmpleado);
+	var employee = {};
+	var user = {}; var newEmployee = 1;
+	employee.name = trim( $( "#nameEmployee" ).val() );
+	employee.email = trim( $( "#emailEmployee" ).val() );	
+	var birthDate = trim( $( "#birthDateEmployee" ).val() );
+	var dateArray = birthDate.split("/");
+	var date = new Date(); date.setDate(dateArray[1]);
+	date.setMonth(dateArray[0] - 1); date.setFullYear(dateArray[2]);
+	employee.birthDate = date;	
+	employee.docCode =  trim( $( "#docCode" ).val() );
+	user.pass = trim( $( "#passwordEmployee" ).val() );
+	user.name = trim( $( "#emailEmployee" ).val() );
+	$( "#nameEmployee" ).val(""); $( "#passwordEmployee" ).val("");
+	$( "#confirmPasswordEmployee" ).val("");
+	$( "#emailEmployee" ).val("");	$( "#birthDateEmployee" ).val("");
+	$( "#docCode" ).val("");
+	var genderHtml = $("#genderEmployee li a");	
+	var gender = $(genderHtml).parents(".dropdown").find('.btn').val();
+	employee.gender = gender;
+	var statusHtml = $("#statusEmployee li a");	
+	var idStatus = $(statusHtml).parents(".dropdown").find('.btn').val();
+	var profileHtml = $("#profileEmployee li a");	
+	var idPerfil = $(profileHtml).parents(".dropdown").find('.btn').val();
+	var docTypeHtml =  $("#docType li a");	
+	var idDocType= $(docTypeHtml).parents(".dropdown").find('.btn').val();	
+	$(genderHtml).parents(".dropdown").find('.btn').html('Seleccionar <span class="caret"></span>');
+	$(genderHtml).parents(".dropdown").find('.btn').val("");
+	$(docTypeHtml).parents(".dropdown").find('.btn').html('Seleccionar <span class="caret"></span>');
+	$(docTypeHtml).parents(".dropdown").find('.btn').val("");
+	$(statusHtml).parents(".dropdown").find('.btn').html('Seleccionar <span class="caret"></span>');
+	$(statusHtml).parents(".dropdown").find('.btn').val("");
+	$(profileHtml).parents(".dropdown").find('.btn').html('Seleccionar <span class="caret"></span>');
+	$(profileHtml).parents(".dropdown").find('.btn').val("");
+	var idUser;
+	var strUrl = window.location.protocol + "//" + window.location.host + "/cabin-web/usuario";
+	console.log(JSON.stringify(user));
+	
+	if (idEmpleado !== "") {
+		var strUsuario = hostname + "/cabin-web/empleado/" + idEmpleado+"/user";		
+		$.ajax({
+			async:false,
+		    url:strUsuario,
+		    crossDomain: true,
+		    dataType: "json",
+		    success: function (json) {
+		    	var hrefArray = json._links.self.href.split("/");
+		    	idUser = hrefArray[hrefArray.length -1];		    	    	
+		    },
+		    error: function (xhr, status) {    	
+		    	console.log("Error, su solicitud no pudo ser atendida");
+		    }
+		});	
+		strUrl += "/" + idUser;	
+		employee.id = idEmpleado;		
+		newEmployee = 0;
+		if( idStatus == estados[0].id){
+			employee.estado = estados[0].name; console.log(employee.estado);}
+		else{
+			employee.estado = estados[1].name; }		
+		var length = tipo_doc.length;
+		for ( i = 0; i< length ; i++){
+			if (idDocType == tipo_doc[i].id ){ 
+				employee.docType = tipo_doc[i].id;
+				employee.docTypeName = tipo_doc[i].name; break;
+			}
+		}
+		length = perfiles.length;
+		for ( i = 0; i< length ; i++){
+			if (idPerfil == perfiles[i].id ){ 
+				employee.perfil =  perfiles[i].name; break;
+			}
+		}
+		empleados.splice(empleadoIndex, 1, employee);
+		fillEmpleadotbl();
+	}		
+	
+	$.ajax({
+		async: false,
+		type: idEmpleado === "" ? "POST" : "PATCH", 
+	    url: strUrl,			    
+	    dataType: 'json', 
+	    data: JSON.stringify(user), 
+	    contentType: 'application/json',
+	    success: function (data) {
+	    	console.log("Send a user into DB");
+	    	if (idEmpleado != ""){
+	    		console.log(strUrl);
+	    		$("#btnEmpleado").html("Nuevo Empleado");
+	    		$("#idEmpleado").attr("value", "");			    		
+	    	}	
+	    },
+	    error: function (xhr, status) {	    	
+	    	console.log("Error, su solicitud no pudo ser atendida");
+	    },	 
+	    complete: function(xhr) {
+	    	if (idEmpleado == ""){
+		    	var strLocation = xhr.getResponseHeader('Location');	    	
+		    	var hrefArray = strLocation.split("/");
+		    	idUser = hrefArray[hrefArray.length -1];
+	    	}
+	    }
+	});		
+	strUrl = window.location.protocol + "//" + window.location.host + "/cabin-web/empleado";
+	if (idEmpleado !== "") {
+		strUrl += "/" + idEmpleado;	
+	}
+	console.log(JSON.stringify(employee));
+	$.ajax({
+		async: false,
+		type: idEmpleado === "" ? "POST" : "PATCH",
+	    url: strUrl,			    
+	    dataType: 'json', 
+	    data: JSON.stringify(employee), 
+	    contentType: 'application/json',	    
+	    success: function (data) {
+	    	console.log("Send a user into DB");
+	    },
+	    error: function (xhr, status) {	    	
+	    	console.log("Error, su solicitud no pudo ser atendida");
+	    },	 
+	    complete: function(xhr) {	    	
+	    	if(idEmpleado == ""){
+	    		var strLocation = xhr.getResponseHeader('Location');
+	    		var hrefArray = strLocation.split("/");
+	    		idEmpleado = hrefArray[hrefArray.length -1];
+	    	}	    	
+	    }
+	});	
+	var strUrlStatus = window.location.protocol + "//" + window.location.host + "/cabin-web/estado/" + idStatus;
+	//var strUrlNivel = window.location.protocol + "//" + window.location.host + "/cabin-web/nivel/" + idNivel;
+	var strUrlPerfil = window.location.protocol + "//" + window.location.host + "/cabin-web/perfil/" + idPerfil;
+	var strUrlUser = window.location.protocol + "//" + window.location.host + "/cabin-web/usuario/"+idUser;
+	var strUrlCustomer = window.location.protocol + "//" + window.location.host + "/cabin-web/empleado/"+idEmpleado+"/status";
+	//Solo para cliente
+	
+	$.ajax({
+		async: false,
+		type: "PUT",
+	    url:strUrlCustomer,			
+	    data: strUrlStatus, 
+	    contentType: 'text/uri-list',
+	    success: function (data) {
+	    	console.log("Se asigno estado a empleado" + idEmpleado);
+	    },
+	    error: function (xhr, status) {	    	
+	    	console.log("Error, su solicitud no pudo ser atendida");
+	    },
+	    complete: function(xhr){
+	    	strUrlCustomer = window.location.protocol + "//" + window.location.host + "/cabin-web/empleado/"+idEmpleado+"/user";
+	    	$.ajax({
+	    		async: false,
+	    		type: "PUT",
+	    	    url:strUrlCustomer,			
+	    	    data: strUrlUser, 
+	    	    contentType: 'text/uri-list',
+	    	    success: function (data) {
+	    	    	console.log("Se asigno usuario a empleado " + idEmpleado);
+	    	    },
+	    	    error: function (xhr, status) {	    	
+	    	    	console.log("Error, su solicitud no pudo ser atendida");
+	    	    },
+	    	    complete: function(){
+	    	    	if (newEmployee == 1){			    		
+	    	    		fillArrayEmpleado();
+	    	    	}
+	    	    }
+    	    	
+    	    });
+	    }
+	});	
+	//Para usuario	
+	strUrlUser = window.location.protocol + "//" + window.location.host + "/cabin-web/usuario/"+idUser+"/profile";	
+	$.ajax({
+		async: false,
+		type: "PUT",
+	    url:strUrlUser,			
+	    data: strUrlPerfil, 
+	    contentType: 'text/uri-list',
+	    success: function (data) {
+	    	console.log("Se asigno perfil a usuario " + idUser);
+	    },
+	    error: function (xhr, status) {	    	
+	    	console.log("Error, su solicitud no pudo ser atendida");
+	    },
+	    complete: function(xhr){
+	    	
+	    }
+	});
+	
+}
+
+
+
+
 function editCliente( code, index ){
 	var hostname = window.location.protocol + "//" + window.location.host;
 	var strUrl = hostname + "/cabin-web/cliente/" + code;
@@ -1633,7 +1847,7 @@ function editEmpleado( code, index ){
 			var arrayDate = date.split("-");
 			var birthDate = arrayDate[2]+"/" + arrayDate[1]+"/" + arrayDate[0];
 			$("#birthDateEmployee").val(birthDate);			
-			$("#idEmployee").attr('value', idEmployee);
+			$("#idEmpleado").attr('value', idEmployee);
 			$("#btnEmpleado").html("Actualizar Empleado");	
 			var genderHtml = $("#genderEmployee li a");
 			if ( json.gender == "M"){
@@ -1644,7 +1858,7 @@ function editEmpleado( code, index ){
 				genderHtml.parents(".dropdown").find('.btn').html( 'Female <span class="caret"></span>');				
 				genderHtml.parents(".dropdown").find('.btn').val("F");
 			}
-			var docTypeHtml = $("#docType li a");
+			var docTypeHtml = $("#docType li a"); 
 			docTypeHtml.parents(".dropdown").find('.btn').val(json.docType);
 			if ( json.docType == 1){
 				docTypeHtml.parents(".dropdown").find('.btn').html( 'DNI <span class="caret"></span>');
@@ -2204,7 +2418,7 @@ $(document).on("click", "#profileEmployee li a", function(){
 	  //Correr el arreglo paui-state-highlightra ver cual es el id y nombre correo del nivel
 	var length = tipo_doc.length;
 	for ( i = 0; i< length ; i++){
-		if (profileEmployee == tipo_doc[i].name.toLowerCase() ){ $(this).parents(".dropdown").find('.btn').val(tipo_doc[i].id); break;}
+		if (profileEmployee == perfiles[i].name.toLowerCase() ){ $(this).parents(".dropdown").find('.btn').val(perfiles[i].id); break;}
 	}	
 } )
 
