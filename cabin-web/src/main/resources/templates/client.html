@@ -108,30 +108,58 @@
 						<p class="lead text-center">Lorem ipsum dolor sit amet, consectetur adipisicing elit. laudantium culpa tenetur.</p>
 					</div>
 				</div>
+				<div class="row" style="margin-bottom: 40px">
+					<div class="col-md-4"></div>
+					<div class="col-md-3">
+						<form class="form-horizontal" role="form">
+							<div class="form-group">
+								<label class="control-label col-sm-2" for="email">Usuario:</label>
+								<label class="control-label col-sm-2" for="email"></label>
+							</div>
+							<div class="form-group">
+								<label class="control-label col-sm-2" for="email">Nivel:</label>
+								<label class="control-label col-sm-2" for="email"></label>
+							</div>
+						</form>
+					</div>
+					<div class="col-md-3">
+						<form class="form-horizontal" role="form">
+							<div class="form-group">
+								<label class="control-label col-sm-2" for="pwd">Puntos:</label> <label
+									class="control-label col-sm-2" for="email"></label>
+							</div>
+							<div class="form-group">
+								<label class="control-label col-sm-2" for="pwd">Saldo:</label> <label
+									class="control-label col-sm-2" for="email"></label>
+							</div>
+						</form>
+					</div>
+				</div>
 				<div class="row" style="margin-left: 90px">
 					<div class="multipe-div">
 						<div class="multipe-box">
-							<select class="select-multiple" size="3">
-								<option class="option-multiple">PC 1</option>
-								<option class="option-multiple">PC 2</option>
-								<option class="option-multiple">PC 3</option>
-								<option class="option-multiple">PC 4</option>
-					    		<option class="option-multiple">PC 5</option>
-								<option class="option-multiple">PC 6</option>
-					    		<option class="option-multiple">PC 7</option>
-								<option class="option-multiple">PC 8</option>
-								<option class="option-multiple">PC 9</option>
-								<option class="option-multiple">PC 10</option>
-								<option class="option-multiple">PC 11</option>
-								<option class="option-multiple">PC 12</option>
+							<select class="select-multiple" multiple="multiple" size="3" id="computer-multiple">
 							</select>
 						</div>
 					</div>
-					<div class="form-group">
-						<div class="col-md-5">
-						</div>
-						<div class="col-md-2">
-							<button type="submit" class="btn btn-default">Recargar</button>
+					<div class="form-group" style="margin-top: 10px">
+						<div class="col-md-3"></div>
+						<div class="col-md-6">
+							<form role="form">
+								<div class="form-group">
+									<label for="amountComputer">Monto Ingresado:</label> 
+									<input type="text" class="form-control" id="amountComputer"/>
+								</div>
+								<div class="form-group">
+									<label for="rechargeComputer">Recarga:</label> 
+									<input type="text" class="form-control" id="rechargeComputer"/>
+								</div>
+								<div class="form-group">
+									<label>Vuelto:</label> 
+									<label></label> 
+								</div>
+								<button type="submit" class="btn btn-default">Recargar</button>
+							</form>
 						</div>
 					</div>
 				</div>
@@ -149,32 +177,62 @@
 						<p class="lead text-center">Lorem ipsum dolor sit amet, consectetur adipisicing elit. laudantium culpa tenetur.</p>
 					</div>
 				</div>
+				<div class="row" style="margin-bottom: 40px">
+					<div class="col-md-4"></div>
+					<div class="col-md-3">
+						<form class="form-horizontal" role="form">
+							<div class="form-group">
+								<label class="control-label col-sm-2" for="email">Usuario:</label>
+								<label class="control-label col-sm-2" for="email"></label>
+							</div>
+							<div class="form-group">
+								<label class="control-label col-sm-2" for="email">Nivel:</label>
+								<label class="control-label col-sm-2" for="email"></label>
+							</div>
+						</form>
+					</div>
+					<div class="col-md-3">
+						<form class="form-horizontal" role="form">
+							<div class="form-group">
+								<label class="control-label col-sm-2" for="pwd">Puntos:</label> <label
+									class="control-label col-sm-2" for="email"></label>
+							</div>
+							<div class="form-group">
+								<label class="control-label col-sm-2" for="pwd">Saldo:</label> <label
+									class="control-label col-sm-2" for="email"></label>
+							</div>
+						</form>
+					</div>
+				</div>
 				<div class="row" style="margin-left: 90px">
 					<div class="multipe-div">
 						<div class="multipe-box">
-							<select class="select-multiple" size="3">
-								<option class="option-multiple">Consola 1</option>
-								<option class="option-multiple">Consola 2</option>
-								<option class="option-multiple">Consola 3</option>
-								<option class="option-multiple">Consola 4</option>
-					    		<option class="option-multiple">Consola 5</option>
-								<option class="option-multiple">Consola 6</option>
-					    		<option class="option-multiple">Consola 7</option>
-								<option class="option-multiple">Consola 8</option>
-								<option class="option-multiple">Consola 9</option>
-								<option class="option-multiple">Consola 10</option>
-								<option class="option-multiple">Consola 11</option>
-								<option class="option-multiple">Consola 12</option>
+							<select class="select-multiple" multiple="multiple" size="3" id="console-multiple">
 							</select>
 						</div>
 					</div>
-					<div class="form-group">
-						<div class="col-md-5">
-						</div>
-						<div class="col-md-2">
-							<button type="submit" class="btn btn-default">Recargar</button>
+					<div class="form-group" style="margin-top: 10px">
+						<div class="col-md-3"></div>
+						<div class="col-md-6" style="margin-bottom: 10px">
+							<form role="form">
+								<div class="form-group">
+									<label for="amountConsole">Monto Ingresado:</label> 
+									<input type="text" class="form-control" id="amountConsole"/>
+								</div>
+								<div class="form-group">
+									<label for="rechargeConsole">Recarga:</label> 
+									<input type="text" class="form-control" id="rechargeConsole"/>
+								</div>
+								<div class="form-group">
+									<label>Vuelto:</label> 
+									<label></label> 
+								</div>
+								<button type="submit" class="btn btn-default">Recargar</button>
+							</form>
 						</div>
 					</div>
+					<br/>
+					<br/>
 					<br/>
 					<br/>
 				</div>
@@ -199,6 +257,62 @@
 
 		</footer>
 		<!-- footer end -->
+		
+		<div id="computerDialog" title="Informacion PC" style="display: none;">
+			<div class="col-md-10" style="margin-bottom: 10px">
+				<form class="form-horizontal" role="form" id="form-regla">
+					<input type="hidden" id="idRegla" value=""/>
+					<div class="form-group">
+						<label class="control-label col-md-4">Nombre:</label>
+						<label class="control-label col-md-8" style="text-align: left;" id="computerName"></label>
+					</div>						
+					<div class="form-group">
+						<label class="control-label col-md-4">IP:</label>
+						<label class="control-label col-md-8" style="text-align: left;" id="computerIpAddress"></label>
+					</div>
+					<div class="form-group">
+						<label class="control-label col-md-4">Serie:</label>
+						<label class="control-label col-md-8" style="text-align: left;" id="computerSeries"></label>
+					</div>
+					<div class="form-group">							
+						<label class="control-label col-md-4">MAC:</label>
+						<label class="control-label col-md-8" style="text-align: left;" id="computerMac"></label>
+					</div>
+					<div class="form-group">							
+						<label class="control-label col-md-4">Estado:</label>
+						<label class="control-label col-md-8" style="text-align: left;" id="computerState"></label>
+					</div>
+					<div class="form-group">							
+						<label class="control-label col-md-4">Grupo:</label>
+						<label class="control-label col-md-8" style="text-align: left;" id="computerGroup"></label>
+					</div>
+				</form>
+			</div>
+		</div>
+		
+		<div id="consoleDialog" title="Informacion Consola" style="display: none;">
+			<div class="col-md-10" style="margin-bottom: 10px">
+				<form class="form-horizontal" role="form" id="form-regla">
+					<input type="hidden" id="idRegla" value=""/>
+					<div class="form-group">
+						<label class="control-label col-md-4">Nombre:</label>
+						<label class="control-label col-md-8" style="text-align: left;" id="consoleName"></label>
+					</div>						
+					<div class="form-group">
+						<label class="control-label col-md-4">IP:</label>
+						<label class="control-label col-md-8" style="text-align: left;" id="consoleIpAddress"></label>
+					</div>
+					<div class="form-group">
+						<label class="control-label col-md-4">Estado:</label>
+						<label class="control-label col-md-8" style="text-align: left;" id="consoleState"></label>
+					</div>
+					<div class="form-group">							
+						<label class="control-label col-md-4">Grupo:</label>
+						<label class="control-label col-md-8" style="text-align: left;" id="consoleGroup"></label>
+					</div>
+				</form>
+			</div>
+		</div>
 
 		<!-- JavaScript --> 
 		<script type="text/javascript" th:src="@{plugins/jquery.min.js}"></script>
@@ -211,7 +325,8 @@
 		<script type="text/javascript" th:src="@{plugins/jquery.mCustomScrollbar.concat.min.js}"></script>
 
 		<!-- Custom Scripts -->
-		<script type="text/javascript" th:src="@{js/operator.js}"></script>
+		<script type="text/javascript" th:src="@{js/computerAndConsole.js}"></script>
+		<script type="text/javascript" th:src="@{js/client.js}"></script>
 
 	</body>
 </html>

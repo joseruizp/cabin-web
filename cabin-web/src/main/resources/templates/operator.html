@@ -111,19 +111,7 @@
 				<div class="row" style="margin-left: 90px">
 					<div class="multipe-div">
 						<div class="multipe-box">
-							<select class="select-multiple" multiple="multiple" size="3">
-								<option class="option-multiple">PC 1</option>
-								<option class="option-multiple">PC 2</option>
-								<option class="option-multiple">PC 3</option>
-								<option class="option-multiple">PC 4</option>
-					    		<option class="option-multiple">PC 5</option>
-								<option class="option-multiple">PC 6</option>
-					    		<option class="option-multiple">PC 7</option>
-								<option class="option-multiple">PC 8</option>
-								<option class="option-multiple">PC 9</option>
-								<option class="option-multiple">PC 10</option>
-								<option class="option-multiple">PC 11</option>
-								<option class="option-multiple">PC 12</option>
+							<select class="select-multiple" multiple="multiple" size="3" id="computer-multiple">
 							</select>
 						</div>
 					</div>
@@ -158,19 +146,7 @@
 				<div class="row" style="margin-left: 90px">
 					<div class="multipe-div">
 						<div class="multipe-box">
-							<select class="select-multiple" multiple="multiple" size="3">
-								<option class="option-multiple">Consola 1</option>
-								<option class="option-multiple">Consola 2</option>
-								<option class="option-multiple">Consola 3</option>
-								<option class="option-multiple">Consola 4</option>
-					    		<option class="option-multiple">Consola 5</option>
-								<option class="option-multiple">Consola 6</option>
-					    		<option class="option-multiple">Consola 7</option>
-								<option class="option-multiple">Consola 8</option>
-								<option class="option-multiple">Consola 9</option>
-								<option class="option-multiple">Consola 10</option>
-								<option class="option-multiple">Consola 11</option>
-								<option class="option-multiple">Consola 12</option>
+							<select class="select-multiple" multiple="multiple" size="3" id="console-multiple">
 							</select>
 						</div>
 					</div>
@@ -212,7 +188,63 @@
 		</footer>
 		<!-- footer end -->
 
-		<!-- JavaScript --> 
+		<div id="computerDialog" title="Informacion PC" style="display: none;">
+			<div class="col-md-10" style="margin-bottom: 10px">
+				<form class="form-horizontal" role="form" id="form-regla">
+					<input type="hidden" id="idRegla" value=""/>
+					<div class="form-group">
+						<label class="control-label col-md-4">Nombre:</label>
+						<label class="control-label col-md-8" style="text-align: left;" id="computerName"></label>
+					</div>						
+					<div class="form-group">
+						<label class="control-label col-md-4">IP:</label>
+						<label class="control-label col-md-8" style="text-align: left;" id="computerIpAddress"></label>
+					</div>
+					<div class="form-group">
+						<label class="control-label col-md-4">Serie:</label>
+						<label class="control-label col-md-8" style="text-align: left;" id="computerSeries"></label>
+					</div>
+					<div class="form-group">							
+						<label class="control-label col-md-4">MAC:</label>
+						<label class="control-label col-md-8" style="text-align: left;" id="computerMac"></label>
+					</div>
+					<div class="form-group">							
+						<label class="control-label col-md-4">Estado:</label>
+						<label class="control-label col-md-8" style="text-align: left;" id="computerState"></label>
+					</div>
+					<div class="form-group">							
+						<label class="control-label col-md-4">Grupo:</label>
+						<label class="control-label col-md-8" style="text-align: left;" id="computerGroup"></label>
+					</div>
+				</form>
+			</div>
+		</div>
+		
+		<div id="consoleDialog" title="Informacion Consola" style="display: none;">
+			<div class="col-md-10" style="margin-bottom: 10px">
+				<form class="form-horizontal" role="form" id="form-regla">
+					<input type="hidden" id="idRegla" value=""/>
+					<div class="form-group">
+						<label class="control-label col-md-4">Nombre:</label>
+						<label class="control-label col-md-8" style="text-align: left;" id="consoleName"></label>
+					</div>						
+					<div class="form-group">
+						<label class="control-label col-md-4">IP:</label>
+						<label class="control-label col-md-8" style="text-align: left;" id="consoleIpAddress"></label>
+					</div>
+					<div class="form-group">
+						<label class="control-label col-md-4">Estado:</label>
+						<label class="control-label col-md-8" style="text-align: left;" id="consoleState"></label>
+					</div>
+					<div class="form-group">							
+						<label class="control-label col-md-4">Grupo:</label>
+						<label class="control-label col-md-8" style="text-align: left;" id="consoleGroup"></label>
+					</div>
+				</form>
+			</div>
+		</div>
+
+	<!-- JavaScript --> 
 		<script type="text/javascript" th:src="@{plugins/jquery.min.js}"></script>
 		<script type="text/javascript" th:src="@{bootstrap/js/bootstrap.min.js}"></script>
 		<script type="text/javascript" th:src="@{plugins/modernizr.js}"></script>
@@ -223,6 +255,7 @@
 		<script type="text/javascript" th:src="@{plugins/jquery.mCustomScrollbar.concat.min.js}"></script>
 
 		<!-- Custom Scripts -->
+		<script type="text/javascript" th:src="@{js/computerAndConsole.js}"></script>
 		<script type="text/javascript" th:src="@{js/operator.js}"></script>
 
 	</body>
