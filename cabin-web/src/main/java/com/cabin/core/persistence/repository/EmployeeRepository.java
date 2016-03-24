@@ -11,4 +11,5 @@ import com.cabin.core.persistence.domain.Employee;
 @RepositoryRestResource(collectionResourceRel = "empleado", path = "empleado")
 public interface EmployeeRepository extends JpaRepository<Employee, Long> {
 	public List<Employee> findByEmail(@Param("email") String email);
+	public List<Employee> findByDocCode(@Param("docCode") String docCode);
 }

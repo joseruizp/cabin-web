@@ -40,6 +40,35 @@ function checkPassword( ps1, ps2, cad, div) {
 	    return true;
 	  }
 }
+
+function checkEmail( email, cad, div) {
+	var hostname = window.location.protocol + "//" + window.location.host;
+	var name = trim(email.val());
+	var strUrl = hostname + "/cabin-web/usuario/search/findByName?name=" + name;
+	var validEmail = 1;
+	$.ajax({
+		async:false,
+	    url:strUrl,
+	    crossDomain: true,
+	    dataType: "json",
+	    success: function (json) {
+	    	for( var i in json){
+	    		validEmail = 0;
+	    	}
+	    },
+	    error: function (xhr, status) {    	
+	    	console.log("Error, su solicitud no pudo ser atendida");
+	    }
+	});
+	if ( validEmail == 1 ) {
+	    return true;
+	} else {		
+		email.addClass( "ui-state-error" );
+		updateTips( cad, div);
+	    return false;
+	  }
+}
+
 //Validation
 function trim(cadena){
 	// USO: Devuelve un string como el parámetro cadena pero quitando los espacios en blanco de los bordes.
@@ -102,7 +131,7 @@ function addUser() {
 	valid = valid && checkRequired( $("#confirmPassword"), "Debe confirmar su contraseña.",1, userValidation);
 	valid = valid && checkRegexp( $("#confirmPassword"), /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?!.*\s).{4,20}$/, "La contraseña debe contener al menos una letra minúscula, una mayúscula, un dígito. Mínimo cuatro caracteres y máximo, veinte.", userValidation );
 	valid = valid && checkPassword($("#password"), $("#confirmPassword"), "Las contraseñas no coinciden",  userValidation);
-	
+	valid = valid && checkEmail( $("#emailCustomer"), "El email ya se encuentra registrado.", clienteValidation);
 	
 	return valid;
 }
@@ -275,3 +304,4 @@ function fnOpenEditDialog() {
         }
     });
 }
+

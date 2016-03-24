@@ -276,9 +276,9 @@ function fillClientetbl(){
 	for(i=0; i<size;i++){
 		if ( jQuery.type( clientes[i].birthDate ) === "date" ){ 
 			var day = (clientes[i].birthDate).getDate();
-			var month = (empleados[i].birthDate).getMonth() + 1;
+			var month = (clientes[i].birthDate).getMonth() + 1;
 			var monthStr = "";
-			var year = (empleados[i].birthDate).getFullYear();			
+			var year = (clientes[i].birthDate).getFullYear();			
 			if (day.length == 1)
 				day = "0"+day;
 			if (month.toString().length == 1)
@@ -1024,26 +1024,63 @@ function deleteCliente( code, index ){
 }
 
 function deleteEmpleado( code, index ){
+	var userId = "";
 	var hostname = window.location.protocol + "//" + window.location.host;
-	var strUrlStatus = window.location.protocol + "//" + window.location.host + "/cabin-web/estado/" + 2;
-	var strUrlEmployee = window.location.protocol + "//" + window.location.host + "/cabin-web/empleado/"+code+"/status";
-	//Solo para cliente	
+	var strUrlStatus = hostname + "/cabin-web/estado/" + 2;
+	var strUrlEmployee = hostname + "/cabin-web/empleado/"+code+"/status";
+	var strUrlUser = hostname + "/cabin-web/empleado/"+code+"/user";
 	$.ajax({
-		async: false,
-		type: "PUT",
-	    url:strUrlEmployee,			
-	    data: strUrlStatus, 
-	    contentType: 'text/uri-list',
-	    success: function (data) {
-	    	console.log("Se asigno estado a empleado" + code);
-	    	empleados[index].estado = "Inactivo";
-	    	fillEmpleadotbl();
+		url:strUrlUser,
+	    crossDomain: true,
+	    dataType: "json",
+	    async:false,
+	    success: function (json) {	    
+	    	var hrefArray = json._links.self.href.split("/");
+	    	userId = hrefArray[hrefArray.length -1];
+	    	console.log("Se va a dar de baja al usuario de codigo: " + userId);
 	    },
 	    error: function (xhr, status) {	    	
 	    	console.log("Error, su solicitud no pudo ser atendida");
 	    }	    
 	});	
 	
+	var strUrlSede = hostname + "/cabin-web/sede/search/findByUserId?userId=" + userId;
+	var userInHeadquarter = 0;
+	//Busca usuario en la sede para ver si se puede dar de baja o no
+	$.ajax({
+		async:false,
+		url:strUrlSede,
+	    crossDomain: true,
+	    dataType: "json",
+	    success: function (json) {
+	    	for ( var i in json)   		
+	    		userInHeadquarter = 1;	    		    	   		   
+	    },
+	    error: function (xhr, status) {	    	
+	    	console.log("Error, su solicitud no pudo ser atendida");
+	    }	    
+	});
+	
+	if (userInHeadquarter == 0){	
+		$.ajax({
+			async: false,
+			type: "PUT",
+		    url:strUrlEmployee,			
+		    data: strUrlStatus, 
+		    contentType: 'text/uri-list',
+		    success: function (data) {
+		    	console.log("Se asigno estado a empleado" + code);
+		    	empleados[index].estado = "Inactivo";
+		    	fillEmpleadotbl();
+		    },
+		    error: function (xhr, status) {	    	
+		    	console.log("Error, su solicitud no pudo ser atendida");
+		    }	    
+		});	
+	}
+	else {
+		updateTips( "Este operario ya se encuentra asignado a una sede, no se puede dar de baja", empleadoValidation );
+	}
 }
 
 function savePremio(){
@@ -2258,7 +2295,9 @@ function fillProfiles( ){
 
 
 function fillOperarios( ){
-	var strUrl = window.location.protocol + "//" + window.location.host + "/cabin-web/usuario/";		
+	var strUrl = window.location.protocol + "//" + window.location.host + "/cabin-web/usuario/";
+	var strLine = "";
+	var ulOperario = $("#operario");
 	$.ajax({
 		async: false,
 	    url:strUrl,
@@ -2270,17 +2309,22 @@ function fillOperarios( ){
 	    		var idUser = hrefArray[hrefArray.length -1];
 	    		var email = value.name;
 	    		console.log("Entro al primer usuario" + idUser + " correo: " + email);
-	    		completeOperario(idUser, email);
+	    		strLine += completeOperario(idUser, email);
 			});	    			    	
 	    },
 	    error: function (xhr, status) {    	
 	    	console.log("Error, su solicitud no pudo ser atendida");
+	    },
+	    complete: function(){
+	    	ulOperario.html(strLine);
 	    }
 	});
+	
 }
 
 function completeOperario( idUser, email ){
-	var strUrl = window.location.protocol + "//" + window.location.host + "/cabin-web/usuario/"+ idUser + "/profile";		
+	var strUrl = window.location.protocol + "//" + window.location.host + "/cabin-web/usuario/"+ idUser + "/profile";
+	var StrLine = "";
 	$.ajax({
 		async: false,
 	    url:strUrl,
@@ -2291,18 +2335,18 @@ function completeOperario( idUser, email ){
     		var idProfile = hrefArray[hrefArray.length -1];
     		console.log("Entro al profile de id " + idProfile);
     		if ( idProfile == "1")	    			
-    			completeOperarioName(idUser, email);			   			    	
+    			StrLine = completeOperarioName(idUser, email);			   			    	
 	    },
 	    error: function (xhr, status) {    	
 	    	console.log("Error, su solicitud no pudo ser atendida");
 	    }
 	});
+	return StrLine;
 }
 
 function completeOperarioName( idUser, email){
 	var hostname = window.location.protocol + "//" + window.location.host;
-	var strUrl = hostname + "/cabin-web/empleado/search/findByEmail?email=" + email;
-	var ulOperario = $("#operario");
+	var strUrl = hostname + "/cabin-web/empleado/search/findByEmail?email=" + email;	
 	var line = "";
 	$.ajax({
 		async: false,
@@ -2325,11 +2369,9 @@ function completeOperarioName( idUser, email){
 	    },
 	    error: function (xhr, status) {	    	
 	    	console.log("Error, su solicitud no pudo ser atendida");
-	    },
-	    complete: function (){
-	    	ulOperario.html(line);
-	    }
+	    },	    
 	});
+	return line;
 		    			
 }
 
@@ -2615,6 +2657,7 @@ function addCliente() {
 	var statusHtml = $("#statusCustomer li a");		
 	statusHtml = $(statusHtml).parents(".dropdown").find('.btn');
 	valid = valid && checkRequired( statusHtml, "Debe seleccionar un estado.",1, clienteValidation);
+	valid = valid && checkEmail( $("#emailCustomer"), "El email ya se encuentra registrado.", clienteValidation);
 	return valid;
 }
 
@@ -2650,6 +2693,8 @@ function addEmpleado() {
 	valid = valid && checkRequired( profileHtml, "Debe seleccionar un perfil.",1, empleadoValidation);
 	statusHtml = $(statusHtml).parents(".dropdown").find('.btn');
 	valid = valid && checkRequired( statusHtml, "Debe seleccionar un estado.",1, empleadoValidation);
+	valid = valid && checkEmail( $("#emailEmployee"), "El email ya se encuentra registrado.", empleadoValidation);
+	valid = valid && checkDocCode( $("#docCode"), "El número de documento ya se encuentra registrado.", empleadoValidation);
 	return valid;
 }
 
@@ -2688,5 +2733,62 @@ function checkPassword( ps1, ps2, cad, div) {
 	    return false;
 	  } else {
 	    return true;
+	  }
+}
+
+function checkEmail( email, cad, div) {
+	var name = trim(email.val());
+	var hostname = window.location.protocol + "//" + window.location.host;
+	var strUrl = hostname + "/cabin-web/usuario/search/findByName?name=" + name;
+	var validEmail = 1;
+	$.ajax({
+		async:false,
+	    url:strUrl,
+	    crossDomain: true,
+	    dataType: "json",
+	    success: function (json) {
+	    	console.log("Entro a la comprobación de email: " + name);
+	    	for( var i in json){
+	    		validEmail = 0;
+	    	}
+	    },
+	    error: function (xhr, status) {    	
+	    	console.log("Error, su solicitud no pudo ser atendida");
+	    }
+	});
+	if ( validEmail == 1 ) {
+	    return true;
+	} else {
+		email.addClass( "ui-state-error" );
+		updateTips( cad, div);
+	    return false;	    
+	  }
+}
+
+function checkDocCode( docCode, cad, div) {
+	var code = trim(docCode.val());
+	var hostname = window.location.protocol + "//" + window.location.host;
+	var strUrl = hostname + "/cabin-web/empleado/search/findByDocCode?docCode=" + code;
+	var validCode = 1;
+	$.ajax({
+		async:false,
+	    url:strUrl,
+	    crossDomain: true,
+	    dataType: "json",
+	    success: function (json) {	    	
+	    	for( var i in json){
+	    		validCode = 0;
+	    	}
+	    },
+	    error: function (xhr, status) {    	
+	    	console.log("Error, su solicitud no pudo ser atendida");
+	    }
+	});
+	if ( validCode == 1 ) {
+	    return true;
+	} else {
+		docCode.addClass( "ui-state-error" );
+		updateTips( cad, div);
+	    return false;	    
 	  }
 }
