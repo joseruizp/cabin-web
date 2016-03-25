@@ -71,6 +71,9 @@ $("#loginBtn").click(function() {
 	    	    	} else if (idProfile === "3") {
 	    	    		console.log("go to user page");
 	    	    		window.location.href = hostname + "/cabin-web/client";
+	    	    	} else if (idProfile === "4") {
+	    	    		console.log("go to user page");
+	    	    		window.location.href = hostname + "/cabin-web/incidence";
 	    	    	}
 	    	    },
 	    	    error: function (xhr, status) {	    	
