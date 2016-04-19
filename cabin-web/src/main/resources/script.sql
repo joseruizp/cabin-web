@@ -26,6 +26,8 @@ SET time_zone = "+00:00";
 -- Table structure for table `cliente`
 --
 
+DROP TABLE IF EXISTS `cliente`;
+
 CREATE TABLE `cliente` (
   `id` bigint(20) NOT NULL,
   `correo` varchar(80) DEFAULT NULL,
@@ -54,6 +56,8 @@ INSERT INTO `cliente` (`id`, `correo`, `nombre`, `sexo`, `fecha_nacimiento`, `sa
 -- Table structure for table `consola`
 --
 
+DROP TABLE IF EXISTS `consola`;
+
 CREATE TABLE `consola` (
   `id` bigint(20) NOT NULL,
   `nombre` varchar(20) DEFAULT NULL,
@@ -78,6 +82,8 @@ INSERT INTO `consola` (`id`, `nombre`, `ip`, `id_estado`, `id_grupo`, `id_sede`)
 --
 -- Table structure for table `empleado`
 --
+
+DROP TABLE IF EXISTS `empleado`;
 
 CREATE TABLE `empleado` (
   `id` bigint(20) NOT NULL,
@@ -109,6 +115,8 @@ INSERT INTO `empleado` (`id`, `correo`, `nombre`, `telefono`, `tipo_documento`, 
 -- Table structure for table `equipo`
 --
 
+DROP TABLE IF EXISTS `equipo`;
+
 CREATE TABLE `equipo` (
   `id` bigint(20) NOT NULL,
   `nombre` varchar(20) DEFAULT NULL,
@@ -137,6 +145,8 @@ INSERT INTO `equipo` (`id`, `nombre`, `ip`, `serie`, `mac`, `id_estado`, `id_gru
 -- Table structure for table `estado`
 --
 
+DROP TABLE IF EXISTS `estado`;
+
 CREATE TABLE `estado` (
   `id` bigint(20) NOT NULL,
   `nombre` varchar(20) DEFAULT NULL
@@ -155,6 +165,8 @@ INSERT INTO `estado` (`id`, `nombre`) VALUES
 --
 -- Table structure for table `grupo`
 --
+
+DROP TABLE IF EXISTS `grupo`;
 
 CREATE TABLE `grupo` (
   `id` bigint(20) NOT NULL,
@@ -175,6 +187,8 @@ INSERT INTO `grupo` (`id`, `nombre`, `descripcion`) VALUES
 --
 -- Table structure for table `incidencia`
 --
+
+DROP TABLE IF EXISTS `incidencia`;
 
 CREATE TABLE `incidencia` (
   `id` bigint(20) NOT NULL,
@@ -201,6 +215,8 @@ INSERT INTO `incidencia` (`id`, `trabajo_realizado`, `fecha`, `cantidad`, `id_em
 -- Table structure for table `nivel`
 --
 
+DROP TABLE IF EXISTS `nivel`;
+
 CREATE TABLE `nivel` (
   `id` bigint(20) NOT NULL,
   `nombre` varchar(20) DEFAULT NULL,
@@ -225,6 +241,8 @@ INSERT INTO `nivel` (`id`, `nombre`, `puntos_inicial`, `puntos_final`, `pregunta
 -- Table structure for table `perfil`
 --
 
+DROP TABLE IF EXISTS `perfil`;
+
 CREATE TABLE `perfil` (
   `id` bigint(20) NOT NULL,
   `nombre` varchar(20) DEFAULT NULL,
@@ -247,6 +265,8 @@ INSERT INTO `perfil` (`id`, `nombre`, `descripcion`) VALUES
 -- Table structure for table `regla_premio`
 --
 
+DROP TABLE IF EXISTS `regla_premio`;
+
 CREATE TABLE `regla_premio` (
   `id` bigint(20) NOT NULL,
   `nombre` varchar(20) DEFAULT NULL,
@@ -268,6 +288,8 @@ INSERT INTO `regla_premio` (`id`, `nombre`, `puntos`, `fraccion_saldo`) VALUES
 --
 -- Table structure for table `regla_puntuacion`
 --
+
+DROP TABLE IF EXISTS `regla_puntuacion`;
 
 CREATE TABLE `regla_puntuacion` (
   `id` bigint(20) NOT NULL,
@@ -294,6 +316,8 @@ INSERT INTO `regla_puntuacion` (`id`, `nombre`, `fraccion_recarga`, `puntos`, `i
 -- Table structure for table `sede`
 --
 
+DROP TABLE IF EXISTS `sede`;
+
 CREATE TABLE `sede` (
   `id` bigint(20) NOT NULL,
   `nombre` varchar(20) DEFAULT NULL,
@@ -317,6 +341,8 @@ INSERT INTO `sede` (`id`, `nombre`, `direccion`, `id_usuario`) VALUES
 -- Table structure for table `servicio`
 --
 
+DROP TABLE IF EXISTS `servicio`;
+
 CREATE TABLE `servicio` (
   `id` bigint(20) NOT NULL,
   `nombre` varchar(20) DEFAULT NULL,
@@ -336,6 +362,8 @@ INSERT INTO `servicio` (`id`, `nombre`, `descripcion`) VALUES
 --
 -- Table structure for table `tarifa`
 --
+
+DROP TABLE IF EXISTS `tarifa`;
 
 CREATE TABLE `tarifa` (
   `id` bigint(20) NOT NULL,
@@ -363,6 +391,8 @@ INSERT INTO `tarifa` (`id`, `descripcion`, `dias`, `fraccion_minima`, `hora_inic
 -- Table structure for table `tarifa_por_grupo_sede`
 --
 
+DROP TABLE IF EXISTS `tarifa_por_grupo_sede`;
+
 CREATE TABLE `tarifa_por_grupo_sede` (
   `id` bigint(20) NOT NULL,
   `id_sede` bigint(20) DEFAULT NULL,
@@ -386,6 +416,8 @@ INSERT INTO `tarifa_por_grupo_sede` (`id`, `id_sede`, `id_grupo`, `id_tarifa`) V
 -- Table structure for table `tipo_documento`
 --
 
+DROP TABLE IF EXISTS `tipo_documento`;
+
 CREATE TABLE `tipo_documento` (
   `id` bigint(20) NOT NULL,
   `nombre` varchar(20) DEFAULT NULL
@@ -406,6 +438,8 @@ INSERT INTO `tipo_documento` (`id`, `nombre`) VALUES
 --
 -- Table structure for table `usuario`
 --
+
+DROP TABLE IF EXISTS `usuario`;
 
 CREATE TABLE `usuario` (
   `id` bigint(20) NOT NULL,
@@ -432,8 +466,34 @@ INSERT INTO `usuario` (`id`, `nombre`, `clave`, `id_perfil`) VALUES
 (11, 'e@pucp.pe', 'eE12', 4);
 
 --
+-- Table structure for table `estado_alquiler`
+--
+
+DROP TABLE IF EXISTS `estado_alquiler`;
+
+CREATE TABLE `estado_alquiler` (
+  `id` bigint(20) NOT NULL,
+  `nombre` varchar(20) DEFAULT NULL
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
+
+INSERT INTO `estado_alquiler` VALUES (1,'ALQUILADO'),(2,'DETENIDO');
+
+--
 -- Indexes for dumped tables
 --
+
+DROP TABLE IF EXISTS `alquiler`;
+
+CREATE TABLE `alquiler` (
+  `id` bigint(20) NOT NULL,
+  `fecha_inicio`  datetime DEFAULT NULL,
+  `fecha_modificacion`  datetime DEFAULT NULL,
+  `tiempo_alquiler` double DEFAULT NULL,
+  `id_estado_alquiler` bigint(20) DEFAULT NULL,
+  `id_cliente` bigint(20) DEFAULT NULL,
+  `id_equipo` bigint(20) DEFAULT NULL,
+  `id_consola` bigint(20) DEFAULT NULL
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
 
 --
 -- Indexes for table `cliente`
@@ -559,6 +619,22 @@ ALTER TABLE `usuario`
   ADD KEY `id_perfil` (`id_perfil`);
 
 --
+-- Indexes for table `usuario`
+--
+ALTER TABLE `estado_alquiler`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `alquiler`
+--
+ALTER TABLE `alquiler`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `id_estado_alquiler` (`id_estado_alquiler`),
+  ADD KEY `id_cliente` (`id_cliente`),
+  ADD KEY `id_equipo` (`id_equipo`),
+  ADD KEY `id_consola` (`id_consola`);
+
+--
 -- AUTO_INCREMENT for dumped tables
 --
 
@@ -648,6 +724,16 @@ ALTER TABLE `tipo_documento`
 ALTER TABLE `usuario`
   MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
 --
+-- AUTO_INCREMENT for table `alquiler`
+--
+ALTER TABLE `estado_alquiler`
+  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+--
+-- AUTO_INCREMENT for table `alquiler`
+--
+ALTER TABLE `alquiler`
+  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
+--
 -- Constraints for dumped tables
 --
 
@@ -718,57 +804,20 @@ ALTER TABLE `usuario`
   ADD CONSTRAINT `usuario_ibfk_1` FOREIGN KEY (`id_perfil`) REFERENCES `perfil` (`id`);
 
 --
+-- Constraints for table `alquiler`
+--
+ALTER TABLE `alquiler`
+  ADD CONSTRAINT `alquiler_ibfk_1` FOREIGN KEY (`id_estado_alquiler`) REFERENCES `estado_alquiler` (`id`),
+  ADD CONSTRAINT `alquiler_ibfk_2` FOREIGN KEY (`id_cliente`) REFERENCES `cliente` (`id`),
+  ADD CONSTRAINT `alquiler_ibfk_3` FOREIGN KEY (`id_equipo`) REFERENCES `equipo` (`id`),
+  ADD CONSTRAINT `alquiler_ibfk_4` FOREIGN KEY (`id_consola`) REFERENCES `consola` (`id`);
+
+--
 -- Table structure for table `alquiler`
 --
 
-DROP TABLE IF EXISTS `alquiler`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `alquiler` (
-  `id` bigint(20) NOT NULL AUTO_INCREMENT,
-  `fecha_inicio`  datetime DEFAULT NULL,
-  `fecha_modificacion`  datetime DEFAULT NULL,
-  `tiempo_alquiler` double DEFAULT NULL,
-  `id_estado_alquiler` bigint(20) DEFAULT NULL,
-  `id_cliente` bigint(20) DEFAULT NULL,
-  `id_equipo` bigint(20) DEFAULT NULL,
-  `id_consola` bigint(20) DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  KEY `id_estado_alquiler` (`id_estado_alquiler`),
-  CONSTRAINT `alquiler_ibfk_1` FOREIGN KEY (`id_estado_alquiler`) REFERENCES `estado_alquiler` (`id`),
-  KEY `id_cliente` (`id_cliente`),
-  CONSTRAINT `alquiler_ibfk_2` FOREIGN KEY (`id_cliente`) REFERENCES `cliente` (`id`),
-  KEY `id_equipo` (`id_equipo`),
-  CONSTRAINT `alquiler_ibfk_3` FOREIGN KEY (`id_equipo`) REFERENCES `equipo` (`id`),
-  KEY `id_consola` (`id_consola`),
-  CONSTRAINT `alquiler_ibfk_4` FOREIGN KEY (`id_consola`) REFERENCES `consola` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Table structure for table `estado_alquiler`
---
-
-DROP TABLE IF EXISTS `estado_alquiler`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `estado_alquiler` (
-  `id` bigint(20) NOT NULL AUTO_INCREMENT,
-  `nombre` varchar(20) DEFAULT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `usuario`
---
-
-LOCK TABLES `estado_alquiler` WRITE;
-/*!40000 ALTER TABLE `usuario` DISABLE KEYS */;
-INSERT INTO `estado_alquiler` VALUES (1,'ALQUILADO'),(2,'DETENIDO');
-/*!40000 ALTER TABLE `usuario` ENABLE KEYS */;
-UNLOCK TABLES;
-/*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
