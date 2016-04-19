@@ -1,11 +1,14 @@
 package com.cabin.core.persistence.repository;
 
+import java.util.List;
+
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.repository.query.Param;
 import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 
 import com.cabin.core.persistence.domain.Client;
 
 @RepositoryRestResource(collectionResourceRel = "cliente", path = "cliente")
 public interface ClientRepository extends JpaRepository<Client, Long> {
-
+	public List<Client> findByEmail(@Param("email") String email);
 }

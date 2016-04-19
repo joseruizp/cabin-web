@@ -31,6 +31,11 @@ $(".login").submit(function() {
 	return false;
 });
 
+function newUser(){
+	var hostname = window.location.protocol + "//" + window.location.host;	
+	window.location.href = hostname + "/cabin-web/newUser";
+}
+
 $("#loginBtn").click(function() {
 	var email = $("#email").val();
 	var password = $("#password").val();
@@ -66,6 +71,9 @@ $("#loginBtn").click(function() {
 	    	    	} else if (idProfile === "3") {
 	    	    		console.log("go to user page");
 	    	    		window.location.href = hostname + "/cabin-web/client";
+	    	    	} else if (idProfile === "4") {
+	    	    		console.log("go to user page");
+	    	    		window.location.href = hostname + "/cabin-web/incidence";
 	    	    	}
 	    	    },
 	    	    error: function (xhr, status) {	    	

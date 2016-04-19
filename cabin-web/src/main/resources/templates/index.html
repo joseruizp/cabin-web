@@ -21,6 +21,7 @@
 		<link th:href="@{plugins/jquery.mCustomScrollbar.min.css}" rel="stylesheet"/>		
 		<link th:href="@{plugins/dataTables/css/jquery.dataTables.css}" rel="stylesheet"/>
 		<link th:href="@{css/custom.css}" rel="stylesheet"/>
+		<link th:href="@{bootstrap/css/bootstrap-datepicker.css}" rel="stylesheet"/>
 	</head>
 
 	<body class="no-trans">
@@ -75,8 +76,9 @@
 										<!-- Collect the nav links, forms, and other content for toggling -->
 										<div class="collapse navbar-collapse scrollspy smooth-scroll" id="navbar-collapse-1">
 											<ul class="nav navbar-nav navbar-right">
-												<li class="active"><a href="#sedes">Sedes</a></li>
-												<li class="active"><a href="#nuevaSede">Nueva Sede</a></li>
+												<li class="active"><a href="#nuevoCliente">Cliente</a></li>
+												<li class="active"><a href="#nuevoEmpleado">Empleado</a></li>
+												<li class="active"><a href="#nuevaSede">Sede</a></li>
 												<li class="active"><a href="#nuevaTarifa">Tarifas</a></li>
 												<li class="active"><a href="#puntos">Puntos</a></li>
 												<li class="active"><a href="#niveles">Niveles</a></li>
@@ -112,6 +114,275 @@
 		<!-- banner end -->
 		
 		<!-- banner start --> 
+		<div id="nuevoCliente">
+			<div class="container">
+				<br/>
+				<div class="row">
+					<div class="col-md-12" style="margin-top: 40px">
+						<h1 id="tituloEquipos" class="title text-center">Nuevo <span>Cliente</span></h1>
+						<p class="lead text-center">Lorem ipsum dolor sit amet, consectetur adipisicing elit. laudantium culpa tenetur.</p>
+					</div>
+				</div>
+				<div class="row" style="margin-left: 110px; margin-right: 110px">
+					<form class="form-horizontal" role="form" id="form-cliente">
+						<input type="hidden" id="idCliente" value=""/>
+						<div class="form-group">
+							<label class="control-label col-sm-2" for="nameCustomer">Nombre:</label>
+							<div class="col-sm-4">
+								<input class="form-control" id="nameCustomer"
+									placeholder="Nombre" maxlength="20"/>
+							</div>							
+					        <label class="control-label col-sm-2" for="birthDateCustomer">Fecha nacimiento:</label>
+					        <div class="col-sm-4">
+					            <div class="input-group date">
+						            <input type="text" class="form-control input-date" name="birthDate" id="birthDateCustomer" placeholder="DD/MM/YYYY"/>
+						            <span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
+					            </div>
+				         	</div>
+						</div>						
+						<div class="form-group">
+							<label class="col-sm-2 control-label">Sexo:</label>
+						    <div class="col-sm-4">
+								<div class="dropdown">
+									<button class="btn btn-primary dropdown-toggle" type="button"
+										data-toggle="dropdown">
+										Seleccionar <span class="caret"></span>
+									</button>
+									<ul id="genderCustomer" class="dropdown-menu">
+										<li><a href="/" onclick="return false;">Masculino</a></li>
+										<li><a href="/" onclick="return false;">Femenino</a></li>
+									</ul>
+								</div>
+							</div>
+						    
+						    <label class="control-label col-sm-2" for="emailCustomer">Email:</label>
+							<div class="col-sm-4">
+								<input class="form-control" id="emailCustomer"
+									placeholder="Correo" maxlength="40"/> 
+							</div>
+					        
+						</div>
+						<div class="form-group">
+							<label class="control-label col-sm-2" for="balanceCustomer">Saldo:</label>
+							<div class="col-sm-4">
+								<input  class="form-control" id="balanceCustomer"
+									placeholder="Saldo" maxlength="20"/>
+							</div>
+							<label class="control-label col-sm-2" for="pointsCustomer">Puntos:</label>
+							<div class="col-sm-4">
+								<input  class="form-control" id="pointsCustomer"
+									placeholder="Puntos" maxlength="20"/>
+							</div>
+						</div>
+						<div class="form-group">
+							<label class="control-label col-sm-2" for="passwordCustomer">Contraseña:</label>
+							<div class="col-sm-4">
+								<input  type="password" class="form-control" id="passwordCustomer"
+									placeholder="Contraseña" maxlength="20"/>
+							</div>
+							<label class="control-label col-sm-2" for="confirmPasswordCustomer">Confirmar contraseña:</label>
+							<div class="col-sm-4">
+								<input  type="password" class="form-control" id="confirmPasswordCustomer"
+									placeholder="Confirmar contraseña" maxlength="20"/>
+							</div>
+						</div>
+						<div class="form-group">
+							<label class="control-label col-sm-2" for="nivelCustomer">Nivel:</label>
+							<div class="col-sm-4">
+								<div class="dropdown">
+									<button class="btn btn-primary dropdown-toggle" type="button"
+										data-toggle="dropdown">
+										Seleccionar <span class="caret"></span>
+									</button>
+									<ul id="nivelCustomer" class="dropdown-menu">																													
+									</ul>
+								</div>
+							</div>
+							<label class="control-label col-sm-2" for="statusCustomer">Estado:</label>
+							<div class="col-sm-4">
+								<div class="dropdown">
+									<button class="btn btn-primary dropdown-toggle" type="button"
+										data-toggle="dropdown">
+										Seleccionar <span class="caret"></span>
+									</button>
+									<ul id="statusCustomer" class="dropdown-menu">
+										<li><a href="/" onclick="return false;">Activo</a></li>
+										<li><a href="/" onclick="return false;">Inactivo</a></li>
+									</ul>
+								</div>
+							</div>
+						</div>
+						<div class="form-group">
+							<div class="col-sm-offset-5 col-sm-7">
+								<button id="btnCliente" type="submit" class="btn btn-default">Nuevo Cliente</button>
+							</div>
+						</div>
+					</form>
+					<div id="clienteValidation" class="alert alert-danger" style="display:none"></div>
+				</div>
+				<div class="space"></div>
+			    <div role="tabpanel" class="table-responsive" id="listaClientesDiv">
+			        <table id="clienteTbl" class="table table-striped display">
+			            <thead>
+			                <tr>	                				                	
+			                	<th>Código</th>
+			                    <th>Nombre</th>
+			                    <th>Correo</th>
+			                    <th>Sexo</th>
+			                    <th>Fecha Nacimiento</th>
+			                    <th>Saldo</th>
+			                    <th>Puntos</th>
+			                    <th>Estado</th>			                    
+			                    <th colspan="2">Opciones</th>			                    
+			                </tr>
+			            </thead>
+			            <tbody>			                
+			            </tbody>
+			        </table>
+			    </div>
+			</div>
+		</div>
+		<!-- banner end -->
+		
+		<!-- banner start --> 
+		<div id="nuevoEmpleado">
+			<div class="container">
+				<br/>
+				<div class="row">
+					<div class="col-md-12" style="margin-top: 40px">
+						<h1 id="tituloEquipos" class="title text-center">Nuevo <span>Empleado</span></h1>
+						<p class="lead text-center">Lorem ipsum dolor sit amet, consectetur adipisicing elit. laudantium culpa tenetur.</p>
+					</div>
+				</div>
+				<div class="row" style="margin-left: 110px; margin-right: 110px">
+					<form class="form-horizontal" role="form" id="form-empleado">
+						<input type="hidden" id="idEmpleado" value=""/>
+						<div class="form-group">
+							<label class="control-label col-sm-2" for="nameEmployee">Nombre:</label>
+							<div class="col-sm-4">
+								<input class="form-control" id="nameEmployee"
+									placeholder="Nombre" maxlength="20"/>
+							</div>							
+					        <label class="control-label col-sm-2" for="birthDateEmployee">Fecha nacimiento:</label>
+					        <div class="col-sm-4">
+					            <div class="input-group date">
+						            <input type="text" class="form-control input-date" name="birthDate" id="birthDateEmployee" placeholder="DD/MM/YYYY"/>
+						            <span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
+					            </div>
+				         	</div>
+						</div>						
+						<div class="form-group">
+							<label class="col-sm-2 control-label">Sexo:</label>
+						    <div class="col-sm-4">
+								<div class="dropdown">
+									<button class="btn btn-primary dropdown-toggle" type="button"
+										data-toggle="dropdown">
+										Seleccionar <span class="caret"></span>
+									</button>
+									<ul id="genderEmployee" class="dropdown-menu">
+										<li><a href="/" onclick="return false;">Masculino</a></li>
+										<li><a href="/" onclick="return false;">Femenino</a></li>
+									</ul>
+								</div>
+							</div>
+						    
+						    <label class="control-label col-sm-2" for="emailEmployee">Email:</label>
+							<div class="col-sm-4">
+								<input class="form-control" id="emailEmployee"
+									placeholder="Correo" maxlength="40"/> 
+							</div>
+					        
+						</div>
+						<div class="form-group">														
+							<label class="control-label col-sm-2" for="docType">Tipo Documento:</label>
+							<div class="col-sm-4">
+								<div class="dropdown">
+									<button class="btn btn-primary dropdown-toggle" type="button"
+										data-toggle="dropdown">
+										Seleccionar <span class="caret"></span>
+									</button>
+									<ul id="docType" class="dropdown-menu">																													
+									</ul>
+								</div>
+							</div>						
+							<label class="control-label col-sm-2" for="docCode">N. Documento:</label>
+							<div class="col-sm-4">
+								<input  class="form-control" id="docCode"
+									placeholder="Confirmar contraseña" maxlength="20"/>
+							</div>
+						</div>
+						<div class="form-group">
+							<label class="control-label col-sm-2" for="passwordEmployee">Contraseña:</label>
+							<div class="col-sm-4">
+								<input  type="password" class="form-control" id="passwordEmployee"
+									placeholder="Contraseña" maxlength="20"/>
+							</div>
+							<label class="control-label col-sm-2" for="confirmPasswordEmployee">Confirmar contraseña:</label>
+							<div class="col-sm-4">
+								<input  type="password" class="form-control" id="confirmPasswordEmployee"
+									placeholder="Confirmar contraseña" maxlength="20"/>
+							</div>
+						</div>
+						<div class="form-group">							
+							<label class="control-label col-sm-2" for="profileEmployee">Perfil:</label>
+							<div class="col-sm-4">
+								<div class="dropdown">
+									<button class="btn btn-primary dropdown-toggle" type="button"
+										data-toggle="dropdown">
+										Seleccionar <span class="caret"></span>
+									</button>
+									<ul id="profileEmployee" class="dropdown-menu">																													
+									</ul>
+								</div>
+							</div>
+							<label class="control-label col-sm-2" for="statusEmployee">Estado:</label>
+							<div class="col-sm-4">
+								<div class="dropdown">
+									<button class="btn btn-primary dropdown-toggle" type="button"
+										data-toggle="dropdown">
+										Seleccionar <span class="caret"></span>
+									</button>
+									<ul id="statusEmployee" class="dropdown-menu">
+										<li><a href="/" onclick="return false;">Activo</a></li>
+										<li><a href="/" onclick="return false;">Inactivo</a></li>
+									</ul>
+								</div>
+							</div>
+						</div>
+						<div class="form-group">
+							<div class="col-sm-offset-5 col-sm-7">
+								<button id="btnEmpleado" type="submit" class="btn btn-default">Nuevo Empleado</button>
+							</div>
+						</div>						
+					</form>
+					<div id="empleadoValidation" class="alert alert-danger" style="display:none"></div>
+				</div>
+				<div class="space"></div>
+			    <div role="tabpanel" class="table-responsive" id="listaEmpleadosDiv">
+			        <table id="empleadoTbl" class="table table-striped display">
+			            <thead>
+			                <tr>	                				                	
+			                	<th>Código</th>
+			                    <th>Nombre</th>
+			                    <th>Correo</th>
+			                    <th>Sexo</th>
+			                    <th>Fecha Nacimiento</th>
+			                    <th>Tipo Documento</th>
+			                    <th>N Documento</th>
+			                    <th>Perfil</th>
+			                    <th>Estado</th>			                    
+			                    <th colspan="2">Opciones</th>			                    
+			                </tr>
+			            </thead>
+			            <tbody>			                
+			            </tbody>
+			        </table>
+			    </div>
+			</div>
+		</div>
+		<!-- banner end -->		
+		
+		<!-- banner start --> 
 		<div id="nuevaSede">
 			<div class="container">
 				<br/>
@@ -126,16 +397,27 @@
 						<input type="hidden" id="idSede" value=""/>
 						<div class="form-group">
 							<label class="control-label col-sm-2" for="name">Nombre:</label>
-							<div class="col-sm-10">
+							<div class="col-sm-4">
 								<input class="form-control" id="name"
 									placeholder="Nombre Sede" maxlength="20"/>
 							</div>
-						</div>
-						<div class="form-group">
 							<label class="control-label col-sm-2" for="address">Direccion:</label>
-							<div class="col-sm-10">
+							<div class="col-sm-4">
 								<input class="form-control" id="address"
-									placeholder="Direccion" maxlength="200"/>
+									placeholder="Direccion" maxlength="200"/>									
+							</div>
+						</div>
+						<div class="form-group">							
+							<label class="control-label col-sm-2" for="operario">Operario:</label>
+							<div class="col-sm-4">
+								<div class="dropdown">
+									<button class="btn btn-primary dropdown-toggle" type="button"
+										data-toggle="dropdown">
+										Seleccionar <span class="caret"></span>
+									</button>
+									<ul id="operario" class="dropdown-menu">																													
+									</ul>
+								</div>
 							</div>
 						</div>
 						<div class="form-group">
@@ -154,6 +436,7 @@
 			                	<th>Código</th>
 			                    <th>Nombre</th>
 			                    <th>Direccion</th>
+			                    <th>Operario</th>
 			                    <th>Nro Equipos</th>
 			                    <th>Nro Consolas</th>			                    
 			                    <th colspan="3">Opciones</th>			                    
@@ -519,6 +802,8 @@
 		<script type="text/javascript" th:src="@{plugins/jquery.mCustomScrollbar.concat.min.js}"></script>
 		<script type="text/javascript" th:src="@{plugins/ng-table/ng-table.min.js}"></script>
 		<script type="text/javascript" th:src="@{plugins/dataTables/js/jquery.dataTables.js}"></script>
+		<script type="text/javascript" th:src="@{bootstrap/js/bootstrap-datepicker.js}"></script>
+		<script type="text/javascript" th:src="@{bootstrap/js/bootstrap-datepicker.es.min.js}"></script>
 		<!-- Custom Scripts -->
 		<script type="text/javascript" th:src="@{js/custom.js}"></script>
 		<script type="text/javascript" th:src="@{js/home.js}"></script>

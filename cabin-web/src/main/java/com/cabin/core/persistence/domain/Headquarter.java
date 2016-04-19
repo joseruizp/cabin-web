@@ -7,6 +7,8 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 
 @Entity(name = "sede")
 public class Headquarter implements Serializable {
@@ -22,7 +24,12 @@ public class Headquarter implements Serializable {
 
     @Column(name = "direccion", length = 200)
     private String address;
+    
+    @ManyToOne
+	@JoinColumn(name = "id_usuario")
+	private User user;
 
+    
     public Long getId() {
         return id;
     }
@@ -35,7 +42,15 @@ public class Headquarter implements Serializable {
         return name;
     }
 
-    public void setName(String name) {
+    public User getUser() {
+		return user;
+	}
+
+	public void setUser(User user) {
+		this.user = user;
+	}
+
+	public void setName(String name) {
         this.name = name;
     }
 
