@@ -11,7 +11,7 @@ $(document).ready(function(){
 	    autoclose: true,
 	    todayHighlight: true
 	 });	
-	$('.input-group.date').datepicker('setDate',"01/01/2000");
+	$('.input-group.date').datepicker('setDate',"");
 	
 	$("#gender li a").click(function(){
 		$(this).parents(".dropdown").find('.btn').html($(this).text() + ' <span class="caret"></span>');
@@ -128,7 +128,7 @@ function addUser() {
 	valid = valid && checkRegexp( $("#email"), /^([\w-\.]+@([\w-]+\.)+[\w-]{2,4})?$/i , "El email ingresado no es válido.", userValidation );
 	valid = valid && checkRequired( $("#password"), "Debe ingresar una contraseña.",1, userValidation);
 	valid = valid && checkRegexp( $("#password"), /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?!.*\s).{4,20}$/, "La contraseña debe contener al menos una letra minúscula, una mayúscula, un dígito. Mínimo cuatro caracteres y máximo, viente.", userValidation );
-	valid = valid && checkRequired( $("#confirmPassword"), "Debe confirmar su contraseña.",1, userValidation);
+	valid = valid && checkRequired( $("#confirmPassword"), "Debe confirmar su contrase&ntilde;a.",1, userValidation);
 	valid = valid && checkRegexp( $("#confirmPassword"), /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?!.*\s).{4,20}$/, "La contraseña debe contener al menos una letra minúscula, una mayúscula, un dígito. Mínimo cuatro caracteres y máximo, veinte.", userValidation );
 	valid = valid && checkPassword($("#password"), $("#confirmPassword"), "Las contraseñas no coinciden",  userValidation);
 	valid = valid && checkEmail( $("#emailCustomer"), "El email ya se encuentra registrado.", clienteValidation);

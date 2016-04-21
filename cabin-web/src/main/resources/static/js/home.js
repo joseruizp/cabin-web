@@ -2648,7 +2648,7 @@ function addCliente() {
 	valid = valid && checkRegexp( $("#balanceCustomer"), /^[0-9]\d{0,3}($|\.\d{0,2}$)/i, "Debe ingresar ingresar un monto válido, no mayor de 999.99 soles y de dos decimales.", clienteValidation);
 	valid = valid && checkRequired( $("#passwordCustomer"), "Debe ingresar una contraseña.",1, clienteValidation);
 	valid = valid && checkRegexp( $("#passwordCustomer"), /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?!.*\s).{4,20}$/, "La contraseña debe contener al menos una letra minúscula, una mayúscula, un dígito. Mínimo cuatro caracteres y máximo, viente.", clienteValidation );
-	valid = valid && checkRequired( $("#confirmPasswordCustomer"), "Debe confirmar su contraseña.",1, clienteValidation);
+	valid = valid && checkRequired( $("#confirmPasswordCustomer"), "Debe confirmar su contrase&ntilde;a.",1, clienteValidation);
 	valid = valid && checkRegexp( $("#confirmPasswordCustomer"), /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?!.*\s).{4,20}$/, "La contraseña debe contener al menos una letra minúscula, una mayúscula, un dígito. Mínimo cuatro caracteres y máximo, veinte.", clienteValidation );
 	valid = valid && checkPassword($("#passwordCustomer"), $("#confirmPasswordCustomer"), "Las contraseñas no coinciden",  clienteValidation);	
 	var nivelCustomerHtml = $("#nivelCustomer li a");	
@@ -2684,7 +2684,7 @@ function addEmpleado() {
     	valid = valid && checkRequired($("#docCode"),"Debe ingresar el número de documento.",1, empleadoValidation);
 	valid = valid && checkRequired( $("#passwordEmployee"), "Debe ingresar una contraseña.",1, empleadoValidation);
 	valid = valid && checkRegexp( $("#passwordEmployee"), /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?!.*\s).{4,20}$/, "La contraseña debe contener al menos una letra minúscula, una mayúscula, un dígito. Mínimo cuatro caracteres y máximo, viente.", empleadoValidation );
-	valid = valid && checkRequired( $("#confirmPasswordEmployee"), "Debe confirmar su contraseña.",1, empleadoValidation);
+	valid = valid && checkRequired( $("#confirmPasswordEmployee"), "Debe confirmar su contrase&ntilde;a.",1, empleadoValidation);
 	valid = valid && checkRegexp( $("#confirmPasswordEmployee"), /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?!.*\s).{4,20}$/, "La contraseña debe contener al menos una letra minúscula, una mayúscula, un dígito. Mínimo cuatro caracteres y máximo, veinte.", empleadoValidation );
 	valid = valid && checkPassword($("#passwordEmployee"), $("#confirmPasswordEmployee"), "Las contraseñas no coinciden",  empleadoValidation);	
 	var statusHtml = $("#statusEmployee li a");		
