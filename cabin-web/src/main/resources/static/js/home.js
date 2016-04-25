@@ -2554,6 +2554,9 @@ function addSede() {
 	valid = valid && checkRegexp( $("#name"), /.+/i, "El nombre ingresado para la sede no es válido.",  sedeValidation);	
 	valid = valid && checkRequired( $("#address"), "Debe ingresar la dirección de la sede.",1, sedeValidation);
 	valid = valid && checkRegexp( $("#address"), /.+/i, "La dirección ingresada para la sede no es válida.",  sedeValidation);	
+	var genderHtml = $("#operario li a");		
+	genderHtml = $(genderHtml).parents(".dropdown").find('.btn');	
+	valid = valid && checkRequired( genderHtml, "Debe seleccionar un operario.",1, sedeValidation);
 	return valid;
 }
 
@@ -2607,6 +2610,11 @@ function addNivel() {
 	valid = valid && checkRegexp( $("#finalPoints"), /^[1-9]\d{0,5}$/i, "Debe ingresar una cantidad de puntos no mayor de 999 999, valor entero.", nivelValidation);
 	valid = valid && checkRequired( $("#question"), "Debe ingresar una pregunta.",1, nivelValidation);
 	valid = valid && checkRegexp( $("#question"), /.+/i, "La pregunta ingresada para el nivel no es válida.",  nivelValidation);
+	
+	if(!valid) {
+		return false;
+	}
+	
 	var length = niveles.length;
 	var startPoint = trim( $( "#initialPoints" ).val() ); var endPoint = trim( $( "#finalPoints" ).val() );
 	var idNivel = $("#idNivel").attr("value");
