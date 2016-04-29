@@ -1452,6 +1452,7 @@ function saveCliente(){
 	    contentType: 'application/json',
 	    success: function (data) {
 	    	console.log("Send a user into DB");
+	    	$('#emailCustomer').prop('disabled', false);
 	    	if (idCustomer != ""){
 	    		console.log(strUrl);
 	    		$("#btnCliente").html("Nuevo Cliente");
@@ -1662,6 +1663,9 @@ function saveEmpleado(){
 	    contentType: 'application/json',
 	    success: function (data) {
 	    	console.log("Send a user into DB");
+	    	$('#emailEmployee').prop('disabled', false);
+	    	$('#docCode').prop('disabled', false);
+	    	$('#docTypeButton').removeClass('disabled');
 	    	if (idEmpleado != ""){
 	    		console.log(strUrl);
 	    		$("#btnEmpleado").html("Nuevo Empleado");
@@ -1785,6 +1789,7 @@ function editCliente( code, index ){
 	    	var idCliente = hrefArray[hrefArray.length -1];
 	    	$( "#nameCustomer" ).val(json.name);
 			$( "#emailCustomer" ).val(json.email);
+			$( "#emailCustomer" ).prop('disabled', true);
 			$( "#balanceCustomer" ).val(json.balance);
 			$( "#pointsCustomer" ).val(json.points);
 			var date = json.birthDate.substring(0,10);
@@ -1906,6 +1911,10 @@ function editEmpleado( code, index ){
 			}else if ( json.docType == 4){
 				docTypeHtml.parents(".dropdown").find('.btn').html( 'OTROS <span class="caret"></span>');	
 			}
+			
+			$('#docTypeButton').addClass('disabled');
+			$('#docCode').prop('disabled', true);
+			$('#emailEmployee').prop('disabled', true);
 	    },
 	    error: function (xhr, status) {	    	
 	    	console.log("Error, su solicitud no pudo ser atendida");
@@ -2680,16 +2689,18 @@ function addEmpleado() {
 	valid = valid && checkRequired( genderHtml, "Debe seleccionar un género.",1, empleadoValidation);	
 	valid = valid && checkRequired($("#emailEmployee"),"Debe ingresar un email.",1, empleadoValidation);
 	valid = valid && checkRegexp( $("#emailEmployee"), /^([\w-\.]+@([\w-]+\.)+[\w-]{2,4})?$/i , "El email ingresado no es válido.", empleadoValidation );
-	var docTypeHtml = $("#docType li a");		
-	docTypeHtml = $(docTypeHtml).parents(".dropdown").find('.btn');
-	valid = valid && checkRequired( docTypeHtml, "Debe seleccionar un tipo de documento.",1, empleadoValidation);
-	//valid = valid && checkRegexp( $("#docCode"), /^[0-9]\d{0,15}$/i, "Debe ingresar número de documento correcto", empleadoValidation);
-	if ( $(docTypeHtml).val() == 1) //En caso DNI
-		valid = valid && checkRegexp( $("#docCode"), /^[0-9]\d{7}$/i, "El DNI ingresado no es válido" , empleadoValidation);
-	else if( $(docTypeHtml).val() == 2) //En caso RUC
-		valid = valid && checkRegexp( $("#docCode"), /^[1-9]\d{10}$/i, "El RUC ingresado no es válido", empleadoValidation );
-    else if( $(docTypeHtml).val > 2) //En cualquier otro documento
-    	valid = valid && checkRequired($("#docCode"),"Debe ingresar el número de documento.",1, empleadoValidation);
+	if(!$("#docCode").is(':disabled')) {
+		var docTypeHtml = $("#docType li a");		
+		docTypeHtml = $(docTypeHtml).parents(".dropdown").find('.btn');
+		valid = valid && checkRequired( docTypeHtml, "Debe seleccionar un tipo de documento.",1, empleadoValidation);
+		//valid = valid && checkRegexp( $("#docCode"), /^[0-9]\d{0,15}$/i, "Debe ingresar número de documento correcto", empleadoValidation);
+		if ( $(docTypeHtml).val() == 1) //En caso DNI
+			valid = valid && checkRegexp( $("#docCode"), /^[0-9]\d{7}$/i, "El DNI ingresado no es válido" , empleadoValidation);
+		else if( $(docTypeHtml).val() == 2) //En caso RUC
+			valid = valid && checkRegexp( $("#docCode"), /^[1-9]\d{10}$/i, "El RUC ingresado no es válido", empleadoValidation );
+	    else if( $(docTypeHtml).val > 2) //En cualquier otro documento
+	    	valid = valid && checkRequired($("#docCode"),"Debe ingresar el número de documento.",1, empleadoValidation);		
+	}
 	valid = valid && checkRequired( $("#passwordEmployee"), "Debe ingresar una contraseña.",1, empleadoValidation);
 	valid = valid && checkRegexp( $("#passwordEmployee"), /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?!.*\s).{4,20}$/, "La contraseña debe contener al menos una letra minúscula, una mayúscula, un dígito. Mínimo cuatro caracteres y máximo, viente.", empleadoValidation );
 	valid = valid && checkRequired( $("#confirmPasswordEmployee"), "Debe confirmar su contrase&ntilde;a.",1, empleadoValidation);
@@ -2702,7 +2713,10 @@ function addEmpleado() {
 	statusHtml = $(statusHtml).parents(".dropdown").find('.btn');
 	valid = valid && checkRequired( statusHtml, "Debe seleccionar un estado.",1, empleadoValidation);
 	valid = valid && checkEmail( $("#emailEmployee"), "El email ya se encuentra registrado.", empleadoValidation);
-	valid = valid && checkDocCode( $("#docCode"), "El número de documento ya se encuentra registrado.", empleadoValidation);
+	
+	if(!$("#docCode").is(':disabled')) {
+		valid = valid && checkDocCode( $("#docCode"), "El número de documento ya se encuentra registrado.", empleadoValidation);
+	}
 	return valid;
 }
 
@@ -2745,6 +2759,9 @@ function checkPassword( ps1, ps2, cad, div) {
 }
 
 function checkEmail( email, cad, div) {
+	if (email.is(':disabled')) {
+		return true;
+	}
 	var name = trim(email.val());
 	var hostname = window.location.protocol + "//" + window.location.host;
 	var strUrl = hostname + "/cabin-web/usuario/search/findByName?name=" + name;
