@@ -367,23 +367,34 @@ DROP TABLE IF EXISTS `tarifa`;
 
 CREATE TABLE `tarifa` (
   `id` bigint(20) NOT NULL,
-  `descripcion` varchar(45) DEFAULT NULL,
-  `dias` varchar(20) DEFAULT NULL,
-  `fraccion_minima` double DEFAULT NULL,
-  `hora_inicio` datetime DEFAULT NULL,
-  `hora_fin` datetime DEFAULT NULL,
-  `precio_hora` double DEFAULT NULL
+  `descripcion` varchar(45) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `tarifa`
 --
 
-INSERT INTO `tarifa` (`id`, `descripcion`, `dias`, `fraccion_minima`, `hora_inicio`, `hora_fin`, `precio_hora`) VALUES
-(1, 'tarifa1', 'L-M', 0.5, '0000-00-00 00:07:00', '0000-00-00 00:20:00', 1),
-(2, 'tarifa2', 'L-M-J', 0.5, '0000-00-00 00:08:00', '0000-00-00 00:15:00', 1.2),
-(3, 'tarifa3', 'S-D', 0.5, '0000-00-00 00:12:00', '0000-00-00 00:23:00', 2),
-(4, 'tarifa4', 'L-M-MI-J-V', 1, '0000-00-00 00:12:00', '0000-00-00 00:20:00', 1.5);
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `tarifa`
+--
+
+DROP TABLE IF EXISTS `tarifa_detalle`;
+
+CREATE TABLE `tarifa_detalle` (
+  `id` bigint(20) NOT NULL,
+  `dias` varchar(20) DEFAULT NULL,
+  `fraccion_minima` double DEFAULT NULL,
+  `hora_inicio` datetime DEFAULT NULL,
+  `hora_fin` datetime DEFAULT NULL,
+  `precio_hora` double DEFAULT NULL,
+  `id_tarifa` bigint(20) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- Dumping data for table `tarifa`
+--
 
 -- --------------------------------------------------------
 
@@ -403,12 +414,6 @@ CREATE TABLE `tarifa_por_grupo_sede` (
 --
 -- Dumping data for table `tarifa_por_grupo_sede`
 --
-
-INSERT INTO `tarifa_por_grupo_sede` (`id`, `id_sede`, `id_grupo`, `id_tarifa`) VALUES
-(1, 1, 1, 1),
-(2, 1, 2, 2),
-(3, 2, 1, 3),
-(4, 2, 2, 4);
 
 -- --------------------------------------------------------
 
@@ -597,6 +602,13 @@ ALTER TABLE `tarifa`
   ADD PRIMARY KEY (`id`);
 
 --
+-- Indexes for table `tarifa_detalle`
+--
+ALTER TABLE `tarifa_detalle`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `id_tarifa` (`id_tarifa`);
+  
+--
 -- Indexes for table `tarifa_por_grupo_sede`
 --
 ALTER TABLE `tarifa_por_grupo_sede`
@@ -709,6 +721,11 @@ ALTER TABLE `servicio`
 ALTER TABLE `tarifa`
   MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 --
+-- AUTO_INCREMENT for table `tarifa`
+--
+ALTER TABLE `tarifa_detalle`
+  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+--
 -- AUTO_INCREMENT for table `tarifa_por_grupo_sede`
 --
 ALTER TABLE `tarifa_por_grupo_sede`
@@ -789,6 +806,13 @@ ALTER TABLE `regla_puntuacion`
 ALTER TABLE `sede`
   ADD CONSTRAINT `id_usuario` FOREIGN KEY (`id_usuario`) REFERENCES `usuario` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
 
+--
+-- Constraints for table `tarifa_detalle`
+--
+ALTER TABLE `tarifa_detalle`
+  ADD CONSTRAINT `tarifa_detalle_ibfk_1` FOREIGN KEY (`id_tarifa`) REFERENCES `tarifa` (`id`);
+
+  
 --
 -- Constraints for table `tarifa_por_grupo_sede`
 --

@@ -1,13 +1,15 @@
 package com.cabin.core.persistence.domain;
 
 import java.io.Serializable;
-import java.util.Calendar;
+import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 
 @Entity(name = "tarifa")
 public class Tariff implements Serializable {
@@ -18,24 +20,19 @@ public class Tariff implements Serializable {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long id;
 
-	@Column(name = "fraccion_minima")
-	private Double minimumFraction;
-	
-	@Column(name = "precio_hora")
-	private Double price;
-	
-	@Column(name = "hora_inicio")
-	private Calendar startTime;
-
-	@Column(name = "hora_fin")
-	private Calendar endTime;
-	
-	@Column(name = "dias")
-	private String days;
-		
 	@Column(name = "descripcion")
 	private String description;
 
+	@OneToMany(cascade = CascadeType.ALL, mappedBy = "tariff")
+	private Set<TariffDetail> tariffDetails;
+
+	public Long getId() {
+		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
+	}
 
 	public String getDescription() {
 		return description;
@@ -45,53 +42,12 @@ public class Tariff implements Serializable {
 		this.description = description;
 	}
 
-	public Double getPrice() {
-		return price;
+	public Set<TariffDetail> getTariffDetails() {
+		return tariffDetails;
 	}
 
-	public void setPrice(Double price) {
-		this.price = price;
+	public void setTariffDetails(Set<TariffDetail> tariffDetails) {
+		this.tariffDetails = tariffDetails;
 	}
-
-	public Calendar getStartTime() {
-		return startTime;
-	}
-
-	public void setStartTime(Calendar startTime) {
-		this.startTime = startTime;
-	}
-
-	public Calendar getEndTime() {
-		return endTime;
-	}
-
-	public void setEndTime(Calendar endTime) {
-		this.endTime = endTime;
-	}
-
-	public String getDays() {
-		return days;
-	}
-
-	public void setDays(String days) {
-		this.days = days;
-	}
-
-	public Long getId() {
-		return id;
-	}
-
-	public void setId(Long id) {
-		this.id = id;
-	}
-	
-	public Double getMinimumFraction() {
-		return minimumFraction;
-	}
-
-	public void setMinimumFraction(Double minimumFraction) {
-		this.minimumFraction = minimumFraction;
-	}
-
 
 }
