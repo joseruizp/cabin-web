@@ -1,8 +1,6 @@
 package com.cabin.core.controller.rest;
 
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -21,8 +19,6 @@ import com.cabin.core.persistence.repository.TariffRepository;
 
 @RestController
 public class TariffRestController {
-
-	private static final SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
 
 	@Autowired
 	private TariffRepository tariffRepository;
@@ -47,10 +43,22 @@ public class TariffRestController {
 		return tariff;
 	}
 
+	@RequestMapping(value = "/post/tariffDetail", method = RequestMethod.POST, produces = {
+			"application/json;charset=UTF-8" })
+	public Tariff putTariffDetail(@RequestBody(required = true) Tariff tariff) throws ParseException {
+		return tariffRepository.saveAndFlush(tariff);
+	}
+
 	@RequestMapping(value = "/get/allTariff", method = RequestMethod.GET, produces = {
 			"application/json;charset=UTF-8" })
 	public List<Tariff> getAllTariffs() {
 		return tariffRepository.findAll();
+	}
+
+	@RequestMapping(value = "/get/allTariffDetails", method = RequestMethod.GET, produces = {
+			"application/json;charset=UTF-8" })
+	public Set<TariffDetail> getAllTariffDetails(@RequestParam(value = "id", required = true) Long tariffId) {
+		return tariffRepository.findOne(tariffId).getTariffDetails();
 	}
 
 	@RequestMapping(value = "/get/tariff", method = RequestMethod.GET, produces = { "application/json;charset=UTF-8" })
@@ -58,32 +66,4 @@ public class TariffRestController {
 		return tariffRepository.findOne(idTariff);
 	}
 
-	@RequestMapping(value = "/post/tariffDetail", method = RequestMethod.POST, produces = {
-			"application/json;charset=UTF-8" })
-	public Tariff putTariffDetail(@RequestParam(value = "id_tariff", required = true) Long idTariff,
-			@RequestParam(value = "days", required = true) String days,
-			@RequestParam(value = "minimumFraction", required = true) Double minimumFraction,
-			@RequestParam(value = "price", required = true) Double price,
-			@RequestParam(value = "startTime", required = true) String startTime,
-			@RequestParam(value = "endTime", required = true) String endTime) throws ParseException {
-
-		Tariff tariff = tariffRepository.findOne(idTariff);
-
-		TariffDetail tariffDetail = new TariffDetail();
-		tariffDetail.setDays(days);
-		tariffDetail.setMinimumFraction(minimumFraction);
-		tariffDetail.setPrice(price);
-
-		Calendar startCalendar = Calendar.getInstance();
-		startCalendar.setTime(format.parse(startTime));
-		Calendar endCalendar = Calendar.getInstance();
-		endCalendar.setTime(format.parse(startTime));
-
-		tariffDetail.setStartTime(startCalendar);
-		tariffDetail.setEndTime(endCalendar);
-
-		tariff.getTariffDetails().add(tariffDetail);
-
-		return tariffRepository.saveAndFlush(tariff);
-	}
 }
