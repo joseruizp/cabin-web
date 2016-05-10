@@ -248,24 +248,21 @@ map = {
 			}
 		});
 		
-		 $( '#daysMenu a' ).on( 'click', function( event ) {
-		    var $target = $( event.currentTarget ),
-		        val = $target.attr( 'data-value' ),
-		        $inp = $target.find( 'input' ),
-		        idx;
+		 $( '.checkboxTarifa' ).on( 'click', function( event ) {
+		    var val = $(this).val();
+		    var idx = daysTarifa.indexOf( val );
 
-		    if ( ( idx = daysTarifa.indexOf( val ) ) > -1 ) {
+		    if ( idx > -1 ) {
 			    daysTarifa.splice( idx, 1 );
-			    setTimeout( function() { $inp.prop( 'checked', false ) }, 0);
 			} else {
 			    daysTarifa.push( val );
-			    setTimeout( function() { $inp.prop( 'checked', true ) }, 0);
 			}
-
-		    $( event.target ).blur();
-		    //console.log( daysTarifa );
-		    return false;
         });
+		 
+		 $("#btnViewTariffs").hide();
+		 $("#btnViewTariffs").on('click', function() {
+			 fillArrayTarifa();
+		 });
 		
 	}); // End document ready
 })(this.jQuery);
@@ -575,7 +572,7 @@ function fillTariffDetailstbl(  ){
 		}
 		t.row.add( [
                 tariffDetails[i].id,
-                tariffDetails[i].description,
+                tariffDetails[i].days,
                 tariffDetails[i].price,             
                 startTime,
                 endTime,
@@ -716,9 +713,9 @@ function saveTarifa(){
 	    	console.log("Error, su solicitud no pudo ser atendida");
 	    },
 	    complete: function() {
-	    	if (idTarifa == ""){
-	    		fillArrayTarifa();
-	    	}
+//	    	if (idTarifa == ""){
+//	    		fillArrayTarifa();
+//	    	}
 	    }
 	});	
 }
@@ -2154,6 +2151,8 @@ function fillArrayEmpleado(){
 function fillArrayTarifa(){
 	$("#listaTarifasDiv").show();
 	$("#listaDetailTariffDiv").hide();
+	$("#btnTarifa").show();
+	$("#btnViewTariffs").hide();
 	var length = tarifas.length;
 	tarifas.splice(0, length);
 	var strUrl = window.location.protocol + "//" + window.location.host + "/cabin-web/get/allTariff/";		
@@ -2181,6 +2180,8 @@ function fillArrayTarifa(){
 function fillArrayTarifaDetails(idTariff){
 	$("#listaTarifasDiv").hide();
 	$("#listaDetailTariffDiv").show();
+	$("#btnTarifa").hide();
+	$("#btnViewTariffs").show();
 	var length = tariffDetails.length;
 	tariffDetails.splice(0, length);
 	var strUrl = window.location.protocol + "//" + window.location.host + "/cabin-web/get/allTariffDetails/";		
