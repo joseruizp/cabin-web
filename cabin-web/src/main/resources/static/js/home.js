@@ -169,7 +169,7 @@ map = {
 			}
 		});
 		//Tarifa save - update
-		$( "#form-tarifaDetail" ).submit(function( event ) {
+		$( "#btnTarifa" ).on('click', function( event ) {
 			event.preventDefault();
 			if ( addTarifa() ){
 				var idTarifa = $("#idTarifa").attr("value");
@@ -260,7 +260,16 @@ map = {
         });
 		 
 		 $("#btnViewTariffs").hide();
-		 $("#btnViewTariffs").on('click', function() {
+		 $("#btnViewTariffs").on('click', function(event) {
+			 event.preventDefault();
+			 event.stopPropagation();
+			 $('#descriptionTarifa').val("");
+			 $('#descriptionTarifa').prop('disabled', false);
+			 $('#priceTariff').val("");
+			 $('#priceTariff').prop('disabled', false);
+			 $('#minFractionTariff').val("");
+			 $('#minFractionTariff').prop('disabled', false);
+	    	 $('#btnRangoTarifa').addClass('disabled');
 			 fillArrayTarifa();
 		 });
 		
