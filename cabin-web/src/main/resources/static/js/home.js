@@ -10,6 +10,7 @@ tariffDetails = []; tariffDetailIndex = -1;
 reglas = []; reglaIndex = -1;
 niveles = []; nivelIndex = -1;
 premios = []; premioIndex = -1;
+experiences = []; experienceIndex = -1;
 sedeValidation = ""; tarifaValidation = "";
 reglaValidation = ""; nivelValidation = "";
 premioValidation = ""; clienteValidation = "";
@@ -70,6 +71,12 @@ map = {
 			else{ $(this).parents(".dropdown").find('.btn').val(estados[1].id); }
 		});
 		$("#statusEmployee li a").click(function(){
+			$(this).parents(".dropdown").find('.btn').html($(this).text() + ' <span class="caret"></span>');
+			var status = $(this).text();
+			if (status.toLowerCase() == estados[0].name.toLowerCase() ){ $(this).parents(".dropdown").find('.btn').val(estados[0].id);}
+			else{ $(this).parents(".dropdown").find('.btn').val(estados[1].id); }
+		});
+		$("#experience_status li a").click(function(){
 			$(this).parents(".dropdown").find('.btn').html($(this).text() + ' <span class="caret"></span>');
 			var status = $(this).text();
 			if (status.toLowerCase() == estados[0].name.toLowerCase() ){ $(this).parents(".dropdown").find('.btn').val(estados[0].id);}
@@ -144,6 +151,14 @@ map = {
 			bLengthChange: false,
 			bInfo: false,
 		});
+		$('#experienceTbl').DataTable({
+		    pscrollY: 300,
+		    paging: false,
+		    ordering: true,
+		    searching: false,
+			bLengthChange: false,
+			bInfo: false,
+		});
 		fillArraySede();
 		fillArrayTarifa();
 		fillArrayRegla();
@@ -155,6 +170,7 @@ map = {
 		fillOperarios();
 		fillArrayCliente();
 		fillArrayEmpleado();		
+		fillArrayExperience();
 		//Sede save - update
 		$( "#form-sede" ).submit(function( event ) {
 			event.preventDefault();
@@ -248,6 +264,19 @@ map = {
 			}
 		});
 		
+		$( "#form-experience" ).submit(function( event ) {
+			event.preventDefault();
+			if ( addExperience() ){
+				var idExperience = $("#idExperience").attr("value");
+				if (idExperience !== ""){
+					fnOpenEditDialog(8);
+				}
+				else{
+					saveExperience();
+				}	
+			}
+		});
+		
 		 $( '.checkboxTarifa' ).on( 'click', function( event ) {
 		    var val = $(this).val();
 		    var idx = daysTarifa.indexOf( val );
@@ -271,6 +300,12 @@ map = {
 			 $('#minFractionTariff').prop('disabled', false);
 	    	 $('#btnRangoTarifa').addClass('disabled');
 			 fillArrayTarifa();
+		 });
+		 
+		 $("#btnRangoTarifa").on('click', function(event) {
+			 event.preventDefault();
+			 event.stopPropagation();
+			 saveTarifa();
 		 });
 		
 	}); // End document ready
@@ -650,14 +685,18 @@ function deleteTarifa( code, index ){
 
 function saveTarifa(){
 	var idTarifa = $("#idTarifa").attr("value");
+	var isNewRange = $("#descriptionTarifa").is(":disabled");
 	console.log("Inside form-tarifaDetail " + idTarifa);
+	
 	var tarifa = {};
 	var tariffDetail = {};
 	var arrayTariffDetail = [];
 	
-	tarifa.description = trim( $( "#descriptionTarifa" ).val() );
-	tarifa.price = trim( $( "#priceTariff" ).val() );
-	tarifa.minimumFraction = trim( $( "#minFractionTariff" ).val() );
+	if (!isNewRange) {
+		tarifa.description = trim( $( "#descriptionTarifa" ).val() );
+		tarifa.price = trim( $( "#priceTariff" ).val() );
+		tarifa.minimumFraction = trim( $( "#minFractionTariff" ).val() );
+	}
 	
 	var length = daysTarifa.length;
 	dateSort(); 
@@ -686,31 +725,35 @@ function saveTarifa(){
 	$( "#endTime" ).val("");	$( "#minFraction" ).val("");
 	setTimeout( function() { $(".checkboxTarifa").prop( 'checked', false ) }, 0);
 	daysTarifa.splice(0,length);
-	//$("#numberPcs").val(""); $("#numberConsoles").val("");
 	
 	arrayTariffDetail.push(tariffDetail);
 	tarifa.tariffDetails = arrayTariffDetail;
 	
-	var strUrl = window.location.protocol + "//" + window.location.host + "/cabin-web/post/tariff";			
-	if (idTarifa !== "") {
-		strUrl += "/" + idTarifa;	
+	var strUrl = window.location.protocol + "//" + window.location.host + "/cabin-web/post/tariff";
+	if (isNewRange) {
+		strUrl = window.location.protocol + "//" + window.location.host + "/cabin-web/post/tariffDetail";
 		tarifa.id = idTarifa;
-		tarifas.splice(tarifaIndex, 1, tarifa);
-		fillTarifatbl();
-	}			
+	} else {
+		if (idTarifa !== "") {
+			strUrl += "/" + idTarifa;	
+			tarifa.id = idTarifa;
+			tarifas.splice(tarifaIndex, 1, tarifa);
+			fillTarifatbl();
+		}
+	}
 	console.log(JSON.stringify(tarifa));
+	
+	
+	
 	$.ajax({
-		type: idTarifa === "" ? "POST" : "PATCH",
+		type: isNewRange ? "POST" : (idTarifa === "" ? "POST" : "PATCH"),
 	    url:strUrl,			    
 	    dataType: 'json', 
 	    data: JSON.stringify(tarifa), 
 	    contentType: 'application/json',
 	    success: function (data) {
-	    	console.log("Send a tarifa into DB");			    	
-	    	if (idTarifa != ""){
-	    		$("#btnTarifa").html("Nueva Tarifa");
-	    		$("#idTarifa").attr("value", "");
-	    	} 
+	    	console.log("Send a tarifa into DB");
+	    	$("#idTarifa").attr("value", data.id);
 	    	$('#descriptionTarifa').prop('disabled', true);
 	    	$('#priceTariff').prop('disabled', true);
 	    	$('#minFractionTariff').prop('disabled', true);
@@ -1209,7 +1252,9 @@ function fnOpenCloseDialog(val, code, index) {
 	                	deleteCliente(code, index);
 	                }else if (val == '7'){
 	                	deleteEmpleado(code, index);
-	                }  
+	                }else if (val == "8") {
+	                	deleteExperience(code, index);
+	                }
 	                
 	         	}, "class":"btn btn-default",
 	        },
@@ -1251,6 +1296,8 @@ function fnOpenEditDialog(val) {
 	                	saveCliente();
 	                }else if (val == '7'){
 	                	saveEmpleado();
+	                }else if (val == '8'){
+	                	saveExperience();
 	                }
 	            }, "class":"btn btn-default",
 	         },
@@ -2249,6 +2296,7 @@ function fillArrayNivel(){
 	niveles.splice(0, length);
 	var strUrl = window.location.protocol + "//" + window.location.host + "/cabin-web/nivel/";
 	var ulRegla = $("#regla_nivel");
+	var ulExperience = $("#experience_nivel");
 	var ulCustomer = $("#nivelCustomer");
 	var line = ""; 
 	$.ajax({
@@ -2275,6 +2323,7 @@ function fillArrayNivel(){
 	    },
 	    complete: function (){
 	    	ulRegla.html(line);
+	    	ulExperience.html(line);
 	    	ulCustomer.html(line);
 	    }
 	});
@@ -2418,6 +2467,170 @@ function fillOperarios( ){
 	});
 	
 }
+
+function fillArrayExperience(){
+	var length = experiences.length;
+	experiences.splice(0, length);
+	var strUrl = window.location.protocol + "//" + window.location.host + "/cabin-web/get/allExperiences/";		
+	$.ajax({
+	    url:strUrl,
+	    crossDomain: true,
+	    dataType: "json",
+	    success: function (json) {
+	    	$.each(json, function(index, value) {		    		
+		    	experiences.push({
+					id: value.id,
+					name: value.name,
+					rechargeFraction: value.rechargeFraction,
+					experienceToGive: value.experienceToGive,
+					level: value.level.name,
+					status: value.status.name
+				});
+			});
+	    	fillExperiencetbl();		    	
+	    },
+	    error: function (xhr, status) {    	
+	    	console.log("Error, su solicitud no pudo ser atendida");
+	    }
+	});	
+}
+
+function fillExperiencetbl(  ){
+	var size = experiences.length;	
+    var j = 0;
+    var t = $('#experienceTbl').DataTable(); t.clear();
+	for(i=0; i<size;i++){
+		t.row.add( [
+                experiences[i].id,
+                experiences[i].name,
+                experiences[i].rechargeFraction,
+                experiences[i].experienceToGive,
+                experiences[i].level,
+                experiences[i].status,
+        ] ).draw( false );
+	};
+    $('#experienceTbl > tbody  > tr').each(function() {	    
+	    var edit = "<td><a onclick='editExperience("+ experiences[j].id +","+ j+")'><i class='fa fa-pencil icons' title='Editar'></i></a></td>";
+	    var remove = "<td><a onclick='fnOpenCloseDialog(8,"+ experiences[j].id +","+ j+")'><i class='fa fa-trash icons' title='Eliminar'></i></a></td>";
+	    j++;
+	    var tr = $(this);
+	    tr.find('td:last').after(edit); tr.find('td:last').after(remove);
+    });
+}
+
+function saveExperience(){
+	var idExperience = $("#idExperience").attr("value");
+	console.log("Inside form-experience " + idExperience);
+	var experience = {};
+	experience.name = trim( $( "#nameExperience" ).val() );
+	experience.rechargeFraction = trim( $( "#rechargeFraction" ).val() );
+	experience.experienceToGive = trim( $( "#experienceToGive" ).val() );
+	$( "#nameExperience" ).val(""); 
+	$( "#rechargeFraction" ).val("");	$( "#experienceToGive" ).val("");
+	
+	var statusHtml = $("#experience_status li a");
+	var experience_nivelHtml = $("#experience_nivel li a");
+	var idStatus = $(statusHtml).parents(".dropdown").find('.btn').val();			
+	var idNivel = $(experience_nivelHtml).parents(".dropdown").find('.btn').val();
+	
+	experience.status = {};
+	experience.status.id = idStatus;
+	experience.level = {};
+	experience.level.id = idNivel;
+	
+	$(statusHtml).parents(".dropdown").find('.btn').html('Seleccionar <span class="caret"></span>');
+	$(statusHtml).parents(".dropdown").find('.btn').val("");	   
+	$(experience_nivelHtml).parents(".dropdown").find('.btn').html('Seleccionar <span class="caret"></span>');
+	$(experience_nivelHtml).parents(".dropdown").find('.btn').val("");
+	
+	
+	//$("#numberPcs").val(""); $("#numberConsoles").val("");
+	var strUrl = window.location.protocol + "//" + window.location.host + "/cabin-web/post/experience";			
+	if (idExperience !== "") {	
+		experience.id = idExperience;
+		experiences.splice(experienceIndex, 1, experience);
+	}						
+	console.log(JSON.stringify(experience));
+	$.ajax({
+		type:"POST",
+	    url:strUrl,			    
+	    dataType: 'json', 
+	    data: JSON.stringify(experience), 
+	    contentType: 'application/json',
+	    success: function (data) {
+	    	console.log("Send a experience into DB");			    	
+	    	if (idExperience != ""){
+	    		$("#btnExperience").html("Nueva Experiencia");
+	    		$("#idExperience").attr("value", "");			    		
+	    	}			    	
+	    },
+	    error: function (xhr, status) {	    	
+	    	console.log("Error, su solicitud no pudo ser atendida");
+	    },
+	    complete: function(){
+			fillArrayExperience()		    	
+		}
+	});
+}
+
+function editExperience( code, index ){
+	reglaIndex = index;
+	var strUrl = window.location.protocol + "//" + window.location.host + "/cabin-web/get/experience";	
+	$.ajax({
+		async:false,
+	    url:strUrl,
+	    data:{id: code},
+	    crossDomain: true,
+	    dataType: "json",
+	    success: function (json) {
+	    	$( "#nameExperience" ).val(json.name);
+			$( "#rechargeFraction" ).val(json.rechargeFraction);
+			$( "#experienceToGive" ).val(json.experienceToGive);
+			
+			var statusHtml = $("#experience_status li a");
+			var statusName = "";
+			for ( i = 0; i< estados.length ; i++){
+				if (json.status.id == estados[i].id ){ statusName = estados[i].name; break;}
+			}
+	    	$(statusHtml).parents(".dropdown").find('.btn').html(statusName + ' <span class="caret"></span>');
+	    	$(statusHtml).parents(".dropdown").find('.btn').attr('value', json.status.id);
+	    	
+	    	var levelHtml = $("#experience_nivel");
+	    	var levelName = "";
+			for ( i = 0; i< niveles.length ; i++){
+				if (json.level.id == niveles[i].id ){ levelName = niveles[i].name; break;}
+			}
+	    	$(levelHtml).parents(".dropdown").find('.btn').html(levelName + ' <span class="caret"></span>');
+	    	$(levelHtml).parents(".dropdown").find('.btn').attr('value', json.level.id);
+			
+			$("#idExperience").attr('value', json.id);
+			$("#btnExperience").html("Actualizar Experiencia");			
+	    },
+	    error: function (xhr, status) {	    	
+	    	console.log("Error, su solicitud no pudo ser atendida");
+	    }
+	});	
+}
+
+function deleteExperience( code, index ){
+	var strUrl = window.location.protocol + "//" + window.location.host + "/cabin-web/experiencia/" + code;	
+	console.log("Inside deleteExperience" + code);
+	$.ajax({
+		type: "DELETE",
+	    url:strUrl,
+	    crossDomain: true,
+	    dataType: "json",
+	    success: function (json) {
+	    	experiences.splice(index, 1);
+	    	fillExperiencetbl();
+	    },
+	    error: function (xhr, status) {	    	
+	    	console.log("Error, su solicitud no pudo ser atendida");
+	    	fnOpenErrorDialog();
+	    }
+	});			
+}
+
 
 function completeOperario( idUser, email ){
 	var strUrl = window.location.protocol + "//" + window.location.host + "/cabin-web/usuario/"+ idUser + "/profile";
@@ -2563,6 +2776,18 @@ $(document).on("click", "#profileEmployee li a", function(){
 
 
 $(document).on("click", "#regla_nivel li a", function(){
+	console.log("Entro aqui: " + $(this).text() );
+	var level = $(this).text();
+	level = level.toLowerCase();
+	$(this).parents(".dropdown").find('.btn').html($(this).text() + ' <span class="caret"></span>');
+	  //Correr el arreglo paui-state-highlightra ver cual es el id y nombre correo del nivel
+	var length = niveles.length;
+	for ( i = 0; i< length ; i++){
+		if (level == niveles[i].name.toLowerCase() ){ $(this).parents(".dropdown").find('.btn').val(niveles[i].id);}
+	}	
+} )
+
+$(document).on("click", "#experience_nivel li a", function(){
 	console.log("Entro aqui: " + $(this).text() );
 	var level = $(this).text();
 	level = level.toLowerCase();
@@ -2807,6 +3032,24 @@ function addEmpleado() {
 	}
 	return valid;
 }
+
+function addExperience() {
+	var valid = true;
+	$("*").removeClass( "ui-state-error");
+	valid = valid && checkRequired( $("#nameExperience"), "Debe ingresar el nombre de la experiencia.",1, reglaValidation);
+	valid = valid && checkRegexp( $("#nameExperience"), /.+/i, "El nombre de la experiencia no es válido.",  reglaValidation);	
+	valid = valid && checkRegexp( $("#rechargeFraction"), /^[0-9]\d{0,3}($|\.\d{0,2}$)/i, "Debe ingresar ingresar un monto válido, no mayor de 999.99 soles y de dos decimales.", reglaValidation);	
+	valid = valid && checkRegexp( $("#experienceToGive"), /^[0-9]\d{0,5}$/i, "Debe ingresar una cantidad  de puntos no mayor de 999 999, valor entero.", reglaValidation);
+	var statusHtml = $("#experience_status li a");
+	var regla_nivelHtml = $("#experience_nivel li a");	
+	statusHtml = $(statusHtml).parents(".dropdown").find('.btn');
+	regla_nivelHtml = $(regla_nivelHtml).parents(".dropdown").find('.btn');
+	valid = valid && checkRequired( regla_nivelHtml, "Debe seleccionar un nivel.",1, reglaValidation);
+	valid = valid && checkRequired( statusHtml, "Debe seleccionar un estado.",1, reglaValidation);
+	
+	return valid;
+}
+
 
 function isValidRange(startPoint, endPoint, boundLower, boundUpper){
 	var valid = true;

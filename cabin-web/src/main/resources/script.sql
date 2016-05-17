@@ -417,6 +417,28 @@ INSERT INTO `regla_puntuacion` VALUES (1,'regla1',50,100,1,1),(2,'regla2',20,50,
 UNLOCK TABLES;
 
 --
+-- Table structure for table `experiencia`
+--
+
+DROP TABLE IF EXISTS `experiencia`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `experiencia` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `nombre` varchar(100) DEFAULT NULL,
+  `fraccion_recarga` double DEFAULT NULL,
+  `experiencia_otorgar` int(11) DEFAULT NULL,
+  `id_estado` bigint(20) DEFAULT NULL,
+  `id_nivel` bigint(20) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `experiencia_estado_idx` (`id_estado`),
+  KEY `experiencia_nivel_idx` (`id_nivel`),
+  CONSTRAINT `experiencia_estado` FOREIGN KEY (`id_estado`) REFERENCES `estado` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `experiencia_nivel` FOREIGN KEY (`id_nivel`) REFERENCES `nivel` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
 -- Table structure for table `sede`
 --
 

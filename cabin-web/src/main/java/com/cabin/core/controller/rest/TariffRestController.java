@@ -20,50 +20,54 @@ import com.cabin.core.persistence.repository.TariffRepository;
 @RestController
 public class TariffRestController {
 
-	@Autowired
-	private TariffRepository tariffRepository;
+    @Autowired
+    private TariffRepository tariffRepository;
 
-	@Autowired
-	private TariffDetailRepository tariffDetailRepository;
+    @Autowired
+    private TariffDetailRepository tariffDetailRepository;
 
-	@RequestMapping(value = "/post/tariff", method = RequestMethod.POST, produces = {
-			"application/json;charset=UTF-8" })
-	public Tariff putTariff(@RequestBody(required = true) Tariff tariff) throws ParseException {
+    @RequestMapping(value = "/post/tariff", method = RequestMethod.POST, produces = { "application/json;charset=UTF-8" })
+    public Tariff putTariff(@RequestBody(required = true) Tariff tariff) throws ParseException {
 
-		Set<TariffDetail> details = tariff.getTariffDetails();
-		tariff.setTariffDetails(new HashSet<TariffDetail>());
+        Set<TariffDetail> details = tariff.getTariffDetails();
+        tariff.setTariffDetails(new HashSet<TariffDetail>());
 
-		Tariff newTariff = tariffRepository.save(tariff);
+        Tariff newTariff = tariffRepository.save(tariff);
 
-		for (TariffDetail tariffDetail : details) {
-			tariffDetail.setTariff(newTariff);
-			tariff.getTariffDetails().add(tariffDetailRepository.save(tariffDetail));
-		}
+        for (TariffDetail tariffDetail : details) {
+            tariffDetail.setTariff(newTariff);
+            tariff.getTariffDetails().add(tariffDetailRepository.save(tariffDetail));
+        }
 
-		return tariff;
-	}
+        return tariff;
+    }
 
-	@RequestMapping(value = "/post/tariffDetail", method = RequestMethod.POST, produces = {
-			"application/json;charset=UTF-8" })
-	public Tariff putTariffDetail(@RequestBody(required = true) Tariff tariff) throws ParseException {
-		return tariffRepository.saveAndFlush(tariff);
-	}
+    @RequestMapping(value = "/post/tariffDetail", method = RequestMethod.POST, produces = { "application/json;charset=UTF-8" })
+    public Tariff putTariffDetail(@RequestBody(required = true) Tariff tariff) throws ParseException {
+        TariffDetail tariffDetail = tariff.getTariffDetails().iterator().next();
+        tariff.setTariffDetails(null);
+        tariffDetail.setTariff(tariff);
 
-	@RequestMapping(value = "/get/allTariff", method = RequestMethod.GET, produces = {
-			"application/json;charset=UTF-8" })
-	public List<Tariff> getAllTariffs() {
-		return tariffRepository.findAll();
-	}
+        tariffDetailRepository.save(tariffDetail);
 
-	@RequestMapping(value = "/get/allTariffDetails", method = RequestMethod.GET, produces = {
-			"application/json;charset=UTF-8" })
-	public Set<TariffDetail> getAllTariffDetails(@RequestParam(value = "id", required = true) Long tariffId) {
-		return tariffRepository.findOne(tariffId).getTariffDetails();
-	}
+        tariff.setTariffDetails(new HashSet<TariffDetail>());
+        tariff.getTariffDetails().add(tariffDetail);
+        return tariff;
+    }
 
-	@RequestMapping(value = "/get/tariff", method = RequestMethod.GET, produces = { "application/json;charset=UTF-8" })
-	public Tariff getTariff(@RequestParam(value = "id", required = true) Long idTariff) {
-		return tariffRepository.findOne(idTariff);
-	}
+    @RequestMapping(value = "/get/allTariff", method = RequestMethod.GET, produces = { "application/json;charset=UTF-8" })
+    public List<Tariff> getAllTariffs() {
+        return tariffRepository.findAll();
+    }
+
+    @RequestMapping(value = "/get/allTariffDetails", method = RequestMethod.GET, produces = { "application/json;charset=UTF-8" })
+    public Set<TariffDetail> getAllTariffDetails(@RequestParam(value = "id", required = true) Long tariffId) {
+        return tariffRepository.findOne(tariffId).getTariffDetails();
+    }
+
+    @RequestMapping(value = "/get/tariff", method = RequestMethod.GET, produces = { "application/json;charset=UTF-8" })
+    public Tariff getTariff(@RequestParam(value = "id", required = true) Long idTariff) {
+        return tariffRepository.findOne(idTariff);
+    }
 
 }

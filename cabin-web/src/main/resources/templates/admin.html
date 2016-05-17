@@ -32,7 +32,7 @@
 		<header class="header fixed clearfix navbar navbar-fixed-top">
 			<div class="container">
 				<div class="row">
-					<div class="col-md-4">
+					<div class="col-md-3" style="width: 23%">
 
 						<!-- header-left start --> 
 						<div class="header-left">
@@ -51,7 +51,7 @@
 						<!-- header-left end -->
 
 					</div>
-					<div class="col-md-8">
+					<div class="col-md-9" style="width: 77%">
 
 						<!-- header-right start --> 
 						<div class="header-right">
@@ -83,6 +83,7 @@
 												<li class="active"><a href="#puntos">Puntos</a></li>
 												<li class="active"><a href="#niveles">Niveles</a></li>
 												<li class="active"><a href="#premios">Premios</a></li>
+												<li class="active"><a href="#experiencias">Experiencias</a></li>
 											</ul>
 										</div>
 
@@ -535,7 +536,7 @@
 											Tarifas</button>
 									</div>
 									<div class="col-md-4">
-										<button id="btnRangoTarifa" type="submit" class="btn btn-default disabled">Nuevo
+										<button id="btnRangoTarifa" class="btn btn-default disabled">Nuevo
 											Rango</button>
 									</div>
 								</div>
@@ -801,6 +802,96 @@
 			    </div>
 			</div>
 		</div>
+
+		<div id="experiencias">
+			<div class="container">
+				<br/>
+				<div class="row">
+					<div class="col-md-12" style="margin-top: 40px">
+						<h1 id="tituloEquipos" class="title text-center">Regla de <span>Experiencia</span></h1>
+						<p class="lead text-center">Lorem ipsum dolor sit amet, consectetur adipisicing elit. laudantium culpa tenetur.</p>
+					</div>
+				</div>
+				<div class="row" style="margin-left: 110px; margin-right: 110px">
+					<form id="form-experience" class="form-horizontal" role="form">
+						<input type="hidden" id="idExperience" value=""/>
+						<div class="form-group">
+							<label class="control-label col-sm-2" for="nameExperience">Nombre:</label>
+							<div class="col-sm-10">
+								<input class="form-control" id="nameExperience"
+									placeholder="Nombre Experiencia" maxlength="20" />
+							</div>
+						</div>
+						<div class="form-group">
+							<label class="control-label col-sm-2" for="rechargeFraction">Fraccion de Recarga:</label>
+							<div class="col-sm-10">
+								<input class="form-control" id="rechargeFraction"
+									placeholder="Fraccion de Recarga" maxlength="11"/>
+							</div>
+						</div>						
+						<div class="form-group">
+							<label class="control-label col-sm-2" for="experienceToGive">Experiencia a Otorgar:</label>
+							<div class="col-sm-10">
+								<input class="form-control" id="experienceToGive"
+									placeholder="Experiencia a Otorgar" maxlength="11"/>
+							</div>
+						</div>
+						<div class="form-group">							
+							<label class="control-label col-sm-2" for="regla_nivel">Nivel:</label>
+							<div class="col-sm-4">
+								<div class="dropdown">
+									<button class="btn btn-primary dropdown-toggle" type="button"
+										data-toggle="dropdown">
+										Seleccionar <span class="caret"></span>
+									</button>
+									<ul id="experience_nivel" class="dropdown-menu">																													
+									</ul>
+								</div>
+							</div>
+							<label class="control-label col-sm-2" for="status">Estado:</label>
+							<div class="col-sm-4">
+								<div class="dropdown">
+									<button class="btn btn-primary dropdown-toggle" type="button"
+										data-toggle="dropdown">
+										Seleccionar <span class="caret"></span>
+									</button>
+									<ul id="experience_status" class="dropdown-menu">
+										<li><a href="/" onclick="return false;">Activo</a></li>
+										<li><a href="/" onclick="return false;">Inactivo</a></li>
+									</ul>
+								</div>
+							</div>
+						</div>
+						<div class="form-group">
+							<div class="col-sm-offset-5 col-sm-7">
+								<button id="btnExperience" type="submit" class="btn btn-default">Nueva Experiencia</button>
+							</div>
+						</div>
+					</form>
+					<div id="experienceValidation" class="alert alert-danger" style="display:none"></div>
+				</div>
+				<div class="space"></div>
+			    <div role="tabpanel" class="table-responsive" id="listaExperienciasDiv">
+			        <table id="experienceTbl" class="table table-striped display">
+			            <thead>
+			                <tr>
+			                    <th>Codigo</th>
+			                    <th>Nombre</th>
+			                    <th>Fraccion de Recarga</th>
+			                    <th>Experiencia a Otorgar</th>
+			                    <th>Nivel</th>
+			                    <th>Estado</th>
+			                    <th colspan="2">Opciones</th>
+			                </tr>
+			            </thead>
+			            <tbody>
+			            </tbody>
+			        </table>
+			    </div>
+			</div>
+		</div>
+
+
 		<!-- banner end -->
 		<br/><br/><br/>
 		<br/><br/><br/>
