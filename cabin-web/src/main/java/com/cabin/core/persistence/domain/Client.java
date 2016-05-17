@@ -38,6 +38,9 @@ public class Client implements Serializable {
 
 	@Column(name = "puntos")
 	private Integer points;
+	
+	@Column(name = "experiencia")
+	private Integer experience;
 
 	@ManyToOne
 	@JoinColumn(name = "id_estado")
@@ -105,6 +108,14 @@ public class Client implements Serializable {
 
 	public void setPoints(Integer points) {
 		this.points = points;
+	}
+	
+	public Integer getExperience() {
+		return experience;
+	}
+
+	public void setExperience(Integer experience) {
+		this.experience = experience;
 	}
 
 	public Status getStatus() {

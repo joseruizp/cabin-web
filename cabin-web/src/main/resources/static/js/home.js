@@ -353,6 +353,7 @@ function fillClientetbl(){
                 date,                
                 clientes[i].balance,
                 clientes[i].points,
+                clientes[i].experience,
                 clientes[i].estado,
                 "",
                 "",
@@ -940,8 +941,8 @@ function fillNiveltbl(  ){
 		t.row.add( [
                 niveles[i].id,
                 niveles[i].name,
-                niveles[i].initialPoints,
-                niveles[i].finalPoints,                
+                niveles[i].initialExperience,
+                niveles[i].finalExperience,                
                 niveles[i].question,
         ] ).draw( false );
 	};
@@ -965,8 +966,8 @@ function editNivel( code, index ){
 	    	var hrefArray = json._links.self.href.split("/");
 	    	var idNivel = hrefArray[hrefArray.length -1];
 	    	$( "#nameNivel" ).val(json.name);
-			$( "#initialPoints" ).val(json.initialPoints);
-			$( "#finalPoints" ).val(json.finalPoints);
+			$( "#initialExperience" ).val(json.initialExperience);
+			$( "#finalExperience" ).val(json.finalExperience);
 			$( "#question" ).val(json.question);
 			$("#idNivel").attr('value', idNivel);
 			$("#btnNivel").html("Actualizar Nivel");			
@@ -1001,11 +1002,11 @@ function saveNivel(){
 	console.log("Inside form-nivel " + idNivel);
 	var nivel = {};
 	nivel.name = trim( $( "#nameNivel" ).val() );
-	nivel.initialPoints = trim( $( "#initialPoints" ).val() );
-	nivel.finalPoints = trim( $( "#finalPoints" ).val() );
+	nivel.initialExperience = trim( $( "#initialExperience" ).val() );
+	nivel.finalExperience = trim( $( "#finalExperience" ).val() );
 	nivel.question = trim( $( "#question" ).val() );
-	$( "#nameNivel" ).val("");	$( "#initialPoints" ).val("");
-	$( "#finalPoints" ).val("");	$( "#question" ).val("");			
+	$( "#nameNivel" ).val("");	$( "#initialExperience" ).val("");
+	$( "#finalExperience" ).val("");	$( "#question" ).val("");			
 	var strUrl = window.location.protocol + "//" + window.location.host + "/cabin-web/nivel";			
 	if (idNivel !== "") {
 		strUrl += "/" + idNivel;
@@ -1375,7 +1376,7 @@ function fillRule(idRegla, name, rechargingFraction, points){
 	});
 }
 
-function fillCliente(idCliente, name, email, gender, birthDate, balance, points){
+function fillCliente(idCliente, name, email, gender, birthDate, balance, points, experience){
 	var hostname = window.location.protocol + "//" + window.location.host 
 	var strLevel = hostname + "/cabin-web/cliente/"+idCliente+"/level";
 	var level, status;
@@ -1412,6 +1413,7 @@ function fillCliente(idCliente, name, email, gender, birthDate, balance, points)
 		birthDate: birthDate,
 		balance: balance,
 		points: points,
+		experience: experience,
 		level: level,
 		estado: status,		
 	});
@@ -1493,12 +1495,14 @@ function saveCliente(){
 	customer.birthDate = date;
 	customer.balance = trim( $( "#balanceCustomer" ).val() );
 	customer.points = trim( $( "#pointsCustomer" ).val() );;
+	customer.experience = trim( $( "#experienceCustomer" ).val() );;
 	user.pass = trim( $( "#passwordCustomer" ).val() );
 	user.name = trim( $( "#emailCustomer" ).val() );
 	$( "#nameCustomer" ).val(""); $( "#passwordCustomer" ).val("");
 	$( "#confirmPasswordCustomer" ).val("");
 	$( "#emailCustomer" ).val("");	$( "#birthDateCustomer" ).val("");
 	$( "#balanceCustomer" ).val("");$( "#pointsCustomer" ).val("");
+	$( "#experienceCustomer" ).val("");
 	var genderHtml = $("#genderCustomer li a");	
 	var gender = $(genderHtml).parents(".dropdown").find('.btn').val();
 	customer.gender = gender;
@@ -1896,6 +1900,7 @@ function editCliente( code, index ){
 			$( "#emailCustomer" ).prop('disabled', true);
 			$( "#balanceCustomer" ).val(json.balance);
 			$( "#pointsCustomer" ).val(json.points);
+			$( "#experienceCustomer" ).val(json.experience);
 			var date = json.birthDate.substring(0,10);
 			var arrayDate = date.split("-");
 			var birthDate = arrayDate[2]+"/" + arrayDate[1]+"/" + arrayDate[0];
@@ -2160,7 +2165,7 @@ function fillArrayCliente(){
 	    		var hrefArray = value._links.self.href.split("/");
 		    	var idCliente = hrefArray[hrefArray.length -1];
 		    	fillCliente(idCliente, value.name, value.email, 
-		    			value.gender, value.birthDate, value.balance, value.points);				
+		    			value.gender, value.birthDate, value.balance, value.points, value.experience);				
 			});
 	    	fillClientetbl();		    	
 	    },
@@ -2311,8 +2316,8 @@ function fillArrayNivel(){
 				niveles.push({
 					id: idNivel,
 					name: value.name,
-					initialPoints: value.initialPoints,
-					finalPoints: value.finalPoints,
+					initialExperience: value.initialExperience,
+					finalExperience: value.finalExperience,
 					question: value.question,
 				});
 			});
@@ -2928,8 +2933,8 @@ function addNivel() {
 	$("*").removeClass( "ui-state-error");
 	valid = valid && checkRequired( $("#nameNivel"), "Debe ingresar el nombre del nivel.",1, nivelValidation);
 	valid = valid && checkRegexp( $("#nameNivel"), /.+/i, "El nombre ingresado para el nivel no es válido.",  nivelValidation);
-	valid = valid && checkRegexp( $("#initialPoints"), /^[0-9]\d{0,5}$/i, "Debe ingresar una cantidad de puntos no mayor de 999 999, valor entero.", nivelValidation);
-	valid = valid && checkRegexp( $("#finalPoints"), /^[1-9]\d{0,5}$/i, "Debe ingresar una cantidad de puntos no mayor de 999 999, valor entero.", nivelValidation);
+	valid = valid && checkRegexp( $("#initialExperience"), /^[0-9]\d{0,5}$/i, "Debe ingresar una cantidad de puntos no mayor de 999 999, valor entero.", nivelValidation);
+	valid = valid && checkRegexp( $("#finalExperience"), /^[1-9]\d{0,5}$/i, "Debe ingresar una cantidad de puntos no mayor de 999 999, valor entero.", nivelValidation);
 	valid = valid && checkRequired( $("#question"), "Debe ingresar una pregunta.",1, nivelValidation);
 	valid = valid && checkRegexp( $("#question"), /.+/i, "La pregunta ingresada para el nivel no es válida.",  nivelValidation);
 	
@@ -2938,14 +2943,14 @@ function addNivel() {
 	}
 	
 	var length = niveles.length;
-	var startPoint = trim( $( "#initialPoints" ).val() ); var endPoint = trim( $( "#finalPoints" ).val() );
+	var startPoint = trim( $( "#initialExperience" ).val() ); var endPoint = trim( $( "#finalExperience" ).val() );
 	var idNivel = $("#idNivel").attr("value");
 	for ( i = 0; i < length ; i ++){
 		if ( i !== nivelIndex )
-			valid = isValidRange(startPoint, endPoint, niveles[i].initialPoints, niveles[i].finalPoints);		
+			valid = isValidRange(startPoint, endPoint, niveles[i].initialExperience, niveles[i].finalExperience);		
 		if (!valid){
-			$("#initialPoints").addClass( "ui-state-error" );
-			$("#finalPoints").addClass( "ui-state-error" );
+			$("#initialExperience").addClass( "ui-state-error" );
+			$("#finalExperience").addClass( "ui-state-error" );
 			updateTips( "El rango de inicio y fin de puntos no es válido", nivelValidation );
 			break;
 		}
@@ -2975,6 +2980,7 @@ function addCliente() {
 	valid = valid && checkRequired($("#emailCustomer"),"Debe ingresar un email.",1, clienteValidation);
 	valid = valid && checkRegexp( $("#emailCustomer"), /^([\w-\.]+@([\w-]+\.)+[\w-]{2,4})?$/i , "El email ingresado no es válido.", clienteValidation );
 	valid = valid && checkRegexp( $("#pointsCustomer"), /^[0-9]\d{0,5}$/i, "Debe ingresar una cantidad de puntos no mayor de 999 999, valor entero.", clienteValidation);
+	valid = valid && checkRegexp( $("#experienceCustomer"), /^[0-9]\d{0,5}$/i, "Debe ingresar una cantidad de experiencia no mayor de 999 999, valor entero.", clienteValidation);
 	valid = valid && checkRegexp( $("#balanceCustomer"), /^[0-9]\d{0,3}($|\.\d{0,2}$)/i, "Debe ingresar ingresar un monto válido, no mayor de 999.99 soles y de dos decimales.", clienteValidation);
 	valid = valid && checkRequired( $("#passwordCustomer"), "Debe ingresar una contraseña.",1, clienteValidation);
 	valid = valid && checkRegexp( $("#passwordCustomer"), /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?!.*\s).{4,20}$/, "La contraseña debe contener al menos una letra minúscula, una mayúscula, un dígito. Mínimo cuatro caracteres y máximo, viente.", clienteValidation );

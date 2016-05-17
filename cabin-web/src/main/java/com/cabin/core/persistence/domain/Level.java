@@ -20,29 +20,29 @@ public class Level implements Serializable {
 	@Column(name = "nombre", length = 20)
 	private String name;
 	
-	@Column(name = "puntos_inicial")
-	private Integer initialPoints;	
+	@Column(name = "experiencia_inicial")
+	private Integer initialExperience;	
 
-	@Column(name = "puntos_final")
-	private Integer finalPoints;
+	@Column(name = "experiencia_final")
+	private Integer finalExperience;
 
 	@Column(name = "pregunta", length = 20)
 	private String question;
 
-	public Integer getInitialPoints() {
-		return initialPoints;
+	public Integer getInitialExperience() {
+		return initialExperience;
 	}
 
-	public void setInitialPoints(Integer initialPoints) {
-		this.initialPoints = initialPoints;
+	public void setInitialExperience(Integer initialExperience) {
+		this.initialExperience = initialExperience;
 	}
 
-	public Integer getFinalPoints() {
-		return finalPoints;
+	public Integer getFinalExperience() {
+		return finalExperience;
 	}
 
-	public void setFinalPoints(Integer finalPoints) {
-		this.finalPoints = finalPoints;
+	public void setFinalExperience(Integer finalExperience) {
+		this.finalExperience = finalExperience;
 	}
 
 	public String getQuestion() {

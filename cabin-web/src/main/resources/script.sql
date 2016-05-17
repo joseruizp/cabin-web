@@ -69,6 +69,7 @@ CREATE TABLE `cliente` (
   `fecha_nacimiento` date DEFAULT NULL,
   `saldo` double DEFAULT NULL,
   `puntos` int(11) DEFAULT NULL,
+  `experiencia` int(11) DEFAULT NULL,
   `id_estado` bigint(20) DEFAULT NULL,
   `id_nivel` bigint(20) DEFAULT NULL,
   `id_usuario` bigint(20) DEFAULT NULL,
@@ -88,7 +89,7 @@ CREATE TABLE `cliente` (
 
 LOCK TABLES `cliente` WRITE;
 /*!40000 ALTER TABLE `cliente` DISABLE KEYS */;
-INSERT INTO `cliente` VALUES (1,'erick.gonzales@bbva.com','erick','M','2000-01-05',0,0,2,2,5),(2,'ivan@pucp.pe','ivan','M','2000-01-01',12,10,1,1,6),(3,'je@pucp.pe','Junior','M','2000-01-01',10,100,1,1,7);
+INSERT INTO `cliente` VALUES (1,'erick.gonzales@bbva.com','erick','M','2000-01-05',0,0,0,2,2,5),(2,'ivan@pucp.pe','ivan','M','2000-01-01',12,10,10,1,1,6),(3,'je@pucp.pe','Junior','M','2000-01-01',10,100,50,1,1,7);
 /*!40000 ALTER TABLE `cliente` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -316,8 +317,8 @@ DROP TABLE IF EXISTS `nivel`;
 CREATE TABLE `nivel` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
   `nombre` varchar(20) DEFAULT NULL,
-  `puntos_inicial` int(11) DEFAULT NULL,
-  `puntos_final` int(11) DEFAULT NULL,
+  `experiencia_inicial` int(11) DEFAULT NULL,
+  `experiencia_final` int(11) DEFAULT NULL,
   `pregunta` varchar(100) DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
