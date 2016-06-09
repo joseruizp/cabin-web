@@ -23,4 +23,10 @@ public class ComputerRestController {
 		System.out.println("headquarterId ::: " + id);
 		return computerRepository.findByHeadquarterId(id);
 	}
+	
+	@RequestMapping(value = "/get/computer", method = RequestMethod.GET, produces = {
+	"application/json;charset=UTF-8" })
+	public Computer getComputer(@RequestParam(value = "id", required = true) Long id) {
+		return computerRepository.findOne(id);
+	}
 }
