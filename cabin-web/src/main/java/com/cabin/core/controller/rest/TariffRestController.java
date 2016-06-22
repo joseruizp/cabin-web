@@ -1,8 +1,12 @@
 package com.cabin.core.controller.rest;
 
 import java.text.ParseException;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,20 +15,38 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.thymeleaf.util.StringUtils;
 
 import com.cabin.core.persistence.domain.Tariff;
+import com.cabin.core.persistence.domain.TariffByGroup;
 import com.cabin.core.persistence.domain.TariffDetail;
+import com.cabin.core.persistence.repository.TariffByGroupRepository;
 import com.cabin.core.persistence.repository.TariffDetailRepository;
 import com.cabin.core.persistence.repository.TariffRepository;
 
 @RestController
 public class TariffRestController {
 
+    private static final Map<Integer, String> DAYS_MAP = new HashMap<>();
+
+    static {
+        DAYS_MAP.put(Calendar.SUNDAY, "Dom");
+        DAYS_MAP.put(Calendar.MONDAY, "Lun");
+        DAYS_MAP.put(Calendar.TUESDAY, "Mar");
+        DAYS_MAP.put(Calendar.WEDNESDAY, "Mie");
+        DAYS_MAP.put(Calendar.THURSDAY, "Jue");
+        DAYS_MAP.put(Calendar.FRIDAY, "Vie");
+        DAYS_MAP.put(Calendar.SATURDAY, "Sab");
+    }
+
     @Autowired
     private TariffRepository tariffRepository;
 
     @Autowired
     private TariffDetailRepository tariffDetailRepository;
+
+    @Autowired
+    private TariffByGroupRepository tariffByGroupRepository;
 
     @RequestMapping(value = "/post/tariff", method = RequestMethod.POST, produces = { "application/json;charset=UTF-8" })
     public Tariff putTariff(@RequestBody(required = true) Tariff tariff) throws ParseException {
@@ -70,4 +92,28 @@ public class TariffRestController {
         return tariffRepository.findOne(idTariff);
     }
 
+    @RequestMapping(value = "/get/tariffPrice", method = RequestMethod.GET, produces = { "application/json;charset=UTF-8" })
+    public Double getTariffPrice(@RequestParam(value = "idGroup", required = true) Long idGroup,
+            @RequestParam(value = "idHeadquarter", required = true) Long idHeadquarter) {
+        List<TariffByGroup> tariffs = tariffByGroupRepository.findByHeadquarterIdAndGroupId(idHeadquarter, idGroup);
+        Tariff tariff = tariffs.get(0).getTariff();
+        Set<TariffDetail> tariffDetails = getAllTariffDetails(tariff.getId());
+
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(new Date());
+        String currentDay = DAYS_MAP.get(calendar.get(Calendar.DAY_OF_WEEK));
+        int currenttMinutes = (calendar.get(Calendar.HOUR_OF_DAY) * 60) + calendar.get(Calendar.MINUTE);
+
+        for (TariffDetail tariffDetail : tariffDetails) {
+            if (StringUtils.contains(tariffDetail.getDays(), currentDay)) {
+                int startMinutes = (tariffDetail.getStartTime().get(Calendar.HOUR_OF_DAY) * 60) + tariffDetail.getStartTime().get(Calendar.MINUTE);
+                int endMinutes = (tariffDetail.getEndTime().get(Calendar.HOUR_OF_DAY) * 60) + tariffDetail.getEndTime().get(Calendar.MINUTE);
+                if (currenttMinutes >= startMinutes && currenttMinutes <= endMinutes) {
+                    return tariffDetail.getPrice();
+                }
+            }
+        }
+
+        return tariff.getPrice();
+    }
 }
