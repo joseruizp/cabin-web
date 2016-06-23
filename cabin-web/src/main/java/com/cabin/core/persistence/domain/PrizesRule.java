@@ -7,6 +7,8 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToOne;
 
 @Entity(name = "regla_premio")
 public class PrizesRule implements Serializable {
@@ -25,6 +27,10 @@ public class PrizesRule implements Serializable {
 
 	@Column(name = "puntos")
 	private Integer points;
+	
+	@OneToOne
+	@JoinColumn(name = "id_nivel")
+	private Level level;
 
 	public Long getId() {
 		return id;
@@ -56,6 +62,14 @@ public class PrizesRule implements Serializable {
 
 	public void setPoints(Integer points) {
 		this.points = points;
+	}
+
+	public Level getLevel() {
+		return level;
+	}
+
+	public void setLevel(Level level) {
+		this.level = level;
 	}
 
 }

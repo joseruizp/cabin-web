@@ -371,7 +371,10 @@ CREATE TABLE `regla_premio` (
   `nombre` varchar(20) DEFAULT NULL,
   `puntos` int(11) DEFAULT NULL,
   `fraccion_saldo` double DEFAULT NULL,
-  PRIMARY KEY (`id`)
+  `id_nivel` bigint(20) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `id_nivel_idx` (`id_nivel`),
+  CONSTRAINT `id_nivel` FOREIGN KEY (`id_nivel`) REFERENCES `nivel` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
