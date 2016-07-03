@@ -374,7 +374,7 @@ CREATE TABLE `regla_premio` (
   `id_nivel` bigint(20) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `id_nivel_idx` (`id_nivel`),
-  CONSTRAINT `id_nivel` FOREIGN KEY (`id_nivel`) REFERENCES `nivel` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+  CONSTRAINT `id_regla_nivel` FOREIGN KEY (`id_nivel`) REFERENCES `nivel` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -384,7 +384,7 @@ CREATE TABLE `regla_premio` (
 
 LOCK TABLES `regla_premio` WRITE;
 /*!40000 ALTER TABLE `regla_premio` DISABLE KEYS */;
-INSERT INTO `regla_premio` VALUES (1,'Oso',10011,2.5),(2,'laptop',15201,120),(3,'minutos',2000,203);
+INSERT INTO `regla_premio` VALUES (1,'Oso',10011,2.5,1),(2,'laptop',15201,120,1),(3,'minutos',2000,203,1);
 /*!40000 ALTER TABLE `regla_premio` ENABLE KEYS */;
 UNLOCK TABLES;
 
