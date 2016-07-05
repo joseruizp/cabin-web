@@ -56,6 +56,15 @@
         <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-thymeleaf</artifactId>
         </dependency>
+		 <dependency>
+		 	<groupId>commons-collections</groupId>
+		 	<artifactId>commons-collections</artifactId>
+		 </dependency>
+		 <dependency>
+		 	<groupId>org.scala-lang</groupId>
+		 	<artifactId>scala-library</artifactId>
+		 	<version>2.10.4</version>
+		 </dependency>
 	</dependencies>
 	
 	<build>

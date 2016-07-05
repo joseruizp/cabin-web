@@ -268,7 +268,7 @@ CREATE TABLE `grupo` (
 
 LOCK TABLES `grupo` WRITE;
 /*!40000 ALTER TABLE `grupo` DISABLE KEYS */;
-INSERT INTO `grupo` VALUES (1,'VIP','Grupo VIP'),(2,'Normal','Grupo Normal');
+INSERT INTO `grupo` VALUES (1,'Normal','Grupo Normal'),(2,'VIP','Grupo VIP'),(3,'Mantenimiento','Grupo Mantenimiento');
 /*!40000 ALTER TABLE `grupo` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -544,6 +544,7 @@ CREATE TABLE `tarifa_por_grupo_sede` (
   `id_sede` bigint(20) DEFAULT NULL,
   `id_grupo` bigint(20) DEFAULT NULL,
   `id_tarifa` bigint(20) DEFAULT NULL,
+  `pc_consola` varchar(1) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `id_sede` (`id_sede`),
   KEY `id_grupo` (`id_grupo`),
