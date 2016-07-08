@@ -384,7 +384,7 @@ CREATE TABLE `regla_premio` (
 
 LOCK TABLES `regla_premio` WRITE;
 /*!40000 ALTER TABLE `regla_premio` DISABLE KEYS */;
-INSERT INTO `regla_premio` VALUES (1,'Oso',10011,2.5,1),(2,'laptop',15201,120,1),(3,'minutos',2000,203,1);
+INSERT INTO `regla_premio` VALUES (1,'Oso',10011,2.5,1),(2,'laptop',15201,120,2),(3,'minutos',2000,203,3);
 /*!40000 ALTER TABLE `regla_premio` ENABLE KEYS */;
 UNLOCK TABLES;
 

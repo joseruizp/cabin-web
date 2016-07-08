@@ -14,13 +14,18 @@ import com.cabin.core.persistence.repository.ComputerRepository;
 @RestController
 public class ComputerRestController {
 
-	@Autowired
-	private ComputerRepository computerRepository;
+    @Autowired
+    private ComputerRepository computerRepository;
 
-	@RequestMapping(value = "/get/computersByHeadquarter", method = RequestMethod.GET, produces = {
-			"application/json;charset=UTF-8" })
-	public List<Computer> getComputersByHeadquarter(@RequestParam(value = "id", required = true) Long id) {
-		System.out.println("headquarterId ::: " + id);
-		return computerRepository.findByHeadquarterId(id);
-	}
+    @RequestMapping(value = "/get/computersByHeadquarter", method = RequestMethod.GET, produces = { "application/json;charset=UTF-8" })
+    public List<Computer> getComputersByHeadquarter(@RequestParam(value = "id", required = true) Long id) {
+        System.out.println("headquarterId ::: " + id);
+        return computerRepository.findByHeadquarterId(id);
+    }
+
+    @RequestMapping(value = "/get/computer", method = RequestMethod.GET, produces = { "application/json;charset=UTF-8" })
+    public Computer getComputer(@RequestParam(value = "id", required = true) Long id) {
+        System.out.println("computerId ::: " + id);
+        return computerRepository.findOne(id);
+    }
 }

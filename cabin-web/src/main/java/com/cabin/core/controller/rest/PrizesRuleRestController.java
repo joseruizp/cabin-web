@@ -12,14 +12,12 @@ import com.cabin.core.persistence.repository.PrizesRuleRepository;
 @RestController
 public class PrizesRuleRestController {
 
-	@Autowired
-	private PrizesRuleRepository prizesRuleRepository;
+    @Autowired
+    private PrizesRuleRepository prizesRuleRepository;
 
-	@RequestMapping(value = "/get/prizeByLevel", method = RequestMethod.GET, produces = {
-			"application/json;charset=UTF-8" })
-	public Double getPrizeByLevel(@RequestParam(value = "id", required = true) Long idlevel,
-			@RequestParam(value = "points", required = true) Integer points) {
-		PrizesRule rule = prizesRuleRepository.findByLevelId(idlevel);
-		return points * rule.getBalanceFraction() / rule.getPoints();
-	}
+    @RequestMapping(value = "/get/prizeByLevel", method = RequestMethod.GET, produces = { "application/json;charset=UTF-8" })
+    public Double getPrizeByLevel(@RequestParam(value = "id", required = true) Long idlevel, @RequestParam(value = "points", required = true) Integer points) {
+        PrizesRule rule = prizesRuleRepository.findByLevelId(idlevel);
+        return points * rule.getBalanceFraction() / rule.getPoints();
+    }
 }
