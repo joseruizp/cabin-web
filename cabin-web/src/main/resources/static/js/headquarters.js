@@ -1,10 +1,12 @@
 (function($){
 	var PC = 'P';
 	var CONSOLE = 'C';
+	var idHeadquarter;
 	
 	$(document).ready(function(){
+		idHeadquarter = $('#idHeadquarter').val();
 		addEventSaveTariff();
-		fillTariffs(idHeadquarter);
+		fillTariffs();
 	});
 	
 	function addEventSaveTariff() {
@@ -53,8 +55,9 @@
 		    contentType: 'application/json',
 		    success: function (data) {
 		    	console.log("tariffs saved : " + data);
+		    	showMessage("Tarifas actualizadas satisfactoriamente", "tariffAlert");
 		    },
-		    error: function (xhr, status) {	    	
+		    error: function (xhr, status) {
 		    	console.log("Error, su solicitud no pudo ser atendida");
 		    }
 		});
@@ -104,6 +107,7 @@
 			type: "GET",
 		    url:strUrl,			    
 		    dataType: 'json', 
+		    data: {id: idHeadquarter},
 		    contentType: 'application/json',
 		    success: function (data) {
 		    	$.each(data, function(index, value) {
@@ -122,5 +126,13 @@
 		    	console.log("Error, su solicitud no pudo ser atendida");
 		    }
 		});
+	}
+	
+	function showMessage(text, divId) {
+		var div = $('#' + divId);
+		div.text(text).show(1000);
+		setTimeout(function() {
+			div.hide(1000);
+		}, 5000);
 	}
 })(this.jQuery);

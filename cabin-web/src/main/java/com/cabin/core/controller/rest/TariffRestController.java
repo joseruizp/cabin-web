@@ -139,7 +139,7 @@ public class TariffRestController {
         return result;
     }
 
-    @RequestMapping(value = "/post/saveTariffByGroup", method = RequestMethod.GET, produces = { "application/json;charset=UTF-8" })
+    @RequestMapping(value = "/get/tariffByHeadquarter", method = RequestMethod.GET, produces = { "application/json;charset=UTF-8" })
     public List<TariffByGroup> getTariffByHeadquarter(@RequestParam(value = "id", required = true) Long headquarterId) {
         return tariffByGroupRepository.findByHeadquarterId(headquarterId);
     }
