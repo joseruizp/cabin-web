@@ -116,4 +116,15 @@ public class RentRestController {
 
         return rentRepository.saveAndFlush(rent);
     }
+    
+    @RequestMapping(value = "/patch/rechargeComputer", method = RequestMethod.PATCH, produces = { "application/json;charset=UTF-8" })
+    public Rent rechargeComputer(@RequestParam(value = "client_id", required = true) Long clientId, @RequestParam(value = "console_id", required = true) Long consoleId) {
+        System.out.println("clientId ::: " + clientId);
+        System.out.println("consoleId ::: " + consoleId);
+        Rent rent = rentRepository.findByClientIdAndConsoleId(clientId, consoleId);
+        rent.setModificationDate(Calendar.getInstance());
+        rent.setRentStatus(rentStatusRepository.getOne(RentStatusEnum.STOPPED.getId()));
+
+        return rentRepository.saveAndFlush(rent);
+    }
 }

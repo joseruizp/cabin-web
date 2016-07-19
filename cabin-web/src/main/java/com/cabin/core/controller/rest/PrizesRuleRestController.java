@@ -13,8 +13,8 @@ import com.cabin.core.persistence.repository.PrizesRuleRepository;
 
 @RestController
 public class PrizesRuleRestController {
-	
-	private static final DecimalFormat DECIMAL_FORMAT = new DecimalFormat("#0.00");
+
+    private static final DecimalFormat DECIMAL_FORMAT = new DecimalFormat("#0.00");
 
     @Autowired
     private PrizesRuleRepository prizesRuleRepository;

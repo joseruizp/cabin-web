@@ -103,7 +103,7 @@ public class Client implements Serializable {
 	}
 
 	public Integer getPoints() {
-		return points;
+		return points == null ? 0 : points;
 	}
 
 	public void setPoints(Integer points) {
@@ -111,7 +111,7 @@ public class Client implements Serializable {
 	}
 	
 	public Integer getExperience() {
-		return experience;
+		return experience == null ? 0 : experience;
 	}
 
 	public void setExperience(Integer experience) {

@@ -446,6 +446,12 @@ CREATE TABLE `experiencia` (
 -- Table structure for table `sede`
 --
 
+LOCK TABLES `experiencia` WRITE;
+/*!40000 ALTER TABLE `experiencia` DISABLE KEYS */;
+INSERT INTO `experiencia` VALUES (1,'experiencia 1',10,5,1,1),(2,'experiencia 2',20,9,1,2),(3,'experiencia 3',30,13,1,3);
+/*!40000 ALTER TABLE `experiencia` ENABLE KEYS */;
+UNLOCK TABLES;
+
 DROP TABLE IF EXISTS `sede`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;

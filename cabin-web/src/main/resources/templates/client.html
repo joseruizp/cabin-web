@@ -74,6 +74,7 @@
 										<!-- Collect the nav links, forms, and other content for toggling -->
 										<div class="collapse navbar-collapse scrollspy smooth-scroll" id="navbar-collapse-1">
 											<ul class="nav navbar-nav navbar-right">
+												<li class="active"><a href="#recarga">Recarga</a></li>
 												<li class="active"><a href="#equipos">Equipos</a></li>
 												<li><a href="#consolas">Consolas</a></li>
 											</ul>
@@ -96,7 +97,7 @@
 		<!-- header end -->
 
 		<!-- banner start --> 
-		<div id="equipos">
+		<div id="recarga">
 			<div class="container">
 				<br/>
 				<br/>
@@ -104,7 +105,7 @@
 				<br/>
 				<div class="row">
 					<div class="col-md-12" style="margin-top: 40px">
-						<h1 id="tituloEquipos" class="title text-center">Definicion de <span>Equipos</span></h1>
+						<h1 id="tituloEquipos" class="title text-center">Realizar <span>Recarga</span></h1>
 						<p class="lead text-center">Lorem ipsum dolor sit amet, consectetur adipisicing elit. laudantium culpa tenetur.</p>
 					</div>
 				</div>
@@ -113,26 +114,66 @@
 					<div class="col-md-3">
 						<form class="form-horizontal" role="form">
 							<div class="form-group">
-								<label class="control-label col-sm-2" for="email">Usuario:</label>
-								<label class="control-label col-sm-2" for="email"></label>
+								<label class="control-label col-sm-3">Usuario:</label>
+								<label class="control-label col-sm-2" id="clientName"></label>
 							</div>
 							<div class="form-group">
-								<label class="control-label col-sm-2" for="email">Nivel:</label>
-								<label class="control-label col-sm-2" for="email"></label>
+								<label class="control-label col-sm-2">Nivel:</label>
+								<label class="control-label col-sm-2" id="level"></label>
 							</div>
 						</form>
 					</div>
 					<div class="col-md-3">
 						<form class="form-horizontal" role="form">
 							<div class="form-group">
-								<label class="control-label col-sm-2" for="pwd">Puntos:</label> <label
-									class="control-label col-sm-2" for="email"></label>
+								<label class="control-label col-sm-2">Puntos:</label> <label
+									class="control-label col-sm-2" id="points"></label>
 							</div>
 							<div class="form-group">
-								<label class="control-label col-sm-2" for="pwd">Saldo:</label> <label
-									class="control-label col-sm-2" for="email"></label>
+								<label class="control-label col-sm-2">Saldo:</label> <label
+									class="control-label col-sm-2" id="balance"></label>
 							</div>
 						</form>
+					</div>
+				</div>
+				<div class="row" style="margin-left: 90px">
+					<div class="form-group" style="margin-top: 10px">
+						<div class="col-md-3"></div>
+						<div class="col-md-6">
+							<form role="form">
+								<div class="form-group">
+									<label for="amountComputer">Monto Ingresado:</label> 
+									<input type="text" class="form-control" id="enterAmount"/>
+								</div>
+								<div class="form-group">
+									<label for="rechargeComputer">Recarga:</label> 
+									<input type="text" class="form-control" id="rechargeAmount"/>
+								</div>
+								<div class="form-group">
+									<label>Vuelto:</label> 
+									<label></label> 
+								</div>
+								<button type="submit" class="btn btn-default" id="rechargeBtn">Grabar</button>
+								<div id="rechargeAlert" class="alert alert-danger" style="display:none"></div>
+							</form>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!-- banner end -->
+		
+		<!-- banner start --> 
+		<div id="equipos">
+			<div class="container">
+				<br/>
+				<br/>
+				<br/>
+				<br/>
+				<div class="row">
+					<div class="col-md-12" style="margin-top: 40px">
+						<h1 id="tituloEquipos" class="title text-center">Listado de <span>Equipos</span></h1>
+						<p class="lead text-center">Lorem ipsum dolor sit amet, consectetur adipisicing elit. laudantium culpa tenetur.</p>
 					</div>
 				</div>
 				<div class="row" style="margin-left: 90px">
@@ -140,26 +181,6 @@
 						<div class="multipe-box">
 							<select class="select-multiple" multiple="multiple" size="3" id="computer-multiple">
 							</select>
-						</div>
-					</div>
-					<div class="form-group" style="margin-top: 10px">
-						<div class="col-md-3"></div>
-						<div class="col-md-6">
-							<form role="form">
-								<div class="form-group">
-									<label for="amountComputer">Monto Ingresado:</label> 
-									<input type="text" class="form-control" id="amountComputer"/>
-								</div>
-								<div class="form-group">
-									<label for="rechargeComputer">Recarga:</label> 
-									<input type="text" class="form-control" id="rechargeComputer"/>
-								</div>
-								<div class="form-group">
-									<label>Vuelto:</label> 
-									<label></label> 
-								</div>
-								<button type="submit" class="btn btn-default">Recargar</button>
-							</form>
 						</div>
 					</div>
 				</div>
@@ -177,58 +198,11 @@
 						<p class="lead text-center">Lorem ipsum dolor sit amet, consectetur adipisicing elit. laudantium culpa tenetur.</p>
 					</div>
 				</div>
-				<div class="row" style="margin-bottom: 40px">
-					<div class="col-md-4"></div>
-					<div class="col-md-3">
-						<form class="form-horizontal" role="form">
-							<div class="form-group">
-								<label class="control-label col-sm-2" for="email">Usuario:</label>
-								<label class="control-label col-sm-2" for="email"></label>
-							</div>
-							<div class="form-group">
-								<label class="control-label col-sm-2" for="email">Nivel:</label>
-								<label class="control-label col-sm-2" for="email"></label>
-							</div>
-						</form>
-					</div>
-					<div class="col-md-3">
-						<form class="form-horizontal" role="form">
-							<div class="form-group">
-								<label class="control-label col-sm-2" for="pwd">Puntos:</label> <label
-									class="control-label col-sm-2" for="email"></label>
-							</div>
-							<div class="form-group">
-								<label class="control-label col-sm-2" for="pwd">Saldo:</label> <label
-									class="control-label col-sm-2" for="email"></label>
-							</div>
-						</form>
-					</div>
-				</div>
 				<div class="row" style="margin-left: 90px">
 					<div class="multipe-div">
 						<div class="multipe-box">
 							<select class="select-multiple" multiple="multiple" size="3" id="console-multiple">
 							</select>
-						</div>
-					</div>
-					<div class="form-group" style="margin-top: 10px">
-						<div class="col-md-3"></div>
-						<div class="col-md-6" style="margin-bottom: 10px">
-							<form role="form">
-								<div class="form-group">
-									<label for="amountConsole">Monto Ingresado:</label> 
-									<input type="text" class="form-control" id="amountConsole"/>
-								</div>
-								<div class="form-group">
-									<label for="rechargeConsole">Recarga:</label> 
-									<input type="text" class="form-control" id="rechargeConsole"/>
-								</div>
-								<div class="form-group">
-									<label>Vuelto:</label> 
-									<label></label> 
-								</div>
-								<button type="submit" class="btn btn-default">Recargar</button>
-							</form>
 						</div>
 					</div>
 					<br/>
@@ -313,6 +287,9 @@
 				</form>
 			</div>
 		</div>
+		
+		<input type="hidden" id="clientId" th:value="${clientId}"></input>
+		<input type="hidden" id="headquarterId" th:value="${headquarterId}"></input>
 
 		<!-- JavaScript --> 
 		<script type="text/javascript" th:src="@{plugins/jquery.min.js}"></script>

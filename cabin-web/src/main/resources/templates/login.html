@@ -24,6 +24,15 @@
 			<fieldset>
 	
 				<legend class="legend">Login</legend>
+				
+				<div class="input">
+					<select id="userType">
+						<option value="2">Administrador</option>
+						<option value="1">Operador</option>
+						<option value="3">Cliente</option>
+						<option value="4">Incidencia</option>
+					</select>
+				</div>
 	
 				<div class="input">
 					<input id="email" type="email" placeholder="Email" required="required" /> <span><i
@@ -33,6 +42,11 @@
 				<div class="input">
 					<input id="password" type="password" placeholder="Password" required="required" /> <span><i
 						class="fa fa-lock"></i></span>
+				</div>
+				
+				<div id="headquarterDiv" class="input" style="display: none;">
+					<select id="headquarter">
+					</select>
 				</div>
 				<div class="form-group">
 					<a href="#" onclick="newUser()"><span>Registrarse</span></a>
