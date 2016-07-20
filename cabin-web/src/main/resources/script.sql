@@ -1,5 +1,3 @@
-CREATE DATABASE  IF NOT EXISTS `cabinas` /*!40100 DEFAULT CHARACTER SET utf8 */;
-USE `cabinas`;
 -- MySQL dump 10.13  Distrib 5.6.24, for Win64 (x86_64)
 --
 -- Host: localhost    Database: cabinas
@@ -89,7 +87,7 @@ CREATE TABLE `cliente` (
 
 LOCK TABLES `cliente` WRITE;
 /*!40000 ALTER TABLE `cliente` DISABLE KEYS */;
-INSERT INTO `cliente` VALUES (1,'erick.gonzales@bbva.com','erick','M','2000-01-05',0,0,0,2,2,5),(2,'ivan@pucp.pe','ivan','M','2000-01-01',12,10,10,1,1,6),(3,'je@pucp.pe','Junior','M','2000-01-01',10,100,50,1,1,7);
+INSERT INTO `cliente` VALUES (1,'erick.gonzales@bbva.com','erick','M','2000-01-05',0,2,9,2,2,5),(2,'ivan@pucp.pe','ivan','M','2000-01-01',12,10,10,1,1,6),(3,'je@pucp.pe','Junior','M','2000-01-01',10,100,50,1,1,7);
 /*!40000 ALTER TABLE `cliente` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -248,6 +246,38 @@ INSERT INTO `estado_alquiler` VALUES (1,'ALQUILADO'),(2,'DETENIDO');
 UNLOCK TABLES;
 
 --
+-- Table structure for table `experiencia`
+--
+
+DROP TABLE IF EXISTS `experiencia`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `experiencia` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `nombre` varchar(100) DEFAULT NULL,
+  `fraccion_recarga` double DEFAULT NULL,
+  `experiencia_otorgar` int(11) DEFAULT NULL,
+  `id_estado` bigint(20) DEFAULT NULL,
+  `id_nivel` bigint(20) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `experiencia_estado_idx` (`id_estado`),
+  KEY `experiencia_nivel_idx` (`id_nivel`),
+  CONSTRAINT `experiencia_estado` FOREIGN KEY (`id_estado`) REFERENCES `estado` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `experiencia_nivel` FOREIGN KEY (`id_nivel`) REFERENCES `nivel` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `experiencia`
+--
+
+LOCK TABLES `experiencia` WRITE;
+/*!40000 ALTER TABLE `experiencia` DISABLE KEYS */;
+INSERT INTO `experiencia` VALUES (1,'experiencia 1',10,5,1,1),(2,'experiencia 2',20,9,1,2),(3,'experiencia 3',30,13,1,3);
+/*!40000 ALTER TABLE `experiencia` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `grupo`
 --
 
@@ -259,7 +289,7 @@ CREATE TABLE `grupo` (
   `nombre` varchar(20) DEFAULT NULL,
   `descripcion` varchar(200) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -330,7 +360,7 @@ CREATE TABLE `nivel` (
 
 LOCK TABLES `nivel` WRITE;
 /*!40000 ALTER TABLE `nivel` DISABLE KEYS */;
-INSERT INTO `nivel` VALUES (1,'principiante',0,100,'Pregunta principiante'),(2,'intermedio',101,500,'pregunta intermedio'),(3,'senior',501,1000,'pregunta senior'),(4,'pro gamer',1001,null,'pregunta pro gamer');
+INSERT INTO `nivel` VALUES (1,'principiante',0,100,'Pregunta principiante'),(2,'intermedio',101,500,'pregunta intermedio'),(3,'senior',501,1000,'pregunta senior'),(4,'pro gamer',1001,2000,'pregunta pro gamer');
 /*!40000 ALTER TABLE `nivel` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -421,36 +451,8 @@ INSERT INTO `regla_puntuacion` VALUES (1,'regla1',50,100,1,1),(2,'regla2',20,50,
 UNLOCK TABLES;
 
 --
--- Table structure for table `experiencia`
---
-
-DROP TABLE IF EXISTS `experiencia`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `experiencia` (
-  `id` bigint(20) NOT NULL AUTO_INCREMENT,
-  `nombre` varchar(100) DEFAULT NULL,
-  `fraccion_recarga` double DEFAULT NULL,
-  `experiencia_otorgar` int(11) DEFAULT NULL,
-  `id_estado` bigint(20) DEFAULT NULL,
-  `id_nivel` bigint(20) DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  KEY `experiencia_estado_idx` (`id_estado`),
-  KEY `experiencia_nivel_idx` (`id_nivel`),
-  CONSTRAINT `experiencia_estado` FOREIGN KEY (`id_estado`) REFERENCES `estado` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `experiencia_nivel` FOREIGN KEY (`id_nivel`) REFERENCES `nivel` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
 -- Table structure for table `sede`
 --
-
-LOCK TABLES `experiencia` WRITE;
-/*!40000 ALTER TABLE `experiencia` DISABLE KEYS */;
-INSERT INTO `experiencia` VALUES (1,'experiencia 1',10,5,1,1),(2,'experiencia 2',20,9,1,2),(3,'experiencia 3',30,13,1,3);
-/*!40000 ALTER TABLE `experiencia` ENABLE KEYS */;
-UNLOCK TABLES;
 
 DROP TABLE IF EXISTS `sede`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
@@ -518,6 +520,16 @@ CREATE TABLE `tarifa` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
+-- Dumping data for table `tarifa`
+--
+
+LOCK TABLES `tarifa` WRITE;
+/*!40000 ALTER TABLE `tarifa` DISABLE KEYS */;
+INSERT INTO `tarifa` VALUES (1,'tarifa defecto',2,1);
+/*!40000 ALTER TABLE `tarifa` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `tarifa_detalle`
 --
 
@@ -539,6 +551,16 @@ CREATE TABLE `tarifa_detalle` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
+-- Dumping data for table `tarifa_detalle`
+--
+
+LOCK TABLES `tarifa_detalle` WRITE;
+/*!40000 ALTER TABLE `tarifa_detalle` DISABLE KEYS */;
+INSERT INTO `tarifa_detalle` VALUES (1,'Lun-Mar-Mie-Jue-Vie',1,'2016-07-18 19:01:01','2016-07-19 15:00:01',2,1);
+/*!40000 ALTER TABLE `tarifa_detalle` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `tarifa_por_grupo_sede`
 --
 
@@ -558,7 +580,7 @@ CREATE TABLE `tarifa_por_grupo_sede` (
   CONSTRAINT `tarifa_por_grupo_sede_ibfk_1` FOREIGN KEY (`id_sede`) REFERENCES `sede` (`id`),
   CONSTRAINT `tarifa_por_grupo_sede_ibfk_2` FOREIGN KEY (`id_grupo`) REFERENCES `grupo` (`id`),
   CONSTRAINT `tarifa_por_grupo_sede_ibfk_3` FOREIGN KEY (`id_tarifa`) REFERENCES `tarifa` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -567,6 +589,7 @@ CREATE TABLE `tarifa_por_grupo_sede` (
 
 LOCK TABLES `tarifa_por_grupo_sede` WRITE;
 /*!40000 ALTER TABLE `tarifa_por_grupo_sede` DISABLE KEYS */;
+INSERT INTO `tarifa_por_grupo_sede` VALUES (1,1,1,1,'P'),(2,1,2,1,'P'),(3,1,3,1,'P'),(4,1,1,1,'C'),(5,1,2,1,'C'),(6,1,3,1,'C');
 /*!40000 ALTER TABLE `tarifa_por_grupo_sede` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -631,4 +654,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2016-05-08 13:24:15
+-- Dump completed on 2016-07-19 20:34:58
