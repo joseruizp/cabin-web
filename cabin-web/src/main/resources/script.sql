@@ -330,7 +330,7 @@ CREATE TABLE `nivel` (
 
 LOCK TABLES `nivel` WRITE;
 /*!40000 ALTER TABLE `nivel` DISABLE KEYS */;
-INSERT INTO `nivel` VALUES (1,'principiante',0,100,'Pregunta principiante'),(2,'intermedio',101,500,'pregunta intermedio'),(3,'senior',501,1000,'pregunta senior'),(4,'pro gamer',1001,2000,'pregunta pro gamer');
+INSERT INTO `nivel` VALUES (1,'principiante',0,100,'Pregunta principiante'),(2,'intermedio',101,500,'pregunta intermedio'),(3,'senior',501,1000,'pregunta senior'),(4,'pro gamer',1001,null,'pregunta pro gamer');
 /*!40000 ALTER TABLE `nivel` ENABLE KEYS */;
 UNLOCK TABLES;
 

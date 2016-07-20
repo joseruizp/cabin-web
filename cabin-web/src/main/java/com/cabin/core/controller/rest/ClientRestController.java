@@ -1,6 +1,7 @@
 package com.cabin.core.controller.rest;
 
 import java.text.ParseException;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -43,7 +44,6 @@ public class ClientRestController {
     @RequestMapping(value = "/post/recharge", method = RequestMethod.POST, produces = { "application/json;charset=UTF-8" })
     public Client recharge(@RequestBody(required = true) Recharge recharge) throws ParseException {
         Client client = clientRepository.findOne(recharge.getClientId());
-        Level level = client.getLevel();
 
         PunctuationRule punctuationRule = punctuationRuleRepository.findByLevelId(client.getLevel().getId());
 
@@ -53,12 +53,16 @@ public class ClientRestController {
         Integer newExperience = client.getExperience() + getRechargeExperience(experience, recharge.getAmount());
         client.setExperience(newExperience);
         
-        if (newExperience > level.getFinalExperience()) {
-        	Level newLevel = levelRepository.findOne(level.getId() + 1);
-        	if (newLevel != null) {
-        		client.setLevel(newLevel);
-        	}
-        }
+    	List<Level> levels = levelRepository.findAll();
+    	for (Level level : levels) {
+    		Integer finalExperience = level.getFinalExperience();
+    		if (finalExperience == null) {
+    			finalExperience = Integer.MAX_VALUE;
+    		}
+    		if (newExperience >= level.getInitialExperience() && newExperience <= finalExperience) {
+    			client.setLevel(level);
+    		}
+    	}
 
         return clientRepository.saveAndFlush(client);
     }
