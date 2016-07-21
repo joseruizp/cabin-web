@@ -27,7 +27,10 @@ public class Rent implements Serializable {
     private Calendar modificationDate;
 
     @Column(name = "tiempo_alquiler")
-    private Double rentTime;
+    private String rentTime;
+
+    @Column(name = "precio")
+    private Double price;
 
     @OneToOne
     @JoinColumn(name = "id_estado_alquiler")
@@ -69,12 +72,20 @@ public class Rent implements Serializable {
         this.modificationDate = modificationDate;
     }
 
-    public Double getRentTime() {
+    public String getRentTime() {
         return rentTime;
     }
 
-    public void setRentTime(Double rentTime) {
+    public void setRentTime(String rentTime) {
         this.rentTime = rentTime;
+    }
+
+    public Double getPrice() {
+        return price;
+    }
+
+    public void setPrice(Double price) {
+        this.price = price;
     }
 
     public RentStatus getRentStatus() {

@@ -12,7 +12,6 @@ import com.cabin.core.enums.RentStatusEnum;
 import com.cabin.core.persistence.domain.Computer;
 import com.cabin.core.persistence.domain.Console;
 import com.cabin.core.persistence.domain.Rent;
-import com.cabin.core.persistence.domain.RentStatus;
 import com.cabin.core.persistence.repository.ClientRepository;
 import com.cabin.core.persistence.repository.ComputerRepository;
 import com.cabin.core.persistence.repository.ConsoleRepository;
@@ -60,15 +59,17 @@ public class RentRestController {
 
     @RequestMapping(value = "/put/rentComputer", method = RequestMethod.PUT, produces = { "application/json;charset=UTF-8" })
     public Rent rentComputer(@RequestParam(value = "client_id", required = true) Long clientId, @RequestParam(value = "computer_id", required = true) Long computerId,
-            @RequestParam(value = "rent_time", required = true) Double rentTime) {
+            @RequestParam(value = "rent_time", required = true) Double rentTime, @RequestParam(value = "price", required = true) Double price) {
         System.out.println("clientId ::: " + clientId);
         System.out.println("computerId ::: " + computerId);
         System.out.println("rentTime ::: " + rentTime);
+        System.out.println("price ::: " + price);
 
         Rent rent = new Rent();
         rent.setStartDate(Calendar.getInstance());
         rent.setModificationDate(Calendar.getInstance());
-        rent.setRentTime(rentTime);
+        rent.setRentTime(getHoursAsString(rentTime));
+        rent.setPrice(price);
         rent.setClient(clientRepository.getOne(clientId));
         rent.setComputer(computerRepository.getOne(computerId));
         rent.setRentStatus(rentStatusRepository.getOne(RentStatusEnum.RENTED.getId()));
@@ -78,20 +79,37 @@ public class RentRestController {
 
     @RequestMapping(value = "/put/rentConsole", method = RequestMethod.PUT, produces = { "application/json;charset=UTF-8" })
     public Rent rentConsole(@RequestParam(value = "client_id", required = true) Long clientId, @RequestParam(value = "console_id", required = true) Long consoleId,
-            @RequestParam(value = "rent_time", required = true) Double rentTime) {
+            @RequestParam(value = "rent_time", required = true) Double rentTime, @RequestParam(value = "price", required = true) Double price) {
         System.out.println("clientId ::: " + clientId);
         System.out.println("consoleId ::: " + consoleId);
         System.out.println("rentTime ::: " + rentTime);
+        System.out.println("price ::: " + price);
 
         Rent rent = new Rent();
         rent.setStartDate(Calendar.getInstance());
         rent.setModificationDate(Calendar.getInstance());
-        rent.setRentTime(rentTime);
+        rent.setRentTime(getHoursAsString(rentTime));
+        rent.setPrice(price);
         rent.setClient(clientRepository.getOne(clientId));
         rent.setConsole(consoleRepository.getOne(consoleId));
         rent.setRentStatus(rentStatusRepository.getOne(RentStatusEnum.RENTED.getId()));
 
         return rentRepository.saveAndFlush(rent);
+    }
+
+    private String getHoursAsString(double hours) {
+        double rounded = round(hours);
+        long hour = (long) rounded;
+        double fraction = rounded - hour;
+        String hourString = hour < 10 ? ("0" + hour) : (Long.toString(hour));
+        return hourString + ":" + (long) (60 * fraction);
+    }
+
+    private double round(double value) {
+        long factor = (long) Math.pow(10, 2);
+        double factorValue = value * factor;
+        long tmp = Math.round(factorValue);
+        return (double) tmp / factor;
     }
 
     @RequestMapping(value = "/patch/stopRentingComputer", method = RequestMethod.PATCH, produces = { "application/json;charset=UTF-8" })
@@ -116,7 +134,7 @@ public class RentRestController {
 
         return rentRepository.saveAndFlush(rent);
     }
-    
+
     @RequestMapping(value = "/patch/rechargeComputer", method = RequestMethod.PATCH, produces = { "application/json;charset=UTF-8" })
     public Rent rechargeComputer(@RequestParam(value = "client_id", required = true) Long clientId, @RequestParam(value = "console_id", required = true) Long consoleId) {
         System.out.println("clientId ::: " + clientId);
