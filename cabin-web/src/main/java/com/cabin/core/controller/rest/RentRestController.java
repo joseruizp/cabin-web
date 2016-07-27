@@ -9,12 +9,15 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.cabin.core.enums.RentStatusEnum;
+import com.cabin.core.persistence.domain.Client;
 import com.cabin.core.persistence.domain.Computer;
 import com.cabin.core.persistence.domain.Console;
+import com.cabin.core.persistence.domain.PrizesRule;
 import com.cabin.core.persistence.domain.Rent;
 import com.cabin.core.persistence.repository.ClientRepository;
 import com.cabin.core.persistence.repository.ComputerRepository;
 import com.cabin.core.persistence.repository.ConsoleRepository;
+import com.cabin.core.persistence.repository.PrizesRuleRepository;
 import com.cabin.core.persistence.repository.RentRepository;
 import com.cabin.core.persistence.repository.RentStatusRepository;
 
@@ -35,6 +38,9 @@ public class RentRestController {
 
     @Autowired
     private RentStatusRepository rentStatusRepository;
+
+    @Autowired
+    private PrizesRuleRepository prizesRuleRepository;
 
     @RequestMapping(value = "/get/statusComputer", method = RequestMethod.GET, produces = { "application/json;charset=UTF-8" })
     public Long getStatusComputer(@RequestParam(value = "id", required = true) Long clientId) {
@@ -59,42 +65,61 @@ public class RentRestController {
 
     @RequestMapping(value = "/put/rentComputer", method = RequestMethod.PUT, produces = { "application/json;charset=UTF-8" })
     public Rent rentComputer(@RequestParam(value = "client_id", required = true) Long clientId, @RequestParam(value = "computer_id", required = true) Long computerId,
-            @RequestParam(value = "rent_time", required = true) Double rentTime, @RequestParam(value = "price", required = true) Double price) {
+            @RequestParam(value = "rent_time", required = true) Double rentTime, @RequestParam(value = "price", required = true) Double price,
+            @RequestParam(value = "bonusPoints", required = false) Integer bonusPoints) {
         System.out.println("clientId ::: " + clientId);
         System.out.println("computerId ::: " + computerId);
         System.out.println("rentTime ::: " + rentTime);
         System.out.println("price ::: " + price);
+        System.out.println("bonusPoints ::: " + bonusPoints);
 
         Rent rent = new Rent();
         rent.setStartDate(Calendar.getInstance());
         rent.setModificationDate(Calendar.getInstance());
         rent.setRentTime(getHoursAsString(rentTime));
         rent.setPrice(price);
-        rent.setClient(clientRepository.getOne(clientId));
+
         rent.setComputer(computerRepository.getOne(computerId));
         rent.setRentStatus(rentStatusRepository.getOne(RentStatusEnum.RENTED.getId()));
+        rent.setClient(updateBonusBalance(clientId, bonusPoints));
 
         return rentRepository.saveAndFlush(rent);
     }
 
     @RequestMapping(value = "/put/rentConsole", method = RequestMethod.PUT, produces = { "application/json;charset=UTF-8" })
     public Rent rentConsole(@RequestParam(value = "client_id", required = true) Long clientId, @RequestParam(value = "console_id", required = true) Long consoleId,
-            @RequestParam(value = "rent_time", required = true) Double rentTime, @RequestParam(value = "price", required = true) Double price) {
+            @RequestParam(value = "rent_time", required = true) Double rentTime, @RequestParam(value = "price", required = true) Double price,
+            @RequestParam(value = "bonusPoints", required = false) Integer bonusPoints) {
         System.out.println("clientId ::: " + clientId);
         System.out.println("consoleId ::: " + consoleId);
         System.out.println("rentTime ::: " + rentTime);
         System.out.println("price ::: " + price);
+        System.out.println("bonusPoints ::: " + bonusPoints);
 
         Rent rent = new Rent();
         rent.setStartDate(Calendar.getInstance());
         rent.setModificationDate(Calendar.getInstance());
         rent.setRentTime(getHoursAsString(rentTime));
         rent.setPrice(price);
-        rent.setClient(clientRepository.getOne(clientId));
+
         rent.setConsole(consoleRepository.getOne(consoleId));
         rent.setRentStatus(rentStatusRepository.getOne(RentStatusEnum.RENTED.getId()));
+        rent.setClient(updateBonusBalance(clientId, bonusPoints));
 
         return rentRepository.saveAndFlush(rent);
+    }
+
+    private Client updateBonusBalance(Long clientId, Integer bonusPoints) {
+        Client client = clientRepository.getOne(clientId);
+        Double bonusBalance = getBonusBalance(client.getLevel().getId(), bonusPoints);
+        client.setBalance(client.getBalance() + bonusBalance);
+        client.setPoints(client.getPoints() - bonusPoints);
+        return clientRepository.saveAndFlush(client);
+    }
+
+    private Double getBonusBalance(Long idLevel, Integer points) {
+        PrizesRule rule = prizesRuleRepository.findByLevelId(idLevel);
+        return points * rule.getBalanceFraction() / rule.getPoints();
     }
 
     private String getHoursAsString(double hours) {
