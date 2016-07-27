@@ -52,6 +52,7 @@ public class ClientRestController {
         client.setPoints(client.getPoints() + getRechargePoints(punctuationRule, recharge.getAmount()));
         Integer newExperience = client.getExperience() + getRechargeExperience(experience, recharge.getAmount());
         client.setExperience(newExperience);
+        client.setBalance(client.getBalance() + recharge.getAmount());
         
     	List<Level> levels = levelRepository.findAll();
     	for (Level level : levels) {
@@ -68,10 +69,10 @@ public class ClientRestController {
     }
 
     private Integer getRechargePoints(PunctuationRule rule, Double recharge) {
-        return Math.toIntExact(Math.round(recharge * rule.getRechargingFraction() / rule.getPoints()));
+        return Math.toIntExact(Math.round(recharge * rule.getPoints() / rule.getRechargingFraction()));
     }
 
     private Integer getRechargeExperience(Experience experience, Double recharge) {
-        return Math.toIntExact(Math.round(recharge * experience.getRechargeFraction() / experience.getExperienceToGive()));
+        return Math.toIntExact(Math.round(recharge * experience.getExperienceToGive() / experience.getRechargeFraction()));
     }
 }

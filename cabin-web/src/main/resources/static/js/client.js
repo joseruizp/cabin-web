@@ -31,6 +31,7 @@ $(function() {
 		    	$("#level").text(data.level.name);
 		    	$("#points").text(data.points);
 		    	$("#balance").text(data.balance);
+		    	$("#experience").text(data.experience);
 		    },
 		    error: function (xhr, status) {	    	
 		    	console.log("Error, su solicitud no pudo ser atendida");
@@ -42,7 +43,9 @@ $(function() {
     	$("#rechargeBtn").click(function(e) {
     		e.preventDefault();
     		var clientId = $("#clientId").val();
+    		var enterAmount = $("#enterAmount").val();
         	var amount = $("#rechargeAmount").val();
+        	var change = Number(enterAmount) - Number(amount);
         	var recharge = {};
         	recharge.clientId = clientId;
         	recharge.amount = amount;
@@ -60,6 +63,8 @@ $(function() {
     		    	console.log("recharge is done");
     		    	$("#points").text(data.points);
     		    	$("#balance").text(data.balance);
+    		    	$("#experience").text(data.experience);
+    		    	$("#rechargeChange").text(change);
     		    	showMessage("Recarga realizada satisfactoriamente", "rechargeAlert");
     		    },
     		    error: function (xhr, status) {	    	
