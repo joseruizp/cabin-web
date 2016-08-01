@@ -35,18 +35,18 @@ map = {
 		    autoclose: true,
 		    todayHighlight: true
 		 });	
-		$('.input-group.date').datepicker('setDate',"01/01/2000");
+		$('.input-group.date').datepicker('setDate',"");
 		
 		$("#genderCustomer li a").click(function(){
 			$(this).parents(".dropdown").find('.btn').html($(this).text() + ' <span class="caret"></span>');
 			var gender = $(this).text();
-			if (gender.toLowerCase() == "male" ){ $(this).parents(".dropdown").find('.btn').val("M");}
+			if (gender.toLowerCase() == "masculino" ){ $(this).parents(".dropdown").find('.btn').val("M");}
 			else{ $(this).parents(".dropdown").find('.btn').val("F"); }
 		});
 		$("#genderEmployee li a").click(function(){
 			$(this).parents(".dropdown").find('.btn').html($(this).text() + ' <span class="caret"></span>');
 			var gender = $(this).text();
-			if (gender.toLowerCase() == "male" ){ $(this).parents(".dropdown").find('.btn').val("M");}
+			if (gender.toLowerCase() == "masculino" ){ $(this).parents(".dropdown").find('.btn').val("M");}
 			else{ $(this).parents(".dropdown").find('.btn').val("F"); }
 		});
 		//Initialize validation divs
@@ -1513,10 +1513,10 @@ function saveCliente(){
 	customer.gender = gender;
 	$(genderHtml).parents(".dropdown").find('.btn').html('Seleccionar <span class="caret"></span>');
 	$(genderHtml).parents(".dropdown").find('.btn').val("");
-	$(statusHtml).parents(".dropdown").find('.btn').html('Seleccionar <span class="caret"></span>');
-	$(statusHtml).parents(".dropdown").find('.btn').val("");
-	$(nivelCustomerHtml).parents(".dropdown").find('.btn').html('Seleccionar <span class="caret"></span>');
-	$(nivelCustomerHtml).parents(".dropdown").find('.btn').val("");
+	$(statusHtml).parents(".dropdown").find('.btn').html('Activo <span class="caret"></span>');
+	$(statusHtml).parents(".dropdown").find('.btn').val("1");
+	$(nivelCustomerHtml).parents(".dropdown").find('.btn').html( niveles[0].name + ' <span class="caret"></span>');
+	$(nivelCustomerHtml).parents(".dropdown").find('.btn').val("1");
 	var idUser;
 	var strUrl = window.location.protocol + "//" + window.location.host + "/cabin-web/usuario";
 	console.log(JSON.stringify(user));
@@ -1909,11 +1909,11 @@ function editCliente( code, index ){
 			$("#btnCliente").html("Actualizar Cliente");	
 			var genderHtml = $("#genderCustomer li a");
 			if ( json.gender == "M"){
-				genderHtml.parents(".dropdown").find('.btn').html( 'Male <span class="caret"></span>');				
+				genderHtml.parents(".dropdown").find('.btn').html( 'Masculino <span class="caret"></span>');				
 				genderHtml.parents(".dropdown").find('.btn').val("M");				
 			}
 			else{
-				genderHtml.parents(".dropdown").find('.btn').html( 'Female <span class="caret"></span>');				
+				genderHtml.parents(".dropdown").find('.btn').html( 'Femenino <span class="caret"></span>');				
 				genderHtml.parents(".dropdown").find('.btn').val("F");
 			}
 	    },
@@ -2002,11 +2002,11 @@ function editEmpleado( code, index ){
 			$("#btnEmpleado").html("Actualizar Empleado");	
 			var genderHtml = $("#genderEmployee li a");
 			if ( json.gender == "M"){
-				genderHtml.parents(".dropdown").find('.btn').html( 'Male <span class="caret"></span>');				
+				genderHtml.parents(".dropdown").find('.btn').html( 'Masculino <span class="caret"></span>');				
 				genderHtml.parents(".dropdown").find('.btn').val("M");				
 			}
 			else{
-				genderHtml.parents(".dropdown").find('.btn').html( 'Female <span class="caret"></span>');				
+				genderHtml.parents(".dropdown").find('.btn').html( 'Femenino <span class="caret"></span>');				
 				genderHtml.parents(".dropdown").find('.btn').val("F");
 			}
 			var docTypeHtml = $("#docType li a"); 
@@ -2330,6 +2330,9 @@ function fillArrayNivel(){
 	    	ulRegla.html(line);
 	    	ulExperience.html(line);
 	    	ulCustomer.html(line);
+	    	var nivelCustomerHtml =  $("#nivelCustomer li a");
+	    	$(nivelCustomerHtml).parents(".dropdown").find('.btn').html( niveles[0].name + ' <span class="caret"></span>');
+	    	$(nivelCustomerHtml).parents(".dropdown").find('.btn').val("1");
 	    }
 	});
 }

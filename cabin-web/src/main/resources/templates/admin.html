@@ -113,7 +113,9 @@
 			</div>
 		</div>
 		<!-- banner end -->
-		
+		<br/>
+		<br/>
+		<br/>
 		<!-- banner start --> 
 		<div id="nuevoCliente">
 			<div class="container">
@@ -131,15 +133,13 @@
 							<label class="control-label col-sm-2" for="nameCustomer">Nombre:</label>
 							<div class="col-sm-4">
 								<input class="form-control" id="nameCustomer"
-									placeholder="Nombre" maxlength="20"/>
+									placeholder="Nombre y Apellidos" maxlength="20"/>
 							</div>							
-					        <label class="control-label col-sm-2" for="birthDateCustomer">Fecha nacimiento:</label>
-					        <div class="col-sm-4">
-					            <div class="input-group date">
-						            <input type="text" class="form-control input-date" name="birthDate" id="birthDateCustomer" placeholder="DD/MM/YYYY"/>
-						            <span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
-					            </div>
-				         	</div>
+					        <label class="control-label col-sm-2" for="emailCustomer">Email:</label>
+							<div class="col-sm-4">
+								<input class="form-control" id="emailCustomer"
+									placeholder="Correo" maxlength="40"/> 
+							</div>
 						</div>						
 						<div class="form-group">
 							<label class="col-sm-2 control-label">Sexo:</label>
@@ -155,21 +155,21 @@
 									</ul>
 								</div>
 							</div>
-						    
-						    <label class="control-label col-sm-2" for="emailCustomer">Email:</label>
-							<div class="col-sm-4">
-								<input class="form-control" id="emailCustomer"
-									placeholder="Correo" maxlength="40"/> 
-							</div>
-					        
+						    <label class="control-label col-sm-2" for="birthDateCustomer">Fecha nacimiento:</label>
+					        <div class="col-sm-4">
+					            <div class="input-group date">
+						            <input type="text" class="form-control input-date" name="birthDate" id="birthDateCustomer" placeholder="dd/mm/aaaa"/>
+						            <span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
+					            </div>
+				         	</div>
 						</div>
 						<div class="form-group">
-							<label class="control-label col-sm-2" for="balanceCustomer">Saldo:</label>
+							<label class="control-label col-sm-2" for="balanceCustomer">Saldo (S/.):</label>
 							<div class="col-sm-4">
 								<input  class="form-control" id="balanceCustomer"
 									placeholder="Saldo" maxlength="20"/>
 							</div>
-							<label class="control-label col-sm-2" for="pointsCustomer">Puntos:</label>
+							<label class="control-label col-sm-2" for="pointsCustomer">Cantidad de puntos:</label>
 							<div class="col-sm-4">
 								<input  class="form-control" id="pointsCustomer"
 									placeholder="Puntos" maxlength="20" value="0"/>
@@ -179,12 +179,12 @@
 							<label class="control-label col-sm-2" for="passwordCustomer">Contrase&ntilde;a:</label>
 							<div class="col-sm-4">
 								<input  type="password" class="form-control" id="passwordCustomer"
-									placeholder="Contraseña" maxlength="20"/>
+									placeholder="Contraseña" maxlength="6"/>
 							</div>
 							<label class="control-label col-sm-2" for="confirmPasswordCustomer">Confirmar contrase&ntilde;a:</label>
 							<div class="col-sm-4">
 								<input  type="password" class="form-control" id="confirmPasswordCustomer"
-									placeholder="Confirmar contrase&ntilde;a" maxlength="20"/>
+									placeholder="Confirmar contrase&ntilde;a" maxlength="6"/>
 							</div>
 						</div>
 						<div class="form-group">
@@ -203,8 +203,8 @@
 							<div class="col-sm-4">
 								<div class="dropdown">
 									<button class="btn btn-primary dropdown-toggle" type="button"
-										data-toggle="dropdown">
-										Seleccionar <span class="caret"></span>
+										data-toggle="dropdown" value="1" >
+										Activo <span class="caret"></span>
 									</button>
 									<ul id="statusCustomer" class="dropdown-menu">
 										<li><a href="/" onclick="return false;">Activo</a></li>
@@ -214,7 +214,7 @@
 							</div>
 						</div>
 						<div class="form-group">
-							<label class="control-label col-sm-2" for="experienceCustomer">Experiencia:</label>
+							<label class="control-label col-sm-2" for="experienceCustomer">Cantidad de experiencia:</label>
 							<div class="col-sm-4">
 								<input class="form-control" id="experienceCustomer"
 									placeholder="Nombre" maxlength="11" value="0"/>
@@ -275,7 +275,7 @@
 					        <label class="control-label col-sm-2" for="birthDateEmployee">Fecha nacimiento:</label>
 					        <div class="col-sm-4">
 					            <div class="input-group date">
-						            <input type="text" class="form-control input-date" name="birthDate" id="birthDateEmployee" placeholder="DD/MM/YYYY"/>
+						            <input type="text" class="form-control input-date" name="birthDate" id="birthDateEmployee" placeholder="dd/mm/aaaa"/>
 						            <span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
 					            </div>
 				         	</div>
