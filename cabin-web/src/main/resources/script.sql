@@ -351,7 +351,10 @@ CREATE TABLE `nivel` (
   `experiencia_inicial` int(11) DEFAULT NULL,
   `experiencia_final` int(11) DEFAULT NULL,
   `pregunta` varchar(100) DEFAULT NULL,
-  PRIMARY KEY (`id`)
+  `id_estado` bigint(20) DEFAULT NULL,    
+  PRIMARY KEY (`id`),
+  KEY `id_estado_idx` (`id_estado`),
+  CONSTRAINT `id_nivel_estado` FOREIGN KEY (`id_estado`) REFERENCES `estado` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -361,7 +364,7 @@ CREATE TABLE `nivel` (
 
 LOCK TABLES `nivel` WRITE;
 /*!40000 ALTER TABLE `nivel` DISABLE KEYS */;
-INSERT INTO `nivel` VALUES (1,'principiante',0,100,'Pregunta principiante'),(2,'intermedio',101,500,'pregunta intermedio'),(3,'senior',501,1000,'pregunta senior'),(4,'pro gamer',1001,2000,'pregunta pro gamer');
+INSERT INTO `nivel` VALUES (1,'principiante',0,100,'Pregunta principiante',1),(2,'intermedio',101,500,'pregunta intermedio',1),(3,'senior',501,1000,'pregunta senior',1),(4,'pro gamer',1001,2000,'pregunta pro gamer',1);
 /*!40000 ALTER TABLE `nivel` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -403,8 +406,11 @@ CREATE TABLE `regla_premio` (
   `puntos` int(11) DEFAULT NULL,
   `fraccion_saldo` double DEFAULT NULL,
   `id_nivel` bigint(20) DEFAULT NULL,
+  `id_estado` bigint(20) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `id_nivel_idx` (`id_nivel`),
+  KEY `id_estado_idx` (`id_estado`),
+  CONSTRAINT `id_regla_estado` FOREIGN KEY (`id_estado`) REFERENCES `estado` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `id_regla_nivel` FOREIGN KEY (`id_nivel`) REFERENCES `nivel` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -415,7 +421,7 @@ CREATE TABLE `regla_premio` (
 
 LOCK TABLES `regla_premio` WRITE;
 /*!40000 ALTER TABLE `regla_premio` DISABLE KEYS */;
-INSERT INTO `regla_premio` VALUES (1,'Oso',10011,2.5,1),(2,'laptop',15201,120,2),(3,'minutos',2000,203,3);
+INSERT INTO `regla_premio` VALUES (1,'Oso',10011,2.5,1,1),(2,'laptop',15201,120,2,1),(3,'minutos',2000,203,3,1);
 /*!40000 ALTER TABLE `regla_premio` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -463,9 +469,12 @@ CREATE TABLE `sede` (
   `nombre` varchar(20) DEFAULT NULL,
   `direccion` varchar(200) DEFAULT NULL,
   `id_usuario` bigint(20) DEFAULT NULL,
+  `id_estado` bigint(20) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `id_usuario_idx` (`id_usuario`),
-  CONSTRAINT `id_usuario` FOREIGN KEY (`id_usuario`) REFERENCES `usuario` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+  KEY `id_estado_idx` (`id_estado`),
+  CONSTRAINT `id_usuario` FOREIGN KEY (`id_usuario`) REFERENCES `usuario` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `id_sede_estado` FOREIGN KEY (`id_estado`) REFERENCES `estado` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -475,7 +484,7 @@ CREATE TABLE `sede` (
 
 LOCK TABLES `sede` WRITE;
 /*!40000 ALTER TABLE `sede` DISABLE KEYS */;
-INSERT INTO `sede` VALUES (1,'sede UNI 10','av. tupac amaru 10',1),(2,'sede prueba 2','direccion prueba 2 edit',1),(5,'sede prueba 5','dirección prueba 5 edit',1),(6,'Sede Fiori','jr Verona 425',10);
+INSERT INTO `sede` VALUES (1,'sede UNI 10','av. tupac amaru 10',1,1),(2,'sede prueba 2','direccion prueba 2 edit',1,1),(5,'sede prueba 5','dirección prueba 5 edit',1,1),(6,'Sede Fiori','jr Verona 425',10,1);
 /*!40000 ALTER TABLE `sede` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -516,9 +525,14 @@ CREATE TABLE `tarifa` (
   `descripcion` varchar(45) DEFAULT NULL,
   `precio` double DEFAULT NULL,
   `fraccion_minima` double DEFAULT NULL,
-  PRIMARY KEY (`id`)
+  `id_estado` bigint(20) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `id_estado_idx` (`id_estado`),
+  CONSTRAINT `id_tarifa_estado` FOREIGN KEY (`id_estado`) REFERENCES `estado` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
+
+  
 
 --
 -- Dumping data for table `tarifa`
@@ -526,7 +540,7 @@ CREATE TABLE `tarifa` (
 
 LOCK TABLES `tarifa` WRITE;
 /*!40000 ALTER TABLE `tarifa` DISABLE KEYS */;
-INSERT INTO `tarifa` VALUES (1,'tarifa defecto',2,1);
+INSERT INTO `tarifa` VALUES (1,'tarifa defecto',2,1,1);
 /*!40000 ALTER TABLE `tarifa` ENABLE KEYS */;
 UNLOCK TABLES;
 

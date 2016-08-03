@@ -8,6 +8,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 
 @Entity(name = "regla_premio")
@@ -31,6 +32,10 @@ public class PrizesRule implements Serializable {
 	@OneToOne
 	@JoinColumn(name = "id_nivel")
 	private Level level;
+	
+	@ManyToOne
+	@JoinColumn(name = "id_estado")
+	private Status status;
 
 	public Long getId() {
 		return id;
@@ -71,5 +76,10 @@ public class PrizesRule implements Serializable {
 	public void setLevel(Level level) {
 		this.level = level;
 	}
-
+	public Status getStatus() {
+		return status;
+	}
+	public void setStatus(Status status) {
+		this.status = status;
+	}
 }

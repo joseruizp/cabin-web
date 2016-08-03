@@ -76,6 +76,30 @@ map = {
 			if (status.toLowerCase() == estados[0].name.toLowerCase() ){ $(this).parents(".dropdown").find('.btn').val(estados[0].id);}
 			else{ $(this).parents(".dropdown").find('.btn').val(estados[1].id); }
 		});
+		$("#statusSede li a").click(function(){
+			$(this).parents(".dropdown").find('.btn').html($(this).text() + ' <span class="caret"></span>');
+			var status = $(this).text();
+			if (status.toLowerCase() == estados[0].name.toLowerCase() ){ $(this).parents(".dropdown").find('.btn').val(estados[0].id);}
+			else{ $(this).parents(".dropdown").find('.btn').val(estados[1].id); }
+		});
+		$("#statusTarifa li a").click(function(){
+			$(this).parents(".dropdown").find('.btn').html($(this).text() + ' <span class="caret"></span>');
+			var status = $(this).text();
+			if (status.toLowerCase() == estados[0].name.toLowerCase() ){ $(this).parents(".dropdown").find('.btn').val(estados[0].id);}
+			else{ $(this).parents(".dropdown").find('.btn').val(estados[1].id); }
+		});
+		$("#statusNivel li a").click(function(){
+			$(this).parents(".dropdown").find('.btn').html($(this).text() + ' <span class="caret"></span>');
+			var status = $(this).text();
+			if (status.toLowerCase() == estados[0].name.toLowerCase() ){ $(this).parents(".dropdown").find('.btn').val(estados[0].id);}
+			else{ $(this).parents(".dropdown").find('.btn').val(estados[1].id); }
+		});
+		$("#statusPremio li a").click(function(){
+			$(this).parents(".dropdown").find('.btn').html($(this).text() + ' <span class="caret"></span>');
+			var status = $(this).text();
+			if (status.toLowerCase() == estados[0].name.toLowerCase() ){ $(this).parents(".dropdown").find('.btn').val(estados[0].id);}
+			else{ $(this).parents(".dropdown").find('.btn').val(estados[1].id); }
+		});
 		$("#experience_status li a").click(function(){
 			$(this).parents(".dropdown").find('.btn').html($(this).text() + ' <span class="caret"></span>');
 			var status = $(this).text();
@@ -427,7 +451,7 @@ function fillSedetbl(  ){
                 sedes[i].name,
                 sedes[i].address,
                 sedes[i].employee,
-                "",
+                sedes[i].estado,
                 "",
         ] ).draw( false );
 	};
@@ -499,25 +523,46 @@ function editSede( code, index ){
 	    	console.log("Error, su solicitud no pudo ser atendida");
 	    }
 	});
-}
-
-function deleteSede( code, index ){	
-	var strUrl = window.location.protocol + "//" + window.location.host + "/cabin-web/sede/" + code;	
-	console.log("Inside deleteSede" + code);
+	
+	strUrl = hostname + "/cabin-web/sede/" + code+"/status";
+	var idStatus;
 	$.ajax({
-		type: "DELETE",
+		async:false,
 	    url:strUrl,
 	    crossDomain: true,
 	    dataType: "json",
 	    success: function (json) {
-	    	sedes.splice(index, 1);
+	    	var hrefArray = json._links.self.href.split("/");
+	    	idStatus = hrefArray[hrefArray.length -1];
+	    	var statusHtml = $("#statusSede li a");			
+			statusHtml.parents(".dropdown").find('.btn').html( json.name +' <span class="caret"></span>');				
+			statusHtml.parents(".dropdown").find('.btn').val( idStatus);
+	    },
+	    error: function (xhr, status) {    	
+	    	console.log("Error, su solicitud no pudo ser atendida");
+	    }
+	});	
+}
+
+function deleteSede( code, index ){	
+	var strUrlStatus = window.location.protocol + "//" + window.location.host + "/cabin-web/estado/" + 2;
+	var strUrlSede = window.location.protocol + "//" + window.location.host + "/cabin-web/sede/"+code+"/status";
+	console.log("Inside deleteSede" + code);
+	$.ajax({
+		async: false,
+		type: "PUT",
+	    url:strUrlSede,			
+	    data: strUrlStatus, 
+	    contentType: 'text/uri-list',
+	    success: function (data) {
+	    	console.log("Se asigno estado a Sede" + code);
+	    	sedes[index].estado = "Inactivo";
 	    	fillSedetbl();
 	    },
 	    error: function (xhr, status) {	    	
 	    	console.log("Error, su solicitud no pudo ser atendida");
-	    	fnOpenErrorDialog();
-	    }
-	});
+	    }	    
+	});	
 }
 
 function saveSede(){
@@ -532,12 +577,21 @@ function saveSede(){
 	$(operarioHtml).parents(".dropdown").find('.btn').html('Seleccionar <span class="caret"></span>');
 	$(operarioHtml).parents(".dropdown").find('.btn').val("");	
 	//$("#numberPcs").val(""); $("#numberConsoles").val("");
+	var statusHtml = $("#statusSede li a");	
+	var idStatus = $(statusHtml).parents(".dropdown").find('.btn').val();
+	$(statusHtml).parents(".dropdown").find('.btn').html('Activo <span class="caret"></span>');
+	$(statusHtml).parents(".dropdown").find('.btn').val("1");
+	
 	var strUrl = window.location.protocol + "//" + window.location.host + "/cabin-web/sede";			
 	if (idSede !== "") {
 		strUrl += "/" + idSede;
 		sede.id = idSede;
 		newSede = 0;
 		var length = operarios.length;
+		if( idStatus == estados[0].id){
+			sede.estado = estados[0].name; console.log(customer.estado);}
+		else{
+			sede.estado = estados[1].name; }	
 		for ( i = 0; i< length ; i++){
 			if (idUser == operarios[i].id ){ sede.employee = operarios[i].name; break;}
 		}		
@@ -545,6 +599,7 @@ function saveSede(){
 		fillSedetbl();
 	}						
 	$.ajax({
+		async: false,
 		type: idSede === "" ? "POST" : "PATCH",
 	    url:strUrl,			    
 	    dataType: 'json', 
@@ -565,10 +620,30 @@ function saveSede(){
 	    	if(idSede == ""){
 	    		var hrefArray = strLocation.split("/");
 	    		idSede = hrefArray[hrefArray.length -1];
-	    	}
-	    	associateUser(idSede, idUser, newSede);
+	    	}	    	
 	    }
 	});
+	
+	var strUrlStatus = window.location.protocol + "//" + window.location.host + "/cabin-web/estado/" + idStatus;	
+	var strUrlSede = window.location.protocol + "//" + window.location.host + "/cabin-web/sede/"+idSede+"/status";
+	//Se inserta el estado en la Sede	
+	$.ajax({
+		async: false,
+		type: "PUT",
+	    url:strUrlSede,			
+	    data: strUrlStatus, 
+	    contentType: 'text/uri-list',
+	    success: function (data) {	    	
+	    	console.log("Se asigno estado a sede" + idSede);
+	    },
+	    error: function (xhr, status) {	    	
+	    	console.log("Error, su solicitud no pudo ser atendida");
+	    },	
+	    complete: function(xhr){
+	    	associateUser(idSede, idUser, newSede);
+	    }
+	});	
+	
 }
 
 function fillTarifatbl(  ){
@@ -582,6 +657,7 @@ function fillTarifatbl(  ){
                 tarifas[i].description,
                 tarifas[i].price,                
                 tarifas[i].minimumFraction,
+                tarifas[i].estado,
         ] ).draw( false );
 	};
     $('#tarifaTbl > tbody  > tr').each(function() {	    
@@ -639,6 +715,7 @@ function editTarifa( code, index ){
 	daysTarifa.splice(0,daysTarifa.length);
 	var strUrl = window.location.protocol + "//" + window.location.host + "/cabin-web/tarifa/" + code;	
 	$.ajax({
+		async:false,
 	    url:strUrl,
 	    crossDomain: true,
 	    dataType: "json",
@@ -662,32 +739,60 @@ function editTarifa( code, index ){
 	    error: function (xhr, status) {	    	
 	    	console.log("Error, su solicitud no pudo ser atendida");
 	    }
-	});			
-}
-
-function deleteTarifa( code, index ){	
-	var strUrl = window.location.protocol + "//" + window.location.host + "/cabin-web/tarifa/" + code;	
-	console.log("Inside deleteTarifa" + code);
+	});		
+	
+	strUrl = hostname + "/cabin-web/tarifa/" + code+"/status";
+	var idStatus;
 	$.ajax({
-		type: "DELETE",
+		async:false,
 	    url:strUrl,
 	    crossDomain: true,
 	    dataType: "json",
-	    success: function (json) {	
-	    	tarifas.splice(index, 1);
-	    	fillTarifatbl();
+	    success: function (json) {
+	    	var hrefArray = json._links.self.href.split("/");
+	    	idStatus = hrefArray[hrefArray.length -1];
+	    	var statusHtml = $("#statusTarifa li a");			
+			statusHtml.parents(".dropdown").find('.btn').html( json.name +' <span class="caret"></span>');				
+			statusHtml.parents(".dropdown").find('.btn').val( idStatus);
 	    },
-	    error: function (xhr, status) {
-	    	fnOpenErrorDialog();
+	    error: function (xhr, status) {    	
 	    	console.log("Error, su solicitud no pudo ser atendida");
 	    }
-	});			
+	});	
+
+	
+}
+
+function deleteTarifa( code, index ){	
+	var strUrlStatus = window.location.protocol + "//" + window.location.host + "/cabin-web/estado/" + 2;
+	var strUrlTarifa = window.location.protocol + "//" + window.location.host + "/cabin-web/tarifa/"+code+"/status";
+	console.log("Inside deleteTarifa" + code);
+	$.ajax({
+		async: false,
+		type: "PUT",
+	    url:strUrlTarifa,			
+	    data: strUrlStatus, 
+	    contentType: 'text/uri-list',
+	    success: function (data) {
+	    	console.log("Se asigno estado a Tarifa" + code);
+	    	tarifas[index].estado = "Inactivo";
+	    	fillTarifatbl();
+	    },
+	    error: function (xhr, status) {	    	
+	    	console.log("Error, su solicitud no pudo ser atendida");
+	    }	    
+	});		
 }
 
 function saveTarifa(){
 	var idTarifa = $("#idTarifa").attr("value");
 	var isNewRange = $("#descriptionTarifa").is(":disabled");
 	console.log("Inside form-tarifaDetail " + idTarifa);
+	
+	var statusHtml = $("#statusSede li a");	
+	var idStatus = $(statusHtml).parents(".dropdown").find('.btn').val();
+	$(statusHtml).parents(".dropdown").find('.btn').html('Activo <span class="caret"></span>');
+	$(statusHtml).parents(".dropdown").find('.btn').val("1");
 	
 	var tarifa = {};
 	var tariffDetail = {};
@@ -738,6 +843,10 @@ function saveTarifa(){
 		if (idTarifa !== "") {
 			strUrl += "/" + idTarifa;	
 			tarifa.id = idTarifa;
+			if( idStatus == estados[0].id){
+				tarifa.estado = estados[0].name; console.log(tarifa.estado);}
+			else{
+				tarifa.estado = estados[1].name; }	
 			tarifas.splice(tarifaIndex, 1, tarifa);
 			fillTarifatbl();
 		}
@@ -771,6 +880,25 @@ function saveTarifa(){
 //	    	}
 	    }
 	});	
+	
+	var strUrlStatus = window.location.protocol + "//" + window.location.host + "/cabin-web/estado/" + idStatus;	
+	var strUrlTarifa = window.location.protocol + "//" + window.location.host + "/cabin-web/tarifa/"+idTarifa+"/status";
+	//Se inserta el estado en la Sede	
+	$.ajax({
+		async: false,
+		type: "PUT",
+	    url:strUrlTarifa,			
+	    data: strUrlStatus, 
+	    contentType: 'text/uri-list',
+	    success: function (data) {
+	    	console.log("Se asigno estado a tarifa" + idTarifa);
+	    },
+	    error: function (xhr, status) {	    	
+	    	console.log("Error, su solicitud no pudo ser atendida");
+	    },	    
+	});	
+
+	
 }
 function fillReglatbl(  ){
 	var size = reglas.length;
@@ -853,22 +981,24 @@ function editRegla( code, index ){
 	});	
 }
 
-function deleteRegla( code, index ){
-	var strUrl = window.location.protocol + "//" + window.location.host + "/cabin-web/regla_puntuacion/" + code;	
+function deleteRegla( code, index ){		
+	var strUrlStatus = window.location.protocol + "//" + window.location.host + "/cabin-web/estado/" + 2;
+	var strUrlRegla = window.location.protocol + "//" + window.location.host + "/cabin-web/regla_puntuacion/"+code+"/status";
 	console.log("Inside deleteRegla" + code);
 	$.ajax({
-		type: "DELETE",
-	    url:strUrl,
-	    crossDomain: true,
-	    dataType: "json",
-	    success: function (json) {
-	    	reglas.splice(index, 1);
+		async: false,
+		type: "PUT",
+	    url:strUrlRegla,			
+	    data: strUrlStatus, 
+	    contentType: 'text/uri-list',
+	    success: function (data) {
+	    	console.log("Se asigno estado a Regla" + code);
+	    	reglas[index].estado = "Inactivo";
 	    	fillReglatbl();
 	    },
 	    error: function (xhr, status) {	    	
 	    	console.log("Error, su solicitud no pudo ser atendida");
-	    	fnOpenErrorDialog();
-	    }
+	    }	    
 	});			
 }
 
@@ -885,8 +1015,8 @@ function saveRegla(){
 	var idNivel = $(regla_nivelHtml).parents(".dropdown").find('.btn').val();
 	$( "#nameReglaPunt" ).val(""); $( "#status" ).val("");
 	$( "#rechargingFraction" ).val("");	$( "#pointsReglaPunt" ).val("");
-	$(statusHtml).parents(".dropdown").find('.btn').html('Seleccionar <span class="caret"></span>');
-	$(statusHtml).parents(".dropdown").find('.btn').val("");	   
+	$(statusHtml).parents(".dropdown").find('.btn').html('Activo <span class="caret"></span>');
+	$(statusHtml).parents(".dropdown").find('.btn').val("1");	   
 	$(regla_nivelHtml).parents(".dropdown").find('.btn').html('Seleccionar <span class="caret"></span>');
 	$(regla_nivelHtml).parents(".dropdown").find('.btn').val("");
 	//$("#numberPcs").val(""); $("#numberConsoles").val("");
@@ -944,6 +1074,7 @@ function fillNiveltbl(  ){
                 niveles[i].initialExperience,
                 niveles[i].finalExperience,                
                 niveles[i].question,
+                niveles[i].estado,
         ] ).draw( false );
 	};
     $('#nivelTbl > tbody  > tr').each(function() {	    
@@ -957,8 +1088,10 @@ function fillNiveltbl(  ){
 
 function editNivel( code, index ){
 	nivelIndex = index;
-	var strUrl = window.location.protocol + "//" + window.location.host + "/cabin-web/nivel/" + code;	
+	var hostname = window.location.protocol + "//" + window.location.host ; 
+	var strUrl = hostname + "/cabin-web/nivel/" + code;	
 	$.ajax({
+		async:false,
 	    url:strUrl,
 	    crossDomain: true,
 	    dataType: "json",
@@ -975,25 +1108,46 @@ function editNivel( code, index ){
 	    error: function (xhr, status) {	    	
 	    	console.log("Error, su solicitud no pudo ser atendida");
 	    }
-	});			
-}
-
-function deleteNivel( code, index ){
-	var strUrl = window.location.protocol + "//" + window.location.host + "/cabin-web/nivel/" + code;	
-	console.log("Inside deleteNivel" + code);
+	});	
+	strUrl = hostname + "/cabin-web/nivel/" + code+"/status";
+	var idStatus;
 	$.ajax({
-		type: "DELETE",
+		async:false,
 	    url:strUrl,
 	    crossDomain: true,
 	    dataType: "json",
 	    success: function (json) {
-	    	niveles.splice(index, 1);	    	
+	    	var hrefArray = json._links.self.href.split("/");
+	    	idStatus = hrefArray[hrefArray.length -1];
+	    	var statusHtml = $("#statusNivel li a");			
+			statusHtml.parents(".dropdown").find('.btn').html( json.name +' <span class="caret"></span>');				
+			statusHtml.parents(".dropdown").find('.btn').val( idStatus);
+	    },
+	    error: function (xhr, status) {    	
+	    	console.log("Error, su solicitud no pudo ser atendida");
+	    }
+	});	
+	
+}
+
+function deleteNivel( code, index ){		
+	var strUrlStatus = window.location.protocol + "//" + window.location.host + "/cabin-web/estado/" + 2;
+	var strUrlNivel = window.location.protocol + "//" + window.location.host + "/cabin-web/nivel/"+code+"/status";
+	console.log("Inside deleteSede" + code);
+	$.ajax({
+		async: false,
+		type: "PUT",
+	    url:strUrlNivel,			
+	    data: strUrlStatus, 
+	    contentType: 'text/uri-list',
+	    success: function (data) {
+	    	console.log("Se asigno estado a Nivel" + code);
+	    	niveles[index].estado = "Inactivo";
 	    	fillNiveltbl();
 	    },
 	    error: function (xhr, status) {	    	
 	    	console.log("Error, su solicitud no pudo ser atendida");
-	    	fnOpenErrorDialog();
-	    }
+	    }	    
 	});			
 }
 
@@ -1006,17 +1160,26 @@ function saveNivel(){
 	nivel.finalExperience = trim( $( "#finalExperience" ).val() );
 	nivel.question = trim( $( "#question" ).val() );
 	$( "#nameNivel" ).val("");	$( "#initialExperience" ).val("");
-	$( "#finalExperience" ).val("");	$( "#question" ).val("");			
+	$( "#finalExperience" ).val("");	$( "#question" ).val("");	
+	var statusHtml = $("#statusNivel li a");	
+	var idStatus = $(statusHtml).parents(".dropdown").find('.btn').val();
+	$(statusHtml).parents(".dropdown").find('.btn').html('Activo <span class="caret"></span>');
+	$(statusHtml).parents(".dropdown").find('.btn').val("1");
 	var strUrl = window.location.protocol + "//" + window.location.host + "/cabin-web/nivel";			
 	if (idNivel !== "") {
 		strUrl += "/" + idNivel;
 		nivel.id = idNivel;
+		if( idStatus == estados[0].id){
+			nivel.estado = estados[0].name; console.log(nivel.estado);}
+		else{
+			nivel.estado = estados[1].name; }	
 		niveles.splice(nivelIndex, 1, nivel);
 		nivelIndex = -1;
 		fillNiveltbl();
 	}		
 	console.log(JSON.stringify(nivel));
 	$.ajax({
+		async: false,
 		type: idNivel === "" ? "POST" : "PATCH",
 	    url:strUrl,			    
 	    dataType: 'json', 
@@ -1031,11 +1194,32 @@ function saveNivel(){
 	    },
 	    error: function (xhr, status) {	    	
 	    	console.log("Error, su solicitud no pudo ser atendida");
+	    },	
+	    complete: function(xhr) {	    	
+	    	var strLocation = xhr.getResponseHeader('Location');
+	    	if(idNivel == ""){
+	    		var hrefArray = strLocation.split("/");
+	    		idNivel = hrefArray[hrefArray.length -1];
+	    	}	    	
+	    }
+	});
+	var strUrlStatus = window.location.protocol + "//" + window.location.host + "/cabin-web/estado/" + idStatus;	
+	var strUrlNivel = window.location.protocol + "//" + window.location.host + "/cabin-web/nivel/"+idNivel+"/status";
+	//Se inserta el estado en la Sede	
+	$.ajax({
+		async: false,
+		type: "PUT",
+	    url:strUrlNivel,			
+	    data: strUrlStatus, 
+	    contentType: 'text/uri-list',
+	    success: function (data) {
+	    	console.log("Se asigno estado a nivel" + idNivel);
 	    },
+	    error: function (xhr, status) {	    	
+	    	console.log("Error, su solicitud no pudo ser atendida");
+	    },	 
 	    complete: function() {
-	    	if (idNivel == ""){
-	    		fillArrayNivel();
-	    	}
+	    	fillArrayNivel();	    	
 	    }
 	});	
 }
@@ -1049,6 +1233,7 @@ function fillPremiotbl(  ){
                 premios[i].name,
                 premios[i].points,
                 premios[i].balanceFraction,                
+                premios[i].estado,
         ] ).draw( false );
 	};
     $('#premioTbl > tbody  > tr').each(function() {	    
@@ -1062,8 +1247,10 @@ function fillPremiotbl(  ){
 
 function editPremio( code, index ){
 	premioIndex = index;
-	var strUrl = window.location.protocol + "//" + window.location.host + "/cabin-web/regla_premio/" + code;	
+	var hostname = window.location.protocol + "//" + window.location.host ;
+	var strUrl = hostname + "/cabin-web/regla_premio/" + code;	
 	$.ajax({
+		async:false,
 	    url:strUrl,
 	    crossDomain: true,
 	    dataType: "json",
@@ -1079,32 +1266,52 @@ function editPremio( code, index ){
 	    error: function (xhr, status) {	    	
 	    	console.log("Error, su solicitud no pudo ser atendida");
 	    }
-	});			
-}
-
-function deletePremio( code, index ){
-	var strUrl = window.location.protocol + "//" + window.location.host + "/cabin-web/regla_premio/" + code;	
-	console.log("Inside deletePremio" + code);
+	});	
+	strUrl = hostname + "/cabin-web/regla_premio/" + code+"/status";
+	var idStatus;
 	$.ajax({
-		type: "DELETE",
+		async:false,
 	    url:strUrl,
 	    crossDomain: true,
 	    dataType: "json",
-	    success: function (json) {	
-	    	premios.splice(index, 1);
+	    success: function (json) {
+	    	var hrefArray = json._links.self.href.split("/");
+	    	idStatus = hrefArray[hrefArray.length -1];
+	    	var statusHtml = $("#statusPremio li a");			
+			statusHtml.parents(".dropdown").find('.btn').html( json.name +' <span class="caret"></span>');				
+			statusHtml.parents(".dropdown").find('.btn').val( idStatus);
+	    },
+	    error: function (xhr, status) {    	
+	    	console.log("Error, su solicitud no pudo ser atendida");
+	    }
+	});
+}
+
+function deletePremio( code, index ){
+	var strUrlStatus = window.location.protocol + "//" + window.location.host + "/cabin-web/estado/" + 2;
+	var strUrlPremio = window.location.protocol + "//" + window.location.host + "/cabin-web/regla_premio/"+code+"/status";
+	console.log("Inside deletePremio" + code);
+	$.ajax({
+		async: false,
+		type: "PUT",
+	    url:strUrlPremio,			
+	    data: strUrlStatus, 
+	    contentType: 'text/uri-list',
+	    success: function (data) {
+	    	console.log("Se asigno estado a Premio" + code);
+	    	premios[index].estado = "Inactivo";
 	    	fillPremiotbl();
 	    },
 	    error: function (xhr, status) {	    	
 	    	console.log("Error, su solicitud no pudo ser atendida");
-	    	fnOpenErrorDialog();
-	    }
-	});			
+	    }	    
+	});	
 }
 
 function deleteCliente( code, index ){
 	var hostname = window.location.protocol + "//" + window.location.host;
-	var strUrlStatus = window.location.protocol + "//" + window.location.host + "/cabin-web/estado/" + 2;
-	var strUrlCustomer = window.location.protocol + "//" + window.location.host + "/cabin-web/cliente/"+code+"/status";
+	var strUrlStatus = hostname + "/cabin-web/estado/" + 2;
+	var strUrlCustomer = hostname + "/cabin-web/cliente/"+code+"/status";
 	//Solo para cliente	
 	$.ajax({
 		async: false,
@@ -1193,16 +1400,26 @@ function savePremio(){
 	premio.points = trim( $( "#pointsPrize" ).val() );
 	$( "#namePrize" ).val(""); 
 	$( "#balanceFraction" ).val("");	$( "#pointsPrize" ).val("");
+	var statusHtml = $("#statusPremio li a");	
+	var idStatus = $(statusHtml).parents(".dropdown").find('.btn').val();
+	$(statusHtml).parents(".dropdown").find('.btn').html('Activo <span class="caret"></span>');
+	$(statusHtml).parents(".dropdown").find('.btn').val("1");
+
 	//$("#numberPcs").val(""); $("#numberConsoles").val("");
 	var strUrl = window.location.protocol + "//" + window.location.host + "/cabin-web/regla_premio";			
 	if (idPremio !== "") {	
 		strUrl += "/" + idPremio;
 		premio.id = idPremio;
+		if( idStatus == estados[0].id){
+			premio.estado = estados[0].name; console.log(premio.estado);}
+		else{
+			premio.estado = estados[1].name; }
 		premios.splice(premioIndex, 1, premio);
 		fillPremiotbl();
 	}						
 	console.log(JSON.stringify(premio));
 	$.ajax({
+		async: false,
 		type: idPremio === "" ? "POST" : "PATCH",
 	    url:strUrl,			    
 	    dataType: 'json', 
@@ -1217,13 +1434,36 @@ function savePremio(){
 	    },
 	    error: function (xhr, status) {	    	
 	    	console.log("Error, su solicitud no pudo ser atendida");
-	    },
-	    complete: function(){
-	    	if (idPremio == ""){						
-				fillArrayPremio();		    	
-			}
-		}
+	    },	
+	    complete: function(xhr) {	    	
+	    	var strLocation = xhr.getResponseHeader('Location');
+	    	if(idPremio == ""){
+	    		var hrefArray = strLocation.split("/");
+	    		idPremio = hrefArray[hrefArray.length -1];
+	    	}	    	
+	    }	    
 	});
+	
+	var strUrlStatus = window.location.protocol + "//" + window.location.host + "/cabin-web/estado/" + idStatus;	
+	var strUrlPremio = window.location.protocol + "//" + window.location.host + "/cabin-web/regla_premio/"+idPremio+"/status";
+	//Se inserta el estado en la Premio	
+	$.ajax({
+		async: false,
+		type: "PUT",
+	    url:strUrlPremio,			
+	    data: strUrlStatus, 
+	    contentType: 'text/uri-list',
+	    success: function (data) {
+	    	console.log("Se asigno estado a premio" + idPremio);
+	    },
+	    error: function (xhr, status) {	    	
+	    	console.log("Error, su solicitud no pudo ser atendida");
+	    },
+	    complete: function(xhr){	
+				fillArrayPremio();
+		}
+	});	
+	
 }
 function fnOpenCloseDialog(val, code, index) {
     $("#dialog-confirm").html("¿Está seguro que desea eliminar este registro?");
@@ -1490,8 +1730,8 @@ function saveCliente(){
 	customer.email = trim( $( "#emailCustomer" ).val() );	
 	var birthDate = trim( $( "#birthDateCustomer" ).val() );
 	var dateArray = birthDate.split("/");
-	var date = new Date(); date.setDate(dateArray[1]);
-	date.setMonth(dateArray[0] - 1); date.setFullYear(dateArray[2]);
+	var date = new Date(); date.setDate(dateArray[0]);
+	date.setMonth(dateArray[1] - 1); date.setFullYear(dateArray[2]);
 	customer.birthDate = date;
 	customer.balance = trim( $( "#balanceCustomer" ).val() );
 	customer.points = trim( $( "#pointsCustomer" ).val() );;
@@ -1509,8 +1749,7 @@ function saveCliente(){
 	var statusHtml = $("#statusCustomer li a");	
 	var idStatus = $(statusHtml).parents(".dropdown").find('.btn').val();
 	var nivelCustomerHtml =  $("#nivelCustomer li a");	
-	var idNivel= $(nivelCustomerHtml).parents(".dropdown").find('.btn').val();
-	customer.gender = gender;
+	var idNivel= $(nivelCustomerHtml).parents(".dropdown").find('.btn').val();	
 	$(genderHtml).parents(".dropdown").find('.btn').html('Seleccionar <span class="caret"></span>');
 	$(genderHtml).parents(".dropdown").find('.btn').val("");
 	$(statusHtml).parents(".dropdown").find('.btn').html('Activo <span class="caret"></span>');
@@ -1692,8 +1931,8 @@ function saveEmpleado(){
 	employee.email = trim( $( "#emailEmployee" ).val() );	
 	var birthDate = trim( $( "#birthDateEmployee" ).val() );
 	var dateArray = birthDate.split("/");
-	var date = new Date(); date.setDate(dateArray[1]);
-	date.setMonth(dateArray[0] - 1); date.setFullYear(dateArray[2]);
+	var date = new Date(); date.setDate(dateArray[0]);
+	date.setMonth(dateArray[1] - 1); date.setFullYear(dateArray[2]);
 	employee.birthDate = date;	
 	employee.docCode =  trim( $( "#docCode" ).val() );
 	user.pass = trim( $( "#passwordEmployee" ).val() );
@@ -1713,10 +1952,10 @@ function saveEmpleado(){
 	var idDocType= $(docTypeHtml).parents(".dropdown").find('.btn').val();	
 	$(genderHtml).parents(".dropdown").find('.btn').html('Seleccionar <span class="caret"></span>');
 	$(genderHtml).parents(".dropdown").find('.btn').val("");
-	$(docTypeHtml).parents(".dropdown").find('.btn').html('Seleccionar <span class="caret"></span>');
-	$(docTypeHtml).parents(".dropdown").find('.btn').val("");
-	$(statusHtml).parents(".dropdown").find('.btn').html('Seleccionar <span class="caret"></span>');
-	$(statusHtml).parents(".dropdown").find('.btn').val("");
+	$(docTypeHtml).parents(".dropdown").find('.btn').html(tipo_doc[0].name +' <span class="caret"></span>');
+	$(docTypeHtml).parents(".dropdown").find('.btn').val("1");
+	$(statusHtml).parents(".dropdown").find('.btn').html('Activo <span class="caret"></span>');
+	$(statusHtml).parents(".dropdown").find('.btn').val("1");
 	$(profileHtml).parents(".dropdown").find('.btn').html('Seleccionar <span class="caret"></span>');
 	$(profileHtml).parents(".dropdown").find('.btn').val("");
 	var idUser;
@@ -2021,9 +2260,10 @@ function editEmpleado( code, index ){
 				docTypeHtml.parents(".dropdown").find('.btn').html( 'OTROS <span class="caret"></span>');	
 			}
 			
-			$('#docTypeButton').addClass('disabled');
+			$('#docTypeButton').addClass('disabled');			
 			$('#docCode').prop('disabled', true);
 			$('#emailEmployee').prop('disabled', true);
+			docTypeHtml.parents(".disabled").find('.btn').attr("value", json.docType);
 	    },
 	    error: function (xhr, status) {	    	
 	    	console.log("Error, su solicitud no pudo ser atendida");
@@ -2091,7 +2331,20 @@ function editEmpleado( code, index ){
 function fillSede(idSede, name, address){
 	var hostname = window.location.protocol + "//" + window.location.host 
 	var strSede = hostname + "/cabin-web/sede/"+idSede+"/user";
-	var employee, email;
+	var employee, email, status;
+	var strUrl = hostname + "/cabin-web/empleado/"+idSede+"/status";
+	$.ajax({
+		async:false,
+	    url:strUrl,
+	    crossDomain: true,
+	    dataType: "json",
+	    success: function (json) {
+	    	status = json.name;
+	    },
+	    error: function (xhr, status) {    	
+	    	console.log("Error, su solicitud no pudo ser atendida");
+	    }
+	});		
 	$.ajax({
 		async:false,
 	    url:strSede,
@@ -2104,7 +2357,7 @@ function fillSede(idSede, name, address){
 	    	console.log("Error, su solicitud no pudo ser atendida");
 	    }
 	});
-	var strUrl = hostname + "/cabin-web/empleado/search/findByEmail?email=" + email;
+	strUrl = hostname + "/cabin-web/empleado/search/findByEmail?email=" + email;
 	$.ajax({
 		async:false,
 	    url:strUrl,
@@ -2124,7 +2377,8 @@ function fillSede(idSede, name, address){
 		id: idSede,
 		name: name,
 		address: address,
-		employee: employee,		
+		employee: employee,
+		estado: status,
 	});
 }
 
@@ -2222,13 +2476,8 @@ function fillArrayTarifa(){
 	    crossDomain: true,
 	    dataType: "json",
 	    success: function (json) {
-	    	$.each(json, function(index, value) {		    		
-				tarifas.push({
-					id: value.id,
-					description: value.description,
-					price: value.price,
-					minimumFraction: value.minimumFraction
-				});
+	    	$.each(json, function(index, value) {
+	    		fillTarifa(value.id, value.description,value.price,value.minimumFraction);				
 			});
 	    	fillTarifatbl();
 	    },
@@ -2236,6 +2485,31 @@ function fillArrayTarifa(){
 	    	console.log("Error, su solicitud no pudo ser atendida");
 	    }
 	});	
+}
+
+function fillTarifa(idTarifa, description, price, minimumFraction){
+	var hostname = window.location.protocol + "//" + window.location.host 
+	var status;	
+	var strUrl = hostname + "/cabin-web/tarifa/"+idTarifa+"/status";
+	$.ajax({
+		async:false,
+	    url:strUrl,
+	    crossDomain: true,
+	    dataType: "json",
+	    success: function (json) {
+	    	status = json.name;
+	    },
+	    error: function (xhr, status) {    	
+	    	console.log("Error, su solicitud no pudo ser atendida");
+	    }
+	});	
+	tarifas.push({
+		id: idTarifa,
+		description: description,
+		price: price,
+		minimumFraction: minimumFraction,		
+		estado: status,				 
+	});
 }
 
 function fillArrayTarifaDetails(idTariff){
@@ -2296,6 +2570,33 @@ function fillArrayRegla(){
 	});	
 }
 
+function fillNivel(idNivel,	name, initialExperience, finalExperience, question){
+	var status;	
+	var hostname = window.location.protocol + "//" + window.location.host ;
+	var strUrl = hostname + "/cabin-web/nivel/"+idNivel+"/status";
+	$.ajax({
+		async:false,
+	    url:strUrl,
+	    crossDomain: true,
+	    dataType: "json",
+	    success: function (json) {
+	    	status = json.name;
+	    },
+	    error: function (xhr, status) {    	
+	    	console.log("Error, su solicitud no pudo ser atendida");
+	    }
+	});	
+	niveles.push({
+		id: idNivel,
+		name: name,
+		initialExperience: initialExperience,
+		finalExperience: finalExperience,
+		question: question,		
+		estado: status,				 
+	});
+	
+}
+
 function fillArrayNivel(){
 	var length = niveles.length;
 	niveles.splice(0, length);
@@ -2313,13 +2614,8 @@ function fillArrayNivel(){
 	    		var hrefArray = value._links.self.href.split("/");
 		    	var idNivel = hrefArray[hrefArray.length -1];
 		    	line += "<li><a href='/' onclick='return false;'>"+value.name+"</a></li>";
-				niveles.push({
-					id: idNivel,
-					name: value.name,
-					initialExperience: value.initialExperience,
-					finalExperience: value.finalExperience,
-					question: value.question,
-				});
+		    	fillNivel(idNivel, value.name, value.initialExperience, value.finalExperience,
+						value.question);				
 			});
 	    	fillNiveltbl();		    	
 	    },
@@ -2337,6 +2633,32 @@ function fillArrayNivel(){
 	});
 }
 
+function fillPremio(idPremio, name, balanceFraction, points){	
+	var status;	
+	var hostname = window.location.protocol + "//" + window.location.host;
+	var strUrl = hostname + "/cabin-web/regla_premio/"+idPremio+"/status";
+	$.ajax({
+		async:false,
+	    url:strUrl,
+	    crossDomain: true,
+	    dataType: "json",
+	    success: function (json) {
+	    	status = json.name;
+	    },
+	    error: function (xhr, status) {    	
+	    	console.log("Error, su solicitud no pudo ser atendida");
+	    }
+	});	
+	
+	premios.push({
+		id: idPremio,
+		name: name,
+		balanceFraction: balanceFraction,
+		points: points,
+		estado: status,
+	});
+}
+
 function fillArrayPremio(){
 	var length = premios.length;
 	premios.splice(0, length);
@@ -2348,13 +2670,8 @@ function fillArrayPremio(){
 	    success: function (json) {
 	    	$.each(json._embedded.regla_premio, function(index, value) {		    		
 	    		var hrefArray = value._links.self.href.split("/");
-		    	var idPremio = hrefArray[hrefArray.length -1];			    	
-				premios.push({
-					id: idPremio,
-					name: value.name,
-					balanceFraction: value.balanceFraction,
-					points: value.points,
-				});
+		    	var idPremio = hrefArray[hrefArray.length -1];
+		    	fillPremio(idPremio, value.name, value.balanceFraction, value.points);				
 			});
 	    	fillPremiotbl();		    	
 	    },
@@ -2409,6 +2726,9 @@ function fillDocTypes( ){
 	    },
 	    complete: function (){
 	    	ulDocType.html(line);
+	    	var docTypeHtml =  $("#docType li a");	    	
+	    	$(docTypeHtml).parents(".dropdown").find('.btn').html(tipo_doc[0].name +' <span class="caret"></span>');
+	    	$(docTypeHtml).parents(".dropdown").find('.btn').val("1");
 	    }
 	});	
 	
@@ -2546,8 +2866,8 @@ function saveExperience(){
 	experience.level = {};
 	experience.level.id = idNivel;
 	
-	$(statusHtml).parents(".dropdown").find('.btn').html('Seleccionar <span class="caret"></span>');
-	$(statusHtml).parents(".dropdown").find('.btn').val("");	   
+	$(statusHtml).parents(".dropdown").find('.btn').html('Activo <span class="caret"></span>');
+	$(statusHtml).parents(".dropdown").find('.btn').val("1");	   
 	$(experience_nivelHtml).parents(".dropdown").find('.btn').html('Seleccionar <span class="caret"></span>');
 	$(experience_nivelHtml).parents(".dropdown").find('.btn').val("");
 	
@@ -2621,22 +2941,24 @@ function editExperience( code, index ){
 }
 
 function deleteExperience( code, index ){
-	var strUrl = window.location.protocol + "//" + window.location.host + "/cabin-web/experiencia/" + code;	
-	console.log("Inside deleteExperience" + code);
+	var strUrlStatus = window.location.protocol + "//" + window.location.host + "/cabin-web/estado/" + 2;
+	var strUrlExperiencia = window.location.protocol + "//" + window.location.host + "/cabin-web/experiencia/"+code+"/status";
+	console.log("Inside deleteExperiencia" + code);
 	$.ajax({
-		type: "DELETE",
-	    url:strUrl,
-	    crossDomain: true,
-	    dataType: "json",
-	    success: function (json) {
-	    	experiences.splice(index, 1);
+		async: false,
+		type: "PUT",
+	    url:strUrlExperiencia,			
+	    data: strUrlStatus, 
+	    contentType: 'text/uri-list',
+	    success: function (data) {
+	    	console.log("Se asigno estado a Experiencia" + code);
+	    	experiences[index].status = "Inactivo";
 	    	fillExperiencetbl();
 	    },
 	    error: function (xhr, status) {	    	
 	    	console.log("Error, su solicitud no pudo ser atendida");
-	    	fnOpenErrorDialog();
-	    }
-	});			
+	    }	    
+	});	
 }
 
 
@@ -2985,10 +3307,8 @@ function addCliente() {
 	valid = valid && checkRegexp( $("#pointsCustomer"), /^[0-9]\d{0,5}$/i, "Debe ingresar una cantidad de puntos no mayor de 999 999, valor entero.", clienteValidation);
 	valid = valid && checkRegexp( $("#experienceCustomer"), /^[0-9]\d{0,5}$/i, "Debe ingresar una cantidad de experiencia no mayor de 999 999, valor entero.", clienteValidation);
 	valid = valid && checkRegexp( $("#balanceCustomer"), /^[0-9]\d{0,3}($|\.\d{0,2}$)/i, "Debe ingresar ingresar un monto válido, no mayor de 999.99 soles y de dos decimales.", clienteValidation);
-	valid = valid && checkRequired( $("#passwordCustomer"), "Debe ingresar una contraseña.",1, clienteValidation);
-	valid = valid && checkRegexp( $("#passwordCustomer"), /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?!.*\s).{4,20}$/, "La contraseña debe contener al menos una letra minúscula, una mayúscula, un dígito. Mínimo cuatro caracteres y máximo, viente.", clienteValidation );
-	valid = valid && checkRequired( $("#confirmPasswordCustomer"), "Debe confirmar su contrase&ntilde;a.",1, clienteValidation);
-	valid = valid && checkRegexp( $("#confirmPasswordCustomer"), /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?!.*\s).{4,20}$/, "La contraseña debe contener al menos una letra minúscula, una mayúscula, un dígito. Mínimo cuatro caracteres y máximo, veinte.", clienteValidation );
+	valid = valid && checkRequired( $("#passwordCustomer"), "Debe ingresar una contraseña de al menos 6 caracteres.",6, clienteValidation);	
+	valid = valid && checkRequired( $("#confirmPasswordCustomer"), "Debe confirmar su contrase&ntilde;a.",6, clienteValidation);	
 	valid = valid && checkPassword($("#passwordCustomer"), $("#confirmPasswordCustomer"), "Las contraseñas no coinciden",  clienteValidation);	
 	var nivelCustomerHtml = $("#nivelCustomer li a");	
 	nivelCustomerHtml = $(nivelCustomerHtml).parents(".dropdown").find('.btn');
@@ -3023,10 +3343,8 @@ function addEmpleado() {
 	    else if( $(docTypeHtml).val > 2) //En cualquier otro documento
 	    	valid = valid && checkRequired($("#docCode"),"Debe ingresar el número de documento.",1, empleadoValidation);		
 	}
-	valid = valid && checkRequired( $("#passwordEmployee"), "Debe ingresar una contraseña.",1, empleadoValidation);
-	valid = valid && checkRegexp( $("#passwordEmployee"), /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?!.*\s).{4,20}$/, "La contraseña debe contener al menos una letra minúscula, una mayúscula, un dígito. Mínimo cuatro caracteres y máximo, viente.", empleadoValidation );
-	valid = valid && checkRequired( $("#confirmPasswordEmployee"), "Debe confirmar su contrase&ntilde;a.",1, empleadoValidation);
-	valid = valid && checkRegexp( $("#confirmPasswordEmployee"), /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?!.*\s).{4,20}$/, "La contraseña debe contener al menos una letra minúscula, una mayúscula, un dígito. Mínimo cuatro caracteres y máximo, veinte.", empleadoValidation );
+	valid = valid && checkRequired( $("#passwordEmployee"), "Debe ingresar una contraseña de al menos seis caracteres.",6, empleadoValidation);	
+	valid = valid && checkRequired( $("#confirmPasswordEmployee"), "Debe confirmar su contrase&ntilde;a.",6, empleadoValidation);	
 	valid = valid && checkPassword($("#passwordEmployee"), $("#confirmPasswordEmployee"), "Las contraseñas no coinciden",  empleadoValidation);	
 	var statusHtml = $("#statusEmployee li a");		
 	var profileHtml = $("#profileEmployee li a");		

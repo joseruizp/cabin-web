@@ -9,6 +9,8 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 
 @Entity(name = "tarifa")
@@ -31,6 +33,10 @@ public class Tariff implements Serializable {
 	
 	@OneToMany(cascade = CascadeType.ALL, mappedBy = "tariff")
 	private Set<TariffDetail> tariffDetails;
+	
+	@ManyToOne
+	@JoinColumn(name = "id_estado")
+	private Status status;
 
 	public Long getId() {
 		return id;
@@ -71,5 +77,10 @@ public class Tariff implements Serializable {
 	public void setTariffDetails(Set<TariffDetail> tariffDetails) {
 		this.tariffDetails = tariffDetails;
 	}
-
+	public Status getStatus() {
+		return status;
+	}
+	public void setStatus(Status status) {
+		this.status = status;
+	}
 }

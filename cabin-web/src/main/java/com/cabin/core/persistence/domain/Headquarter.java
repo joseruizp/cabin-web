@@ -29,6 +29,9 @@ public class Headquarter implements Serializable {
 	@JoinColumn(name = "id_usuario")
 	private User user;
 
+    @ManyToOne
+	@JoinColumn(name = "id_estado")
+	private Status status;
     
     public Long getId() {
         return id;
@@ -61,5 +64,11 @@ public class Headquarter implements Serializable {
     public void setAddress(String address) {
         this.address = address;
     }
+    public Status getStatus() {
+		return status;
+	}
 
+	public void setStatus(Status status) {
+		this.status = status;
+	}
 }

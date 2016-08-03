@@ -179,12 +179,12 @@
 							<label class="control-label col-sm-2" for="passwordCustomer">Contrase&ntilde;a:</label>
 							<div class="col-sm-4">
 								<input  type="password" class="form-control" id="passwordCustomer"
-									placeholder="Contraseña" maxlength="6"/>
+									placeholder="Contraseña" maxlength="20"/>
 							</div>
 							<label class="control-label col-sm-2" for="confirmPasswordCustomer">Confirmar contrase&ntilde;a:</label>
 							<div class="col-sm-4">
 								<input  type="password" class="form-control" id="confirmPasswordCustomer"
-									placeholder="Confirmar contrase&ntilde;a" maxlength="6"/>
+									placeholder="Confirmar contrase&ntilde;a" maxlength="20"/>
 							</div>
 						</div>
 						<div class="form-group">
@@ -348,8 +348,8 @@
 							<div class="col-sm-4">
 								<div class="dropdown">
 									<button class="btn btn-primary dropdown-toggle" type="button"
-										data-toggle="dropdown">
-										Seleccionar <span class="caret"></span>
+										data-toggle="dropdown" value="1">
+										Activo <span class="caret"></span>
 									</button>
 									<ul id="statusEmployee" class="dropdown-menu">
 										<li><a href="/" onclick="return false;">Activo</a></li>
@@ -428,6 +428,19 @@
 									</ul>
 								</div>
 							</div>
+							<label class="control-label col-sm-2" for="statusSede">Estado:</label>
+							<div class="col-sm-4">
+								<div class="dropdown">
+									<button class="btn btn-primary dropdown-toggle" type="button"
+										data-toggle="dropdown" value="1">
+										Activo <span class="caret"></span>
+									</button>
+									<ul id="statusSede" class="dropdown-menu">
+										<li><a href="/" onclick="return false;">Activo</a></li>
+										<li><a href="/" onclick="return false;">Inactivo</a></li>
+									</ul>
+								</div>
+							</div>
 						</div>
 						<div class="form-group">
 							<div class="col-sm-offset-5 col-sm-7">
@@ -446,7 +459,7 @@
 			                    <th>Nombre</th>
 			                    <th>Direccion</th>
 			                    <th>Operario</th>
-			                    <th>Nro Equipos</th>
+			                    <th>Estado</th>
 			                    <th>Nro Consolas</th>			                    
 			                    <th colspan="3">Opciones</th>			                    
 			                </tr>
@@ -537,6 +550,21 @@
 									</div>
 								</div>
 								<div class="form-group">
+									<label class="control-label col-sm-2" for="statusTarifa">Estado:</label>
+									<div class="col-sm-4">
+										<div class="dropdown">
+											<button class="btn btn-primary dropdown-toggle" type="button"
+												data-toggle="dropdown" value="1">
+												Activo <span class="caret"></span>
+											</button>
+											<ul id="statusSede" class="dropdown-menu">
+												<li><a href="/" onclick="return false;">Activo</a></li>
+												<li><a href="/" onclick="return false;">Inactivo</a></li>
+											</ul>
+										</div>
+									</div>
+								</div>
+								<div class="form-group">
 									<div class="col-sm-offset-3 col-md-3">
 										<button id="btnTarifa" class="btn btn-default">Nueva
 											Tarifa</button>
@@ -561,7 +589,7 @@
 					                    <th>Precio</th>
 					                    <th>Hora Inicio</th>
 					                    <th>Hora Fin</th>
-					                    <th >Minima Fraccion</th>
+					                    <th >Minima Fraccion</th>					                    
 					                    <th colspan="2" >Opciones</th>
 					                </tr>
 					            </thead>
@@ -577,6 +605,7 @@
 					                    <th>Descripcion</th>
 					                    <th>Precio</th>
 					                    <th >Minima Fraccion</th>
+					                    <th >Estado</th>
 					                    <th colspan="2" >Opciones</th>
 					                </tr>
 					            </thead>
@@ -640,8 +669,8 @@
 							<div class="col-sm-4">
 								<div class="dropdown">
 									<button class="btn btn-primary dropdown-toggle" type="button"
-										data-toggle="dropdown">
-										Seleccionar <span class="caret"></span>
+										data-toggle="dropdown" value="1">
+										Activo <span class="caret"></span>
 									</button>
 									<ul id="status" class="dropdown-menu">
 										<li><a href="/" onclick="return false;">Activo</a></li>
@@ -722,10 +751,25 @@
 							</div>
 						</div>
 						<div class="form-group">
+							<label class="control-label col-sm-2" for="statusNivel">Estado:</label>
+							<div class="col-sm-4">
+								<div class="dropdown">
+									<button class="btn btn-primary dropdown-toggle" type="button"
+										data-toggle="dropdown" value="1">
+										Activo <span class="caret"></span>
+									</button>
+									<ul id="statusNivel" class="dropdown-menu">
+										<li><a href="/" onclick="return false;">Activo</a></li>
+										<li><a href="/" onclick="return false;">Inactivo</a></li>
+									</ul>
+								</div>
+							</div>
+						</div>
+						<div class="form-group">
 							<div class="col-sm-offset-5 col-sm-7">
 								<button id="btnNivel" type="submit" class="btn btn-default">Nuevo Nivel</button>
 							</div>
-						</div>
+						</div>						
 					</form>
 					<div id="nivelValidation" class="alert alert-danger" style="display:none"></div>
 				</div>
@@ -738,7 +782,8 @@
 			                    <th>Nombre</th>
 			                    <th>Experiencia inicial</th>
 			                    <th>Experiencia final</th>
-			                    <th>Pregunta</th>			                    			                    
+			                    <th>Pregunta</th>	
+								<th>Estado</th>			                    		                    			                    
 			                    <th colspan="2">Opciones</th>
 			                </tr>
 			            </thead>
@@ -785,6 +830,21 @@
 							</div>
 						</div>
 						<div class="form-group">
+							<label class="control-label col-sm-2" for="statusPremio">Estado:</label>
+							<div class="col-sm-4">
+								<div class="dropdown">
+									<button class="btn btn-primary dropdown-toggle" type="button"
+										data-toggle="dropdown" value="1">
+										Activo <span class="caret"></span>
+									</button>
+									<ul id="statusPremio" class="dropdown-menu">
+										<li><a href="/" onclick="return false;">Activo</a></li>
+										<li><a href="/" onclick="return false;">Inactivo</a></li>
+									</ul>
+								</div>
+							</div>
+						</div>
+						<div class="form-group">
 							<div class="col-sm-offset-5 col-sm-7">
 								<button id="btnPremio" type="submit" class="btn btn-default">Nuevo Premio</button>
 							</div>
@@ -801,6 +861,7 @@
 			                    <th>Nombre</th>
 			                    <th>Cantidad puntos</th>
 			                    <th>Fraccion de saldo</th>			                    			                    
+			                    <th>Estado</th>
 			                    <th colspan="2">Opciones</th>
 			                </tr>
 			            </thead>
@@ -856,12 +917,12 @@
 									</ul>
 								</div>
 							</div>
-							<label class="control-label col-sm-2" for="status">Estado:</label>
+							<label class="control-label col-sm-2" for="experience_status">Estado:</label>
 							<div class="col-sm-4">
 								<div class="dropdown">
 									<button class="btn btn-primary dropdown-toggle" type="button"
-										data-toggle="dropdown">
-										Seleccionar <span class="caret"></span>
+										data-toggle="dropdown" value="1">
+										Activo <span class="caret"></span>
 									</button>
 									<ul id="experience_status" class="dropdown-menu">
 										<li><a href="/" onclick="return false;">Activo</a></li>

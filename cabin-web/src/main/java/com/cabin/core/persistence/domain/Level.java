@@ -7,6 +7,8 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 
 @Entity(name = "nivel")
 public class Level implements Serializable {
@@ -28,6 +30,10 @@ public class Level implements Serializable {
 
 	@Column(name = "pregunta", length = 20)
 	private String question;
+	
+	@ManyToOne
+	@JoinColumn(name = "id_estado")
+	private Status status;
 
 	public Integer getInitialExperience() {
 		return initialExperience;
@@ -67,5 +73,11 @@ public class Level implements Serializable {
 
 	public void setName(String name) {
 		this.name = name;
+	}
+	public Status getStatus() {
+		return status;
+	}
+	public void setStatus(Status status) {
+		this.status = status;
 	}
 }
