@@ -11,10 +11,13 @@ reglas = []; reglaIndex = -1;
 niveles = []; nivelIndex = -1;
 premios = []; premioIndex = -1;
 experiences = []; experienceIndex = -1;
+parametros = []; parametroIndex = -1;
+bonificaciones = []; bonificacionIndex = -1;
 sedeValidation = ""; tarifaValidation = "";
 reglaValidation = ""; nivelValidation = "";
 premioValidation = ""; clienteValidation = "";
-empleadoValidation = ""; clienteIndex = -1;
+empleadoValidation = ""; parametroValidation = "" 
+clienteIndex = -1;
 daysTarifa = []; empleados = []; empleadoIndex = -1;
 map = {
         "Lun" : 0,
@@ -57,6 +60,7 @@ map = {
 		premioValidation = $("#premioValidation");
 		clienteValidation = $("#clienteValidation");
 		empleadoValidation = $("#empleadoValidation");		
+		parametroValidation = $("#parametroValidation");
 		//Select
 		$("#status li a").click(function(){
 			$(this).parents(".dropdown").find('.btn').html($(this).text() + ' <span class="caret"></span>');
@@ -101,6 +105,18 @@ map = {
 			else{ $(this).parents(".dropdown").find('.btn').val(estados[1].id); }
 		});
 		$("#experience_status li a").click(function(){
+			$(this).parents(".dropdown").find('.btn').html($(this).text() + ' <span class="caret"></span>');
+			var status = $(this).text();
+			if (status.toLowerCase() == estados[0].name.toLowerCase() ){ $(this).parents(".dropdown").find('.btn').val(estados[0].id);}
+			else{ $(this).parents(".dropdown").find('.btn').val(estados[1].id); }
+		});
+		$("#statusParametro li a").click(function(){
+			$(this).parents(".dropdown").find('.btn').html($(this).text() + ' <span class="caret"></span>');
+			var status = $(this).text();
+			if (status.toLowerCase() == estados[0].name.toLowerCase() ){ $(this).parents(".dropdown").find('.btn').val(estados[0].id);}
+			else{ $(this).parents(".dropdown").find('.btn').val(estados[1].id); }
+		});
+		$("#statusBonificacion li a").click(function(){
 			$(this).parents(".dropdown").find('.btn').html($(this).text() + ' <span class="caret"></span>');
 			var status = $(this).text();
 			if (status.toLowerCase() == estados[0].name.toLowerCase() ){ $(this).parents(".dropdown").find('.btn').val(estados[0].id);}
@@ -183,6 +199,22 @@ map = {
 			bLengthChange: false,
 			bInfo: false,
 		});
+		$('#parametroTbl').DataTable({
+		    pscrollY: 300,
+		    paging: false,
+		    ordering: true,
+		    searching: false,
+			bLengthChange: false,
+			bInfo: false,
+		});
+		$('#bonificacionTbl').DataTable({
+		    pscrollY: 300,
+		    paging: false,
+		    ordering: true,
+		    searching: false,
+			bLengthChange: false,
+			bInfo: false,
+		});
 		fillArraySede();
 		fillArrayTarifa();
 		fillArrayRegla();
@@ -195,6 +227,8 @@ map = {
 		fillArrayCliente();
 		fillArrayEmpleado();		
 		fillArrayExperience();
+		fillArrayParametro();
+		//fillArrayBonificacion();
 		//Sede save - update
 		$( "#form-sede" ).submit(function( event ) {
 			event.preventDefault();
@@ -297,6 +331,32 @@ map = {
 				}
 				else{
 					saveExperience();
+				}	
+			}
+		});
+		
+		$( "#form-parametro" ).submit(function( event ) {
+			event.preventDefault();
+			if ( addParametro() ){
+				var idParametro = $("#idParametro").attr("value");
+				if (idParametro !== ""){
+					fnOpenEditDialog(9);
+				}
+				else{
+					saveParametro();
+				}	
+			}
+		});
+		
+		$( "#form-bonificacion" ).submit(function( event ) {
+			event.preventDefault();
+			if ( addBonificacion() ){
+				var idBonificacion = $("#idBonificacion").attr("value");
+				if (idBonificacion !== ""){
+					fnOpenEditDialog(10);
+				}
+				else{
+					saveBonificacion();
 				}	
 			}
 		});
@@ -900,6 +960,30 @@ function saveTarifa(){
 
 	
 }
+
+function fillParametrotbl(  ){
+	var size = parametros.length;
+	var j = 0;
+    var t = $('#parametroTbl').DataTable();
+    t.clear();
+	for(i=0; i<size;i++){
+		t.row.add( [
+                parametros[i].id,
+                parametros[i].name,
+                parametros[i].value,                
+                parametros[i].status,
+        ] ).draw( false );
+	};
+    $('#parametroTbl > tbody  > tr').each(function() {	    
+	    var edit = "<td><a onclick='editParametro("+ parametros[j].id +","+ j+")'><i class='fa fa-pencil icons' title='Editar'></i></a></td>";
+	    var remove = "<td><a onclick='fnOpenCloseDialog(9,"+ parametros[j].id +","+ j+")'><i class='fa fa-trash icons' title='Eliminar'></i></a></td>";
+	    j++;
+	    var tr = $(this);
+	    tr.find('td:last').after(edit); tr.find('td:last').after(remove);
+    });
+}
+
+
 function fillReglatbl(  ){
 	var size = reglas.length;
 	var j = 0;
@@ -923,6 +1007,88 @@ function fillReglatbl(  ){
 	    tr.find('td:last').after(edit); tr.find('td:last').after(remove);
     });
 }
+
+
+function editParametro( code, index ){
+	parametroIndex = index;
+	var strUrl = window.location.protocol + "//" + window.location.host + "/cabin-web/parametro/" + code;	
+	$.ajax({
+		async:false,
+	    url:strUrl,
+	    crossDomain: true,
+	    dataType: "json",
+	    success: function (json) {
+	    	var hrefArray = json._links.self.href.split("/");
+	    	var idParametro = hrefArray[hrefArray.length -1];
+	    	$( "#nameParametro" ).val(json.name);
+			$( "#valueParametro" ).val(json.value);			
+			$("#idParametro").attr('value', idParametro);
+			$("#btnParametro").html("Actualizar Parametro");			
+	    },
+	    error: function (xhr, status) {	    	
+	    	console.log("Error, su solicitud no pudo ser atendida");
+	    }
+	});	
+	var strRule = window.location.protocol + "//" + window.location.host + "/cabin-web/parametro/"+code+"/status";
+	$.ajax({
+		async:false,
+	    url:strRule,
+	    crossDomain: true,
+	    dataType: "json",
+	    success: function (json) {
+	    	var hrefArray = json._links.self.href.split("/");
+	    	var idStat = hrefArray[hrefArray.length -1];
+	    	var statusHtml = $("#statusParametro li a");
+	    	$(statusHtml).parents(".dropdown").find('.btn').html(json.name + ' <span class="caret"></span>');
+	    	$(statusHtml).parents(".dropdown").find('.btn').attr('value', idStat);
+	    },
+	    error: function (xhr, status) {    	
+	    	console.log("Error, su solicitud no pudo ser atendida");
+	    }
+	});
+}
+
+function editBonificacion( code, index ){
+	bonificacionIndex = index;
+	var strUrl = window.location.protocol + "//" + window.location.host + "/cabin-web/bonificacion/" + code;	
+	$.ajax({
+		async:false,
+	    url:strUrl,
+	    crossDomain: true,
+	    dataType: "json",
+	    success: function (json) {
+	    	var hrefArray = json._links.self.href.split("/");
+	    	var idBonificacion = hrefArray[hrefArray.length -1];
+	    	$( "#nameBonificacion" ).val(json.name);
+			$( "#experienceAmountBonificacion" ).val(json.experienceAmount);			
+			$( "#fractionToGiveBonificacion" ).val(json.fractionToGive);
+			$("#idBonificacion").attr('value', idBonificacion);
+			$("#btnBonificacion").html("Actualizar Bonificacion");			
+	    },
+	    error: function (xhr, status) {	    	
+	    	console.log("Error, su solicitud no pudo ser atendida");
+	    }
+	});	
+	var strRule = window.location.protocol + "//" + window.location.host + "/cabin-web/bonificacion/"+code+"/status";
+	$.ajax({
+		async:false,
+	    url:strRule,
+	    crossDomain: true,
+	    dataType: "json",
+	    success: function (json) {
+	    	var hrefArray = json._links.self.href.split("/");
+	    	var idStat = hrefArray[hrefArray.length -1];
+	    	var statusHtml = $("#statusBonificacion li a");
+	    	$(statusHtml).parents(".dropdown").find('.btn').html(json.name + ' <span class="caret"></span>');
+	    	$(statusHtml).parents(".dropdown").find('.btn').attr('value', idStat);
+	    },
+	    error: function (xhr, status) {    	
+	    	console.log("Error, su solicitud no pudo ser atendida");
+	    }
+	});
+}
+
+
 
 function editRegla( code, index ){
 	reglaIndex = index;
@@ -981,6 +1147,51 @@ function editRegla( code, index ){
 	});	
 }
 
+function deleteBonificacion( code, index ){		
+	var strUrlStatus = window.location.protocol + "//" + window.location.host + "/cabin-web/estado/" + 2;
+	var strUrlBonificacion = window.location.protocol + "//" + window.location.host + "/cabin-web/bonificacion/"+code+"/status";
+	console.log("Inside deleteBonificacion" + code);
+	$.ajax({
+		async: false,
+		type: "PUT",
+	    url:strUrlBonificacion,			
+	    data: strUrlStatus, 
+	    contentType: 'text/uri-list',
+	    success: function (data) {
+	    	console.log("Se asigno estado a Bonificacion" + code);
+	    	bonificaciones[index].estado = "Inactivo";
+	    	fillBonificaciontbl();
+	    },
+	    error: function (xhr, status) {	    	
+	    	console.log("Error, su solicitud no pudo ser atendida");
+	    }	    
+	});			
+}
+
+
+
+function deleteParametro( code, index ){		
+	var strUrlStatus = window.location.protocol + "//" + window.location.host + "/cabin-web/estado/" + 2;
+	var strUrlParametro = window.location.protocol + "//" + window.location.host + "/cabin-web/parametro/"+code+"/status";
+	console.log("Inside deleteParametro" + code);
+	$.ajax({
+		async: false,
+		type: "PUT",
+	    url:strUrlParametro,			
+	    data: strUrlStatus, 
+	    contentType: 'text/uri-list',
+	    success: function (data) {
+	    	console.log("Se asigno estado a Parametro" + code);
+	    	parametros[index].status = "Inactivo";
+	    	fillParametrotbl();
+	    },
+	    error: function (xhr, status) {	    	
+	    	console.log("Error, su solicitud no pudo ser atendida");
+	    }	    
+	});			
+}
+
+
 function deleteRegla( code, index ){		
 	var strUrlStatus = window.location.protocol + "//" + window.location.host + "/cabin-web/estado/" + 2;
 	var strUrlRegla = window.location.protocol + "//" + window.location.host + "/cabin-web/regla_puntuacion/"+code+"/status";
@@ -993,7 +1204,7 @@ function deleteRegla( code, index ){
 	    contentType: 'text/uri-list',
 	    success: function (data) {
 	    	console.log("Se asigno estado a Regla" + code);
-	    	reglas[index].estado = "Inactivo";
+	    	reglas[index].status = "Inactivo";
 	    	fillReglatbl();
 	    },
 	    error: function (xhr, status) {	    	
@@ -1001,6 +1212,53 @@ function deleteRegla( code, index ){
 	    }	    
 	});			
 }
+
+
+function saveParametro(){	
+	var idParametro = $("#idParametro").attr("value");
+	console.log("Inside form-parametro " + idParametro);
+	var parametro = {};
+	parametro.name = trim( $( "#nameParametro" ).val() );
+	parametro.value = trim( $( "#valueParametro" ).val() );
+	$( "#nameParametro" ).val("");	$( "#valueParametro" ).val("");		
+	var statusHtml = $("#statusParametro li a");	
+	var idStatus = $(statusHtml).parents(".dropdown").find('.btn').val();
+	$(statusHtml).parents(".dropdown").find('.btn').html('Activo <span class="caret"></span>');
+	$(statusHtml).parents(".dropdown").find('.btn').val("1");
+	var strUrl = window.location.protocol + "//" + window.location.host + "/cabin-web/post/parameter";
+	
+	parametro.status = {};
+	parametro.status.id = idStatus;
+	
+	if (idParametro !== "") {		
+		parametro.id = idParametro;		
+		parametros.splice(parametroIndex, 1, parametro);
+		parametroIndex = -1;		
+	}		
+	console.log(JSON.stringify(parametro));
+	$.ajax({
+		type: "POST",
+	    url:strUrl,			    
+	    dataType: 'json', 
+	    data: JSON.stringify(parametro), 
+	    contentType: 'application/json',
+	    success: function (data) {
+	    	console.log("Send a parametro into DB");			    	
+	    	if (idParametro != ""){
+	    		$("#btnParametro").html("Nuevo Parametro");
+	    		$("#idParametro").attr("value", "");
+	    	}			    	
+	    },
+	    error: function (xhr, status) {	    	
+	    	console.log("Error, su solicitud no pudo ser atendida");
+	    },	
+	    complete: function(xhr) {
+	    	fillArrayParametro();
+	    }
+	});
+	
+}
+
 
 function saveRegla(){
 	var idRegla = $("#idRegla").attr("value");
@@ -1223,6 +1481,7 @@ function saveNivel(){
 	    }
 	});	
 }
+
 function fillPremiotbl(  ){
 	var size = premios.length;	
     var j = 0;
@@ -1495,6 +1754,10 @@ function fnOpenCloseDialog(val, code, index) {
 	                	deleteEmpleado(code, index);
 	                }else if (val == "8") {
 	                	deleteExperience(code, index);
+	                }else if (val == "9") {
+	                	deleteParametro(code, index);
+	                }else if (val == "10") {
+	                	deleteBonificacion(code, index);
 	                }
 	                
 	         	}, "class":"btn btn-default",
@@ -1539,6 +1802,10 @@ function fnOpenEditDialog(val) {
 	                	saveEmpleado();
 	                }else if (val == '8'){
 	                	saveExperience();
+	                }else if (val == '9'){
+	                	saveParametro();
+	                }else if (val == '10'){
+	                	saveBonificacion();
 	                }
 	            }, "class":"btn btn-default",
 	         },
@@ -1570,6 +1837,32 @@ function fnOpenErrorDialog() {
 	         }
         }
     });
+}
+
+function fillParametro(idParametro, name, value){
+	var strParametro = window.location.protocol + "//" + window.location.host + "/cabin-web/parametro/"+idParametro+"/status";
+	var status; var level;
+	$.ajax({
+		async:false,
+	    url:strParametro,
+	    crossDomain: true,
+	    dataType: "json",
+	    success: function (json) {	
+	    	//var hrefArray = json._links.self.href.split("/");
+	    	//idStatus = hrefArray[hrefArray.length -1];
+	    	status = json.name;
+	    },
+	    error: function (xhr, status) {    	
+	    	console.log("Error, su solicitud no pudo ser atendida");
+	    }
+	});
+		
+	parametros.push({
+		id: idParametro,
+		name: name,
+		value: value,		
+		status: status,		
+	});
 }
 
 
@@ -2544,6 +2837,32 @@ function fillArrayTarifaDetails(idTariff){
 	});	
 }
 
+function fillArrayParametro(){
+	var length = parametros.length;
+	parametros.splice(0, length);
+	var strUrl = window.location.protocol + "//" + window.location.host + "/cabin-web/parametro/";		
+	$.ajax({
+		async:false,
+	    url:strUrl,
+	    crossDomain: true,
+	    dataType: "json",
+	    success: function (json) {
+	    	$.each(json._embedded.parametro, function(index, value) {		    		
+	    		var hrefArray = value._links.self.href.split("/");
+		    	var idParametro = hrefArray[hrefArray.length -1];
+		    	var name = value.name;
+				var value = value.value;					    	
+		    	fillParametro(idParametro, name, value)
+			});
+	    	fillParametrotbl();		    	
+	    },
+	    error: function (xhr, status) {    	
+	    	console.log("Error, su solicitud no pudo ser atendida");
+	    }
+	});	
+}
+
+
 function fillArrayRegla(){
 	var length = reglas.length;
 	reglas.splice(0, length);
@@ -3252,6 +3571,18 @@ function addRegla() {
 	
 	return valid;
 }
+
+function addParametro() {
+	var valid = true;
+	$("*").removeClass( "ui-state-error");
+	valid = valid && checkRequired( $("#nameParametro"), "Debe ingresar el nombre del parametro.",1, parametroValidation);
+	valid = valid && checkRequired( $("#valueParametro"), "Debe ingresar el valor del parametro.",1, parametroValidation);	
+	var statusHtml = $("#statusParametro li a");		
+	statusHtml = $(statusHtml).parents(".dropdown").find('.btn');
+	valid = valid && checkRequired( statusHtml, "Debe seleccionar un estado.",1, parametroValidation);	
+	return valid;
+}
+
 
 function addNivel() {
 	var valid = true;

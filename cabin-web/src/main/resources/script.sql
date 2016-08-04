@@ -632,6 +632,56 @@ INSERT INTO `tipo_documento` VALUES (1,'DNI'),(2,'C.E.'),(3,'PASAPORTE'),(4,'OTR
 /*!40000 ALTER TABLE `tipo_documento` ENABLE KEYS */;
 UNLOCK TABLES;
 
+
+--
+-- Table structure for table `parametro`
+--
+
+DROP TABLE IF EXISTS `parametro`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `parametro` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `nombre` varchar(20) DEFAULT NULL,
+  `valor` varchar(20) DEFAULT NULL,
+  `id_estado` bigint(20) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `parametro_estado_idx` (`id_estado`),  
+  CONSTRAINT `parametro_estado` FOREIGN KEY (`id_estado`) REFERENCES `estado` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `parametro`
+--
+
+LOCK TABLES `parametro` WRITE;
+/*!40000 ALTER TABLE `parametro` DISABLE KEYS */;
+INSERT INTO `parametro` VALUES (1,'Fracción de recarga', 0.5,1),(2,'Fracción mínima.', 0.5,1);
+/*!40000 ALTER TABLE `parametro` ENABLE KEYS */;
+UNLOCK TABLES;
+
+
+--
+-- Table structure for table `bonificacion`
+--
+
+DROP TABLE IF EXISTS `bonificacion`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `bonificacion` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `nombre` varchar(20) DEFAULT NULL,
+  `cantidad_experiencia` int(11) DEFAULT NULL,
+  `fraccion_otorgar` double DEFAULT NULL,
+  `id_estado` bigint(20) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `bonificacion_estado_idx` (`id_estado`),  
+  CONSTRAINT `bonificacion_estado` FOREIGN KEY (`id_estado`) REFERENCES `estado` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+
 --
 -- Table structure for table `usuario`
 --

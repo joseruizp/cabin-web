@@ -492,17 +492,7 @@
 									<div class="col-md-8">
 										<input class="form-control" id="descriptionTarifa" placeholder="Descripcion" maxlength="45"/>
 									</div>
-								</div>
-								<div class="form-group">
-									<label class="control-label col-md-2" for="priceTariff">Precio por Defecto:</label>
-									<div class="col-md-3">
-										<input class="form-control" id="priceTariff" placeholder="Precio por Defecto" maxlength="45"/>
-									</div>
-									<label class="control-label col-md-2" for="minFractionTariff">Fraccion Minima por Defecto:</label>
-									<div class="col-md-3">
-										<input class="form-control" id="minFractionTariff" placeholder="Fraccion Minima por Defecto" maxlength="45"/>
-									</div>
-								</div>
+								</div>								
 								<div class="form-group">
 									<label class="control-label col-md-2" for="email">Dias:</label>
 									<div class="col-md-8">
@@ -764,6 +754,13 @@
 									</ul>
 								</div>
 							</div>
+							<label class="control-label col-sm-2" for="imageFile">Cargar Imagen:</label>
+							<div class="col-sm-4">
+	          						<span class="btn btn-primary btn-file">
+		          						Cargar Imagen
+						    			<input type="file" id="imageFile" name="picture" accept="image/*"></input>
+					    			</span>								
+							</div>
 						</div>
 						<div class="form-group">
 							<div class="col-sm-offset-5 col-sm-7">
@@ -962,6 +959,78 @@
 
 
 		<!-- banner end -->
+		
+		
+		<!-- banner start --> 
+		<div id="parametro">
+			<div class="container">
+				<br/>
+				<div class="row">
+					<div class="col-md-12" style="margin-top: 40px">
+						<h1 id="tituloEquipos" class="title text-center">Nuevo <span>Parámetro</span></h1>
+						<p class="lead text-center">Lorem ipsum dolor sit amet, consectetur adipisicing elit. laudantium culpa tenetur.</p>
+					</div>
+				</div>
+				<div class="row" style="margin-left: 110px; margin-right: 110px">
+					<form class="form-horizontal" role="form" id="form-parametro">
+						<input type="hidden" id="idParametro" value=""/>
+						<div class="form-group">
+							<label class="control-label col-sm-2" for="nameParametro">Nombre:</label>
+							<div class="col-sm-10">
+								<input class="form-control" id="nameParametro"
+									placeholder="Nombre" maxlength="20"/>
+							</div>
+						</div>						
+						<div class="form-group">
+							<label class="control-label col-sm-2" for="valueParametro">Fraccion de Recarga:</label>
+							<div class="col-sm-10">
+								<input class="form-control" id="valueParametro"
+									placeholder="Valor" maxlength="20"/>
+							</div>
+						</div>						
+						<div class="form-group">
+							<label class="control-label col-sm-2" for="statusParametro">Estado:</label>
+							<div class="col-sm-4">
+								<div class="dropdown">
+									<button class="btn btn-primary dropdown-toggle" type="button"
+										data-toggle="dropdown" value="1">
+										Activo <span class="caret"></span>
+									</button>
+									<ul id="statusParametro" class="dropdown-menu">
+										<li><a href="/" onclick="return false;">Activo</a></li>
+										<li><a href="/" onclick="return false;">Inactivo</a></li>
+									</ul>
+								</div>
+							</div>
+						</div>
+						<div class="form-group">
+							<div class="col-sm-offset-5 col-sm-7">
+								<button id="btnParametro" type="submit" class="btn btn-default">Nuevo Parámetro</button>
+							</div>
+						</div>
+					</form>
+					<div id="parametroValidation" class="alert alert-danger" style="display:none"></div>
+				</div>
+				<div class="space"></div>
+			    <div role="tabpanel" class="table-responsive" id="listaParametrosDiv">
+			        <table id="parametroTbl" class="table table-striped display">
+			            <thead>
+			                <tr>
+			                    <th>Codigo</th>
+			                    <th>Nombre</th>
+			                    <th>Valor</th>			                    
+			                    <th>Estado</th>			                    
+			                    <th colspan="2" >Opciones</th>
+			                </tr>
+			            </thead>
+			            <tbody>
+			            </tbody>
+			        </table>
+			    </div>
+			</div>
+		</div>
+		<!-- banner end -->
+		
 		<br/><br/><br/>
 		<br/><br/><br/>
 		<div id="dialog-confirm"></div>
