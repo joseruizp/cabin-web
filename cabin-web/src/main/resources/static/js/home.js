@@ -61,6 +61,7 @@ map = {
 		clienteValidation = $("#clienteValidation");
 		empleadoValidation = $("#empleadoValidation");		
 		parametroValidation = $("#parametroValidation");
+		bonificacionValidation = $("#bonificacionValidation");
 		//Select
 		$("#status li a").click(function(){
 			$(this).parents(".dropdown").find('.btn').html($(this).text() + ' <span class="caret"></span>');
@@ -179,17 +180,23 @@ map = {
 			scrollY: 300,
 		    paging: false,
 			ordering: true,
-			searching: false,
+			searching: true,
 			bLengthChange: false,
 			bInfo: false,
+			language: {
+			    search: "Buscar Cliente:"
+			},
 		});
 		$('#empleadoTbl').DataTable({			
 			scrollY: 300,
 		    paging: false,
 			ordering: true,
-			searching: false,
+			searching: true,
 			bLengthChange: false,
 			bInfo: false,
+			language: {
+			    search: "Buscar Empleado:"
+			},
 		});
 		$('#experienceTbl').DataTable({
 		    pscrollY: 300,
@@ -228,7 +235,7 @@ map = {
 		fillArrayEmpleado();		
 		fillArrayExperience();
 		fillArrayParametro();
-		//fillArrayBonificacion();
+		fillArrayBonificacion();
 		//Sede save - update
 		$( "#form-sede" ).submit(function( event ) {
 			event.preventDefault();
@@ -390,8 +397,8 @@ map = {
 			 event.preventDefault();
 			 event.stopPropagation();
 			 saveTarifa();
-		 });
-		
+		 });		
+		 
 	}); // End document ready
 })(this.jQuery);
 
@@ -443,13 +450,15 @@ function fillClientetbl(){
                 "",
         ] ).draw( false );
 	};
-    $('#clienteTbl > tbody  > tr').each(function() {
-	    var edit = "<td><a onclick='editCliente("+ clientes[j].id +","+ j+")'><i class='fa fa-pencil icons' title='Editar'></i></a></td>";
-	    var remove = "<td><a onclick='fnOpenCloseDialog(6, "+ clientes[j].id +","+ j+")'><i class='fa fa-trash icons' title='Eliminar'></i></a></td>";	    
-	    j++; 
-	    var tr = $(this);	    
-	    tr.find('td:last').after(edit); tr.find('td:last').after(remove);
-    });
+	if (size > 0 ){
+	    $('#clienteTbl > tbody  > tr').each(function() {
+		    var edit = "<td><a onclick='editCliente("+ clientes[j].id +","+ j+")'><i class='fa fa-pencil icons' title='Editar'></i></a></td>";
+		    var remove = "<td><a onclick='fnOpenCloseDialog(6, "+ clientes[j].id +","+ j+")'><i class='fa fa-trash icons' title='Eliminar'></i></a></td>";	    
+		    j++; 
+		    var tr = $(this);	    
+		    tr.find('td:last').after(edit); tr.find('td:last').after(remove);
+	    });
+	}
 }
 
 function fillEmpleadotbl(){
@@ -490,13 +499,15 @@ function fillEmpleadotbl(){
                 "",
         ] ).draw( false );
 	};
-    $('#empleadoTbl > tbody  > tr').each(function() {
-	    var edit = "<td><a onclick='editEmpleado("+ empleados[j].id +","+ j+")'><i class='fa fa-pencil icons' title='Editar'></i></a></td>";
-	    var remove = "<td><a onclick='fnOpenCloseDialog(7, "+ empleados[j].id +","+ j+")'><i class='fa fa-trash icons' title='Eliminar'></i></a></td>";	    
-	    j++; 
-	    var tr = $(this);	    
-	    tr.find('td:last').after(edit); tr.find('td:last').after(remove);
-    });
+	if (size > 0 ){
+	    $('#empleadoTbl > tbody  > tr').each(function() {
+		    var edit = "<td><a onclick='editEmpleado("+ empleados[j].id +","+ j+")'><i class='fa fa-pencil icons' title='Editar'></i></a></td>";
+		    var remove = "<td><a onclick='fnOpenCloseDialog(7, "+ empleados[j].id +","+ j+")'><i class='fa fa-trash icons' title='Eliminar'></i></a></td>";	    
+		    j++; 
+		    var tr = $(this);	    
+		    tr.find('td:last').after(edit); tr.find('td:last').after(remove);
+	    });
+	}
 }
 
 
@@ -515,16 +526,17 @@ function fillSedetbl(  ){
                 "",
         ] ).draw( false );
 	};
-    $('#sedeTbl > tbody  > tr').each(function() {	    
-    	var zoom = "<td><form method='POST' id='formSede"+sedes[j].id+"'><a onclick='insideSede("+ sedes[j].id +")'><i class='fa fa-search-plus icons' title='Entrar'></i></a></form></td>";
-	    var edit = "<td><a onclick='editSede("+ sedes[j].id +","+ j+")'><i class='fa fa-pencil icons' title='Editar'></i></a></td>";
-	    var remove = "<td><a onclick='fnOpenCloseDialog(1, "+ sedes[j].id +","+ j+")'><i class='fa fa-trash icons' title='Eliminar'></i></a></td>";	    
-	    j++; 
-	    var tr = $(this);	    
-	    tr.find('td:last').after(edit); tr.find('td:last').after(remove); 
-	    tr.find('td:last').after(zoom); 
-	    
-    });
+	if (size > 0 ){
+	    $('#sedeTbl > tbody  > tr').each(function() {	    
+	    	var zoom = "<td><form method='POST' id='formSede"+sedes[j].id+"'><a onclick='insideSede("+ sedes[j].id +")'><i class='fa fa-search-plus icons' title='Entrar'></i></a></form></td>";
+		    var edit = "<td><a onclick='editSede("+ sedes[j].id +","+ j+")'><i class='fa fa-pencil icons' title='Editar'></i></a></td>";
+		    var remove = "<td><a onclick='fnOpenCloseDialog(1, "+ sedes[j].id +","+ j+")'><i class='fa fa-trash icons' title='Eliminar'></i></a></td>";	    
+		    j++; 
+		    var tr = $(this);	    
+		    tr.find('td:last').after(edit); tr.find('td:last').after(remove); 
+		    tr.find('td:last').after(zoom);
+	    });
+	}
 }
 
 function editSede( code, index ){
@@ -627,7 +639,7 @@ function deleteSede( code, index ){
 
 function saveSede(){
 	var idSede = $("#idSede").attr("value");
-	console.log("Inside form-tarifaDetail " + idSede);
+	console.log("Inside form-Sede " + idSede);
 	var sede = {};  var newSede = 1;
 	sede.name = trim( $( "#name" ).val() );
 	sede.address = trim( $( "#address" ).val() );			
@@ -720,13 +732,15 @@ function fillTarifatbl(  ){
                 tarifas[i].estado,
         ] ).draw( false );
 	};
-    $('#tarifaTbl > tbody  > tr').each(function() {	    
-    	var edit = "<td><a onclick='editTarifa("+ tarifas[j].id +","+ j+")'><i class='fa fa-pencil icons' title='Editar'></i></a></td>";
-	    var remove = "<td><a onclick='fnOpenCloseDialog(2,"+ tarifas[j].id +","+ j+")'><i class='fa fa-trash icons' title='Eliminar'></i></a></td>";
-	    j++;
-	    var tr = $(this);
-	    tr.find('td:last').after(edit); tr.find('td:last').after(remove);
-    });
+	if (size > 0 ){
+	    $('#tarifaTbl > tbody  > tr').each(function() {	    
+	    	var edit = "<td><a onclick='editTarifa("+ tarifas[j].id +","+ j+")'><i class='fa fa-pencil icons' title='Editar'></i></a></td>";
+		    var remove = "<td><a onclick='fnOpenCloseDialog(2,"+ tarifas[j].id +","+ j+")'><i class='fa fa-trash icons' title='Eliminar'></i></a></td>";
+		    j++;
+		    var tr = $(this);
+		    tr.find('td:last').after(edit); tr.find('td:last').after(remove);
+	    });
+	}
 }
 
 function fillTariffDetailstbl(  ){
@@ -961,6 +975,33 @@ function saveTarifa(){
 	
 }
 
+function fillBonificaciontbl(  ){
+	var size = bonificaciones.length;
+	var j = 0;
+    var t = $('#bonificacionTbl').DataTable();
+    t.clear();
+	for(i=0; i<size;i++){
+		t.row.add( [
+                bonificaciones[i].id,
+                bonificaciones[i].name,
+                bonificaciones[i].experienceAmount,                
+                bonificaciones[i].fractionToGive,
+                bonificaciones[i].status,
+        ] ).draw( false );
+	};
+	if (size > 0 ){
+	    $('#bonificacionTbl > tbody  > tr').each(function() {	    
+		    var edit = "<td><a onclick='editBonificacion("+ bonificaciones[j].id +","+ j+")'><i class='fa fa-pencil icons' title='Editar'></i></a></td>";
+		    var remove = "<td><a onclick='fnOpenCloseDialog(10,"+ bonificaciones[j].id +","+ j+")'><i class='fa fa-trash icons' title='Eliminar'></i></a></td>";
+		    j++;
+		    var tr = $(this);
+		    tr.find('td:last').after(edit); tr.find('td:last').after(remove);
+	    });
+	}
+}
+
+
+
 function fillParametrotbl(  ){
 	var size = parametros.length;
 	var j = 0;
@@ -974,13 +1015,15 @@ function fillParametrotbl(  ){
                 parametros[i].status,
         ] ).draw( false );
 	};
-    $('#parametroTbl > tbody  > tr').each(function() {	    
-	    var edit = "<td><a onclick='editParametro("+ parametros[j].id +","+ j+")'><i class='fa fa-pencil icons' title='Editar'></i></a></td>";
-	    var remove = "<td><a onclick='fnOpenCloseDialog(9,"+ parametros[j].id +","+ j+")'><i class='fa fa-trash icons' title='Eliminar'></i></a></td>";
-	    j++;
-	    var tr = $(this);
-	    tr.find('td:last').after(edit); tr.find('td:last').after(remove);
-    });
+	if (size > 0 ){
+	    $('#parametroTbl > tbody  > tr').each(function() {	    
+		    var edit = "<td><a onclick='editParametro("+ parametros[j].id +","+ j+")'><i class='fa fa-pencil icons' title='Editar'></i></a></td>";
+		    var remove = "<td><a onclick='fnOpenCloseDialog(9,"+ parametros[j].id +","+ j+")'><i class='fa fa-trash icons' title='Eliminar'></i></a></td>";
+		    j++;
+		    var tr = $(this);
+		    tr.find('td:last').after(edit); tr.find('td:last').after(remove);
+	    });
+	}
 }
 
 
@@ -999,13 +1042,15 @@ function fillReglatbl(  ){
                 reglas[i].status,
         ] ).draw( false );
 	};
-    $('#reglaTbl > tbody  > tr').each(function() {	    
-	    var edit = "<td><a onclick='editRegla("+ reglas[j].id +","+ j+")'><i class='fa fa-pencil icons' title='Editar'></i></a></td>";
-	    var remove = "<td><a onclick='fnOpenCloseDialog(3,"+ reglas[j].id +","+ j+")'><i class='fa fa-trash icons' title='Eliminar'></i></a></td>";
-	    j++;
-	    var tr = $(this);
-	    tr.find('td:last').after(edit); tr.find('td:last').after(remove);
-    });
+	if (size > 0 ){
+	    $('#reglaTbl > tbody  > tr').each(function() {	    
+		    var edit = "<td><a onclick='editRegla("+ reglas[j].id +","+ j+")'><i class='fa fa-pencil icons' title='Editar'></i></a></td>";
+		    var remove = "<td><a onclick='fnOpenCloseDialog(3,"+ reglas[j].id +","+ j+")'><i class='fa fa-trash icons' title='Eliminar'></i></a></td>";
+		    j++;
+		    var tr = $(this);
+		    tr.find('td:last').after(edit); tr.find('td:last').after(remove);
+	    });
+	}
 }
 
 
@@ -1159,7 +1204,7 @@ function deleteBonificacion( code, index ){
 	    contentType: 'text/uri-list',
 	    success: function (data) {
 	    	console.log("Se asigno estado a Bonificacion" + code);
-	    	bonificaciones[index].estado = "Inactivo";
+	    	bonificaciones[index].status = "Inactivo";
 	    	fillBonificaciontbl();
 	    },
 	    error: function (xhr, status) {	    	
@@ -1211,6 +1256,54 @@ function deleteRegla( code, index ){
 	    	console.log("Error, su solicitud no pudo ser atendida");
 	    }	    
 	});			
+}
+
+
+function saveBonificacion(){	
+	var idBonificacion = $("#idBonificacion").attr("value");
+	console.log("Inside form-bonificacion " + idBonificacion);
+	var bonificacion = {};
+	bonificacion.name = trim( $( "#nameBonificacion" ).val() );
+	bonificacion.experienceAmount = trim( $( "#experienceAmountBonificacion" ).val() );
+	bonificacion.fractionToGive = trim( $( "#fractionToGiveBonificacion" ).val() );
+	$( "#nameBonificacion" ).val("");	$( "#experienceAmountBonificacion" ).val("");
+	$( "#fractionToGiveBonificacion" ).val("");
+	var statusHtml = $("#statusBonificacion li a");	
+	var idStatus = $(statusHtml).parents(".dropdown").find('.btn').val();
+	$(statusHtml).parents(".dropdown").find('.btn').html('Activo <span class="caret"></span>');
+	$(statusHtml).parents(".dropdown").find('.btn').val("1");
+	var strUrl = window.location.protocol + "//" + window.location.host + "/cabin-web/post/bonus";
+	
+	bonificacion.status = {};
+	bonificacion.status.id = idStatus;
+	
+	if (idBonificacion !== "") {		
+		bonificacion.id = idBonificacion;		
+		bonificaciones.splice(bonificacionIndex, 1, bonificacion);
+		bonificacionIndex = -1;		
+	}		
+	console.log(JSON.stringify(bonificacion));
+	$.ajax({
+		type: "POST",
+	    url:strUrl,			    
+	    dataType: 'json', 
+	    data: JSON.stringify(bonificacion), 
+	    contentType: 'application/json',
+	    success: function (data) {
+	    	console.log("Send a bonificacion into DB");			    	
+	    	if (idBonificacion != ""){
+	    		$("#btnBonificacion").html("Nueva Bonificación");
+	    		$("#idBonificacion").attr("value", "");
+	    	}			    	
+	    },
+	    error: function (xhr, status) {	    	
+	    	console.log("Error, su solicitud no pudo ser atendida");
+	    },	
+	    complete: function(xhr) {
+	    	fillArrayBonificacion();
+	    }
+	});
+	
 }
 
 
@@ -1335,13 +1428,15 @@ function fillNiveltbl(  ){
                 niveles[i].estado,
         ] ).draw( false );
 	};
-    $('#nivelTbl > tbody  > tr').each(function() {	    
-    	var edit = "<td><a onclick='editNivel("+ niveles[j].id +","+ j+")'><i class='fa fa-pencil icons' title='Editar'></i></a></td>";
-	    var remove = "<td><a onclick='fnOpenCloseDialog(4,"+ niveles[j].id +","+ j+")'><i class='fa fa-trash icons' title='Eliminar'></i></a></td>";
-	    j++;
-	    var tr = $(this);
-	    tr.find('td:last').after(edit); tr.find('td:last').after(remove);
-    });
+	if (size > 0 ){
+	    $('#nivelTbl > tbody  > tr').each(function() {	    
+	    	var edit = "<td><a onclick='editNivel("+ niveles[j].id +","+ j+")'><i class='fa fa-pencil icons' title='Editar'></i></a></td>";
+		    var remove = "<td><a onclick='fnOpenCloseDialog(4,"+ niveles[j].id +","+ j+")'><i class='fa fa-trash icons' title='Eliminar'></i></a></td>";
+		    j++;
+		    var tr = $(this);
+		    tr.find('td:last').after(edit); tr.find('td:last').after(remove);
+	    });
+	}
 }
 
 function editNivel( code, index ){
@@ -1495,13 +1590,15 @@ function fillPremiotbl(  ){
                 premios[i].estado,
         ] ).draw( false );
 	};
-    $('#premioTbl > tbody  > tr').each(function() {	    
-	    var edit = "<td><a onclick='editPremio("+ premios[j].id +","+ j+")'><i class='fa fa-pencil icons' title='Editar'></i></a></td>";
-	    var remove = "<td><a onclick='fnOpenCloseDialog(5,"+ premios[j].id +","+ j+")'><i class='fa fa-trash icons' title='Eliminar'></i></a></td>";
-	    j++;
-	    var tr = $(this);
-	    tr.find('td:last').after(edit); tr.find('td:last').after(remove);
-    });
+	if (size > 0 ){
+	    $('#premioTbl > tbody  > tr').each(function() {	    
+		    var edit = "<td><a onclick='editPremio("+ premios[j].id +","+ j+")'><i class='fa fa-pencil icons' title='Editar'></i></a></td>";
+		    var remove = "<td><a onclick='fnOpenCloseDialog(5,"+ premios[j].id +","+ j+")'><i class='fa fa-trash icons' title='Eliminar'></i></a></td>";
+		    j++;
+		    var tr = $(this);
+		    tr.find('td:last').after(edit); tr.find('td:last').after(remove);
+	    });
+	}
 }
 
 function editPremio( code, index ){
@@ -1839,31 +1936,6 @@ function fnOpenErrorDialog() {
     });
 }
 
-function fillParametro(idParametro, name, value){
-	var strParametro = window.location.protocol + "//" + window.location.host + "/cabin-web/parametro/"+idParametro+"/status";
-	var status; var level;
-	$.ajax({
-		async:false,
-	    url:strParametro,
-	    crossDomain: true,
-	    dataType: "json",
-	    success: function (json) {	
-	    	//var hrefArray = json._links.self.href.split("/");
-	    	//idStatus = hrefArray[hrefArray.length -1];
-	    	status = json.name;
-	    },
-	    error: function (xhr, status) {    	
-	    	console.log("Error, su solicitud no pudo ser atendida");
-	    }
-	});
-		
-	parametros.push({
-		id: idParametro,
-		name: name,
-		value: value,		
-		status: status,		
-	});
-}
 
 
 function fillRule(idRegla, name, rechargingFraction, points){
@@ -2837,22 +2909,49 @@ function fillArrayTarifaDetails(idTariff){
 	});	
 }
 
-function fillArrayParametro(){
-	var length = parametros.length;
-	parametros.splice(0, length);
-	var strUrl = window.location.protocol + "//" + window.location.host + "/cabin-web/parametro/";		
+
+function fillArrayBonificacion(){
+	var length = bonificaciones.length;
+	bonificaciones.splice(0, length);
+	var strUrl = window.location.protocol + "//" + window.location.host + "/cabin-web/get/allBonus/";				
 	$.ajax({
-		async:false,
 	    url:strUrl,
 	    crossDomain: true,
 	    dataType: "json",
 	    success: function (json) {
-	    	$.each(json._embedded.parametro, function(index, value) {		    		
-	    		var hrefArray = value._links.self.href.split("/");
-		    	var idParametro = hrefArray[hrefArray.length -1];
-		    	var name = value.name;
-				var value = value.value;					    	
-		    	fillParametro(idParametro, name, value)
+	    	$.each(json, function(index, value) {		    	
+				bonificaciones.push({
+					id: value.id,
+					name: value.name,
+					experienceAmount: value.experienceAmount,
+					fractionToGive: value.fractionToGive,
+					status: value.status.name,		
+				});
+			});
+	    	fillBonificaciontbl();		    	
+	    },
+	    error: function (xhr, status) {    	
+	    	console.log("Error, su solicitud no pudo ser atendida");
+	    }
+	});	
+}
+
+function fillArrayParametro(){
+	var length = parametros.length;
+	parametros.splice(0, length);
+	var strUrl = window.location.protocol + "//" + window.location.host + "/cabin-web/get/allParameters/";		
+	$.ajax({		
+	    url:strUrl,
+	    crossDomain: true,
+	    dataType: "json",
+	    success: function (json) {
+	    	$.each(json, function(index, value) {		    		
+	    		parametros.push({
+	    			id: value.id,
+	    			name: value.name,
+	    			value: value.value,		
+	    			status: value.status.name,		
+	    		});
 			});
 	    	fillParametrotbl();		    	
 	    },
@@ -3156,13 +3255,15 @@ function fillExperiencetbl(  ){
                 experiences[i].status,
         ] ).draw( false );
 	};
-    $('#experienceTbl > tbody  > tr').each(function() {	    
-	    var edit = "<td><a onclick='editExperience("+ experiences[j].id +","+ j+")'><i class='fa fa-pencil icons' title='Editar'></i></a></td>";
-	    var remove = "<td><a onclick='fnOpenCloseDialog(8,"+ experiences[j].id +","+ j+")'><i class='fa fa-trash icons' title='Eliminar'></i></a></td>";
-	    j++;
-	    var tr = $(this);
-	    tr.find('td:last').after(edit); tr.find('td:last').after(remove);
-    });
+	if (size > 0 ){
+	    $('#experienceTbl > tbody  > tr').each(function() {	    
+		    var edit = "<td><a onclick='editExperience("+ experiences[j].id +","+ j+")'><i class='fa fa-pencil icons' title='Editar'></i></a></td>";
+		    var remove = "<td><a onclick='fnOpenCloseDialog(8,"+ experiences[j].id +","+ j+")'><i class='fa fa-trash icons' title='Eliminar'></i></a></td>";
+		    j++;
+		    var tr = $(this);
+		    tr.find('td:last').after(edit); tr.find('td:last').after(remove);
+	    });
+	}
 }
 
 function saveExperience(){
@@ -3582,6 +3683,22 @@ function addParametro() {
 	valid = valid && checkRequired( statusHtml, "Debe seleccionar un estado.",1, parametroValidation);	
 	return valid;
 }
+
+
+function addBonificacion() {
+	var valid = true;
+	$("*").removeClass( "ui-state-error");
+	valid = valid && checkRequired( $("#nameBonificacion"), "Debe ingresar el nombre de la bonificacion.",1, bonificacionValidation);
+	valid = valid && checkRequired( $("#experienceAmountBonificacion"), "Debe ingresar una cantidad de experiencia.",1, bonificacionValidation);
+	valid = valid && checkRegexp( $("#experienceAmountBonificacion"), /^[0-9]\d{0,5}$/i, "Debe ingresar una cantidad de puntos no mayor de 999 999, valor entero.", bonificacionValidation);
+	valid = valid && checkRequired( $("#fractionToGiveBonificacion"), "Debe ingresar el valor de la fracción a otorgar.",1, bonificacionValidation);
+	valid = valid && checkRegexp( $("#fractionToGiveBonificacion"), /^[0-9]\d{0,3}($|\.\d{0,2}$)/i, "Debe ingresar ingresar un monto válido, no mayor de 999.99 soles y de dos decimales.", bonificacionValidation);
+	var statusHtml = $("#statusBonificacion li a");		
+	statusHtml = $(statusHtml).parents(".dropdown").find('.btn');
+	valid = valid && checkRequired( statusHtml, "Debe seleccionar un estado.",1, bonificacionValidation);	
+	return valid;
+}
+
 
 
 function addNivel() {
