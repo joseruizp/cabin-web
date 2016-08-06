@@ -101,7 +101,7 @@
 			    		window.location.href = hostname + "/cabin-web/operator";
 			    	} else if (idProfile === 2) {
 			    		console.log("go to admin page");
-			    		window.location.href = hostname + "/cabin-web/home";
+			    		window.location.href = hostname + "/cabin-web/admin";
 			    	} else if (idProfile === 3) {
 			    		console.log("go to user page");
 			    		window.location.href = hostname + "/cabin-web/client";
