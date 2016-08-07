@@ -94,7 +94,7 @@
 			    data: JSON.stringify(user),
 			    success: function (json) {
 			    	console.log(json);
-			    	var idProfile = json.profile.id;
+			    	var idProfile = json.user.profile.id;
 			    	console.log("id profile ::: " + idProfile);
 			    	if (idProfile === 1) {
 			    		console.log("go to operator page");

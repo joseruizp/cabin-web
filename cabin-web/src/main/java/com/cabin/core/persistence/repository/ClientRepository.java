@@ -12,4 +12,6 @@ import com.cabin.core.persistence.domain.Client;
 public interface ClientRepository extends JpaRepository<Client, Long> {
 	
 	public List<Client> findByUserId(@Param("userId") Long userId);
+	public List<Client> findByStatusId(@Param("statusId") Long statusId);
+	public List<Client> findByName(@Param("name") String name);
 }

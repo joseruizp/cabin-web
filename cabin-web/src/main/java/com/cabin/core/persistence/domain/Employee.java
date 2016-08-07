@@ -12,6 +12,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 @Entity(name = "empleado")
 public class Employee implements Serializable {
 
@@ -29,9 +31,10 @@ public class Employee implements Serializable {
 	
 	@Column(name = "telefono", length = 15)
 	private String cellphone;
-	
-	@Column(name = "tipo_documento", length = 2)
-	private String docType;
+			
+	@ManyToOne
+    @JoinColumn(name = "id_tipo_documento")
+    private DocType docType;
 	
 	@Column(name = "n_documento", length = 15)
 	private String docCode;
@@ -39,6 +42,7 @@ public class Employee implements Serializable {
 	@Column(name = "sexo", length = 1)
 	private String gender;
 
+	@JsonFormat(pattern="dd-MM-yyyy")
 	@Column(name = "fechaNacimiento")
 	private Calendar birthDate;
 
@@ -46,16 +50,8 @@ public class Employee implements Serializable {
 		return cellphone;
 	}
 
-	public void setCellphone(String cellphone) {
+	public void setCellphone(String cellphone) {	
 		this.cellphone = cellphone;
-	}
-
-	public String getDocType() {
-		return docType;
-	}
-
-	public void setDocType(String docType) {
-		this.docType = docType;
 	}
 
 	public String getDocCode() {
@@ -131,4 +127,13 @@ public class Employee implements Serializable {
 		this.user = user;
 	}
 
+	public DocType getDocType() {
+		return docType;
+	}
+
+	public void setDocType(DocType docType) {
+		this.docType = docType;
+	}
+
+	
 }

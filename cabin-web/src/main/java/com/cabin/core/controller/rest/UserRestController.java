@@ -34,7 +34,7 @@ public class UserRestController {
 
     @Autowired
     private HttpSession httpSession;
-    /*
+    
     @RequestMapping(value = "/post/login", method = RequestMethod.POST, produces = { "application/json;charset=UTF-8" })
     public Client login(@RequestBody UserRequest user) throws ParseException {
 
@@ -50,7 +50,8 @@ public class UserRestController {
 
         return client;
     }
-	*/
+	
+    /*
     @RequestMapping(value = "/post/login", method = RequestMethod.POST, produces = { "application/json;charset=UTF-8" })
     public User login(@RequestBody UserRequest user) throws ParseException {    	
     	long id = 0;
@@ -71,5 +72,5 @@ public class UserRestController {
         }
         return users.get(0);
     }
-    
+    */
 }

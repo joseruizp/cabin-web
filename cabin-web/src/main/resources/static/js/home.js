@@ -482,8 +482,8 @@ function fillEmpleadotbl(){
 			date = ""+ day +"-"+monthStr+"-"+year;
 		}
 		else{
-			var arrayDate = empleados[i].birthDate.substring(0, 10).split("-");
-			date = ""+ arrayDate[2] +"-"+arrayDate[1]+"-"+arrayDate[0];
+			var arrayDate = empleados[i].birthDate.split("-");
+			date = ""+ arrayDate[0] +"-"+arrayDate[1]+"-"+arrayDate[2];
 		} 
 		t.row.add( [
                 empleados[i].id,
@@ -1429,14 +1429,20 @@ function fillNiveltbl(  ){
         ] ).draw( false );
 	};
 	if (size > 0 ){
-	    $('#nivelTbl > tbody  > tr').each(function() {	    
+	    $('#nivelTbl > tbody  > tr').each(function() {	  
+	    	var zoom = "<td><a onclick='openImageNivel("+niveles[j].id+","+j+")'><i class='fa fa-search-plus icons' title='Ver'></i></a></td>";
 	    	var edit = "<td><a onclick='editNivel("+ niveles[j].id +","+ j+")'><i class='fa fa-pencil icons' title='Editar'></i></a></td>";
 		    var remove = "<td><a onclick='fnOpenCloseDialog(4,"+ niveles[j].id +","+ j+")'><i class='fa fa-trash icons' title='Eliminar'></i></a></td>";
 		    j++;
 		    var tr = $(this);
 		    tr.find('td:last').after(edit); tr.find('td:last').after(remove);
+		    tr.find('td:last').after(zoom);
 	    });
 	}
+}
+
+function openImageNivel( code, index ){	
+	return;
 }
 
 function editNivel( code, index ){
@@ -1864,7 +1870,8 @@ function fnOpenCloseDialog(val, code, index) {
 	                $(this).dialog('close');                
 	            }, "class":"btn btn-default"
 	         }
-        }
+        },
+        open: function() { $(".ui-dialog :button").blur(); }
     });
 }
 
@@ -1911,7 +1918,8 @@ function fnOpenEditDialog(val) {
 	                $(this).dialog('close');                
 	            }, "class":"btn btn-default"
 	         }
-        }
+        },
+        open: function() { $(".ui-dialog :button").blur(); }
     });
 }
 
@@ -1932,7 +1940,8 @@ function fnOpenErrorDialog() {
 	            	$(this).dialog('close');
 	            }, "class":"btn btn-default",
 	         }
-        }
+        },
+        open: function() { $(".ui-dialog :button").blur(); }
     });
 }
 
@@ -2021,66 +2030,6 @@ function fillCliente(idCliente, name, email, gender, birthDate, balance, points,
 		experience: experience,
 		level: level,
 		estado: status,		
-	});
-}
-
-function fillEmpleado(idEmpleado, name, email, gender, birthDate, docType, docCode, docName){
-	var hostname = window.location.protocol + "//" + window.location.host 
-	var level, status, profile;	
-	var strUrl = hostname + "/cabin-web/empleado/"+idEmpleado+"/status";
-	$.ajax({
-		async:false,
-	    url:strUrl,
-	    crossDomain: true,
-	    dataType: "json",
-	    success: function (json) {
-	    	status = json.name;
-	    },
-	    error: function (xhr, status) {    	
-	    	console.log("Error, su solicitud no pudo ser atendida");
-	    }
-	});	
-	var idUser;
-	strUrl = hostname + "/cabin-web/empleado/"+idEmpleado+"/user";
-	$.ajax({
-		async:false,
-	    url:strUrl,
-	    crossDomain: true,
-	    dataType: "json",
-	    success: function (json) {
-	    	var hrefArray = json._links.self.href.split("/");
-	    	idUser = hrefArray[hrefArray.length -1];	
-	    },
-	    error: function (xhr, status) {    	
-	    	console.log("Error, su solicitud no pudo ser atendida");
-	    }
-	});
-	
-	strUrl = hostname + "/cabin-web/usuario/"+idUser+"/profile";
-	$.ajax({
-		async:false,
-	    url:strUrl,
-	    crossDomain: true,
-	    dataType: "json",
-	    success: function (json) {
-	    	profile = json.name;
-	    },
-	    error: function (xhr, status) {    	
-	    	console.log("Error, su solicitud no pudo ser atendida");
-	    }
-	});	
-	
-	empleados.push({
-		id: idEmpleado,
-		name: name,
-		email: email,
-		gender: gender,
-		docType: docType,
-		docTypeName: docName,
-		docCode: docCode,
-		birthDate: birthDate,
-		estado: status,
-		perfil: profile,		 
 	});
 }
 
@@ -2351,8 +2300,7 @@ function saveEmpleado(){
 			employee.estado = estados[1].name; }		
 		var length = tipo_doc.length;
 		for ( i = 0; i< length ; i++){
-			if (idDocType == tipo_doc[i].id ){ 
-				employee.docType = tipo_doc[i].id;
+			if (idDocType == tipo_doc[i].id ){
 				employee.docTypeName = tipo_doc[i].name; break;
 			}
 		}
@@ -2422,12 +2370,31 @@ function saveEmpleado(){
 	    }
 	});	
 	var strUrlStatus = window.location.protocol + "//" + window.location.host + "/cabin-web/estado/" + idStatus;
-	//var strUrlNivel = window.location.protocol + "//" + window.location.host + "/cabin-web/nivel/" + idNivel;
+	var strUrlDocType = window.location.protocol + "//" + window.location.host + "/cabin-web/tipo_documento/"+idDocType;
 	var strUrlPerfil = window.location.protocol + "//" + window.location.host + "/cabin-web/perfil/" + idPerfil;
 	var strUrlUser = window.location.protocol + "//" + window.location.host + "/cabin-web/usuario/"+idUser;
-	var strUrlCustomer = window.location.protocol + "//" + window.location.host + "/cabin-web/empleado/"+idEmpleado+"/status";
-	//Solo para cliente
+	var strUrlCustomer = window.location.protocol + "//" + window.location.host + "/cabin-web/empleado/"+idEmpleado+"/status";	
 	
+
+	//Para tipo documento
+	strUrlCustomer = window.location.protocol + "//" + window.location.host + "/cabin-web/empleado/"+idEmpleado+"/docType";	
+	$.ajax({
+		async: false,
+		type: "PUT",
+	    url:strUrlCustomer,			
+	    data: strUrlDocType, 
+	    contentType: 'text/uri-list',
+	    success: function (data) {
+	    	console.log("Se asigno tipo de documento a empleado" + idEmpleado);
+	    },
+	    error: function (xhr, status) {	    	
+	    	console.log("Error, su solicitud no pudo ser atendida");
+	    },
+	    complete: function(xhr){
+	    	
+	    }
+	});
+	//Solo para cliente	
 	$.ajax({
 		async: false,
 		type: "PUT",
@@ -2481,7 +2448,6 @@ function saveEmpleado(){
 	    	
 	    }
 	});
-	
 }
 
 
@@ -2697,7 +2663,7 @@ function fillSede(idSede, name, address){
 	var hostname = window.location.protocol + "//" + window.location.host 
 	var strSede = hostname + "/cabin-web/sede/"+idSede+"/user";
 	var employee, email, status;
-	var strUrl = hostname + "/cabin-web/empleado/"+idSede+"/status";
+	var strUrl = hostname + "/cabin-web/sede/"+idSede+"/status";
 	$.ajax({
 		async:false,
 	    url:strUrl,
@@ -2773,7 +2739,7 @@ function fillArraySede(){
 
 function fillArrayCliente(){
 	var length = clientes.length;
-	sedes.splice(0, length);
+	clientes.splice(0, length);
 	var strUrl = window.location.protocol + "//" + window.location.host + "/cabin-web/cliente/";
 	$.ajax({
 	    url:strUrl,
@@ -2797,26 +2763,26 @@ function fillArrayCliente(){
 
 function fillArrayEmpleado(){
 	var length = empleados.length;
-	sedes.splice(0, length);
-	var strUrl = window.location.protocol + "//" + window.location.host + "/cabin-web/empleado/";
+	empleados.splice(0, length);
+	var strUrl = window.location.protocol + "//" + window.location.host + "/cabin-web/get/allEmployees/";
 	var docName;
 	$.ajax({
 	    url:strUrl,
 	    crossDomain: true,
 	    dataType: "json",
 	    success: function (json) {
-	    	$.each(json._embedded.empleado, function(index, value) {		    		
-	    		var hrefArray = value._links.self.href.split("/");
-		    	var idEmpleado = hrefArray[hrefArray.length -1];
-		    	var length = tipo_doc.length; 
-		    	for ( i = 0; i < length; i++){
-		    		if ( value.docType == tipo_doc[i].id){
-		    			docName = tipo_doc[i].name;
-		    			break;
-		    		}
-		    	}
-		    	fillEmpleado(idEmpleado, value.name, value.email, 
-		    			value.gender, value.birthDate, value.docType, value.docCode, docName);				
+	    	$.each(json, function(index, value) {		    		
+	    		empleados.push({
+	    			id: value.id,
+	    			name: value.name,
+	    			email: value.email,
+	    			gender: value.gender,
+	    			docTypeName: value.docType.name,	    			
+	    			docCode: value.docCode,
+	    			birthDate: value.birthDate,
+	    			estado: value.status.name,
+	    			perfil: value.user.profile.name,		 
+	    		});			
 			});
 	    	fillEmpleadotbl();		    	
 	    },
@@ -3045,8 +3011,19 @@ function fillArrayNivel(){
 	    	ulExperience.html(line);
 	    	ulCustomer.html(line);
 	    	var nivelCustomerHtml =  $("#nivelCustomer li a");
-	    	$(nivelCustomerHtml).parents(".dropdown").find('.btn').html( niveles[0].name + ' <span class="caret"></span>');
-	    	$(nivelCustomerHtml).parents(".dropdown").find('.btn').val("1");
+	    	var menorNivel = "Seleccionar";
+	    	var menor = 999999999; 
+	    	var idMenorNivel = 0;
+	    	length = niveles.length;
+	    	for ( var i = 0 ; i < length ; i++){
+	    		if ( niveles[i].initialExperience < menor && niveles[i].estado == "Activo"){
+	    			menor =  niveles[i].initialExperience;
+	    			menorNivel = niveles[i].name;
+	    			idMenorNivel = niveles[i].id;
+	    		}
+	    	}
+	    	$(nivelCustomerHtml).parents(".dropdown").find('.btn').html( menorNivel + ' <span class="caret"></span>');
+	    	$(nivelCustomerHtml).parents(".dropdown").find('.btn').val( idMenorNivel);
 	    }
 	});
 }

@@ -20,6 +20,7 @@
 		<link th:href="@{plugins/jquery-ui-1.11.4.custom/jquery-ui.min.css}" rel="stylesheet"/>
 		<link th:href="@{plugins/jquery.mCustomScrollbar.min.css}" rel="stylesheet"/>
 		<link th:href="@{css/custom.css}" rel="stylesheet"/>
+		<link th:href="@{plugins/select2-4.0.3/css/select2.min.css}" rel="stylesheet" />		
 	</head>
 
 	<body class="no-trans">
@@ -109,6 +110,14 @@
 					</div>
 				</div>
 				<div class="row" style="margin-left: 90px">
+					<div class="form-group">
+							<label class="control-label col-sm-2" for="name">Cliente:</label>
+							<div class="col-sm-4">
+								<select id="e1">
+										
+								</select>
+							</div>
+					</div>
 					<div class="multipe-div">
 						<div class="multipe-box">
 							<select class="select-multiple" multiple="multiple" size="3" id="computer-multiple">
@@ -253,7 +262,7 @@
 		<script type="text/javascript" th:src="@{plugins/jquery.appear.js}"></script>
 		<script type="text/javascript" th:src="@{plugins/jquery-ui-1.11.4.custom/jquery-ui.min.js}"></script>
 		<script type="text/javascript" th:src="@{plugins/jquery.mCustomScrollbar.concat.min.js}"></script>
-
+		<script type="text/javascript" th:src="@{plugins/select2-4.0.3/js/select2.min.js}"></script>
 		<!-- Custom Scripts -->
 		<script type="text/javascript" th:src="@{js/computerAndConsole.js}"></script>
 		<script type="text/javascript" th:src="@{js/operator.js}"></script>
