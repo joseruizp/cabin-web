@@ -39,8 +39,9 @@
 	});
 	
 	function addEventUserType(){
-		$("#userType").change(function() {
+		$("#userType").change(function() {			
 			var value = $(this).val();
+			console.log("userType value: " + value);
 			if (value === "3") {
 				$("#headquarterDiv").show();
 			} else {
@@ -74,6 +75,7 @@
 			var email = $("#email").val();
 			var password = $("#password").val();
 			var headquarterId = $("#headquarter").val();
+			console.log("headquarterId value: " + headquarterId);
 			var user = {};
 			user.name = email;
 			user.pass = password;
@@ -91,6 +93,7 @@
 			    dataType: "json",
 			    data: JSON.stringify(user),
 			    success: function (json) {
+			    	console.log(json);
 			    	var idProfile = json.user.profile.id;
 			    	console.log("id profile ::: " + idProfile);
 			    	if (idProfile === 1) {
@@ -98,7 +101,7 @@
 			    		window.location.href = hostname + "/cabin-web/operator";
 			    	} else if (idProfile === 2) {
 			    		console.log("go to admin page");
-			    		window.location.href = hostname + "/cabin-web/home";
+			    		window.location.href = hostname + "/cabin-web/admin";
 			    	} else if (idProfile === 3) {
 			    		console.log("go to user page");
 			    		window.location.href = hostname + "/cabin-web/client";

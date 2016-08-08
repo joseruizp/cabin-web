@@ -32,7 +32,7 @@
 		<header class="header fixed clearfix navbar navbar-fixed-top">
 			<div class="container">
 				<div class="row">
-					<div class="col-md-3" style="width: 23%">
+					<div class="col-md-3" style="width: 20%">
 
 						<!-- header-left start --> 
 						<div class="header-left">
@@ -51,7 +51,7 @@
 						<!-- header-left end -->
 
 					</div>
-					<div class="col-md-9" style="width: 77%">
+					<div class="col-md-9" style="width: 80%">
 
 						<!-- header-right start --> 
 						<div class="header-right">
@@ -84,6 +84,8 @@
 												<li class="active"><a href="#niveles">Niveles</a></li>
 												<li class="active"><a href="#premios">Premios</a></li>
 												<li class="active"><a href="#experiencias">Experiencias</a></li>
+												<li class="active"><a href="#parametros">Parámetros</a></li>
+												<li class="active"><a href="#bonificaciones">Bonificaciones</a></li>
 											</ul>
 										</div>
 
@@ -113,6 +115,9 @@
 			</div>
 		</div>
 		<!-- banner end -->
+		<br/>
+		<br/>
+		<br/>
 		<br/>
 		<br/>
 		<br/>
@@ -492,6 +497,16 @@
 									<div class="col-md-8">
 										<input class="form-control" id="descriptionTarifa" placeholder="Descripcion" maxlength="45"/>
 									</div>
+								</div>
+								<div class="form-group">
+									<label class="control-label col-md-2" for="priceTariff">Precio por Defecto:</label>
+									<div class="col-md-3">
+										<input class="form-control" id="priceTariff" placeholder="Precio por Defecto" maxlength="45"/>
+									</div>
+									<label class="control-label col-md-2" for="minFractionTariff">Fraccion Minima por Defecto:</label>
+									<div class="col-md-3">
+										<input class="form-control" id="minFractionTariff" placeholder="Fraccion Minima por Defecto" maxlength="45"/>
+									</div>
 								</div>								
 								<div class="form-group">
 									<label class="control-label col-md-2" for="email">Dias:</label>
@@ -781,7 +796,7 @@
 			                    <th>Experiencia final</th>
 			                    <th>Pregunta</th>	
 								<th>Estado</th>			                    		                    			                    
-			                    <th colspan="2">Opciones</th>
+			                    <th colspan="3">Opciones</th>
 			                </tr>
 			            </thead>
 			            <tbody>
@@ -962,7 +977,7 @@
 		
 		
 		<!-- banner start --> 
-		<div id="parametro">
+		<div id="parametros">
 			<div class="container">
 				<br/>
 				<div class="row">
@@ -982,7 +997,7 @@
 							</div>
 						</div>						
 						<div class="form-group">
-							<label class="control-label col-sm-2" for="valueParametro">Fraccion de Recarga:</label>
+							<label class="control-label col-sm-2" for="valueParametro">Valor:</label>
 							<div class="col-sm-10">
 								<input class="form-control" id="valueParametro"
 									placeholder="Valor" maxlength="20"/>
@@ -1030,6 +1045,86 @@
 			</div>
 		</div>
 		<!-- banner end -->
+		
+		
+		<!-- banner start --> 
+		<div id="bonificaciones">
+			<div class="container">
+				<br/>
+				<div class="row">
+					<div class="col-md-12" style="margin-top: 40px">
+						<h1 id="tituloEquipos" class="title text-center">Nueva <span>Bonificación</span></h1>
+						<p class="lead text-center">Lorem ipsum dolor sit amet, consectetur adipisicing elit. laudantium culpa tenetur.</p>
+					</div>
+				</div>
+				<div class="row" style="margin-left: 110px; margin-right: 110px">
+					<form class="form-horizontal" role="form" id="form-bonificacion">
+						<input type="hidden" id="idBonificacion" value=""/>
+						<div class="form-group">
+							<label class="control-label col-sm-2" for="nameBonificacion">Nombre:</label>
+							<div class="col-sm-10">
+								<input class="form-control" id="nameBonificacion"
+									placeholder="Nombre" maxlength="20"/>
+							</div>
+						</div>						
+						<div class="form-group">
+							<label class="control-label col-sm-2" for="experienceAmountBonificacion">Cantidad de experiencia:</label>
+							<div class="col-sm-10">
+								<input class="form-control" id="experienceAmountBonificacion"
+									placeholder="Cantidad de experiencia" maxlength="20"/>
+							</div>
+						</div>	
+						<div class="form-group">
+							<label class="control-label col-sm-2" for="fractionToGiveBonificacion">Fracción a otorgar:</label>
+							<div class="col-sm-10">
+								<input class="form-control" id="fractionToGiveBonificacion"
+									placeholder="Fracción a otorgar" maxlength="20"/>
+							</div>
+						</div>						
+						<div class="form-group">
+							<label class="control-label col-sm-2" for="statusBonificacion">Estado:</label>
+							<div class="col-sm-4">
+								<div class="dropdown">
+									<button class="btn btn-primary dropdown-toggle" type="button"
+										data-toggle="dropdown" value="1">
+										Activo <span class="caret"></span>
+									</button>
+									<ul id="statusBonificacion" class="dropdown-menu">
+										<li><a href="/" onclick="return false;">Activo</a></li>
+										<li><a href="/" onclick="return false;">Inactivo</a></li>
+									</ul>
+								</div>
+							</div>
+						</div>
+						<div class="form-group">
+							<div class="col-sm-offset-5 col-sm-7">
+								<button id="btnBonificacion" type="submit" class="btn btn-default">Nueva Bonificación</button>
+							</div>
+						</div>
+					</form>
+					<div id="bonificacionValidation" class="alert alert-danger" style="display:none"></div>
+				</div>
+				<div class="space"></div>
+			    <div role="tabpanel" class="table-responsive" id="listaBonificacionesDiv">
+			        <table id="bonificacionTbl" class="table table-striped display">
+			            <thead>
+			                <tr>
+			                    <th>Codigo</th>
+			                    <th>Nombre</th>
+			                    <th>Cantidad de experiencia</th>
+			                    <th>Fracción a otorgar</th>			                    
+			                    <th>Estado</th>			                    
+			                    <th colspan="2" >Opciones</th>
+			                </tr>
+			            </thead>
+			            <tbody>
+			            </tbody>
+			        </table>
+			    </div>
+			</div>
+		</div>
+		<!-- banner end -->
+		
 		
 		<br/><br/><br/>
 		<br/><br/><br/>

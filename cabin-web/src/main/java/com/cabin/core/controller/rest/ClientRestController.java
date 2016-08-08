@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.cabin.core.persistence.domain.Bonus;
 import com.cabin.core.persistence.domain.Client;
 import com.cabin.core.persistence.domain.Experience;
 import com.cabin.core.persistence.domain.Level;
@@ -34,6 +35,12 @@ public class ClientRestController {
     
     @Autowired
     private LevelRepository levelRepository;
+    
+    
+    @RequestMapping(value = "/get/allClients", method = RequestMethod.GET, produces = { "application/json;charset=UTF-8" })
+    public List<Client> getAllClient() {
+        return clientRepository.findAll();
+    }
     
     @RequestMapping(value = "/get/client", method = RequestMethod.GET, produces = { "application/json;charset=UTF-8" })
     public Client getClient(@RequestParam(value = "id", required = true) Long id) {

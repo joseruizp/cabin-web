@@ -137,18 +137,20 @@ CREATE TABLE `empleado` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
   `correo` varchar(80) DEFAULT NULL,
   `nombre` varchar(100) DEFAULT NULL,
-  `telefono` varchar(15) DEFAULT NULL,
-  `tipo_documento` varchar(2) DEFAULT NULL,
+  `telefono` varchar(15) DEFAULT NULL,  
   `n_documento` varchar(15) DEFAULT NULL,
   `sexo` varchar(1) DEFAULT NULL,
   `fecha_nacimiento` date DEFAULT NULL,
   `id_estado` bigint(20) DEFAULT NULL,
+  `id_tipo_documento` bigint(20) DEFAULT NULL,
   `id_usuario` bigint(20) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `id_estado` (`id_estado`),
   KEY `id_usuario` (`id_usuario`),
+  KEY `id_tipo_documento` (`id_tipo_documento`),
   CONSTRAINT `empleado_ibfk_1` FOREIGN KEY (`id_estado`) REFERENCES `estado` (`id`),
-  CONSTRAINT `empleado_ibfk_2` FOREIGN KEY (`id_usuario`) REFERENCES `usuario` (`id`)
+  CONSTRAINT `empleado_ibfk_2` FOREIGN KEY (`id_tipo_documento`) REFERENCES `tipo_documento` (`id`),
+  CONSTRAINT `empleado_ibfk_3` FOREIGN KEY (`id_usuario`) REFERENCES `usuario` (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -158,7 +160,7 @@ CREATE TABLE `empleado` (
 
 LOCK TABLES `empleado` WRITE;
 /*!40000 ALTER TABLE `empleado` DISABLE KEYS */;
-INSERT INTO `empleado` VALUES (1,'user1@email.com','Erick','954604372','1','71844756','M','1993-05-04',1,1),(2,'user5@email.com','Erick',NULL,'1','71844756','M','1993-05-04',2,8),(3,'user6@email.com','Erick',NULL,'1','71844756','M','1993-05-04',1,9),(4,'j@pucp.pe','Junior',NULL,'1','71844756','M','2000-06-03',1,10),(5,'e@pucp.pe','e',NULL,NULL,'71844756','F','2000-01-01',1,11);
+INSERT INTO `empleado` VALUES (1,'user1@email.com','Erick','954604372','71844756','M','1993-05-04',1,1,1),(2,'user5@email.com','Erick',NULL,'71844756','M','1993-05-04',2,1,8),(3,'user6@email.com','Erick',NULL,'71844756','M','1993-05-04',1,1,9),(4,'j@pucp.pe','Junior',NULL,'71844756','M','2000-06-03',1,1,10),(5,'e@pucp.pe','e',NULL,'71844756','F','2000-01-01',1,1,11);
 /*!40000 ALTER TABLE `empleado` ENABLE KEYS */;
 UNLOCK TABLES;
 
