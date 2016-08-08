@@ -63,7 +63,7 @@ public class RentRestController {
     }
 
     @RequestMapping(value = "/put/startRentComputer", method = RequestMethod.PUT, produces = { "application/json;charset=UTF-8" })
-    public Rent startRentComputer(@RequestParam(value = "client_id", required = true) Long clientId,
+    public Long startRentComputer(@RequestParam(value = "client_id", required = true) Long clientId,
             @RequestParam(value = "computer_id", required = true) Long computerId) {
         System.out.println("clientId ::: " + clientId);
 
@@ -73,8 +73,10 @@ public class RentRestController {
 
         rent.setComputer(computerRepository.getOne(computerId));
         rent.setRentStatus(rentStatusRepository.getOne(RentStatusEnum.RENTED.getId()));
+        rent.setClient(clientRepository.getOne(clientId));
 
-        return rentRepository.saveAndFlush(rent);
+        Rent rentSaved = rentRepository.saveAndFlush(rent);
+        return rentSaved.getId();
     }
 
     @RequestMapping(value = "/put/endRentComputer", method = RequestMethod.PUT, produces = { "application/json;charset=UTF-8" })
@@ -89,14 +91,16 @@ public class RentRestController {
         rent.setRentTime(getHoursAsString(rentTime));
         rent.setPrice(price);
 
+        Client client = rent.getClient();
+        client.setBalance(client.getBalance() - price);
+
         rent.setRentStatus(rentStatusRepository.getOne(RentStatusEnum.STOPPED.getId()));
 
         return rentRepository.saveAndFlush(rent);
     }
 
     @RequestMapping(value = "/put/exchangePoints", method = RequestMethod.PUT, produces = { "application/json;charset=UTF-8" })
-    public Client exchangePoints(@RequestParam(value = "rent_id", required = true) Long rentId,
-            @RequestParam(value = "bonusPoints", required = true) Integer bonusPoints) {
+    public Client exchangePoints(@RequestParam(value = "rent_id", required = true) Long rentId, @RequestParam(value = "bonusPoints", required = true) Integer bonusPoints) {
         System.out.println("rentId ::: " + rentId);
         System.out.println("bonusPoints ::: " + bonusPoints);
 
@@ -127,9 +131,11 @@ public class RentRestController {
     private String getHoursAsString(double hours) {
         double rounded = round(hours);
         long hour = (long) rounded;
-        double fraction = rounded - hour;
+        double fraction = hours - hour;
         String hourString = hour < 10 ? ("0" + hour) : (Long.toString(hour));
-        return hourString + ":" + (long) (60 * fraction);
+        long minutes = Math.round(60 * fraction);
+        String minutesString = minutes < 10 ? ("0" + minutes) : (Long.toString(minutes));
+        return hourString + ":" + minutesString;
     }
 
     private double round(double value) {
