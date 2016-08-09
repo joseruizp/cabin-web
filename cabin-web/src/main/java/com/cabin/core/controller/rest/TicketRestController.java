@@ -1,0 +1,49 @@
+package com.cabin.core.controller.rest;
+
+import java.text.ParseException;
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+import java.util.Calendar;
+import com.cabin.core.persistence.domain.Ticket;
+import com.cabin.core.persistence.repository.TicketRepository;
+
+@RestController
+public class TicketRestController {
+
+    @Autowired
+    private TicketRepository ticketRepository;
+
+    @RequestMapping(value = "/get/allTickets", method = RequestMethod.GET, produces = { "application/json;charset=UTF-8" })
+    public List<Ticket> getAllTickets() {
+        return ticketRepository.findAll();
+    }
+    
+    @RequestMapping(value = "/get/allTicketsByCashClosing", method = RequestMethod.GET, produces = { "application/json;charset=UTF-8" })
+    public List<Ticket> getAllTicketsByCashClosing(@RequestParam(value = "id", required = true) Long cashClosingId) {
+        return ticketRepository.findByCashClosingId(cashClosingId);
+    }
+    
+    @RequestMapping(value = "/get/allTicketsByOperator", method = RequestMethod.GET, produces = { "application/json;charset=UTF-8" })
+    public List<Ticket> getAllTicketsByOperator(@RequestParam(value = "id", required = true) Long employeeId,
+    		@RequestParam(value = "cashClosingFlag", required = true) Integer cashClosingFlag) {    	 
+        return ticketRepository.findByEmployeeIdAndCashClosingFlag(employeeId, cashClosingFlag);
+    }
+     
+    @RequestMapping(value = "/get/ticket", method = RequestMethod.GET, produces = { "application/json;charset=UTF-8" })
+    public Ticket getTicket(@RequestParam(value = "id", required = true) Long idTicket) {
+        return ticketRepository.findOne(idTicket);
+    }
+
+    @RequestMapping(value = "/post/ticket", method = RequestMethod.POST, produces = { "application/json;charset=UTF-8" })
+    public Ticket postTicket(@RequestBody(required = true) Ticket ticket) throws ParseException {
+    	Calendar date = Calendar.getInstance();    	
+    	ticket.setDate( date );
+        return ticketRepository.save(ticket);
+    }
+}

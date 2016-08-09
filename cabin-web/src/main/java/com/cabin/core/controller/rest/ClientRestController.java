@@ -39,7 +39,8 @@ public class ClientRestController {
     
     @RequestMapping(value = "/get/allClients", method = RequestMethod.GET, produces = { "application/json;charset=UTF-8" })
     public List<Client> getAllClient() {
-        return clientRepository.findAll();
+    	long status = 1;
+        return clientRepository.findByStatusId(status);
     }
     
     @RequestMapping(value = "/get/client", method = RequestMethod.GET, produces = { "application/json;charset=UTF-8" })

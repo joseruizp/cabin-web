@@ -211,7 +211,7 @@ CREATE TABLE `estado` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
   `nombre` varchar(20) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -220,9 +220,34 @@ CREATE TABLE `estado` (
 
 LOCK TABLES `estado` WRITE;
 /*!40000 ALTER TABLE `estado` DISABLE KEYS */;
-INSERT INTO `estado` VALUES (1,'Activo'),(2,'Inactivo');
+INSERT INTO `estado` VALUES (1,'Activo'),(2,'Inactivo'), (3, 'Válido'), (4, 'Anulado');
 /*!40000 ALTER TABLE `estado` ENABLE KEYS */;
 UNLOCK TABLES;
+
+--
+-- Table structure for table `tipo_recarga`
+--
+
+DROP TABLE IF EXISTS `tipo_recarga`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `tipo_recarga` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `nombre` varchar(20) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `tipo_recarga`
+--
+
+LOCK TABLES `tipo_recarga` WRITE;
+/*!40000 ALTER TABLE `tipo_recarga` DISABLE KEYS */;
+INSERT INTO `tipo_recarga` VALUES (1,'Automático'),(2,'Manual');
+/*!40000 ALTER TABLE `tipo_recarga` ENABLE KEYS */;
+UNLOCK TABLES;
+
 
 --
 -- Table structure for table `estado_alquiler`
@@ -247,6 +272,67 @@ LOCK TABLES `estado_alquiler` WRITE;
 INSERT INTO `estado_alquiler` VALUES (1,'ALQUILADO'),(2,'DETENIDO');
 /*!40000 ALTER TABLE `estado_alquiler` ENABLE KEYS */;
 UNLOCK TABLES;
+
+
+--
+-- Table structure for table `ticket`
+--
+
+DROP TABLE IF EXISTS `ticket`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `ticket` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,  
+  `monto_recarga` double DEFAULT NULL,
+  `fecha` datetime DEFAULT NULL,
+  `flag_cierre_caja` int(2) DEFAULT NULL,
+  `id_empleado` bigint(20) DEFAULT NULL,
+  `id_cliente` bigint(20) DEFAULT NULL,
+  `id_tipo_recarga` bigint(20) DEFAULT NULL,
+  `id_cierre_caja` bigint(20) DEFAULT NULL,
+  `id_estado` bigint(20) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `ticket_cliente_idx` (`id_cliente`),
+  KEY `ticket_empleado_idx` (`id_empleado`),
+  KEY `ticket_tipo_recarga_idx` (`id_tipo_recarga`),
+  KEY `ticket_cierre_caja_idx` (`id_cierre_caja`),
+  KEY `ticket_estado_idx` (`id_estado`),
+  CONSTRAINT `ticket_cliente` FOREIGN KEY (`id_cliente`) REFERENCES `cliente` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `ticket_empleado` FOREIGN KEY (`id_empleado`) REFERENCES `empleado` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `ticket_tipo_recarga` FOREIGN KEY (`id_tipo_recarga`) REFERENCES `tipo_recarga` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `ticket_cierre_caja` FOREIGN KEY (`id_cierre_caja`) REFERENCES `cierre_caja` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `ticket_estado` FOREIGN KEY (`id_estado`) REFERENCES `estado` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `ticket`
+--
+
+
+--
+-- Table structure for table `cierre_caja`
+--
+
+DROP TABLE IF EXISTS `cierre_caja`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `cierre_caja` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `cantidad_tickets` int(11) DEFAULT NULL,
+  `monto_total` double DEFAULT NULL,
+  `fecha` datetime DEFAULT NULL,  
+  `id_empleado` bigint(20) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `cierre_caja_empleado_idx` (`id_empleado`),
+  CONSTRAINT `cierre_caja_empleado` FOREIGN KEY (`id_empleado`) REFERENCES `empleado` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION  
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `cierre_caja`
+--
+
 
 --
 -- Table structure for table `experiencia`
