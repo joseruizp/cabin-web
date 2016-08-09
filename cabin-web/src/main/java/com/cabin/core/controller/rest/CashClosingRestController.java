@@ -1,6 +1,7 @@
 package com.cabin.core.controller.rest;
 
 import java.text.ParseException;
+import java.util.Calendar;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,6 +32,8 @@ public class CashClosingRestController {
 
     @RequestMapping(value = "/post/cashClosing", method = RequestMethod.POST, produces = { "application/json;charset=UTF-8" })
     public CashClosing postCashClosing(@RequestBody(required = true) CashClosing cashClosing) throws ParseException {
+    	Calendar date = Calendar.getInstance();    	
+    	cashClosing.setDate( date );
         return cashClosingRepository.save(cashClosing);
     }
 }

@@ -1592,8 +1592,9 @@ function fillPremiotbl(  ){
                 premios[i].id,
                 premios[i].name,
                 premios[i].points,
-                premios[i].balanceFraction,                
-                premios[i].estado,
+                premios[i].balanceFraction,   
+                premios[i].level,
+                premios[i].status,
         ] ).draw( false );
 	};
 	if (size > 0 ){
@@ -1610,43 +1611,29 @@ function fillPremiotbl(  ){
 function editPremio( code, index ){
 	premioIndex = index;
 	var hostname = window.location.protocol + "//" + window.location.host ;
-	var strUrl = hostname + "/cabin-web/regla_premio/" + code;	
-	$.ajax({
-		async:false,
+	var strUrl = hostname + "/cabin-web/get/prizesRule";	
+	$.ajax({		
 	    url:strUrl,
+	    data:{id: code},
 	    crossDomain: true,
 	    dataType: "json",
 	    success: function (json) {
-	    	var hrefArray = json._links.self.href.split("/");
-	    	var idPremio = hrefArray[hrefArray.length -1];
 	    	$( "#namePrize" ).val(json.name);
 			$( "#balanceFraction" ).val(json.balanceFraction);
 			$( "#pointsPrize" ).val(json.points);			
-			$("#idPremio").attr('value', idPremio);
+			$("#idPremio").attr('value', json.id);
+			var levelHtml = $("#premio_nivel li a");			
+			levelHtml.parents(".dropdown").find('.btn').html( json.level.name +' <span class="caret"></span>');				
+			levelHtml.parents(".dropdown").find('.btn').val( json.level.id);
+			var statusHtml = $("#statusPremio li a");			
+			statusHtml.parents(".dropdown").find('.btn').html( json.status.name +' <span class="caret"></span>');				
+			statusHtml.parents(".dropdown").find('.btn').val( json.status.id);
 			$("#btnPremio").html("Actualizar Premio");			
 	    },
 	    error: function (xhr, status) {	    	
 	    	console.log("Error, su solicitud no pudo ser atendida");
 	    }
 	});	
-	strUrl = hostname + "/cabin-web/regla_premio/" + code+"/status";
-	var idStatus;
-	$.ajax({
-		async:false,
-	    url:strUrl,
-	    crossDomain: true,
-	    dataType: "json",
-	    success: function (json) {
-	    	var hrefArray = json._links.self.href.split("/");
-	    	idStatus = hrefArray[hrefArray.length -1];
-	    	var statusHtml = $("#statusPremio li a");			
-			statusHtml.parents(".dropdown").find('.btn').html( json.name +' <span class="caret"></span>');				
-			statusHtml.parents(".dropdown").find('.btn').val( idStatus);
-	    },
-	    error: function (xhr, status) {    	
-	    	console.log("Error, su solicitud no pudo ser atendida");
-	    }
-	});
 }
 
 function deletePremio( code, index ){
@@ -1762,27 +1749,28 @@ function savePremio(){
 	premio.points = trim( $( "#pointsPrize" ).val() );
 	$( "#namePrize" ).val(""); 
 	$( "#balanceFraction" ).val("");	$( "#pointsPrize" ).val("");
+	var levelHtml = $("#premio_nivel li a");	
+	var idLevel = $(levelHtml).parents(".dropdown").find('.btn').val();
+	$(levelHtml).parents(".dropdown").find('.btn').html('Seleccionar <span class="caret"></span>');
+	$(levelHtml).parents(".dropdown").find('.btn').val("");
 	var statusHtml = $("#statusPremio li a");	
 	var idStatus = $(statusHtml).parents(".dropdown").find('.btn').val();
 	$(statusHtml).parents(".dropdown").find('.btn').html('Activo <span class="caret"></span>');
 	$(statusHtml).parents(".dropdown").find('.btn').val("1");
 
-	//$("#numberPcs").val(""); $("#numberConsoles").val("");
-	var strUrl = window.location.protocol + "//" + window.location.host + "/cabin-web/regla_premio";			
+	premio.status = {};
+	premio.status.id = idStatus;
+	premio.level = {};
+	premio.level.id = idLevel;
+	
+	var strUrl = window.location.protocol + "//" + window.location.host + "/cabin-web/post/prizesRule";			
 	if (idPremio !== "") {	
-		strUrl += "/" + idPremio;
 		premio.id = idPremio;
-		if( idStatus == estados[0].id){
-			premio.estado = estados[0].name; console.log(premio.estado);}
-		else{
-			premio.estado = estados[1].name; }
 		premios.splice(premioIndex, 1, premio);
-		fillPremiotbl();
 	}						
 	console.log(JSON.stringify(premio));
 	$.ajax({
-		async: false,
-		type: idPremio === "" ? "POST" : "PATCH",
+		type:"POST",
 	    url:strUrl,			    
 	    dataType: 'json', 
 	    data: JSON.stringify(premio), 
@@ -1798,35 +1786,11 @@ function savePremio(){
 	    	console.log("Error, su solicitud no pudo ser atendida");
 	    },	
 	    complete: function(xhr) {	    	
-	    	var strLocation = xhr.getResponseHeader('Location');
-	    	if(idPremio == ""){
-	    		var hrefArray = strLocation.split("/");
-	    		idPremio = hrefArray[hrefArray.length -1];
-	    	}	    	
+	    	fillArrayPremio()    	
 	    }	    
-	});
-	
-	var strUrlStatus = window.location.protocol + "//" + window.location.host + "/cabin-web/estado/" + idStatus;	
-	var strUrlPremio = window.location.protocol + "//" + window.location.host + "/cabin-web/regla_premio/"+idPremio+"/status";
-	//Se inserta el estado en la Premio	
-	$.ajax({
-		async: false,
-		type: "PUT",
-	    url:strUrlPremio,			
-	    data: strUrlStatus, 
-	    contentType: 'text/uri-list',
-	    success: function (data) {
-	    	console.log("Se asigno estado a premio" + idPremio);
-	    },
-	    error: function (xhr, status) {	    	
-	    	console.log("Error, su solicitud no pudo ser atendida");
-	    },
-	    complete: function(xhr){	
-				fillArrayPremio();
-		}
-	});	
-	
+	});		
 }
+
 function fnOpenCloseDialog(val, code, index) {
     $("#dialog-confirm").html("¿Está seguro que desea eliminar este registro?");
     // Define the Dialog and its properties.
@@ -2988,6 +2952,7 @@ function fillArrayNivel(){
 	var ulRegla = $("#regla_nivel");
 	var ulExperience = $("#experience_nivel");
 	var ulCustomer = $("#nivelCustomer");
+	var ulPrizesRule = $("#premio_nivel");
 	var line = ""; 
 	$.ajax({
 	    url:strUrl,
@@ -3010,6 +2975,7 @@ function fillArrayNivel(){
 	    	ulRegla.html(line);
 	    	ulExperience.html(line);
 	    	ulCustomer.html(line);
+	    	ulPrizesRule.html(line);
 	    	var nivelCustomerHtml =  $("#nivelCustomer li a");
 	    	var menorNivel = "Seleccionar";
 	    	var menor = 999999999; 
@@ -3028,45 +2994,25 @@ function fillArrayNivel(){
 	});
 }
 
-function fillPremio(idPremio, name, balanceFraction, points){	
-	var status;	
-	var hostname = window.location.protocol + "//" + window.location.host;
-	var strUrl = hostname + "/cabin-web/regla_premio/"+idPremio+"/status";
-	$.ajax({
-		async:false,
-	    url:strUrl,
-	    crossDomain: true,
-	    dataType: "json",
-	    success: function (json) {
-	    	status = json.name;
-	    },
-	    error: function (xhr, status) {    	
-	    	console.log("Error, su solicitud no pudo ser atendida");
-	    }
-	});	
-	
-	premios.push({
-		id: idPremio,
-		name: name,
-		balanceFraction: balanceFraction,
-		points: points,
-		estado: status,
-	});
-}
 
 function fillArrayPremio(){
 	var length = premios.length;
 	premios.splice(0, length);
-	var strUrl = window.location.protocol + "//" + window.location.host + "/cabin-web/regla_premio/";		
+	var strUrl = window.location.protocol + "//" + window.location.host + "/cabin-web/get/allPrizesRules/";			
 	$.ajax({
 	    url:strUrl,
 	    crossDomain: true,
 	    dataType: "json",
 	    success: function (json) {
-	    	$.each(json._embedded.regla_premio, function(index, value) {		    		
-	    		var hrefArray = value._links.self.href.split("/");
-		    	var idPremio = hrefArray[hrefArray.length -1];
-		    	fillPremio(idPremio, value.name, value.balanceFraction, value.points);				
+	    	$.each(json, function(index, value) {		    		
+	    		premios.push({
+	    			id: value.id,
+	    			name: value.name,
+	    			balanceFraction: value.balanceFraction,
+	    			points: value.points,
+	    			level: value.level.name,
+	    			status: value.status.name,
+	    		});			
 			});
 	    	fillPremiotbl();		    	
 	    },
@@ -3519,7 +3465,19 @@ $(document).on("click", "#experience_nivel li a", function(){
 	var level = $(this).text();
 	level = level.toLowerCase();
 	$(this).parents(".dropdown").find('.btn').html($(this).text() + ' <span class="caret"></span>');
-	  //Correr el arreglo paui-state-highlightra ver cual es el id y nombre correo del nivel
+	//Correr el arreglo para ver cual es el id y nombre del nivel
+	var length = niveles.length;
+	for ( i = 0; i< length ; i++){
+		if (level == niveles[i].name.toLowerCase() ){ $(this).parents(".dropdown").find('.btn').val(niveles[i].id);}
+	}	
+} )
+
+$(document).on("click", "#premio_nivel li a", function(){
+	console.log("Entro aqui: " + $(this).text() );
+	var level = $(this).text();
+	level = level.toLowerCase();
+	$(this).parents(".dropdown").find('.btn').html($(this).text() + ' <span class="caret"></span>');
+	//Correr el arreglo para ver cual es el id y nombre del nivel
 	var length = niveles.length;
 	for ( i = 0; i< length ; i++){
 		if (level == niveles[i].name.toLowerCase() ){ $(this).parents(".dropdown").find('.btn').val(niveles[i].id);}
@@ -3531,7 +3489,7 @@ $(document).on("click", "#nivelCustomer li a", function(){
 	var level = $(this).text();
 	level = level.toLowerCase();
 	$(this).parents(".dropdown").find('.btn').html($(this).text() + ' <span class="caret"></span>');
-	  //Correr el arreglo paui-state-highlightra ver cual es el id y nombre correo del nivel
+	  //Correr el arreglo para ver cual es el id y nombre del nivel
 	var length = niveles.length;
 	for ( i = 0; i< length ; i++){
 		if (level == niveles[i].name.toLowerCase() ){ $(this).parents(".dropdown").find('.btn').val(niveles[i].id);}
@@ -3715,6 +3673,12 @@ function addPremio() {
 	valid = valid && checkRegexp( $("#namePrize"), /.+/i, "El nombre ingresado para el premio no es válido.",  premioValidation);
 	valid = valid && checkRegexp( $("#pointsPrize"), /^[1-9]\d{0,5}$/i, "Debe ingresar una cantidad de puntos no mayor de 999 999, valor entero.", premioValidation);
 	valid = valid && checkRegexp( $("#balanceFraction"), /^[0-9]\d{0,3}($|\.\d{0,2}$)/i, "Debe ingresar ingresar un monto válido, no mayor de 999.99 soles y de dos decimales.", premioValidation);		
+	var nivelCustomerHtml = $("#premio_nivel li a");	
+	nivelCustomerHtml = $(nivelCustomerHtml).parents(".dropdown").find('.btn');
+	valid = valid && checkRequired( nivelCustomerHtml, "Debe seleccionar un nivel.",1, premioValidation);
+	var statusHtml = $("#statusPremio li a");		
+	statusHtml = $(statusHtml).parents(".dropdown").find('.btn');
+	valid = valid && checkRequired( statusHtml, "Debe seleccionar un estado.",1, premioValidation);	
 	return valid;
 }
 
