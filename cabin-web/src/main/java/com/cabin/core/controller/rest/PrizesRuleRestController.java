@@ -1,6 +1,7 @@
 package com.cabin.core.controller.rest;
 
-import java.text.DecimalFormat;
+import java.text.NumberFormat;
+import java.util.Locale;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -14,7 +15,7 @@ import com.cabin.core.persistence.repository.PrizesRuleRepository;
 @RestController
 public class PrizesRuleRestController {
 
-    private static final DecimalFormat DECIMAL_FORMAT = new DecimalFormat("#0.00");
+    private static final NumberFormat DECIMAL_FORMAT = NumberFormat.getNumberInstance(Locale.US);
 
     @Autowired
     private PrizesRuleRepository prizesRuleRepository;

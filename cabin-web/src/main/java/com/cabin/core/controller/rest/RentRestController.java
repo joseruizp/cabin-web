@@ -16,7 +16,6 @@ import com.cabin.core.persistence.domain.PrizesRule;
 import com.cabin.core.persistence.domain.Rent;
 import com.cabin.core.persistence.repository.ClientRepository;
 import com.cabin.core.persistence.repository.ComputerRepository;
-import com.cabin.core.persistence.repository.ConsoleRepository;
 import com.cabin.core.persistence.repository.PrizesRuleRepository;
 import com.cabin.core.persistence.repository.RentRepository;
 import com.cabin.core.persistence.repository.RentStatusRepository;
@@ -33,8 +32,8 @@ public class RentRestController {
     @Autowired
     private ComputerRepository computerRepository;
 
-    @Autowired
-    private ConsoleRepository consoleRepository;
+    // @Autowired
+    // private ConsoleRepository consoleRepository;
 
     @Autowired
     private RentStatusRepository rentStatusRepository;
@@ -63,54 +62,59 @@ public class RentRestController {
         return rent.getConsole();
     }
 
-    @RequestMapping(value = "/put/rentComputer", method = RequestMethod.PUT, produces = { "application/json;charset=UTF-8" })
-    public Rent rentComputer(@RequestParam(value = "client_id", required = true) Long clientId, @RequestParam(value = "computer_id", required = true) Long computerId,
-            @RequestParam(value = "rent_time", required = true) Double rentTime, @RequestParam(value = "price", required = true) Double price,
-            @RequestParam(value = "bonusPoints", required = false) Integer bonusPoints) {
+    @RequestMapping(value = "/put/startRentComputer", method = RequestMethod.PUT, produces = { "application/json;charset=UTF-8" })
+    public Long startRentComputer(@RequestParam(value = "client_id", required = true) Long clientId,
+            @RequestParam(value = "computer_id", required = true) Long computerId) {
         System.out.println("clientId ::: " + clientId);
-        System.out.println("computerId ::: " + computerId);
-        System.out.println("rentTime ::: " + rentTime);
-        System.out.println("price ::: " + price);
-        System.out.println("bonusPoints ::: " + bonusPoints);
 
         Rent rent = new Rent();
         rent.setStartDate(Calendar.getInstance());
         rent.setModificationDate(Calendar.getInstance());
-        rent.setRentTime(getHoursAsString(rentTime));
-        rent.setPrice(price);
 
         rent.setComputer(computerRepository.getOne(computerId));
         rent.setRentStatus(rentStatusRepository.getOne(RentStatusEnum.RENTED.getId()));
-        rent.setClient(updateBonusBalance(clientId, bonusPoints));
+        rent.setClient(clientRepository.getOne(clientId));
 
-        return rentRepository.saveAndFlush(rent);
+        Rent rentSaved = rentRepository.saveAndFlush(rent);
+        return rentSaved.getId();
     }
 
-    @RequestMapping(value = "/put/rentConsole", method = RequestMethod.PUT, produces = { "application/json;charset=UTF-8" })
-    public Rent rentConsole(@RequestParam(value = "client_id", required = true) Long clientId, @RequestParam(value = "console_id", required = true) Long consoleId,
-            @RequestParam(value = "rent_time", required = true) Double rentTime, @RequestParam(value = "price", required = true) Double price,
-            @RequestParam(value = "bonusPoints", required = false) Integer bonusPoints) {
-        System.out.println("clientId ::: " + clientId);
-        System.out.println("consoleId ::: " + consoleId);
+    @RequestMapping(value = "/put/endRentComputer", method = RequestMethod.PUT, produces = { "application/json;charset=UTF-8" })
+    public Rent endRentComputer(@RequestParam(value = "rent_id", required = true) Long rentId, @RequestParam(value = "rent_time", required = true) Double rentTime,
+            @RequestParam(value = "price", required = true) Double price) {
+        System.out.println("rentId ::: " + rentId);
         System.out.println("rentTime ::: " + rentTime);
         System.out.println("price ::: " + price);
-        System.out.println("bonusPoints ::: " + bonusPoints);
 
-        Rent rent = new Rent();
-        rent.setStartDate(Calendar.getInstance());
+        Rent rent = rentRepository.findOne(rentId);
         rent.setModificationDate(Calendar.getInstance());
         rent.setRentTime(getHoursAsString(rentTime));
         rent.setPrice(price);
 
-        rent.setConsole(consoleRepository.getOne(consoleId));
-        rent.setRentStatus(rentStatusRepository.getOne(RentStatusEnum.RENTED.getId()));
-        rent.setClient(updateBonusBalance(clientId, bonusPoints));
+        Client client = rent.getClient();
+        client.setBalance(client.getBalance() - price);
+
+        rent.setRentStatus(rentStatusRepository.getOne(RentStatusEnum.STOPPED.getId()));
 
         return rentRepository.saveAndFlush(rent);
     }
 
-    private Client updateBonusBalance(Long clientId, Integer bonusPoints) {
-        Client client = clientRepository.getOne(clientId);
+    @RequestMapping(value = "/put/exchangePoints", method = RequestMethod.PUT, produces = { "application/json;charset=UTF-8" })
+    public Client exchangePoints(@RequestParam(value = "rent_id", required = true) Long rentId, @RequestParam(value = "bonusPoints", required = true) Integer bonusPoints) {
+        System.out.println("rentId ::: " + rentId);
+        System.out.println("bonusPoints ::: " + bonusPoints);
+
+        Rent rent = rentRepository.findOne(rentId);
+        rent.setModificationDate(Calendar.getInstance());
+
+        rent.setRentStatus(rentStatusRepository.getOne(RentStatusEnum.RENTED.getId()));
+        rent.setClient(updateBonusBalance(rent.getClient(), bonusPoints));
+
+        rentRepository.saveAndFlush(rent);
+        return rent.getClient();
+    }
+
+    private Client updateBonusBalance(Client client, Integer bonusPoints) {
         if (bonusPoints != null) {
             Double bonusBalance = getBonusBalance(client.getLevel().getId(), bonusPoints);
             client.setBalance(client.getBalance() + bonusBalance);
@@ -127,9 +131,11 @@ public class RentRestController {
     private String getHoursAsString(double hours) {
         double rounded = round(hours);
         long hour = (long) rounded;
-        double fraction = rounded - hour;
+        double fraction = hours - hour;
         String hourString = hour < 10 ? ("0" + hour) : (Long.toString(hour));
-        return hourString + ":" + (long) (60 * fraction);
+        long minutes = Math.round(60 * fraction);
+        String minutesString = minutes < 10 ? ("0" + minutes) : (Long.toString(minutes));
+        return hourString + ":" + minutesString;
     }
 
     private double round(double value) {
