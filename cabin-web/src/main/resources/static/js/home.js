@@ -184,7 +184,7 @@ map = {
 			bLengthChange: false,
 			bInfo: false,
 			language: {
-			    search: "Buscar Cliente:"
+			    search: "Buscar Cliente: "
 			},
 		});
 		$('#empleadoTbl').DataTable({			
@@ -195,7 +195,7 @@ map = {
 			bLengthChange: false,
 			bInfo: false,
 			language: {
-			    search: "Buscar Empleado:"
+			    search: "Buscar Empleado: "
 			},
 		});
 		$('#experienceTbl').DataTable({

@@ -11,18 +11,24 @@ $(document).ready(function() {
 			scrollY: 300,
 		    paging: false,
 			ordering: true,
-			searching: false,
+			searching: true,
 			bLengthChange: false,
 			bInfo: false,
+	        language: {
+				 search: "Buscar Ticket: "
+	        },
 		});
 		
 		$('#cierreCajaTbl').DataTable({			
 			scrollY: 300,
 		    paging: false,
 			ordering: true,
-			searching: false,
+			searching: true,
 			bLengthChange: false,
-			bInfo: false,
+			bInfo: false,		
+	        language: {
+					 search: "Buscar Ticket: "
+			},
 		});
 		
 		$( "#form-recarga" ).submit(function( event ) {
@@ -116,15 +122,20 @@ function fillArrayTicketsCierreCaja( idCierreCaja){
 					employee: value.employee.name,
 					rechargingType : value.rechargingType.name,
 					status: value.status.name
-				});		    			  
+				});		
+		    	if ( value.status.id == 3)		    	
+		    		totalAmount = totalAmount + value.rechargingAmount;	
 			});	    	
 	    },
 	    error: function (xhr, status) {    	
 	    	console.log("Error, su solicitud no pudo ser atendida");
 	    },
 	    complete: function(){
-	    	fillCierreCajaTbl();
-	    	fillArrayTickets();
+	    	fillCierreCajaTbl();	
+	    	clearTickets();
+	    	fillTickettbl();
+	    	$( "#totalAmount" ).val("" + totalAmount);
+	    	totalAmount = 0;
 	    }
 	});	
 }
@@ -153,9 +164,7 @@ function fillArrayTickets(){
 					employee: value.employee.name,
 					rechargingType : value.rechargingType.name,
 					status: value.status.name
-				});
-		    	if ( value.status.id == 3)		    	
-		    		totalAmount = totalAmount + value.rechargingAmount;		  
+				});	  
 			});	    			    	
 	    },
 	    error: function (xhr, status) {    	
@@ -170,7 +179,8 @@ function fillArrayTickets(){
 function fillTickettbl(  ){
 	var size = tickets.length;	
     var j = 0;
-    var t = $('#recargaTbl').DataTable(); t.clear();
+    var t = $('#recargaTbl').DataTable(); t.clear(); t.draw();
+    console.log("Entro al llenado de la tabla");
 	for(i=0; i<size;i++){
 		t.row.add( [
                 tickets[i].id,
@@ -181,6 +191,7 @@ function fillTickettbl(  ){
                 tickets[i].status,                
         ] ).draw( false );
 	};
+	
 	if (size > 0 ){
 	    $('#recargaTbl > tbody  > tr').each(function() {
 		    var remove = "<td><a onclick='fnOpenCloseDialog(1,"+ tickets[j].id +","+ j+")'><i class='fa fa-trash icons' title='Eliminar'></i></a></td>";
@@ -189,6 +200,7 @@ function fillTickettbl(  ){
 		    tr.find('td:last').after(remove);
 	    });
 	}
+	
 }
 
 function fillCierreCajaTbl(  ){
@@ -253,8 +265,7 @@ function saveCierreCaja(){
 	console.log("Inside form-cierreCaja");
 	var length = tickets.length;
 	var idCierreCaja;
-	$( "#ticketsAmount" ).val("" + length);
-	$( "#totalAmount" ).val("" + totalAmount);	
+	$( "#ticketsAmount" ).val("" + length);		
 	//ticket.date = new Date();
 	var cierreCaja = {};
 	cierreCaja.ticketsAmount = length;
@@ -281,9 +292,6 @@ function saveCierreCaja(){
 	    error: function (xhr, status) {	    	
 	    	console.log("Error, su solicitud no pudo ser atendida");
 	    },
-	    complete: function(xhr){
-			totalAmount = 0;
-		}
 	});
 	for ( var i = 0; i < length ; i++){		
 		tickets[i].cashClosing = {};
@@ -421,4 +429,12 @@ function addTicket() {
 	valid = valid && checkRequired( $("#clientSelect"), "Debe seleccionar un cliente.",1, recargaValidation);		
 	valid = valid && checkRegexp( $("#rechargingAmount"), /^[0-9]\d{0,3}($|\.\d{0,1}$)/i, "Debe ingresar ingresar un monto válido, no mayor de 999.90 soles y de un decimal.", recargaValidation);	
 	return valid;
+}
+
+function clearTickets() {
+	console.log("Limpio el arreglo");
+	while (tickets.length > 0) {
+	    tickets.pop();
+	} 
+	console.log("Tamaño del arreglo" + tickets.length);
 }
