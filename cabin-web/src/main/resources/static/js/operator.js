@@ -15,8 +15,10 @@ $(document).ready(function() {
 			bLengthChange: false,
 			bInfo: false,
 	        language: {
-				 search: "Buscar Ticket: "
-	        },
+				 search: "Buscar Ticket: ",
+				 zeroRecords: "No se encontró registros",			     
+			     emptyTable: "No hay datos disponibles",
+	        },    
 		});
 		
 		$('#cierreCajaTbl').DataTable({			
@@ -27,7 +29,9 @@ $(document).ready(function() {
 			bLengthChange: false,
 			bInfo: false,		
 	        language: {
-					 search: "Buscar Ticket: "
+					 search: "Buscar Ticket: ",
+					 zeroRecords: "No se encontró registros",			     
+				     emptyTable: "No hay datos disponibles",
 			},
 		});
 		
@@ -185,7 +189,7 @@ function fillTickettbl(  ){
 		t.row.add( [
                 tickets[i].id,
                 tickets[i].client,
-                tickets[i].rechargingAmount,
+                parseFloat(tickets[i].rechargingAmount).toFixed(2),
                 tickets[i].rechargingType,
                 tickets[i].date,
                 tickets[i].status,                
@@ -199,8 +203,7 @@ function fillTickettbl(  ){
 		    var tr = $(this);
 		    tr.find('td:last').after(remove);
 	    });
-	}
-	
+	}	
 }
 
 function fillCierreCajaTbl(  ){
@@ -211,12 +214,12 @@ function fillCierreCajaTbl(  ){
 		t.row.add( [
                 ticketsCierreCaja[i].id,
                 ticketsCierreCaja[i].client,
-                ticketsCierreCaja[i].rechargingAmount,
+                parseFloat(ticketsCierreCaja[i].rechargingAmount).toFixed(2),
                 ticketsCierreCaja[i].rechargingType,
                 ticketsCierreCaja[i].date,
                 ticketsCierreCaja[i].status,                
         ] ).draw( false );
-	};	
+	};
 }
 
 
@@ -426,7 +429,13 @@ function checkRegexp( o, regexp, n, div ) {
 function addTicket() {
 	var valid = true;
 	$("*").removeClass( "ui-state-error");
-	valid = valid && checkRequired( $("#clientSelect"), "Debe seleccionar un cliente.",1, recargaValidation);		
+	valid = valid && checkRequired( $("#clientSelect"), "Debe seleccionar un cliente.",1, recargaValidation);
+	var value = $("#rechargingAmount").val();
+	if ( value == 0){
+		$("#rechargingAmount").addClass( "ui-state-error" );
+		updateTips( "Debe ingresar un monto mayor a 0", recargaValidation );
+		return false;
+	}
 	valid = valid && checkRegexp( $("#rechargingAmount"), /^[0-9]\d{0,3}($|\.\d{0,1}$)/i, "Debe ingresar ingresar un monto válido, no mayor de 999.90 soles y de un decimal.", recargaValidation);	
 	return valid;
 }

@@ -131,6 +131,9 @@ map = {
 			searching: false,
 			bLengthChange: false,
 			bInfo: false,
+			language: {	     
+			     emptyTable: "No hay datos disponibles",
+			},
 		});
 		$('#tarifaTbl').DataTable({
 			scrollY: 300,
@@ -138,7 +141,10 @@ map = {
 			ordering: true,
 			searching: false,
 			bLengthChange: false,
-			bInfo: false
+			bInfo: false,
+			language: {	     
+			     emptyTable: "No hay datos disponibles",
+			},
 		});
 		$('#tarifaDetailTbl').DataTable({
 			scrollY: 300,
@@ -150,7 +156,10 @@ map = {
 			columnDefs: [
 			             { width: '20%', targets: 1 }
 			         ],
-			fixedColumns: true
+			fixedColumns: true,
+			language: {	     
+			     emptyTable: "No hay datos disponibles",
+			},
 		});
 		$('#reglaTbl').DataTable({
 			scrollY: 300,
@@ -159,6 +168,9 @@ map = {
 			searching: false,
 			bLengthChange: false,
 			bInfo: false,
+			language: {	     
+			     emptyTable: "No hay datos disponibles",
+			},
 		});
 		$('#nivelTbl').DataTable({
 			scrollY: 300,
@@ -167,6 +179,9 @@ map = {
 		    searching: false,
 			bLengthChange: false,
 			bInfo: false,
+			language: {	     
+			     emptyTable: "No hay datos disponibles",
+			},
 		});
 		$('#premioTbl').DataTable({
 		    pscrollY: 300,
@@ -175,6 +190,9 @@ map = {
 		    searching: false,
 			bLengthChange: false,
 			bInfo: false,
+			language: {	     
+			     emptyTable: "No hay datos disponibles",
+			},
 		});
 		$('#clienteTbl').DataTable({			
 			scrollY: 300,
@@ -184,7 +202,9 @@ map = {
 			bLengthChange: false,
 			bInfo: false,
 			language: {
-			    search: "Buscar Cliente: "
+			    search: "Buscar Cliente: ",
+			    zeroRecords: "No se encontró registros",			     
+			    emptyTable: "No hay datos disponibles",
 			},
 		});
 		$('#empleadoTbl').DataTable({			
@@ -195,7 +215,9 @@ map = {
 			bLengthChange: false,
 			bInfo: false,
 			language: {
-			    search: "Buscar Empleado: "
+			    search: "Buscar Empleado: ",
+			    zeroRecords: "No se encontró registros",			     
+			    emptyTable: "No hay datos disponibles",
 			},
 		});
 		$('#experienceTbl').DataTable({
@@ -205,6 +227,9 @@ map = {
 		    searching: false,
 			bLengthChange: false,
 			bInfo: false,
+			language: {	     
+			    emptyTable: "No hay datos disponibles",
+			},
 		});
 		$('#parametroTbl').DataTable({
 		    pscrollY: 300,
@@ -213,6 +238,9 @@ map = {
 		    searching: false,
 			bLengthChange: false,
 			bInfo: false,
+			language: {	     
+			    emptyTable: "No hay datos disponibles",
+			},
 		});
 		$('#bonificacionTbl').DataTable({
 		    pscrollY: 300,
@@ -221,6 +249,9 @@ map = {
 		    searching: false,
 			bLengthChange: false,
 			bInfo: false,
+			language: {	     
+			    emptyTable: "No hay datos disponibles",
+			},
 		});
 		fillArraySede();
 		fillArrayTarifa();
