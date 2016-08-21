@@ -88,7 +88,7 @@ CREATE TABLE `cliente` (
 
 LOCK TABLES `cliente` WRITE;
 /*!40000 ALTER TABLE `cliente` DISABLE KEYS */;
-INSERT INTO `cliente` VALUES (1,'erick.gonzales@bbva.com','erick','M','2000-01-05',0,2,9,2,2,5),(2,'ivan@pucp.pe','ivan','M','2000-01-01',12,10,10,1,1,6),(3,'je@pucp.pe','Junior','M','2000-01-01',10,100,50,1,1,7);
+INSERT INTO `cliente` VALUES (1,'erick.gonzales@bbva.com','erick','M','2000-01-05',0,2,9,2,2,5),(2,'ivan@pucp.pe','ivan','M','2000-01-01',12,10,10,1,1,6),(3,'je@pucp.pe','Junior','M','2000-01-01',10,100,50,1,1,7),(4,'userlab01@cabinas.com','userlab01','M','2000-01-01',0,0,0,2,1,12),(5,'userlab02@cabinas.com','userlab02','M','2000-01-01',0,0,0,2,1,13),(6,'userlab03@cabinas.com','userlab03','M','2000-01-01',0,0,0,2,1,14),(7,'userlab04@cabinas.com','userlab04','M','2000-01-01',0,0,0,2,1,15),(8,'userlab05@cabinas.com','userlab05','M','2000-01-01',0,0,0,2,1,16),(9,'userlab06@cabinas.com','userlab06','M','2000-01-01',0,0,0,2,1,17),(10,'userlab07@cabinas.com','userlab07','M','2000-01-01',0,0,0,2,1,18),(11,'userlab08@cabinas.com','userlab08','M','2000-01-01',0,0,0,2,1,19),(12,'userlab09@cabinas.com','userlab09','M','2000-01-01',0,0,0,2,1,20),(13,'userlab10@cabinas.com','userlab10','M','2000-01-01',0,0,0,2,1,21);
 /*!40000 ALTER TABLE `cliente` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -782,6 +782,7 @@ CREATE TABLE `usuario` (
   `nombre` varchar(50) DEFAULT NULL,
   `clave` varchar(20) DEFAULT NULL,
   `id_perfil` bigint(20) DEFAULT NULL,
+  `anonimo` varchar(1),
   PRIMARY KEY (`id`),
   KEY `id_perfil` (`id_perfil`),
   CONSTRAINT `usuario_ibfk_1` FOREIGN KEY (`id_perfil`) REFERENCES `perfil` (`id`)
@@ -794,7 +795,7 @@ CREATE TABLE `usuario` (
 
 LOCK TABLES `usuario` WRITE;
 /*!40000 ALTER TABLE `usuario` DISABLE KEYS */;
-INSERT INTO `usuario` VALUES (1,'user1@email.com','Ee12',2),(2,'user2@email.com','inicio',2),(3,'user3@email.com','inicio',3),(4,'user4@email.com','inicio',3),(5,'erick.gonzales@bbva.com','Ee12',3),(6,'ivan@pucp.pe','Ee12',3),(7,'je@pucp.pe','Ee12',3),(8,'user5@email.com','Ee12',1),(9,'user6@email.com','Ee12',1),(10,'j@pucp.pe','Ee12',1),(11,'e@pucp.pe','eE12',4);
+INSERT INTO `usuario` VALUES (1,'user1@email.com','Ee12',2,'0'),(2,'user2@email.com','inicio',2,'0'),(3,'user3@email.com','inicio',3,'0'),(4,'user4@email.com','inicio',3,'0'),(5,'erick.gonzales@bbva.com','Ee12',3,'0'),(6,'ivan@pucp.pe','Ee12',3,'0'),(7,'je@pucp.pe','Ee12',3,'0'),(8,'user5@email.com','Ee12',1,'0'),(9,'user6@email.com','Ee12',1,'0'),(10,'j@pucp.pe','Ee12',1,'0'),(11,'e@pucp.pe','eE12',4,'0'),(12,'userlab01@cabinas.com','067e6162-3b6f-4ae2-a171-2470b63dff00',3,'1'),(13,'userlab02@cabinas.com','067e6162-3b6f-4ae2-a171-2470b63dff00',3,'1'),(14,'userlab03@cabinas.com','067e6162-3b6f-4ae2-a171-2470b63dff00',3,'1'),(15,'userlab04@cabinas.com','067e6162-3b6f-4ae2-a171-2470b63dff00',3,'1'),(16,'userlab05@cabinas.com','067e6162-3b6f-4ae2-a171-2470b63dff00',3,'1'),(17,'userlab06@cabinas.com','067e6162-3b6f-4ae2-a171-2470b63dff00',3,'1'),(18,'userlab07@cabinas.com','067e6162-3b6f-4ae2-a171-2470b63dff00',3,'1'),(19,'userlab08@cabinas.com','067e6162-3b6f-4ae2-a171-2470b63dff00',3,'1'),(20,'userlab09@cabinas.com','067e6162-3b6f-4ae2-a171-2470b63dff00',3,'1'),(21,'userlab10@cabinas.com','067e6162-3b6f-4ae2-a171-2470b63dff00',3,'1');
 /*!40000 ALTER TABLE `usuario` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;

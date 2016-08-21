@@ -12,6 +12,9 @@ import javax.persistence.Id;
 public class Status implements Serializable {
 
 	private static final long serialVersionUID = 5455460821721637779L;
+	
+	public static final Long ACTIVE = 1L;
+	public static final Long INACTIVE = 2L;
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)

@@ -66,6 +66,13 @@ $(function() {
     		    	$("#experience").text(data.experience);
     		    	$("#rechargeChange").text(change);
     		    	showMessage("Recarga realizada satisfactoriamente", "rechargeAlert");
+    		    	var isAnonymous = "1" === data.user.anonymous;
+    		    	if (isAnonymous) {
+    		    		$("#generatedPassword").text(data.user.pass);
+    		    		$( "#passwordDialog" ).dialog({
+    		      		  width: 700
+    		      	}); 
+    		    	}
     		    },
     		    error: function (xhr, status) {	    	
     		    	console.log("Error, su solicitud no pudo ser atendida");

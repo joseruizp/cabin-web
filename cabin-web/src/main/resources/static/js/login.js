@@ -36,6 +36,7 @@
 		addEventUserType();
 		getHeadquarters();
 		addEventLogin();
+		addEventAnonymous();
 	});
 	
 	function addEventUserType(){
@@ -44,8 +45,10 @@
 			console.log("userType value: " + value);
 			if (value === "3") {
 				$("#headquarterDiv").show();
+				$("#anonymousDiv").show();
 			} else {
 				$("#headquarterDiv").hide();
+				$("#anonymousDiv").show();
 			}
 		});
 	}
@@ -120,6 +123,33 @@
 	function newUser(){
 		var hostname = window.location.protocol + "//" + window.location.host;	
 		window.location.href = hostname + "/cabin-web/newUser";
+	}
+	
+	function addEventAnonymous() {
+		$("#anonymousBtn").click(function() {
+			var headquarterId = $("#headquarter").val();
+			console.log("headquarterId value: " + headquarterId);
+			var user = {};
+			user.headquarterId = headquarterId;
+			
+			var hostname = window.location.protocol + "//" + window.location.host;
+			var strUrl = hostname + "/cabin-web/post/loginAnonymous";
+			
+			$.ajax({
+				type: "POST",
+			    url:strUrl,
+			    contentType: 'application/json',
+			    dataType: "json",
+			    data: JSON.stringify(user),
+			    success: function (json) {
+		    		console.log("go to user page");
+		    		window.location.href = hostname + "/cabin-web/client";
+			    },
+			    error: function (xhr, status) {	    	
+			    	console.log("Error, su solicitud no pudo ser atendida");
+			    }
+			});
+		});
 	}
 
 })(this.jQuery);

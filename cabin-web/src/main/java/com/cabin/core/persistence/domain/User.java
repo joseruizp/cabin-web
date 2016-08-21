@@ -15,6 +15,8 @@ public class User implements Serializable {
 
     private static final long serialVersionUID = 2701948806122433973L;
 
+    public static final String IS_ANONYMOUS = "1";
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
@@ -24,6 +26,9 @@ public class User implements Serializable {
 
     @Column(name = "clave", length = 20)
     private String pass;
+
+    @Column(name = "anonimo", length = 1)
+    private String anonymous;
 
     @ManyToOne
     @JoinColumn(name = "id_perfil")
@@ -51,6 +56,14 @@ public class User implements Serializable {
 
     public void setPass(String pass) {
         this.pass = pass;
+    }
+
+    public String getAnonymous() {
+        return anonymous;
+    }
+
+    public void setAnonymous(String anonymous) {
+        this.anonymous = anonymous;
     }
 
     public Profile getProfile() {

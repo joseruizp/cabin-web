@@ -9,6 +9,7 @@ public class UserRequest implements Serializable {
     private String name;
     private String pass;
     private Long headquarterId;
+    private Long profileId;
 
     public String getName() {
         return name;
@@ -32,6 +33,14 @@ public class UserRequest implements Serializable {
 
     public void setHeadquarterId(Long headquarterId) {
         this.headquarterId = headquarterId;
+    }
+
+    public Long getProfileId() {
+        return profileId;
+    }
+
+    public void setProfileId(Long profileId) {
+        this.profileId = profileId;
     }
 
 }

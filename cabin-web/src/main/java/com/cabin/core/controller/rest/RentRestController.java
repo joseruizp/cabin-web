@@ -14,6 +14,8 @@ import com.cabin.core.persistence.domain.Computer;
 import com.cabin.core.persistence.domain.Console;
 import com.cabin.core.persistence.domain.PrizesRule;
 import com.cabin.core.persistence.domain.Rent;
+import com.cabin.core.persistence.domain.Status;
+import com.cabin.core.persistence.domain.User;
 import com.cabin.core.persistence.repository.ClientRepository;
 import com.cabin.core.persistence.repository.ComputerRepository;
 import com.cabin.core.persistence.repository.PrizesRuleRepository;
@@ -95,6 +97,11 @@ public class RentRestController {
         client.setBalance(client.getBalance() - price);
 
         rent.setRentStatus(rentStatusRepository.getOne(RentStatusEnum.STOPPED.getId()));
+
+        if (User.IS_ANONYMOUS.equals(client.getUser().getAnonymous())) {
+            client.setStatus(new Status());
+            client.getStatus().setId(Status.INACTIVE);
+        }
 
         return rentRepository.saveAndFlush(rent);
     }

@@ -12,6 +12,8 @@ import javax.persistence.Id;
 public class Profile implements Serializable {
 
 	private static final long serialVersionUID = -2185823049272069007L;
+	
+	public static final Long CLIENT = 3L;
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
