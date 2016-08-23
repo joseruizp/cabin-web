@@ -48,7 +48,7 @@
 				$("#anonymousDiv").show();
 			} else {
 				$("#headquarterDiv").hide();
-				$("#anonymousDiv").show();
+				$("#anonymousDiv").hide();
 			}
 		});
 	}
@@ -78,10 +78,12 @@
 			var email = $("#email").val();
 			var password = $("#password").val();
 			var headquarterId = $("#headquarter").val();
+			var profileId = $("#userType").val();
 			console.log("headquarterId value: " + headquarterId);
 			var user = {};
 			user.name = email;
 			user.pass = password;
+			user.profileId = profileId;
 			if ($("#headquarterDiv").is(":visible")) {
 				user.headquarterId = headquarterId;
 			}
@@ -97,18 +99,17 @@
 			    data: JSON.stringify(user),
 			    success: function (json) {
 			    	console.log(json);
-			    	var idProfile = json.user.profile.id;
-			    	console.log("id profile ::: " + idProfile);
-			    	if (idProfile === 1) {
+			    	console.log("id profile ::: " + profileId);
+			    	if (profileId === "1") {
 			    		console.log("go to operator page");
 			    		window.location.href = hostname + "/cabin-web/operator";
-			    	} else if (idProfile === 2) {
+			    	} else if (profileId === "2") {
 			    		console.log("go to admin page");
 			    		window.location.href = hostname + "/cabin-web/admin";
-			    	} else if (idProfile === 3) {
+			    	} else if (profileId === "3") {
 			    		console.log("go to user page");
 			    		window.location.href = hostname + "/cabin-web/client";
-			    	} else if (idProfile === 4) {
+			    	} else if (profileId === "4") {
 			    		console.log("go to user page");
 			    		window.location.href = hostname + "/cabin-web/incidence";
 			    	}
