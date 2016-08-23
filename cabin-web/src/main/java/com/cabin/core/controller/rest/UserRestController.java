@@ -44,6 +44,10 @@ public class UserRestController {
 
         List<Client> clients = clientRepository.findByUserId(users.get(0).getId());
         Client client = clients.get(0);
+        
+        if (Status.INACTIVE == client.getStatus().getId()) {
+            return null;
+        }
 
         System.out.println("httpSession ::: " + httpSession);
         httpSession.setAttribute(SessionEnum.CLIENT_ID.name(), client.getId());
