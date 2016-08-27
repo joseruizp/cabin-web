@@ -17,123 +17,121 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 @Entity(name = "empleado")
 public class Employee implements Serializable {
 
-	private static final long serialVersionUID = 3018012749173085005L;
+    private static final long serialVersionUID = 3018012749173085005L;
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
-	private Long id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private Long id;
 
-	@Column(name = "correo", length = 80)
-	private String email;
+    @Column(name = "correo", length = 80)
+    private String email;
 
-	@Column(name = "nombre", length = 100)
-	private String name;
-	
-	@Column(name = "telefono", length = 15)
-	private String cellphone;
-			
-	@ManyToOne
+    @Column(name = "nombre", length = 100)
+    private String name;
+
+    @Column(name = "telefono", length = 15)
+    private String cellphone;
+
+    @ManyToOne
     @JoinColumn(name = "id_tipo_documento")
     private DocType docType;
-	
-	@Column(name = "n_documento", length = 15)
-	private String docCode;
 
-	@Column(name = "sexo", length = 1)
-	private String gender;
+    @Column(name = "n_documento", length = 15)
+    private String docCode;
 
-	@JsonFormat(pattern="dd-MM-yyyy")
-	@Column(name = "fechaNacimiento")
-	private Calendar birthDate;
+    @Column(name = "sexo", length = 1)
+    private String gender;
 
-	public String getCellphone() {
-		return cellphone;
-	}
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy")
+    @Column(name = "fechaNacimiento")
+    private Calendar birthDate;
 
-	public void setCellphone(String cellphone) {	
-		this.cellphone = cellphone;
-	}
+    @ManyToOne
+    @JoinColumn(name = "id_estado")
+    private Status status;
 
-	public String getDocCode() {
-		return docCode;
-	}
+    @OneToOne
+    @JoinColumn(name = "id_usuario")
+    private User user;
 
-	public void setDocCode(String docCode) {
-		this.docCode = docCode;
-	}
+    public Long getId() {
+        return id;
+    }
 
-	@ManyToOne
-	@JoinColumn(name = "id_estado")
-	private Status status;
-	
-	@OneToOne
-	@JoinColumn(name = "id_usuario")
-	private User user;
+    public void setId(Long id) {
+        this.id = id;
+    }
 
-	public Long getId() {
-		return id;
-	}
+    public String getEmail() {
+        return email;
+    }
 
-	public void setId(Long id) {
-		this.id = id;
-	}
+    public void setEmail(String email) {
+        this.email = email;
+    }
 
-	public String getEmail() {
-		return email;
-	}
+    public String getName() {
+        return name;
+    }
 
-	public void setEmail(String email) {
-		this.email = email;
-	}
+    public void setName(String name) {
+        this.name = name;
+    }
 
-	public String getName() {
-		return name;
-	}
+    public String getGender() {
+        return gender;
+    }
 
-	public void setName(String name) {
-		this.name = name;
-	}
+    public void setGender(String gender) {
+        this.gender = gender;
+    }
 
-	public String getGender() {
-		return gender;
-	}
+    public Calendar getBirthDate() {
+        return birthDate;
+    }
 
-	public void setGender(String gender) {
-		this.gender = gender;
-	}
+    public void setBirthDate(Calendar birthDate) {
+        this.birthDate = birthDate;
+    }
 
-	public Calendar getBirthDate() {
-		return birthDate;
-	}
+    public Status getStatus() {
+        return status;
+    }
 
-	public void setBirthDate(Calendar birthDate) {
-		this.birthDate = birthDate;
-	}
+    public void setStatus(Status status) {
+        this.status = status;
+    }
 
-	
-	public Status getStatus() {
-		return status;
-	}
+    public User getUser() {
+        return user;
+    }
 
-	public void setStatus(Status status) {
-		this.status = status;
-	}
+    public void setUser(User user) {
+        this.user = user;
+    }
 
-	public User getUser() {
-		return user;
-	}
+    public DocType getDocType() {
+        return docType;
+    }
 
-	public void setUser(User user) {
-		this.user = user;
-	}
+    public void setDocType(DocType docType) {
+        this.docType = docType;
+    }
 
-	public DocType getDocType() {
-		return docType;
-	}
+    public String getCellphone() {
+        return cellphone;
+    }
 
-	public void setDocType(DocType docType) {
-		this.docType = docType;
-	}
+    public void setCellphone(String cellphone) {
+        this.cellphone = cellphone;
+    }
 
-	
+    public String getDocCode() {
+        return docCode;
+    }
+
+    public void setDocCode(String docCode) {
+        this.docCode = docCode;
+    }
+
 }
