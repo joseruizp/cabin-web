@@ -28,9 +28,6 @@ public class Tariff implements Serializable {
 	@Column(name = "precio")
 	private Double price;
 
-	@Column(name = "fraccion_minima")
-	private Double minimumFraction;
-	
 	@OneToMany(cascade = CascadeType.ALL, mappedBy = "tariff")
 	private Set<TariffDetail> tariffDetails;
 	
@@ -60,14 +57,6 @@ public class Tariff implements Serializable {
 
 	public void setPrice(Double price) {
 		this.price = price;
-	}
-
-	public Double getMinimumFraction() {
-		return minimumFraction;
-	}
-
-	public void setMinimumFraction(Double minimumFraction) {
-		this.minimumFraction = minimumFraction;
 	}
 
 	public Set<TariffDetail> getTariffDetails() {

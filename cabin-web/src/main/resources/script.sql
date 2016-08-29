@@ -612,7 +612,6 @@ CREATE TABLE `tarifa` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
   `descripcion` varchar(45) DEFAULT NULL,
   `precio` double DEFAULT NULL,
-  `fraccion_minima` double DEFAULT NULL,
   `id_estado` bigint(20) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `id_estado_idx` (`id_estado`),
@@ -628,7 +627,7 @@ CREATE TABLE `tarifa` (
 
 LOCK TABLES `tarifa` WRITE;
 /*!40000 ALTER TABLE `tarifa` DISABLE KEYS */;
-INSERT INTO `tarifa` VALUES (1,'tarifa defecto',2,1,1);
+INSERT INTO `tarifa` VALUES (1,'tarifa defecto',2,1);
 /*!40000 ALTER TABLE `tarifa` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -642,9 +641,8 @@ DROP TABLE IF EXISTS `tarifa_detalle`;
 CREATE TABLE `tarifa_detalle` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
   `dias` varchar(20) DEFAULT NULL,
-  `fraccion_minima` double DEFAULT NULL,
-  `hora_inicio` datetime DEFAULT NULL,
-  `hora_fin` datetime DEFAULT NULL,
+  `hora_inicio` varchar(5) DEFAULT NULL,
+  `hora_fin` varchar(5) DEFAULT NULL,
   `precio_hora` double DEFAULT NULL,
   `id_tarifa` bigint(20) NOT NULL,
   PRIMARY KEY (`id`),
@@ -659,7 +657,7 @@ CREATE TABLE `tarifa_detalle` (
 
 LOCK TABLES `tarifa_detalle` WRITE;
 /*!40000 ALTER TABLE `tarifa_detalle` DISABLE KEYS */;
-INSERT INTO `tarifa_detalle` VALUES (1,'Lun-Mar-Mie-Jue-Vie',1,'2016-07-18 19:01:01','2016-07-19 15:00:01',2,1);
+INSERT INTO `tarifa_detalle` VALUES (1,'Lun-Mar-Mie-Jue-Vie','15:00','19:00',2,1);
 /*!40000 ALTER TABLE `tarifa_detalle` ENABLE KEYS */;
 UNLOCK TABLES;
 

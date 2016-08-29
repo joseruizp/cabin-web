@@ -1,7 +1,6 @@
 package com.cabin.core.persistence.domain;
 
 import java.io.Serializable;
-import java.util.Calendar;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -14,81 +13,70 @@ import javax.persistence.ManyToOne;
 @Entity(name = "tarifa_detalle")
 public class TariffDetail implements Serializable {
 
-	private static final long serialVersionUID = 426366428063983856L;
+    private static final long serialVersionUID = 426366428063983856L;
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
-	private Long id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private Long id;
 
-	@Column(name = "fraccion_minima")
-	private Double minimumFraction;
+    @Column(name = "precio_hora")
+    private Double price;
 
-	@Column(name = "precio_hora")
-	private Double price;
+    @Column(name = "hora_inicio")
+    private String startTime;
 
-	@Column(name = "hora_inicio")
-	private Calendar startTime;
+    @Column(name = "hora_fin")
+    private String endTime;
 
-	@Column(name = "hora_fin")
-	private Calendar endTime;
+    @Column(name = "dias")
+    private String days;
 
-	@Column(name = "dias")
-	private String days;
+    @ManyToOne
+    @JoinColumn(name = "id_tarifa")
+    private Tariff tariff;
 
-	@ManyToOne
-	@JoinColumn(name = "id_tarifa")
-	private Tariff tariff;
+    public Long getId() {
+        return id;
+    }
 
-	public Long getId() {
-		return id;
-	}
+    public void setId(Long id) {
+        this.id = id;
+    }
 
-	public void setId(Long id) {
-		this.id = id;
-	}
+    public Double getPrice() {
+        return price;
+    }
 
-	public Double getMinimumFraction() {
-		return minimumFraction;
-	}
+    public void setPrice(Double price) {
+        this.price = price;
+    }
 
-	public void setMinimumFraction(Double minimumFraction) {
-		this.minimumFraction = minimumFraction;
-	}
+    public String getStartTime() {
+        return startTime;
+    }
 
-	public Double getPrice() {
-		return price;
-	}
+    public void setStartTime(String startTime) {
+        this.startTime = startTime;
+    }
 
-	public void setPrice(Double price) {
-		this.price = price;
-	}
+    public String getEndTime() {
+        return endTime;
+    }
 
-	public Calendar getStartTime() {
-		return startTime;
-	}
+    public void setEndTime(String endTime) {
+        this.endTime = endTime;
+    }
 
-	public void setStartTime(Calendar startTime) {
-		this.startTime = startTime;
-	}
+    public String getDays() {
+        return days;
+    }
 
-	public Calendar getEndTime() {
-		return endTime;
-	}
+    public void setDays(String days) {
+        this.days = days;
+    }
 
-	public void setEndTime(Calendar endTime) {
-		this.endTime = endTime;
-	}
-
-	public String getDays() {
-		return days;
-	}
-
-	public void setDays(String days) {
-		this.days = days;
-	}
-
-	public void setTariff(Tariff tariff) {
-		this.tariff = tariff;
-	}
+    public void setTariff(Tariff tariff) {
+        this.tariff = tariff;
+    }
 
 }

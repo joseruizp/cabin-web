@@ -146,17 +146,13 @@ map = {
 			     emptyTable: "No hay datos disponibles",
 			},
 		});
-		$('#tarifaDetailTbl').DataTable({
+		$('#tariffDetailTbl').DataTable({
 			scrollY: 300,
 		    paging: false,
 			ordering: true,
 			searching: false,
 			bLengthChange: false,
 			bInfo: false,
-			columnDefs: [
-			             { width: '20%', targets: 1 }
-			         ],
-			fixedColumns: true,
 			language: {	     
 			     emptyTable: "No hay datos disponibles",
 			},
@@ -408,28 +404,20 @@ map = {
 			} else {
 			    daysTarifa.push( val );
 			}
+		    
+		    if (daysTarifa.length === 0) {
+		    	$('#startTime').val("");
+		    	$('#endTime').val("");
+		    	$('#price').val("");
+		    	$('#startTime').prop('disabled', true);
+		    	$('#endTime').prop('disabled', true);
+		    	$('#price').prop('disabled', true);
+		    } else {
+		    	$('#startTime').prop('disabled', false);
+		    	$('#endTime').prop('disabled', false);
+		    	$('#price').prop('disabled', false);
+		    }
         });
-		 
-		 $("#btnViewTariffs").hide();
-		 $("#btnViewTariffs").on('click', function(event) {
-			 event.preventDefault();
-			 event.stopPropagation();
-			 $('#descriptionTarifa').val("");
-			 $('#descriptionTarifa').prop('disabled', false);
-			 $('#priceTariff').val("");
-			 $('#priceTariff').prop('disabled', false);
-			 $('#minFractionTariff').val("");
-			 $('#minFractionTariff').prop('disabled', false);
-	    	 $('#btnRangoTarifa').addClass('disabled');
-			 fillArrayTarifa();
-		 });
-		 
-		 $("#btnRangoTarifa").on('click', function(event) {
-			 event.preventDefault();
-			 event.stopPropagation();
-			 saveTarifa();
-		 });		
-		 
 	}); // End document ready
 })(this.jQuery);
 
@@ -751,7 +739,7 @@ function saveSede(){
 
 function fillTarifatbl(  ){
 	var size = tarifas.length;
-	var j = 0; var startTime = ""; var endTime = "";
+	var j = 0;
     var t = $('#tarifaTbl').DataTable();
     t.clear();
 	for(i=0; i<size;i++){		
@@ -759,7 +747,6 @@ function fillTarifatbl(  ){
                 tarifas[i].id,
                 tarifas[i].description,
                 tarifas[i].price,                
-                tarifas[i].minimumFraction,
                 tarifas[i].estado,
         ] ).draw( false );
 	};
@@ -776,37 +763,20 @@ function fillTarifatbl(  ){
 
 function fillTariffDetailstbl(  ){
 	var size = tariffDetails.length;
-	var j = 0; var startTime = ""; var endTime = "";
+	var j = 0; 
     var t = $('#tariffDetailTbl').DataTable();
     t.clear();
 	for(i=0; i<size;i++){		
-		if ( jQuery.type( tariffDetails[i].startTime ) === "date" ){ 
-			startTime = tariffDetails[i].startTime.toString();
-			startTime = startTime.substring(16, 21);
-		}
-		else{
-			var dateStartTime = new Date(tariffDetails[i].startTime);
-			startTime = dateStartTime.getHours() + ':' + dateStartTime.getMinutes();
-		}
-		if ( jQuery.type( tariffDetails[i].endTime ) === "date" ){ 
-			endTime = tariffDetails[i].endTime.toString();
-			endTime = endTime.substring(16, 21);
-		}
-		else{
-			var dateEndTime = new Date(tariffDetails[i].endTime);
-			endTime = dateEndTime.getHours() + ':' + dateEndTime.getMinutes();
-		}
 		t.row.add( [
                 tariffDetails[i].id,
                 tariffDetails[i].days,
-                tariffDetails[i].price,             
-                startTime,
-                endTime,
-                tariffDetails[i].minimumFraction,
+                tariffDetails[i].price,
+                tariffDetails[i].startTime,
+                tariffDetails[i].endTime,
         ] ).draw( false );
 	};
     $('#tariffDetailTbl > tbody  > tr').each(function() {	    
-    	var edit = "<td><a onclick='editTarifa("+ tariffDetails[j].id +","+ j+")'><i class='fa fa-pencil icons' title='Editar'></i></a></td>";
+    	var edit = "<td><a onclick='editTariffDetail("+ tariffDetails[j].id +","+ j+")'><i class='fa fa-pencil icons' title='Editar'></i></a></td>";
 	    var remove = "<td><a onclick='fnOpenCloseDialog(2,"+ tariffDetails[j].id +","+ j+")'><i class='fa fa-trash icons' title='Eliminar'></i></a></td>";
 	    j++;
 	    var tr = $(this);
@@ -817,55 +787,55 @@ function fillTariffDetailstbl(  ){
 function editTarifa( code, index ){
 	tarifaIndex = index;
 	$(".checkboxTarifa").prop( 'checked', false );
-	daysTarifa.splice(0,daysTarifa.length);
-	var strUrl = window.location.protocol + "//" + window.location.host + "/cabin-web/tarifa/" + code;	
+	var strUrl = window.location.protocol + "//" + window.location.host + "/cabin-web/get/tariff";	
 	$.ajax({
 		async:false,
 	    url:strUrl,
+	    data: {id : code},
 	    crossDomain: true,
 	    dataType: "json",
 	    success: function (json) {
-	    	var hrefArray = json._links.self.href.split("/");
-	    	var idTarifa = hrefArray[hrefArray.length -1];
-	    	var daysArray = json.days.split("-");
-	    	var length = daysArray.length;	    	
-	    	for( i = 0 ; i < length; i++){
-	    		$("#checkbox"+daysArray[i]).prop( 'checked', true );	    		
-	    		daysTarifa.push(daysArray[i]);
-	    	}
-	    	$( "#price" ).val(json.price);	    	
-			$( "#startTime" ).val(json.startTime.substring(11,16));
-			$( "#endTime" ).val(json.endTime.substring(11,16));
-			$( "#minFraction" ).val(json.minimumFraction);
+	    	var idTariff = json.id;
+	    	$( "#priceTariff" ).val(json.price);
 			$( "#descriptionTarifa" ).val(json.description);
-			$("#idTarifa").attr('value', idTarifa);
-			$("#btnTarifa").html("Actualizar Tarifa");			
+			var statusHtml = $("#statusTarifa li a");			
+			statusHtml.parents(".dropdown").find('.btn').html( json.status.name +' <span class="caret"></span>');
+			statusHtml.parents(".dropdown").find('.btn').val( json.status.id);
+			$("#idTarifa").val(idTariff);
+			$("#btnTarifa").html("Actualizar Tarifa");
+			
+			if (json.tariffDetails.length > 0) {
+				fillArrayTarifaDetails(idTariff);
+			} else {
+				fillArrayTarifa();
+			}
 	    },
 	    error: function (xhr, status) {	    	
 	    	console.log("Error, su solicitud no pudo ser atendida");
 	    }
-	});		
-	
-	strUrl = hostname + "/cabin-web/tarifa/" + code+"/status";
-	var idStatus;
-	$.ajax({
-		async:false,
-	    url:strUrl,
-	    crossDomain: true,
-	    dataType: "json",
-	    success: function (json) {
-	    	var hrefArray = json._links.self.href.split("/");
-	    	idStatus = hrefArray[hrefArray.length -1];
-	    	var statusHtml = $("#statusTarifa li a");			
-			statusHtml.parents(".dropdown").find('.btn').html( json.name +' <span class="caret"></span>');				
-			statusHtml.parents(".dropdown").find('.btn').val( idStatus);
-	    },
-	    error: function (xhr, status) {    	
-	    	console.log("Error, su solicitud no pudo ser atendida");
-	    }
-	});	
+	});
+}
 
+function editTariffDetail( code, index ){
+	var tariffDetailIndex = index;
+	var tariffDetail = tariffDetails[tariffDetailIndex];
 	
+	$("#idTariffDetail").val(tariffDetail.id);
+	$("#startTime").val(tariffDetail.startTime);
+	$("#endTime").val(tariffDetail.endTime);
+	$("#price").val(tariffDetail.price);
+	
+	$(".checkboxTarifa").prop( 'checked', false );
+	daysTarifa.splice(0,length);
+	var days = tariffDetail.days.split("-");
+	for (var i = 0; i < days.length; i++) {
+		$(".checkboxTarifa[value="+ days[i] +"]").prop( 'checked', true );
+		daysTarifa.push(days[i]);
+	}
+	
+	$('#startTime').prop('disabled', false);
+	$('#endTime').prop('disabled', false);
+	$('#price').prop('disabled', false);
 }
 
 function deleteTarifa( code, index ){	
@@ -889,121 +859,92 @@ function deleteTarifa( code, index ){
 	});		
 }
 
-function saveTarifa(){
-	var idTarifa = $("#idTarifa").attr("value");
-	var isNewRange = $("#descriptionTarifa").is(":disabled");
-	console.log("Inside form-tarifaDetail " + idTarifa);
-	
-	var statusHtml = $("#statusSede li a");	
-	var idStatus = $(statusHtml).parents(".dropdown").find('.btn').val();
-	$(statusHtml).parents(".dropdown").find('.btn').html('Activo <span class="caret"></span>');
-	$(statusHtml).parents(".dropdown").find('.btn').val("1");
-	
-	var tarifa = {};
-	var tariffDetail = {};
-	var arrayTariffDetail = [];
-	
-	if (!isNewRange) {
-		tarifa.description = trim( $( "#descriptionTarifa" ).val() );
-		tarifa.price = trim( $( "#priceTariff" ).val() );
-		tarifa.minimumFraction = trim( $( "#minFractionTariff" ).val() );
-	}
-	
-	var length = daysTarifa.length;
-	dateSort(); 
-	var days = "";
-	for( i = 0; i < length ; i++){
-		if ( i == (length - 1) ){
-			days +=  daysTarifa[i];
-			break;
-		}
-		days +=  daysTarifa[i] + "-";
-	}
-	
-	var timeStr = trim( $( "#startTime" ).val() ); 
-	var arrayTime = timeStr.split(':'); 
-	var startTime = new Date(); startTime.setHours(arrayTime[0]-5); startTime.setMinutes(arrayTime[1]);
-	var endTimeStr = $( "#endTime" ).val(); 
-	var arrayEndTime = endTimeStr.split(':'); 
-	var endTime = new Date(); endTime.setHours(arrayEndTime[0]-5); endTime.setMinutes(arrayEndTime[1]);
-	
-	tariffDetail.startTime = startTime;			
-	tariffDetail.endTime = endTime;
-	tariffDetail.minimumFraction = trim( $( "#minFraction" ).val() );
-	tariffDetail.days = days;
-	tariffDetail.price =  trim( $( "#price" ).val() );
-	$( "#price" ).val("");	$( "#startTime" ).val("");
-	$( "#endTime" ).val("");	$( "#minFraction" ).val("");
-	setTimeout( function() { $(".checkboxTarifa").prop( 'checked', false ) }, 0);
-	daysTarifa.splice(0,length);
-	
-	arrayTariffDetail.push(tariffDetail);
-	tarifa.tariffDetails = arrayTariffDetail;
-	
-	var strUrl = window.location.protocol + "//" + window.location.host + "/cabin-web/post/tariff";
-	if (isNewRange) {
-		strUrl = window.location.protocol + "//" + window.location.host + "/cabin-web/post/tariffDetail";
-		tarifa.id = idTarifa;
-	} else {
-		if (idTarifa !== "") {
-			strUrl += "/" + idTarifa;	
-			tarifa.id = idTarifa;
-			if( idStatus == estados[0].id){
-				tarifa.estado = estados[0].name; console.log(tarifa.estado);}
-			else{
-				tarifa.estado = estados[1].name; }	
-			tarifas.splice(tarifaIndex, 1, tarifa);
-			fillTarifatbl();
-		}
-	}
-	console.log(JSON.stringify(tarifa));
-	
-	
-	
-	$.ajax({
-		type: isNewRange ? "POST" : (idTarifa === "" ? "POST" : "PATCH"),
-	    url:strUrl,			    
-	    dataType: 'json', 
-	    data: JSON.stringify(tarifa), 
-	    contentType: 'application/json',
-	    success: function (data) {
-	    	console.log("Send a tarifa into DB");
-	    	$("#idTarifa").attr("value", data.id);
-	    	$('#descriptionTarifa').prop('disabled', true);
-	    	$('#priceTariff').prop('disabled', true);
-	    	$('#minFractionTariff').prop('disabled', true);
-	    	$('#btnRangoTarifa').removeClass('disabled');
-	    	
-	    	fillArrayTarifaDetails(data.id);
-	    },
-	    error: function (xhr, status) {	    	
-	    	console.log("Error, su solicitud no pudo ser atendida");
-	    },
-	    complete: function() {
-//	    	if (idTarifa == ""){
-//	    		fillArrayTarifa();
-//	    	}
-	    }
-	});	
-	
-	var strUrlStatus = window.location.protocol + "//" + window.location.host + "/cabin-web/estado/" + idStatus;	
-	var strUrlTarifa = window.location.protocol + "//" + window.location.host + "/cabin-web/tarifa/"+idTarifa+"/status";
-	//Se inserta el estado en la Sede	
-	$.ajax({
-		async: false,
-		type: "PUT",
-	    url:strUrlTarifa,			
-	    data: strUrlStatus, 
-	    contentType: 'text/uri-list',
-	    success: function (data) {
-	    	console.log("Se asigno estado a tarifa" + idTarifa);
-	    },
-	    error: function (xhr, status) {	    	
-	    	console.log("Error, su solicitud no pudo ser atendida");
-	    },	    
-	});	
+function saveTarifa() {
+    var tariff = {};
+    tariff.status = {};
+    tariff.tariffDetails = [];
 
-	
+    var idTarifa = trim($("#idTarifa").val());
+    var idTariffDetail = trim($("#idTariffDetail").val());
+    if (idTarifa !== "") {
+    	tariff.id = idTarifa;
+    }
+    console.log("Inside form-tarifaDetail " + idTarifa + " - " + idTariffDetail);
+
+    var statusHtml = $("#statusSede li a");
+
+    tariff.description = trim($("#descriptionTarifa" ).val());
+    tariff.price = trim($("#priceTariff").val());
+    tariff.status.id = $(statusHtml).parents(".dropdown").find('.btn').val();
+    
+    var hasDetails = false;
+
+    var daysLength = daysTarifa.length;
+    if (daysLength > 0) {
+        dateSort(); 
+        var days = "";
+        for (i = 0; i < daysLength ; i++) {
+            if (i == (daysLength - 1)) {
+                days +=  daysTarifa[i];
+                break;
+            }
+            days +=  daysTarifa[i] + "-";
+        }
+
+        var tariffDetail = {};
+        if (idTariffDetail !== "") {
+        	tariffDetail.id = idTariffDetail;
+        }
+        tariffDetail.startTime = trim($("#startTime").val());
+        tariffDetail.endTime = $("#endTime").val();
+        tariffDetail.days = days;
+        tariffDetail.price =  trim($("#price").val());
+        
+        daysTarifa.splice(0,length);
+
+        setTimeout(function() {
+            $(".checkboxTarifa").prop( 'checked', false ) 
+        }, 0);
+
+        tariff.tariffDetails.push(tariffDetail);
+        hasDetails = true;
+    }
+
+    console.log(JSON.stringify(tariff));
+
+    var strUrl = window.location.protocol + "//" + window.location.host + "/cabin-web/post/tariff";
+
+    $.ajax({
+        type: "POST",
+        url:strUrl,
+        dataType: 'json', 
+        data: JSON.stringify(tariff), 
+        contentType: 'application/json',
+        success: function (data) {
+            console.log("Send a tarifa into DB");
+            $("#idTarifa").attr("value", data.id);
+            
+            $( "#price" ).val("");
+            $( "#startTime" ).val("");
+            $( "#endTime" ).val("");
+            $(statusHtml).parents(".dropdown").find('.btn').html('Activo <span class="caret"></span>');
+            $(statusHtml).parents(".dropdown").find('.btn').val("1");
+
+            if (hasDetails) {
+                $('#descriptionTarifa').prop('disabled', true);
+                $('#priceTariff').prop('disabled', true);
+                fillArrayTarifaDetails(data.id);	
+            } else {
+                $('#descriptionTarifa').val("");
+                $('#priceTariff').val("");
+                fillArrayTarifa();
+            }
+        },
+        error: function (xhr, status) {
+            console.log("Error, su solicitud no pudo ser atendida");
+        },
+    });
+    
 }
 
 function fillBonificaciontbl(  ){
@@ -2562,7 +2503,6 @@ function fillSede(idSede, name, address){
 	    	console.log("Error, su solicitud no pudo ser atendida");
 	    }
 	});
-	console.log("Valor del empleado: " + employee);
 	sedes.push({
 		id: idSede,
 		name: name,
@@ -2657,7 +2597,6 @@ function fillArrayTarifa(){
 	$("#listaTarifasDiv").show();
 	$("#listaDetailTariffDiv").hide();
 	$("#btnTarifa").show();
-	$("#btnViewTariffs").hide();
 	var length = tarifas.length;
 	tarifas.splice(0, length);
 	var strUrl = window.location.protocol + "//" + window.location.host + "/cabin-web/get/allTariff/";		
@@ -2667,7 +2606,7 @@ function fillArrayTarifa(){
 	    dataType: "json",
 	    success: function (json) {
 	    	$.each(json, function(index, value) {
-	    		fillTarifa(value.id, value.description,value.price,value.minimumFraction);				
+	    		fillTarifa(value.id, value.description,value.price);				
 			});
 	    	fillTarifatbl();
 	    },
@@ -2677,7 +2616,7 @@ function fillArrayTarifa(){
 	});	
 }
 
-function fillTarifa(idTarifa, description, price, minimumFraction){
+function fillTarifa(idTarifa, description, price){
 	var hostname = window.location.protocol + "//" + window.location.host 
 	var status;	
 	var strUrl = hostname + "/cabin-web/tarifa/"+idTarifa+"/status";
@@ -2697,7 +2636,6 @@ function fillTarifa(idTarifa, description, price, minimumFraction){
 		id: idTarifa,
 		description: description,
 		price: price,
-		minimumFraction: minimumFraction,		
 		estado: status,				 
 	});
 }
@@ -2705,8 +2643,6 @@ function fillTarifa(idTarifa, description, price, minimumFraction){
 function fillArrayTarifaDetails(idTariff){
 	$("#listaTarifasDiv").hide();
 	$("#listaDetailTariffDiv").show();
-	$("#btnTarifa").hide();
-	$("#btnViewTariffs").show();
 	var length = tariffDetails.length;
 	tariffDetails.splice(0, length);
 	var strUrl = window.location.protocol + "//" + window.location.host + "/cabin-web/get/allTariffDetails/";		
@@ -2716,17 +2652,18 @@ function fillArrayTarifaDetails(idTariff){
 	    data: {id : idTariff},
 	    dataType: "json",
 	    success: function (json) {
-	    	$.each(json, function(index, value) {		    		
-	    		tariffDetails.push({
-					id: value.id,
-					days: value.days,
-					price: value.price,
-					startTime: value.startTime,
-					endTime: value.endTime,
-					minimumFraction: value.minimumFraction
+	    	if (json.length > 0) {
+	    		$.each(json, function(index, value) {		    		
+		    		tariffDetails.push({
+						id: value.id,
+						days: value.days,
+						price: value.price,
+						startTime: value.startTime,
+						endTime: value.endTime,
+					});
 				});
-			});
-	    	fillTariffDetailstbl();
+	    		fillTariffDetailstbl();
+	    	}
 	    },
 	    error: function (xhr, status) {    	
 	    	console.log("Error, su solicitud no pudo ser atendida");
@@ -3018,7 +2955,6 @@ function fillOperarios( ){
 	    		var hrefArray = value._links.self.href.split("/");
 	    		var idUser = hrefArray[hrefArray.length -1];
 	    		var email = value.name;
-	    		console.log("Entro al primer usuario" + idUser + " correo: " + email);
 	    		strLine += completeOperario(idUser, email);
 			});	    			    	
 	    },
@@ -3211,7 +3147,6 @@ function completeOperario( idUser, email ){
 	    success: function (json) {	    	
     		var hrefArray = json._links.self.href.split("/");
     		var idProfile = hrefArray[hrefArray.length -1];
-    		console.log("Entro al profile de id " + idProfile);
     		if ( idProfile == "1")	    			
     			StrLine = completeOperarioName(idUser, email);			   			    	
 	    },
@@ -3234,7 +3169,6 @@ function completeOperarioName( idUser, email){
 	    dataType: "json",	     
 	    success: function (json) {
 	    	$.each(json._embedded.empleado, function(index, value) {		
-	    		console.log("Entro al empleado x usuario " + value.name );
 	    		operarios.push({
 	    			id : idUser,
 	    			name: value.name
@@ -3466,22 +3400,33 @@ function addTarifa() {
 	var valid = true;
 	$("*").removeClass( "ui-state-error");
 	valid = valid && checkRequired( $("#descriptionTarifa"), "Debe ingresar la descripción de la tarifa.",1, tarifaValidation);
-	valid = valid && checkRegexp( $("#descriptionTarifa"), /.+/i, "La descripción de la tarifa no es válida.",  tarifaValidation);	
-	valid = valid && checkRegexp( $("#minFraction"), /^[0-9]\d{0,3}($|\.\d{0,2}$)/i, "Debe ingresar un monto válido, no mayor de 999.99 soles y de dos decimales.", tarifaValidation);
-	valid = valid && checkRegexp( $("#price"), /^[0-9]\d{0,3}($|\.\d{0,2}$)/i, "Debe ingresar un monto válido, no mayor de 999.99 soles y de dos decimales.", tarifaValidation );
-	valid = valid && checkRequired( $("#startTime"), "Debe ingresar la hora de inicio en el formato de 24 horas, por ejemplo: 10:00.",1, tarifaValidation);
-	valid = valid && checkRegexp( $("#startTime"), /([01]\d|2[0-3]):([0-5]\d)/ , "La hora de inicio ingresada no es válida, formato permitido desde 00:00 hasta 23:59.",  tarifaValidation);
-	valid = valid && checkRequired( $("#endTime"), "Debe ingresar la hora de fin en el formato de 24 horas, por ejemplo: 10:00.",1, tarifaValidation);
-	valid = valid && checkRegexp( $("#endTime"), /([01]\d|2[0-3]):([0-5]\d)/ , "La hora de fin no es válida, formato permitido desde 00:00 hasta 23:59.",  tarifaValidation);
-	var startStr = trim( $( "#startTime" ).val() );	var endStr = trim( $( "#endTime" ).val() );
-	var arrayStartTime = startStr.split(':'); var arrayEndTime = endStr.split(':'); 
-	var startTime = new Date(); startTime.setHours(arrayStartTime[0]-5); startTime.setMinutes(arrayStartTime[1]);
-	var endTime = new Date(); endTime.setHours(arrayEndTime[0]-5); endTime.setMinutes(arrayEndTime[1]);
-	if ( startTime.getTime() >= endTime.getTime() ){
-		$("#startTime").addClass( "ui-state-error" );
-		$("#endTime").addClass( "ui-state-error" );
-		updateTips( "La hora de inicio no puede ser mayor que la hora de fin", tarifaValidation );
-		valid = false;
+	valid = valid && checkRegexp( $("#descriptionTarifa"), /.+/i, "La descripción de la tarifa no es válida.",  tarifaValidation);
+	valid = valid && checkRequired( $("#priceTariff"), "Debe ingresar la descripción de la tarifa.",1, tarifaValidation);
+	valid = valid && checkRegexp( $("#priceTariff"), /^[0-9]\d{0,3}($|\.\d{0,2}$)/i, "Debe ingresar un monto válido, no mayor de 999.99 soles y de dos decimales.", tarifaValidation );
+	
+	if (daysTarifa.length > 0) {
+		valid = valid && checkRequired( $("#startTime"), "Debe ingresar la hora de inicio en el formato de 24 horas, por ejemplo: 10:00.",1, tarifaValidation);
+		valid = valid && checkRegexp( $("#startTime"), /([01]\d|2[0-3]):([0-5]\d)/ , "La hora de inicio ingresada no es válida, formato permitido desde 00:00 hasta 23:59.",  tarifaValidation);
+		valid = valid && checkRequired( $("#endTime"), "Debe ingresar la hora de fin en el formato de 24 horas, por ejemplo: 10:00.",1, tarifaValidation);
+		valid = valid && checkRegexp( $("#endTime"), /([01]\d|2[0-3]):([0-5]\d)/ , "La hora de fin no es válida, formato permitido desde 00:00 hasta 23:59.",  tarifaValidation);
+		valid = valid && checkRegexp( $("#price"), /^[0-9]\d{0,3}($|\.\d{0,2}$)/i, "Debe ingresar un monto válido, no mayor de 999.99 soles y de dos decimales.", tarifaValidation );
+		
+		var startStr = trim( $( "#startTime" ).val());
+		var endStr = trim( $( "#endTime" ).val());
+		var arrayStartTime = startStr.split(':');
+		var arrayEndTime = endStr.split(':'); 
+		var startTime = new Date();
+		startTime.setHours(arrayStartTime[0]-5);
+		startTime.setMinutes(arrayStartTime[1]);
+		var endTime = new Date();
+		endTime.setHours(arrayEndTime[0]-5);
+		endTime.setMinutes(arrayEndTime[1]);
+		if ( startTime.getTime() >= endTime.getTime() ){
+			$("#startTime").addClass( "ui-state-error" );
+			$("#endTime").addClass( "ui-state-error" );
+			updateTips( "La hora de inicio no puede ser mayor que la hora de fin", tarifaValidation );
+			valid = false;
+		}
 	}
 	return valid;
 }

@@ -75,7 +75,7 @@
 
 										<!-- Collect the nav links, forms, and other content for toggling -->
 										<div class="collapse navbar-collapse scrollspy smooth-scroll" id="navbar-collapse-1">
-											<ul class="nav navbar-nav navbar-right">
+											<ul class="nav navbar-nav navbar-right nav-admin">
 												<li class="active"><a href="#nuevoCliente">Cliente</a></li>
 												<li class="active"><a href="#nuevoEmpleado">Empleado</a></li>
 												<li class="active"><a href="#nuevaSede">Sede</a></li>
@@ -480,146 +480,124 @@
 		<!-- section start -->
 		<div id="nuevaTarifa">
 			<div class="container">
-				<br /> <br /> <br />
+				<br />
 				<div class="row">
-					<div class="col-md-12">
-						<h1 id="about" class="title text-center">
-							Nueva <span>Tarifa</span>
-						</h1>
-						<p class="lead text-center">Lorem ipsum dolor sit amet,
-							consectetur adipisicing elit. laudantium culpa tenetur.</p>
-						<div class="space"></div>
-						<div class="row">
-							<form class="form-horizontal" role="form" style="margin-left: 170px" id="form-tarifaDetail">
-								<input type="hidden" id="idTarifa" value=""/>
-								<div class="form-group">
-									<label class="control-label col-md-2" for="descriptionTarifa">Descripcion:</label>
-									<div class="col-md-8">
-										<input class="form-control" id="descriptionTarifa" placeholder="Descripcion" maxlength="45"/>
-									</div>
-								</div>
-								<div class="form-group">
-									<label class="control-label col-md-2" for="priceTariff">Precio por Defecto:</label>
-									<div class="col-md-3">
-										<input class="form-control" id="priceTariff" placeholder="Precio por Defecto" maxlength="45"/>
-									</div>
-									<label class="control-label col-md-2" for="minFractionTariff">Fraccion Minima por Defecto:</label>
-									<div class="col-md-3">
-										<input class="form-control" id="minFractionTariff" placeholder="Fraccion Minima por Defecto" maxlength="45"/>
-									</div>
-								</div>								
-								<div class="form-group">
-									<label class="control-label col-md-2" for="email">Dias:</label>
-									<div class="col-md-8">
-										<div class="col-md-2" style="margin-right : -5%">
-											<input id="checkboxLun" class="checkboxTarifa" type="checkbox" value="Lun"/>&nbsp;Lunes
-										</div>
-										<div class="col-md-2" style="margin-right : -4%">
-											<input id="checkboxMar" class="checkboxTarifa" type="checkbox" value="Mar"/>&nbsp;Martes
-										</div>
-										<div class="col-md-2" style="margin-right : -3%; width: 18%">
-											<input id="checkboxMie" class="checkboxTarifa" type="checkbox" value="Mie"/>&nbsp;Miercoles
-										</div>
-										<div class="col-md-2" style="margin-right : -5%">
-											<input id="checkboxJue" class="checkboxTarifa" type="checkbox" value="Jue"/>&nbsp;Jueves
-										</div>
-										<div class="col-md-2" style="margin-right : -4%">
-											<input id="checkboxVie" class="checkboxTarifa" type="checkbox" value="Vie"/>&nbsp;Viernes
-										</div>
-										<div class="col-md-2" style="margin-right : -4%">
-											<input id="checkboxSab" class="checkboxTarifa" type="checkbox" value="Sab"/>&nbsp;Sabado
-										</div>
-										<div class="col-md-2" style="width: 17%">
-											<input id="checkboxDom" class="checkboxTarifa" type="checkbox" value="Dom"/>&nbsp;Domingo
-										</div>
-									</div>
-								</div>
-								<div class="form-group">
-									<label class="control-label col-md-2" for="startTime">Hora Inicio:</label>
-									<div class="col-md-3">
-										<input class="form-control" id="startTime" placeholder="Hora Inicio hh:mm" maxlength="5"/>
-									</div>
-									<label class="control-label col-md-2" for="endTime">Hora Fin:</label>
-									<div class="col-md-3">
-										<input class="form-control" id="endTime" placeholder="Hora Fin hh:mm" maxlength="5"/>
-									</div>
-								</div>
-								<div class="form-group">
-									<label class="control-label col-md-2" for="minFraction">Fracion Minima:</label>
-									<div class="col-md-3">
-										<input class="form-control" id="minFraction" placeholder="Fracion Minima" maxlength="6"/>
-									</div>
-									<label class="control-label col-md-2" for="price">Precio:</label>
-									<div class="col-md-3">
-										<input class="form-control" id="price" placeholder="Precio" maxlength="6"/>
-									</div>
-								</div>
-								<div class="form-group">
-									<label class="control-label col-sm-2" for="statusTarifa">Estado:</label>
-									<div class="col-sm-4">
-										<div class="dropdown">
-											<button class="btn btn-primary dropdown-toggle" type="button"
-												data-toggle="dropdown" value="1">
-												Activo <span class="caret"></span>
-											</button>
-											<ul id="statusSede" class="dropdown-menu">
-												<li><a href="/" onclick="return false;">Activo</a></li>
-												<li><a href="/" onclick="return false;">Inactivo</a></li>
-											</ul>
-										</div>
-									</div>
-								</div>
-								<div class="form-group">
-									<div class="col-sm-offset-3 col-md-3">
-										<button id="btnTarifa" class="btn btn-default">Nueva
-											Tarifa</button>
-										<button id="btnViewTariffs" class="btn btn-default">Ver
-											Tarifas</button>
-									</div>
-									<div class="col-md-4">
-										<button id="btnRangoTarifa" class="btn btn-default disabled">Nuevo
-											Rango</button>
-									</div>
-								</div>
-							</form>
-							<div id="tarifaValidation" class="alert alert-danger" style="display:none"></div>
-						</div>
-						<div class="space"></div>
-					    <div role="tabpanel" class="table-responsive" id="listaDetailTariffDiv">
-					        <table id="tariffDetailTbl" class="table table-striped display" style="min-height: 100px">
-					            <thead>
-					                <tr>
-					                    <th>Codigo</th>
-					                    <th>Dias</th>
-					                    <th>Precio</th>
-					                    <th>Hora Inicio</th>
-					                    <th>Hora Fin</th>
-					                    <th >Minima Fraccion</th>					                    
-					                    <th colspan="2" >Opciones</th>
-					                </tr>
-					            </thead>
-					            <tbody>
-					            </tbody>
-					        </table>
-					    </div>
-					    <div role="tabpanel" class="table-responsive" id="listaTarifasDiv">
-					        <table id="tarifaTbl" class="table table-striped display" style="min-height: 100px">
-					            <thead>
-					                <tr>
-					                    <th>Codigo</th>
-					                    <th>Descripcion</th>
-					                    <th>Precio</th>
-					                    <th >Minima Fraccion</th>
-					                    <th >Estado</th>
-					                    <th colspan="2" >Opciones</th>
-					                </tr>
-					            </thead>
-					            <tbody>
-					            </tbody>
-					        </table>
-					    </div>
+					<div class="col-md-12" style="margin-top: 40px">
+						<h1 id="tituloEquipos" class="title text-center">Nueva <span>Tarifa</span></h1>
+						<p class="lead text-center">Lorem ipsum dolor sit amet, consectetur adipisicing elit. laudantium culpa tenetur.</p>
 					</div>
 				</div>
+				<div class="row" style="margin-left: 110px; margin-right: 110px">
+					<form class="form-horizontal" role="form" id="form-tarifaDetail">
+						<input type="hidden" id="idTarifa" value=""/>
+						<input type="hidden" id="idTariffDetail" value=""/>
+						<div class="form-group">
+							<label class="control-label col-md-2" for="descriptionTarifa">Descripcion:</label>
+							<div class="col-md-10">
+								<input class="form-control" id="descriptionTarifa" placeholder="Descripcion" maxlength="45"/>
+							</div>
+						</div>
+						<div class="form-group">
+							<label class="control-label col-md-2" for="priceTariff">Precio por Defecto:</label>
+							<div class="col-md-4">
+								<input class="form-control" id="priceTariff" placeholder="Precio por Defecto" maxlength="45"/>
+							</div>
+							<label class="control-label col-sm-2" for="statusTarifa">Estado:</label>
+							<div class="col-sm-4">
+								<div class="dropdown">
+									<button class="btn btn-primary dropdown-toggle" type="button"
+										data-toggle="dropdown" value="1">
+										Activo <span class="caret"></span>
+									</button>
+									<ul id="statusSede" class="dropdown-menu">
+										<li><a href="/" onclick="return false;">Activo</a></li>
+										<li><a href="/" onclick="return false;">Inactivo</a></li>
+									</ul>
+								</div>
+							</div>
+						</div>								
+						<div class="form-group">
+							<label class="control-label col-md-2" for="email">Dias:</label>
+							<div class="col-md-10">
+								<div class="col-md-2" style="margin-right : -5%">
+									<input id="checkboxLun" class="checkboxTarifa" type="checkbox" value="Lun"/>&nbsp;Lunes
+								</div>
+								<div class="col-md-2" style="margin-right : -4%">
+									<input id="checkboxMar" class="checkboxTarifa" type="checkbox" value="Mar"/>&nbsp;Martes
+								</div>
+								<div class="col-md-2" style="margin-right : -3%; width: 18%">
+									<input id="checkboxMie" class="checkboxTarifa" type="checkbox" value="Mie"/>&nbsp;Miercoles
+								</div>
+								<div class="col-md-2" style="margin-right : -5%">
+									<input id="checkboxJue" class="checkboxTarifa" type="checkbox" value="Jue"/>&nbsp;Jueves
+								</div>
+								<div class="col-md-2" style="margin-right : -4%">
+									<input id="checkboxVie" class="checkboxTarifa" type="checkbox" value="Vie"/>&nbsp;Viernes
+								</div>
+								<div class="col-md-2" style="margin-right : -4%">
+									<input id="checkboxSab" class="checkboxTarifa" type="checkbox" value="Sab"/>&nbsp;Sabado
+								</div>
+								<div class="col-md-2" style="width: 17%">
+									<input id="checkboxDom" class="checkboxTarifa" type="checkbox" value="Dom"/>&nbsp;Domingo
+								</div>
+							</div>
+						</div>
+						<div class="form-group">
+							<label class="control-label col-md-2" for="startTime">Hora Inicio:</label>
+							<div class="col-md-4">
+								<input class="form-control" id="startTime" placeholder="Hora Inicio hh:mm" maxlength="5" disabled="disabled"/>
+							</div>
+							<label class="control-label col-md-2" for="endTime">Hora Fin:</label>
+							<div class="col-md-4">
+								<input class="form-control" id="endTime" placeholder="Hora Fin hh:mm" maxlength="5" disabled="disabled"/>
+							</div>
+						</div>
+						<div class="form-group">
+							<label class="control-label col-md-2" for="price">Precio:</label>
+							<div class="col-md-4">
+								<input class="form-control" id="price" placeholder="Precio" maxlength="6" disabled="disabled"/>
+							</div>
+						</div>
+						<div class="form-group">
+							<div class="col-sm-offset-5 col-sm-7">
+								<button id="btnTarifa" class="btn btn-default">Nueva Tarifa</button>
+							</div>
+						</div>
+					</form>
+					<div id="tarifaValidation" class="alert alert-danger" style="display:none"></div>
+				</div>
+				<div class="space"></div>
+			    <div role="tabpanel" class="table-responsive" id="listaDetailTariffDiv">
+			        <table id="tariffDetailTbl" class="table table-striped display" style="min-height: 100px">
+			            <thead>
+			                <tr>
+			                    <th>Codigo</th>
+			                    <th>Dias</th>
+			                    <th>Precio</th>
+			                    <th>Hora Inicio</th>
+			                    <th>Hora Fin</th>
+			                    <th colspan="2" >Opciones</th>
+			                </tr>
+			            </thead>
+			            <tbody>
+			            </tbody>
+			        </table>
+			    </div>
+			    <div role="tabpanel" class="table-responsive" id="listaTarifasDiv">
+			        <table id="tarifaTbl" class="table table-striped display" style="min-height: 100px">
+			            <thead>
+			                <tr>
+			                    <th>Codigo</th>
+			                    <th>Descripcion</th>
+			                    <th>Precio</th>
+			                    <th >Estado</th>
+			                    <th colspan="2" >Opciones</th>
+			                </tr>
+			            </thead>
+			            <tbody>
+			            </tbody>
+			        </table>
+			    </div>
 			</div>
 		</div>
 		<!-- section end -->

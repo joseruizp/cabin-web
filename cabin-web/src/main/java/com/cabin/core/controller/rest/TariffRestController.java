@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -52,31 +51,31 @@ public class TariffRestController {
 
     @RequestMapping(value = "/post/tariff", method = RequestMethod.POST, produces = { "application/json;charset=UTF-8" })
     public Tariff putTariff(@RequestBody(required = true) Tariff tariff) throws ParseException {
+        Long tariffId = tariff.getId();
+        TariffDetail tariffDetail = CollectionUtils.isNotEmpty(tariff.getTariffDetails()) ? tariff.getTariffDetails().iterator().next() : null;
 
-        Set<TariffDetail> details = tariff.getTariffDetails();
-        tariff.setTariffDetails(new HashSet<TariffDetail>());
+        if (tariffDetail != null) {
+            tariff.setTariffDetails(null);
+            tariffId = tariffRepository.saveAndFlush(tariff).getId();
 
-        Tariff newTariff = tariffRepository.save(tariff);
-
-        for (TariffDetail tariffDetail : details) {
-            tariffDetail.setTariff(newTariff);
-            tariff.getTariffDetails().add(tariffDetailRepository.save(tariffDetail));
+            Tariff originalTarif = new Tariff();
+            originalTarif.setId(tariffId);
+            tariffDetail.setTariff(originalTarif);
+            tariffDetailRepository.saveAndFlush(tariffDetail);
+        } else {
+            tariffId = tariffRepository.saveAndFlush(tariff).getId();
         }
 
-        return tariff;
+        return tariffRepository.getOne(tariffId);
     }
 
     @RequestMapping(value = "/post/tariffDetail", method = RequestMethod.POST, produces = { "application/json;charset=UTF-8" })
-    public Tariff putTariffDetail(@RequestBody(required = true) Tariff tariff) throws ParseException {
+    public TariffDetail putTariffDetail(@RequestBody(required = true) Tariff tariff) throws ParseException {
         TariffDetail tariffDetail = tariff.getTariffDetails().iterator().next();
         tariff.setTariffDetails(null);
         tariffDetail.setTariff(tariff);
 
-        tariffDetailRepository.save(tariffDetail);
-
-        tariff.setTariffDetails(new HashSet<TariffDetail>());
-        tariff.getTariffDetails().add(tariffDetail);
-        return tariff;
+        return tariffDetailRepository.save(tariffDetail);
     }
 
     @RequestMapping(value = "/get/allTariff", method = RequestMethod.GET, produces = { "application/json;charset=UTF-8" })
@@ -108,8 +107,8 @@ public class TariffRestController {
 
         for (TariffDetail tariffDetail : tariffDetails) {
             if (StringUtils.contains(tariffDetail.getDays(), currentDay)) {
-                int startMinutes = (tariffDetail.getStartTime().get(Calendar.HOUR_OF_DAY) * 60) + tariffDetail.getStartTime().get(Calendar.MINUTE);
-                int endMinutes = (tariffDetail.getEndTime().get(Calendar.HOUR_OF_DAY) * 60) + tariffDetail.getEndTime().get(Calendar.MINUTE);
+                int startMinutes = getNumberOfMinutes(tariffDetail.getStartTime());
+                int endMinutes = getNumberOfMinutes(tariffDetail.getEndTime());
                 if (currenttMinutes >= startMinutes && currenttMinutes <= endMinutes) {
                     return tariffDetail.getPrice();
                 }
@@ -117,6 +116,12 @@ public class TariffRestController {
         }
 
         return tariff.getPrice();
+    }
+
+    private int getNumberOfMinutes(String time) {
+        int hours = Integer.parseInt(time.split(":")[0]);
+        int minutes = Integer.parseInt(time.split(":")[1]);
+        return (hours * 60) + minutes;
     }
 
     @RequestMapping(value = "/post/saveTariffByGroup", method = RequestMethod.POST, produces = { "application/json;charset=UTF-8" })
