@@ -126,73 +126,111 @@ map = {
 		
 		$('#sedeTbl').DataTable({			
 			scrollY: 300,
-		    paging: false,
+		    paging: true,
 			ordering: true,
-			searching: false,
+			searching: true,
 			bLengthChange: false,
 			bInfo: false,
-			language: {	     
-			     emptyTable: "No hay datos disponibles",
+			language: {
+			    search: "Buscar Sede: ",
+			    zeroRecords: "No se encontró registros",			     
+			    emptyTable: "No hay datos disponibles",
+			    paginate: {
+			        "first":      "Primero",
+			        "last":       "Ultimo",
+			        "next":       "Siguiente",
+			        "previous":   "Anterior"
+			    }
 			},
 		});
 		$('#tarifaTbl').DataTable({
 			scrollY: 300,
-		    paging: false,
+		    paging: true,
 			ordering: true,
 			searching: false,
 			bLengthChange: false,
 			bInfo: false,
 			language: {	     
 			     emptyTable: "No hay datos disponibles",
+			     paginate: {
+				        "first":      "Primero",
+				        "last":       "Ultimo",
+				        "next":       "Siguiente",
+				        "previous":   "Anterior"
+				    }
 			},
 		});
 		$('#tariffDetailTbl').DataTable({
 			scrollY: 300,
-		    paging: false,
+		    paging: true,
 			ordering: true,
 			searching: false,
 			bLengthChange: false,
 			bInfo: false,
 			language: {	     
 			     emptyTable: "No hay datos disponibles",
+			     paginate: {
+				        "first":      "Primero",
+				        "last":       "Ultimo",
+				        "next":       "Siguiente",
+				        "previous":   "Anterior"
+				    }
 			},
 		});
 		$('#reglaTbl').DataTable({
 			scrollY: 300,
-		    paging: false,
+		    paging: true,
 			ordering: true,
 			searching: false,
 			bLengthChange: false,
 			bInfo: false,
 			language: {	     
 			     emptyTable: "No hay datos disponibles",
+			     paginate: {
+				        "first":      "Primero",
+				        "last":       "Ultimo",
+				        "next":       "Siguiente",
+				        "previous":   "Anterior"
+				    }
 			},
 		});
 		$('#nivelTbl').DataTable({
 			scrollY: 300,
-		    paging: false,
+		    paging: true,
 		    ordering: true,
 		    searching: false,
 			bLengthChange: false,
 			bInfo: false,
 			language: {	     
 			     emptyTable: "No hay datos disponibles",
+			     paginate: {
+				        "first":      "Primero",
+				        "last":       "Ultimo",
+				        "next":       "Siguiente",
+				        "previous":   "Anterior"
+				    }
 			},
 		});
 		$('#premioTbl').DataTable({
 		    pscrollY: 300,
-		    paging: false,
+		    paging: true,
 		    ordering: true,
 		    searching: false,
 			bLengthChange: false,
 			bInfo: false,
 			language: {	     
 			     emptyTable: "No hay datos disponibles",
+			     paginate: {
+				        "first":      "Primero",
+				        "last":       "Ultimo",
+				        "next":       "Siguiente",
+				        "previous":   "Anterior"
+				    }
 			},
 		});
 		$('#clienteTbl').DataTable({			
 			scrollY: 300,
-		    paging: false,
+		    paging: true,
 			ordering: true,
 			searching: true,
 			bLengthChange: false,
@@ -201,11 +239,17 @@ map = {
 			    search: "Buscar Cliente: ",
 			    zeroRecords: "No se encontró registros",			     
 			    emptyTable: "No hay datos disponibles",
+			    paginate: {
+			        "first":      "Primero",
+			        "last":       "Ultimo",
+			        "next":       "Siguiente",
+			        "previous":   "Anterior"
+			    }
 			},
 		});
 		$('#empleadoTbl').DataTable({			
 			scrollY: 300,
-		    paging: false,
+		    paging: true,
 			ordering: true,
 			searching: true,
 			bLengthChange: false,
@@ -214,39 +258,63 @@ map = {
 			    search: "Buscar Empleado: ",
 			    zeroRecords: "No se encontró registros",			     
 			    emptyTable: "No hay datos disponibles",
+			    paginate: {
+			        "first":      "Primero",
+			        "last":       "Ultimo",
+			        "next":       "Siguiente",
+			        "previous":   "Anterior"
+			    }
 			},
 		});
 		$('#experienceTbl').DataTable({
 		    pscrollY: 300,
-		    paging: false,
+		    paging: true,
 		    ordering: true,
 		    searching: false,
 			bLengthChange: false,
 			bInfo: false,
 			language: {	     
 			    emptyTable: "No hay datos disponibles",
+			    paginate: {
+			        "first":      "Primero",
+			        "last":       "Ultimo",
+			        "next":       "Siguiente",
+			        "previous":   "Anterior"
+			    }
 			},
 		});
 		$('#parametroTbl').DataTable({
 		    pscrollY: 300,
-		    paging: false,
+		    paging: true,
 		    ordering: true,
 		    searching: false,
 			bLengthChange: false,
 			bInfo: false,
 			language: {	     
 			    emptyTable: "No hay datos disponibles",
+			    paginate: {
+			        "first":      "Primero",
+			        "last":       "Ultimo",
+			        "next":       "Siguiente",
+			        "previous":   "Anterior"
+			    }
 			},
 		});
 		$('#bonificacionTbl').DataTable({
 		    pscrollY: 300,
-		    paging: false,
+		    paging: true,
 		    ordering: true,
 		    searching: false,
 			bLengthChange: false,
 			bInfo: false,
 			language: {	     
 			    emptyTable: "No hay datos disponibles",
+			    paginate: {
+			        "first":      "Primero",
+			        "last":       "Ultimo",
+			        "next":       "Siguiente",
+			        "previous":   "Anterior"
+			    }
 			},
 		});
 		fillArraySede();
@@ -684,7 +752,7 @@ function saveSede(){
 		else{
 			sede.estado = estados[1].name; }	
 		for ( i = 0; i< length ; i++){
-			if (idUser == operarios[i].id ){ sede.employee = operarios[i].name; break;}
+			if (idUser == operarios[i].id ){sede.employee = operarios[i].name; break;}
 		}		
 		sedes.splice(sedeIndex, 1, sede);
 		fillSedetbl();
@@ -1010,8 +1078,8 @@ function fillReglatbl(  ){
                 reglas[i].name,
                 reglas[i].rechargingFraction,
                 reglas[i].points,                
-                reglas[i].level,
-                reglas[i].status,
+                reglas[i].level.name,
+                reglas[i].status.name,
         ] ).draw( false );
 	};
 	if (size > 0 ){
@@ -1221,7 +1289,7 @@ function deleteRegla( code, index ){
 	    contentType: 'text/uri-list',
 	    success: function (data) {
 	    	console.log("Se asigno estado a Regla" + code);
-	    	reglas[index].status = "Inactivo";
+	    	reglas[index].status.name = "Inactivo";
 	    	fillReglatbl();
 	    },
 	    error: function (xhr, status) {	    	
@@ -1329,6 +1397,8 @@ function saveRegla(){
 	var idRegla = $("#idRegla").attr("value");
 	console.log("Inside form-regla " + idRegla);
 	var regla = {}; var newRegla = 1;
+	regla.status = {};
+	regla.level = {};
 	regla.name = trim( $( "#nameReglaPunt" ).val() );
 	regla.rechargingFraction = trim( $( "#rechargingFraction" ).val() );
 	regla.points = trim( $( "#pointsReglaPunt" ).val() );
@@ -1343,25 +1413,28 @@ function saveRegla(){
 	$(regla_nivelHtml).parents(".dropdown").find('.btn').html('Seleccionar <span class="caret"></span>');
 	$(regla_nivelHtml).parents(".dropdown").find('.btn').val("");
 	//$("#numberPcs").val(""); $("#numberConsoles").val("");
-	var strUrl = window.location.protocol + "//" + window.location.host + "/cabin-web/regla_puntuacion";			
+	var strUrl = window.location.protocol + "//" + window.location.host + "/cabin-web/post/punctuation_rule";			
 	if (idRegla !== "") {
-		strUrl += "/" + idRegla;
 		regla.id = idRegla; newRegla = 0;
 		if( idStatus == estados[0].id)
-			regla.status = estados[0].name;
+			regla.status.name = idStatus;
 		else
-			regla.status = estados[1].name;				
+			regla.status.name = estados[1].name;				
+		regla.status.id = idStatus;
 		var length = niveles.length;
 		for ( i = 0; i< length ; i++){
-			if (idNivel == niveles[i].id ){ regla.level = niveles[i].name; break;}
+			if (idNivel == niveles[i].id ){
+				regla.level.name = niveles[i].name; break
+			}
 		}
+		regla.level.id = idNivel;
 		reglas.splice(reglaIndex, 1, regla);
 		fillReglatbl();
 	}						 
 	console.log(JSON.stringify(regla));
 	$.ajax({
 		async: false,
-		type: idRegla === "" ? "POST" : "PATCH",
+		type: "POST",
 	    url:strUrl,			    
 	    dataType: 'json', 
 	    data: JSON.stringify(regla), 
@@ -1371,18 +1444,11 @@ function saveRegla(){
 	    	if (idRegla != ""){
 	    		$("#btnRegla").html("Nueva Regla");
 	    		$("#idRegla").attr("value", "");			    		
-	    	}			    	
+	    	}
+	    	associateStatus(data.id, idStatus, idNivel, newRegla);
 	    },
 	    error: function (xhr, status) {	    	
 	    	console.log("Error, su solicitud no pudo ser atendida");
-	    },
-	    complete: function(xhr) {
-	    	var strLocation = xhr.getResponseHeader('Location');
-	    	if(idRegla == ""){
-	    		var hrefArray = strLocation.split("/");
-	    		idRegla = hrefArray[hrefArray.length -1];
-	    	}
-	    	associateStatus(idRegla, idStatus, idNivel, newRegla);
 	    }
 	});
 }
@@ -1885,7 +1951,7 @@ function fnOpenErrorDialog() {
 
 function fillRule(idRegla, name, rechargingFraction, points){
 	var strRule = window.location.protocol + "//" + window.location.host + "/cabin-web/regla_puntuacion/"+idRegla+"/status";
-	var status; var level;
+	var status = {}; var level = {};
 	$.ajax({
 		async:false,
 	    url:strRule,
@@ -1894,7 +1960,7 @@ function fillRule(idRegla, name, rechargingFraction, points){
 	    success: function (json) {	
 	    	//var hrefArray = json._links.self.href.split("/");
 	    	//idStatus = hrefArray[hrefArray.length -1];
-	    	status = json.name;
+	    	status.name = json.name;
 	    },
 	    error: function (xhr, status) {    	
 	    	console.log("Error, su solicitud no pudo ser atendida");
@@ -1909,7 +1975,7 @@ function fillRule(idRegla, name, rechargingFraction, points){
 	    success: function (json) {	
 	    	//var hrefArray = json._links.self.href.split("/");
 	    	//idStatus = hrefArray[hrefArray.length -1];
-	    	level = json.name;
+	    	level.name = json.name;
 	    },
 	    error: function (xhr, status) {    	
 	    	console.log("Error, su solicitud no pudo ser atendida");
