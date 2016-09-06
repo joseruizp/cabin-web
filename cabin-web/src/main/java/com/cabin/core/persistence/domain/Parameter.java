@@ -14,6 +14,10 @@ import javax.persistence.ManyToOne;
 public class Parameter implements Serializable {
 
 	private static final long serialVersionUID = 3018012749173085005L;
+	
+	public static Long RECHARGE_FRACTION = 1L;
+	public static Long MINIMUN_RECHARGE = 2L;
+	public static Long MAXIMUM_NUMBER_OF_FAILURES = 3L;
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)

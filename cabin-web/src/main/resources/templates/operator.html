@@ -175,6 +175,14 @@
 					</div>
 				</div>
 				<div class="row" style="margin-left: 90px">					
+					<div class="form-group">
+						<label class="control-label col-sm-2" for="name">Sede:</label>
+						<div class="col-sm-6">
+							<select id="computerHeadquarterId" class="headquartedSelect">
+								<option></option>
+							</select>
+						</div>		
+					</div>
 					<div class="multipe-div">
 						<div class="multipe-box">
 							<select class="select-multiple" multiple="multiple" size="3" id="computer-multiple">
@@ -214,6 +222,14 @@
 					</div>
 				</div>
 				<div class="row" style="margin-left: 90px">
+					<div class="form-group">
+						<label class="control-label col-sm-2" for="name">Sede:</label>
+						<div class="col-sm-6">
+							<select id="consoleHeadquarterId" class="headquartedSelect">
+								<option></option>
+							</select>
+						</div>		
+					</div>
 					<div class="multipe-div">
 						<div class="multipe-box">
 							<select class="select-multiple" multiple="multiple" size="3" id="console-multiple">
@@ -373,6 +389,9 @@
 			</div>
 		</div>
 
+		<input type="hidden" id="employeeId" th:value="${employeeId}"></input>
+		<input type="hidden" id="employeeId"></input>
+		
 	<!-- JavaScript --> 
 		<script type="text/javascript" th:src="@{plugins/jquery.min.js}"></script>
 		<script type="text/javascript" th:src="@{bootstrap/js/bootstrap.min.js}"></script>
@@ -385,8 +404,8 @@
 		<script type="text/javascript" th:src="@{plugins/select2-4.0.3/js/select2.min.js}"></script>
 		<script type="text/javascript" th:src="@{plugins/dataTables/js/jquery.dataTables.js}"></script>
 		<!-- Custom Scripts -->
-		<script type="text/javascript" th:src="@{js/computerAndConsole.js}"></script>
 		<script type="text/javascript" th:src="@{js/operator.js}"></script>
+		<script type="text/javascript" th:src="@{js/computerAndConsole.js}"></script>
 
 	</body>
 </html>

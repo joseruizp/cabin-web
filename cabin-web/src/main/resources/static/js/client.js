@@ -14,6 +14,7 @@ $(function() {
     $(document).ready(function(){
     	getClientInformation();
     	addRechargeEvent();
+    	getComputersAndConsoles();
 	});
     
     function getClientInformation() {
@@ -88,4 +89,10 @@ $(function() {
 			div.hide(1000);
 		}, 5000);
 	}
+    
+    function getComputersAndConsoles() {
+		var headquarterId = $("#headquarterId").val();
+		getComputers(headquarterId);
+		getConsoles(headquarterId);
+    }
 });

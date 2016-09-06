@@ -1,4 +1,5 @@
 clients = [];
+headquarters = [];
 data = [];
 tickets = []; ticketIndex = -1;
 ticketsCierreCaja = [];
@@ -54,7 +55,9 @@ $(document).ready(function() {
 		cierreCajaValidation = $("#cierreCajaValidation");
 		
 		fillArrayClients();	
+		fillArrayHeadquarters();
 		fillArrayTickets();
+		addHeadquartersSelectEvent();
 });
 
 function format(item) { return item.tag; }
@@ -103,6 +106,66 @@ function fillArrayClients(){
 	    	console.log("Error, su solicitud no pudo ser atendida");
 	    }
 	});	
+}
+
+function fillArrayHeadquarters(){
+	var length = headquarters.length;
+	headquarters.splice(0, length);
+	var strUrl = window.location.protocol + "//" + window.location.host + "/cabin-web/get/allHeadquarters/";		
+	$.ajax({
+	    url:strUrl,
+	    crossDomain: true,
+	    dataType: "json",
+	    success: function (json) {
+	    	$.each(json, function(index, value) {		    		
+	    		headquarters.push({
+					id: value.id,
+					name: value.name,
+				});
+		    	data.push({ 
+					id: value.id,
+					text: value.name,
+				});
+			});
+	    },
+	    complete: function(){	    	
+	    	var placeholder = "<i class='fa fa-search'></i>  " + "Seleccione una sede";
+	    	$(".headquartedSelect").select2({
+				width: "100%",	
+				data: data,
+			    formatSelection: format,
+			    formatResult: format,
+			    placeholder: placeholder,
+				allowClear: true,
+				escapeMarkup: function(m) { 
+				       return m; 
+				},
+				language: {
+				       "noResults": function(){
+				           return "No se encontraron resultados";
+				       }
+				},
+			});
+	    	$("#computerHeadquarterId").val(data[0].id);
+	    	$("#consoleHeadquarterId").val(data[0].id);
+	    	$("#computerHeadquarterId").change();
+	    	$("#consoleHeadquarterId").change();
+	    },	    
+	    error: function (xhr, status) {    	
+	    	console.log("Error, su solicitud no pudo ser atendida");
+	    }
+	});	
+}
+
+function addHeadquartersSelectEvent() {
+	$("#computerHeadquarterId").change(function() {
+		var headquarterId = $(this).val();
+		getComputers(headquarterId);
+	});
+	$("#consoleHeadquarterId").change(function() {
+		var headquarterId = $(this).val();
+		getConsoles(headquarterId);
+	});
 }
 
 function fillArrayTicketsCierreCaja( idCierreCaja){
