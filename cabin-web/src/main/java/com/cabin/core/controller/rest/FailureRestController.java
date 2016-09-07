@@ -39,8 +39,9 @@ public class FailureRestController {
         return failureRepository.findAll();
     }
 
-    @RequestMapping(value = "/get/report", method = RequestMethod.POST, produces = { "application/json;charset=UTF-8" })
-    public FailureByComputer reportFailures(@RequestParam(value = "id", required = true) Long computerId, @RequestParam(value = "id", required = true) Long failureId) {
+    @RequestMapping(value = "/put/report", method = RequestMethod.PUT, produces = { "application/json;charset=UTF-8" })
+    public FailureByComputer putReportFailures(@RequestParam(value = "computerId", required = true) Long computerId,
+            @RequestParam(value = "failureId", required = true) Long failureId) {
         Parameter parameter = parameterRepository.findOne(Parameter.MAXIMUM_NUMBER_OF_FAILURES);
         int maximumNumberOfFailures = Integer.parseInt(parameter.getValue());
 
@@ -55,13 +56,12 @@ public class FailureRestController {
 
         List<FailureByComputer> failureByComputers = failureByComputerRepository.findByComputerIdAndStatusId(computerId, Status.ACTIVE);
         if (CollectionUtils.size(failureByComputers) >= maximumNumberOfFailures) {
-            Computer computer = new Computer();
-            computer.setId(computerId);
+            Computer computer = computerRepository.findOne(computerId);
             computer.setStatus(new Status());
             computer.getStatus().setId(Status.INACTIVE);
             computerRepository.saveAndFlush(computer);
         }
-        
+
         return failureByComputer;
     }
 }

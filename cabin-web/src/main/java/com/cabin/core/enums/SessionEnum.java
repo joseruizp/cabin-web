@@ -6,6 +6,7 @@ public enum SessionEnum {
     EMPLOYEE_ID,
     USER_PROFILE,
     IS_ANONYMOUS,
+    USER_ID,
     USER_NAME,
     HEADQUARTER_ID;
 }

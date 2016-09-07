@@ -110,37 +110,49 @@
 					</div>
 				</div>
 				<div class="row" style="margin-bottom: 40px">
-					<div class="col-md-3"></div>
+					<div class="col-md-2"></div>
 					<div class="col-md-3">
 						<form class="form-horizontal" role="form">
 							<div class="form-group">
-								<label class="control-label col-sm-3">Usuario:</label>
+								<label class="control-label col-sm-5">Usuario:</label>
 								<label class="control-label col-sm-2" id="clientName"></label>
 							</div>
 							<div class="form-group">
-								<label class="control-label col-sm-3">Nivel:</label>
+								<label class="control-label col-sm-5">Nivel:</label>
 								<label class="control-label col-sm-2" id="level"></label>
 							</div>
-						</form>
-					</div>
-					<div class="col-md-2">
-						<form class="form-horizontal" role="form">
 							<div class="form-group">
-								<label class="control-label col-sm-4">Puntos:</label> <label
-									class="control-label col-sm-2" id="points"></label>
-							</div>
-							<div class="form-group">
-								<label class="control-label col-sm-4">Saldo:</label> <label
-									class="control-label col-sm-2" id="balance"></label>
-							</div>
+                                <label class="control-label col-sm-5">Minimo de Recarga:</label> <label
+                                    class="control-label col-sm-2" id="minimumRecharge"></label>
+                            </div>
 						</form>
 					</div>
 					<div class="col-md-3">
 						<form class="form-horizontal" role="form">
 							<div class="form-group">
-								<label class="control-label col-sm-4">Experiencia:</label> <label
+								<label class="control-label col-sm-5">Puntos:</label> <label
+									class="control-label col-sm-2" id="points"></label>
+							</div>
+							<div class="form-group">
+								<label class="control-label col-sm-5">Saldo:</label> <label
+									class="control-label col-sm-2" id="balance"></label>
+							</div>
+							<div class="form-group">
+                                <label class="control-label col-sm-5">Maximo de Recarga:</label> <label
+                                    class="control-label col-sm-2" id="maximumRecharge"></label>
+                            </div>
+						</form>
+					</div>
+					<div class="col-md-3">
+						<form class="form-horizontal" role="form">
+							<div class="form-group">
+								<label class="control-label col-sm-5">Experiencia:</label> <label
 									class="control-label col-sm-2" id="experience"></label>
 							</div>
+							<div class="form-group">
+                                <label class="control-label col-sm-5">Fraccion de Recarga:</label> <label
+                                    class="control-label col-sm-2" id="rechargeFraction"></label>
+                            </div>
 						</form>
 					</div>
 				</div>
@@ -298,11 +310,19 @@
 		
 		<div id="passwordDialog" title="Informacion Consola" style="display: none;">
 			<div class="col-md-10" style="margin-bottom: 10px">
-				<form class="form-horizontal" role="form" id="form-regla">
+				<form class="form-horizontal" role="form">
 					El password autogenerado es: <span id="generatedPassword"></span>
 				</form>
 			</div>
 		</div>
+		
+		<div id="messageDialog" title="Informacion Consola" style="display: none;">
+            <div class="col-md-10" style="margin-bottom: 10px">
+                <form class="form-horizontal" role="form">
+                    <span id="message"></span>
+                </form>
+            </div>
+        </div>
 		
 		<input type="hidden" id="clientId" th:value="${clientId}"></input>
 		<input type="hidden" id="headquarterId" th:value="${headquarterId}"></input>

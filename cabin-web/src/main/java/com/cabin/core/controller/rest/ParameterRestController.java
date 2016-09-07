@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.cabin.core.persistence.domain.Parameter;
+import com.cabin.core.persistence.domain.RechargeInfo;
 import com.cabin.core.persistence.repository.ParameterRepository;
 
 @RestController
@@ -22,6 +23,15 @@ public class ParameterRestController {
     @RequestMapping(value = "/get/allParameters", method = RequestMethod.GET, produces = { "application/json;charset=UTF-8" })
     public List<Parameter> getAllParameters() {
         return parameterRepository.findAll();
+    }
+
+    @RequestMapping(value = "/get/parametersRecharge", method = RequestMethod.GET, produces = { "application/json;charset=UTF-8" })
+    public RechargeInfo getParametersRecharge() {
+        RechargeInfo rechargeInfo = new RechargeInfo();
+        rechargeInfo.setMinimumFraction(Double.parseDouble(getParameter(Parameter.MINIMUN_RECHARGE).getValue()));
+        rechargeInfo.setMaximumFraction(Double.parseDouble(getParameter(Parameter.MAXIMUM_RECHARGE).getValue()));
+        rechargeInfo.setRechargeFraction(Double.parseDouble(getParameter(Parameter.RECHARGE_FRACTION).getValue()));
+        return rechargeInfo;
     }
 
     @RequestMapping(value = "/get/parameter", method = RequestMethod.GET, produces = { "application/json;charset=UTF-8" })

@@ -618,7 +618,7 @@
 	
 	LOCK TABLES `sede` WRITE;
 	/*!40000 ALTER TABLE `sede` DISABLE KEYS */;
-	INSERT INTO `sede` VALUES (1,'sede UNI 10','av. tupac amaru 10',1,1),(2,'sede prueba 2','direccion prueba 2 edit',1,1),(5,'sede prueba 5','dirección prueba 5 edit',1,1),(6,'Sede Fiori','jr Verona 425',10,1);
+	INSERT INTO `sede` VALUES (1,'sede UNI 10','av. tupac amaru 10',1,1),(2,'sede prueba 2','direccion prueba 2 edit',8,1),(5,'sede prueba 5','dirección prueba 5 edit',9,1),(6,'Sede Fiori','jr Verona 425',10,1);
 	/*!40000 ALTER TABLE `sede` ENABLE KEYS */;
 	UNLOCK TABLES;
 	
@@ -789,7 +789,7 @@
 	
 	LOCK TABLES `parametro` WRITE;
 	/*!40000 ALTER TABLE `parametro` DISABLE KEYS */;
-	INSERT INTO `parametro` VALUES (1,'Fracción de recarga', 0.5,1),(2,'Fracción mínima.', 0.5,1),(3,'Numero maximo de fallas.', '3',1);
+	INSERT INTO `parametro` VALUES (1,'Fracción de recarga', 0.5,1),(2,'Fracción mínima.', 0.5,1),(3,'Fracción manima.', 5,1),(4,'Numero maximo de fallas.', '3',1);
 	/*!40000 ALTER TABLE `parametro` ENABLE KEYS */;
 	UNLOCK TABLES;
 	

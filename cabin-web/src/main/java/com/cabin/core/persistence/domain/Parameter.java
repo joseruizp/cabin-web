@@ -17,7 +17,8 @@ public class Parameter implements Serializable {
 	
 	public static Long RECHARGE_FRACTION = 1L;
 	public static Long MINIMUN_RECHARGE = 2L;
-	public static Long MAXIMUM_NUMBER_OF_FAILURES = 3L;
+	public static Long MAXIMUM_RECHARGE = 3L;
+	public static Long MAXIMUM_NUMBER_OF_FAILURES = 4L;
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)

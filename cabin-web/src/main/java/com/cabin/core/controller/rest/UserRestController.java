@@ -52,6 +52,7 @@ public class UserRestController {
         System.out.println("httpSession ::: " + httpSession);
         httpSession.setAttribute(SessionEnum.CLIENT_ID.name(), client.getId());
         httpSession.setAttribute(SessionEnum.HEADQUARTER_ID.name(), user.getHeadquarterId());
+        httpSession.setAttribute(SessionEnum.USER_ID.name(), users.get(0).getId());
         httpSession.setAttribute(SessionEnum.USER_NAME.name(), user.getName());
 
         return client;
@@ -80,6 +81,7 @@ public class UserRestController {
         httpSession.setAttribute(SessionEnum.IS_ANONYMOUS.name(), false);
         httpSession.setAttribute(SessionEnum.USER_PROFILE.name(), userRequest.getProfileId());
         httpSession.setAttribute(SessionEnum.HEADQUARTER_ID.name(), userRequest.getHeadquarterId());
+        httpSession.setAttribute(SessionEnum.USER_ID.name(), user.getId());
         httpSession.setAttribute(SessionEnum.USER_NAME.name(), user.getName());
 
         return user;

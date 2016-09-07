@@ -175,14 +175,6 @@
 					</div>
 				</div>
 				<div class="row" style="margin-left: 90px">					
-					<div class="form-group">
-						<label class="control-label col-sm-2" for="name">Sede:</label>
-						<div class="col-sm-6">
-							<select id="computerHeadquarterId" class="headquartedSelect">
-								<option></option>
-							</select>
-						</div>		
-					</div>
 					<div class="multipe-div">
 						<div class="multipe-box">
 							<select class="select-multiple" multiple="multiple" size="3" id="computer-multiple">
@@ -222,14 +214,6 @@
 					</div>
 				</div>
 				<div class="row" style="margin-left: 90px">
-					<div class="form-group">
-						<label class="control-label col-sm-2" for="name">Sede:</label>
-						<div class="col-sm-6">
-							<select id="consoleHeadquarterId" class="headquartedSelect">
-								<option></option>
-							</select>
-						</div>		
-					</div>
 					<div class="multipe-div">
 						<div class="multipe-box">
 							<select class="select-multiple" multiple="multiple" size="3" id="console-multiple">
@@ -390,7 +374,7 @@
 		</div>
 
 		<input type="hidden" id="employeeId" th:value="${employeeId}"></input>
-		<input type="hidden" id="employeeId"></input>
+		<input type="hidden" id="headquarterId" th:value="${headquarterId}"></input>
 		
 	<!-- JavaScript --> 
 		<script type="text/javascript" th:src="@{plugins/jquery.min.js}"></script>

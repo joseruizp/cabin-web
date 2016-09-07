@@ -356,7 +356,6 @@ map = {
 					saveTarifa();
 				}
 			}
-			
 		});
 		//Regla puntuacion save - update
 		$( "#form-regla" ).submit(function( event ) {
@@ -869,6 +868,11 @@ function editTarifa( code, index ){
 			var statusHtml = $("#statusTarifa li a");			
 			statusHtml.parents(".dropdown").find('.btn').html( json.status.name +' <span class="caret"></span>');
 			statusHtml.parents(".dropdown").find('.btn').val( json.status.id);
+			
+			$('#startTime').prop('disabled', true);
+	    	$('#endTime').prop('disabled', true);
+	    	$('#price').prop('disabled', true);
+			
 			$("#idTarifa").val(idTariff);
 			$("#btnTarifa").html("Actualizar Tarifa");
 			
@@ -990,23 +994,17 @@ function saveTarifa() {
         contentType: 'application/json',
         success: function (data) {
             console.log("Send a tarifa into DB");
-            $("#idTarifa").attr("value", data.id);
-            
             $( "#price" ).val("");
             $( "#startTime" ).val("");
             $( "#endTime" ).val("");
             $(statusHtml).parents(".dropdown").find('.btn').html('Activo <span class="caret"></span>');
             $(statusHtml).parents(".dropdown").find('.btn').val("1");
 
-            if (hasDetails) {
-                $('#descriptionTarifa').prop('disabled', true);
-                $('#priceTariff').prop('disabled', true);
-                fillArrayTarifaDetails(data.id);	
-            } else {
-                $('#descriptionTarifa').val("");
-                $('#priceTariff').val("");
-                fillArrayTarifa();
-            }
+            $('#descriptionTarifa').val("");
+            $('#priceTariff').val("");
+            $("#divTariffBtn").show();
+            $("#divTariffDetailBtn").hide();
+            fillArrayTarifa();
         },
         error: function (xhr, status) {
             console.log("Error, su solicitud no pudo ser atendida");
@@ -2662,7 +2660,6 @@ function fillArrayEmpleado(){
 function fillArrayTarifa(){
 	$("#listaTarifasDiv").show();
 	$("#listaDetailTariffDiv").hide();
-	$("#btnTarifa").show();
 	var length = tarifas.length;
 	tarifas.splice(0, length);
 	var strUrl = window.location.protocol + "//" + window.location.host + "/cabin-web/get/allTariff/";		

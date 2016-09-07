@@ -1,4 +1,5 @@
 $(function() {
+	var rechargeInfo = {};
     $(".computer-multiple").click(function() {
     	$( "#computerDialog" ).dialog({
     		  width: 700
@@ -13,6 +14,7 @@ $(function() {
     
     $(document).ready(function(){
     	getClientInformation();
+    	getRechargeInformation();
     	addRechargeEvent();
     	getComputersAndConsoles();
 	});
@@ -40,16 +42,58 @@ $(function() {
 		});
     }
     
+    function getRechargeInformation() {
+    	var hostname = window.location.protocol + "//" + window.location.host;
+		var strUrl = hostname + "/cabin-web/get/parametersRecharge";
+		$.ajax({
+			type: "GET",
+		    url:strUrl,			    
+		    dataType: 'json', 
+		    contentType: 'application/json',
+		    success: function (data) {
+		    	$("#rechargeFraction").text(data.rechargeFraction);
+		    	$("#minimumRecharge").text(data.minimumFraction);
+		    	$("#maximumRecharge").text(data.maximumFraction);
+		    	rechargeInfo.rechargeFraction = Number(data.rechargeFraction);
+		    	rechargeInfo.minimumFraction = Number(data.minimumFraction);
+		    	rechargeInfo.maximumFraction = Number(data.maximumFraction);
+		    },
+		    error: function (xhr, status) {	    	
+		    	console.log("Error, su solicitud no pudo ser atendida");
+		    }
+		});
+    }
+    
     function addRechargeEvent() {
     	$("#rechargeBtn").click(function(e) {
     		e.preventDefault();
     		var clientId = $("#clientId").val();
-    		var enterAmount = $("#enterAmount").val();
-        	var amount = $("#rechargeAmount").val();
-        	var change = Number(enterAmount) - Number(amount);
+    		var enterAmount = Number($("#enterAmount").val());
+        	var amount = Number($("#rechargeAmount").val());
+        	
+        	if (amount < rechargeInfo.minimumFraction) {
+        		$("#message").text("El monto es menor que el minimo de recarga requerido.");
+        		$( "#messageDialog" ).dialog({
+		      		  width: 700
+		      	}); 
+        		return;
+        	} else if (amount > rechargeInfo.maximumFraction) {
+        		$("#message").text("El monto es mayor que el minimo de recarga requerido.");
+        		$( "#messageDialog" ).dialog({
+		      		  width: 700
+		      	}); 
+        		return;
+        	}
+        	
+        	amount = (amount - (amount % rechargeInfo.rechargeFraction).toFixed(1));
+        	$("#rechargeAmount").val("" + amount);
+        	
+        	var change = enterAmount - amount;
         	var recharge = {};
         	recharge.clientId = clientId;
         	recharge.amount = amount;
+        	
+        	console.log("rechargeInfo: " + rechargeInfo);
         	
         	var hostname = window.location.protocol + "//" + window.location.host;
     		var strUrl = hostname + "/cabin-web/post/recharge";
