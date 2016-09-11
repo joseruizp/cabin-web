@@ -138,14 +138,46 @@
 							<label class="control-label col-sm-2" for="nameCustomer">Nombre:</label>
 							<div class="col-sm-4">
 								<input class="form-control" id="nameCustomer"
-									placeholder="Nombre y Apellidos" maxlength="20"/>
-							</div>							
-					        <label class="control-label col-sm-2" for="emailCustomer">Email:</label>
+									placeholder="Nombre" maxlength="20"/>
+							</div>
+							<label class="control-label col-sm-2" for="lastnameCustomer">Apellidos:</label>
+							<div class="col-sm-4">
+								<input class="form-control" id="lastnameCustomer"
+									placeholder="Apellidos" maxlength="40"/> 
+							</div>
+						</div>						
+						<div class="form-group">
+							<label class="control-label col-sm-2" for="emailCustomer">Email:</label>
 							<div class="col-sm-4">
 								<input class="form-control" id="emailCustomer"
 									placeholder="Correo" maxlength="40"/> 
 							</div>
-						</div>						
+							<label class="control-label col-sm-2" for="birthDateCustomer">Fecha nacimiento:</label>
+					        <div class="col-sm-4">
+					            <div class="input-group date">
+						            <input type="text" class="form-control input-date" name="birthDate" id="birthDateCustomer" placeholder="dd/mm/aaaa"/>
+						            <span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
+					            </div>
+				         	</div>													    
+						</div>
+						<div class="form-group">														
+							<label class="control-label col-sm-2" for="docTypeCustomer">Tipo Documento:</label>
+							<div class="col-sm-4">
+								<div class="dropdown">
+									<button class="btn btn-primary dropdown-toggle" type="button"
+										data-toggle="dropdown" id="docTypeButtonCustomer">
+										Seleccionar <span class="caret"></span>
+									</button>
+									<ul id="docTypeCustomer" class="dropdown-menu">																													
+									</ul>
+								</div>
+							</div>						
+							<label class="control-label col-sm-2" for="docCodeCustomer">N. Documento:</label>
+							<div class="col-sm-4">
+								<input  class="form-control" id="docCodeCustomer"
+									placeholder="N. Documento" maxlength="15"/>
+							</div>
+						</div>
 						<div class="form-group">
 							<label class="col-sm-2 control-label">Sexo:</label>
 						    <div class="col-sm-4">
@@ -159,20 +191,6 @@
 										<li><a href="/" onclick="return false;">Femenino</a></li>
 									</ul>
 								</div>
-							</div>
-						    <label class="control-label col-sm-2" for="birthDateCustomer">Fecha nacimiento:</label>
-					        <div class="col-sm-4">
-					            <div class="input-group date">
-						            <input type="text" class="form-control input-date" name="birthDate" id="birthDateCustomer" placeholder="dd/mm/aaaa"/>
-						            <span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
-					            </div>
-				         	</div>
-						</div>
-						<div class="form-group">
-							<label class="control-label col-sm-2" for="balanceCustomer">Saldo (S/.):</label>
-							<div class="col-sm-4">
-								<input  class="form-control" id="balanceCustomer"
-									placeholder="Saldo" maxlength="20"/>
 							</div>
 							<label class="control-label col-sm-2" for="pointsCustomer">Cantidad de puntos:</label>
 							<div class="col-sm-4">
@@ -203,7 +221,7 @@
 									<ul id="nivelCustomer" class="dropdown-menu">																													
 									</ul>
 								</div>
-							</div>
+							</div>							
 							<label class="control-label col-sm-2" for="statusCustomer">Estado:</label>
 							<div class="col-sm-4">
 								<div class="dropdown">
@@ -222,7 +240,12 @@
 							<label class="control-label col-sm-2" for="experienceCustomer">Cantidad de experiencia:</label>
 							<div class="col-sm-4">
 								<input class="form-control" id="experienceCustomer"
-									placeholder="Nombre" maxlength="11" value="0"/>
+									placeholder="Cantidad de experiencia" maxlength="11" value="0"/>
+							</div>
+							<label class="control-label col-sm-2" for="balanceCustomer">Saldo (S/.):</label>
+							<div class="col-sm-4">
+								<input  class="form-control" id="balanceCustomer"
+									placeholder="Saldo" maxlength="20"/>
 							</div>							
 						</div>	
 						<div class="form-group">
@@ -276,36 +299,26 @@
 							<div class="col-sm-4">
 								<input class="form-control" id="nameEmployee"
 									placeholder="Nombre" maxlength="20"/>
+							</div>	
+							<label class="control-label col-sm-2" for="lastnameEmployee">Apellidos:</label>
+							<div class="col-sm-4">
+								<input class="form-control" id="lastnameEmployee"
+									placeholder="Apellidos" maxlength="40"/> 
+							</div>
+						</div>						
+						<div class="form-group">
+							<label class="control-label col-sm-2" for="emailEmployee">Email:</label>
+							<div class="col-sm-4">
+								<input class="form-control" id="emailEmployee"
+									placeholder="Correo" maxlength="40"/> 
 							</div>							
-					        <label class="control-label col-sm-2" for="birthDateEmployee">Fecha nacimiento:</label>
+						    <label class="control-label col-sm-2" for="birthDateEmployee">Fecha nacimiento:</label>
 					        <div class="col-sm-4">
 					            <div class="input-group date">
 						            <input type="text" class="form-control input-date" name="birthDate" id="birthDateEmployee" placeholder="dd/mm/aaaa"/>
 						            <span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
 					            </div>
 				         	</div>
-						</div>						
-						<div class="form-group">
-							<label class="col-sm-2 control-label">Sexo:</label>
-						    <div class="col-sm-4">
-								<div class="dropdown">
-									<button class="btn btn-primary dropdown-toggle" type="button"
-										data-toggle="dropdown">
-										Seleccionar <span class="caret"></span>
-									</button>
-									<ul id="genderEmployee" class="dropdown-menu">
-										<li><a href="/" onclick="return false;">Masculino</a></li>
-										<li><a href="/" onclick="return false;">Femenino</a></li>
-									</ul>
-								</div>
-							</div>
-						    
-						    <label class="control-label col-sm-2" for="emailEmployee">Email:</label>
-							<div class="col-sm-4">
-								<input class="form-control" id="emailEmployee"
-									placeholder="Correo" maxlength="40"/> 
-							</div>
-					        
 						</div>
 						<div class="form-group">														
 							<label class="control-label col-sm-2" for="docType">Tipo Documento:</label>
@@ -322,7 +335,7 @@
 							<label class="control-label col-sm-2" for="docCode">N. Documento:</label>
 							<div class="col-sm-4">
 								<input  class="form-control" id="docCode"
-									placeholder="N. Documento" maxlength="20"/>
+									placeholder="N. Documento" maxlength="15"/>
 							</div>
 						</div>
 						<div class="form-group">
@@ -337,7 +350,7 @@
 									placeholder="Confirmar contrase&ntilde;a" maxlength="20"/>
 							</div>
 						</div>
-						<div class="form-group">							
+						<div class="form-group">
 							<label class="control-label col-sm-2" for="profileEmployee">Perfil:</label>
 							<div class="col-sm-4">
 								<div class="dropdown">
@@ -359,6 +372,21 @@
 									<ul id="statusEmployee" class="dropdown-menu">
 										<li><a href="/" onclick="return false;">Activo</a></li>
 										<li><a href="/" onclick="return false;">Inactivo</a></li>
+									</ul>
+								</div>
+							</div>							
+						</div>
+						<div class="form-group">
+							<label class="col-sm-2 control-label">Sexo:</label>
+						    <div class="col-sm-4">
+								<div class="dropdown">
+									<button class="btn btn-primary dropdown-toggle" type="button"
+										data-toggle="dropdown">
+										Seleccionar <span class="caret"></span>
+									</button>
+									<ul id="genderEmployee" class="dropdown-menu">
+										<li><a href="/" onclick="return false;">Masculino</a></li>
+										<li><a href="/" onclick="return false;">Femenino</a></li>
 									</ul>
 								</div>
 							</div>

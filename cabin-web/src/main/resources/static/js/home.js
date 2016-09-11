@@ -505,6 +505,7 @@ function fillClientetbl(){
     var date;
     t.clear();
 	for(i=0; i<size;i++){
+		/*
 		if ( jQuery.type( clientes[i].birthDate ) === "date" ){ 
 			var day = (clientes[i].birthDate).getDate();
 			var month = (clientes[i].birthDate).getMonth() + 1;
@@ -516,18 +517,19 @@ function fillClientetbl(){
 				monthStr = "0"+ month;
 			else
 				monthStr = "" + month;
-			date = ""+ day +"-"+monthStr+"-"+year;
+			date = ""+ day +"/"+monthStr+"/"+year;
 		}
 		else{
 			var arrayDate = clientes[i].birthDate.substring(0, 10).split("-");
-			date = ""+ arrayDate[2] +"-"+arrayDate[1]+"-"+arrayDate[0];
+			date = ""+ arrayDate[2] +"/"+arrayDate[1]+"/"+arrayDate[0];
 		} 
+		*/
 		t.row.add( [
                 clientes[i].id,
                 clientes[i].name,
                 clientes[i].email,
                 clientes[i].gender,
-                date,                
+                clientes[i].birthDate,                
                 clientes[i].balance,
                 clientes[i].points,
                 clientes[i].experience,
@@ -554,6 +556,7 @@ function fillEmpleadotbl(){
     var date;
     t.clear();
 	for(i=0; i<size;i++){
+		/*
 		if ( jQuery.type( empleados[i].birthDate ) === "date" ){ 
 			var day = "" + (empleados[i].birthDate).getDate();
 			var month = (empleados[i].birthDate).getMonth() + 1;
@@ -571,12 +574,13 @@ function fillEmpleadotbl(){
 			var arrayDate = empleados[i].birthDate.split("-");
 			date = ""+ arrayDate[0] +"-"+arrayDate[1]+"-"+arrayDate[2];
 		} 
+		*/
 		t.row.add( [
                 empleados[i].id,
                 empleados[i].name,
                 empleados[i].email,
                 empleados[i].gender,
-                date,
+                empleados[i].birthDate,
                 empleados[i].docTypeName, 
                 empleados[i].docCode,
                 empleados[i].perfil,
@@ -747,7 +751,7 @@ function saveSede(){
 		newSede = 0;
 		var length = operarios.length;
 		if( idStatus == estados[0].id){
-			sede.estado = estados[0].name; console.log(customer.estado);}
+			sede.estado = estados[0].name; }
 		else{
 			sede.estado = estados[1].name; }	
 		for ( i = 0; i< length ; i++){
@@ -1990,7 +1994,7 @@ function fillRule(idRegla, name, rechargingFraction, points){
 	});
 }
 
-function fillCliente(idCliente, name, email, gender, birthDate, balance, points, experience){
+function fillCliente(idCliente, name, lastname, email, gender, birthDate, balance, points, experience){
 	var hostname = window.location.protocol + "//" + window.location.host 
 	var strLevel = hostname + "/cabin-web/cliente/"+idCliente+"/level";
 	var level, status;
@@ -2022,6 +2026,7 @@ function fillCliente(idCliente, name, email, gender, birthDate, balance, points,
 	clientes.push({
 		id: idCliente,
 		name: name,
+		lastname: lastname,
 		email: email,
 		gender: gender,
 		birthDate: birthDate,
@@ -2037,44 +2042,15 @@ function fillCliente(idCliente, name, email, gender, birthDate, balance, points,
 function saveCliente(){
 	var hostname = window.location.protocol + "//" + window.location.host;
 	var idCustomer = $("#idCliente").attr("value");
-	console.log("Inside form-cliente " + idCustomer);
+	var idUser;	
 	var customer = {};
-	var user = {}; var newCliente = 1;
-	customer.name = trim( $( "#nameCustomer" ).val() );
-	customer.email = trim( $( "#emailCustomer" ).val() );	
-	var birthDate = trim( $( "#birthDateCustomer" ).val() );
-	var dateArray = birthDate.split("/");
-	var date = new Date(); date.setDate(dateArray[0]);
-	date.setMonth(dateArray[1] - 1); date.setFullYear(dateArray[2]);
-	customer.birthDate = date;
-	customer.balance = trim( $( "#balanceCustomer" ).val() );
-	customer.points = trim( $( "#pointsCustomer" ).val() );;
-	customer.experience = trim( $( "#experienceCustomer" ).val() );;
-	user.pass = trim( $( "#passwordCustomer" ).val() );
-	user.name = trim( $( "#emailCustomer" ).val() );
-	$( "#nameCustomer" ).val(""); $( "#passwordCustomer" ).val("");
-	$( "#confirmPasswordCustomer" ).val("");
-	$( "#emailCustomer" ).val("");	$( "#birthDateCustomer" ).val("");
-	$( "#balanceCustomer" ).val("");$( "#pointsCustomer" ).val("");
-	$( "#experienceCustomer" ).val("");
-	var genderHtml = $("#genderCustomer li a");	
-	var gender = $(genderHtml).parents(".dropdown").find('.btn').val();
-	customer.gender = gender;
-	var statusHtml = $("#statusCustomer li a");	
-	var idStatus = $(statusHtml).parents(".dropdown").find('.btn').val();
-	var nivelCustomerHtml =  $("#nivelCustomer li a");	
-	var idNivel= $(nivelCustomerHtml).parents(".dropdown").find('.btn').val();	
-	$(genderHtml).parents(".dropdown").find('.btn').html('Seleccionar <span class="caret"></span>');
-	$(genderHtml).parents(".dropdown").find('.btn').val("");
-	$(statusHtml).parents(".dropdown").find('.btn').html('Activo <span class="caret"></span>');
-	$(statusHtml).parents(".dropdown").find('.btn').val("1");
-	$(nivelCustomerHtml).parents(".dropdown").find('.btn').html( niveles[0].name + ' <span class="caret"></span>');
-	$(nivelCustomerHtml).parents(".dropdown").find('.btn').val("1");
-	var idUser;
-	var strUrl = window.location.protocol + "//" + window.location.host + "/cabin-web/usuario";
-	console.log(JSON.stringify(user));
-	
+	customer.user = {}; 
+	customer.status = {};	
+	customer.level = {};
+	customer.docType = {};
+	console.log("Inside form-cliente " + idCustomer);
 	if (idCustomer !== "") {
+		customer.id = idCustomer;
 		var strUsuario = hostname + "/cabin-web/cliente/" + idCustomer+"/user";		
 		$.ajax({
 			async:false,
@@ -2083,169 +2059,116 @@ function saveCliente(){
 		    dataType: "json",
 		    success: function (json) {
 		    	var hrefArray = json._links.self.href.split("/");
-		    	idUser = hrefArray[hrefArray.length -1];		    	    	
+		    	idUser = hrefArray[hrefArray.length -1];
+		    	customer.user.id = idUser;
 		    },
 		    error: function (xhr, status) {    	
 		    	console.log("Error, su solicitud no pudo ser atendida");
 		    }
 		});	
-		strUrl += "/" + idUser;	
-		customer.id = idCustomer;		
-		newCliente = 0;
-		if( idStatus == estados[0].id){
-			customer.estado = estados[0].name; console.log(customer.estado);}
-		else{
-			customer.estado = estados[1].name; }		
-		var length = niveles.length;
-		for ( i = 0; i< length ; i++){
-			if (idNivel == niveles[i].id ){ customer.nivel = niveles[i].name; break;}
-		}
-		clientes.splice(clienteIndex, 1, customer);
-		fillClientetbl();
-	}		
+	}	
 	
-	$.ajax({
-		async: false,
-		type: idCustomer === "" ? "POST" : "PATCH", 
-	    url: strUrl,			    
-	    dataType: 'json', 
-	    data: JSON.stringify(user), 
-	    contentType: 'application/json',
-	    success: function (data) {
-	    	console.log("Send a user into DB");
-	    	$('#emailCustomer').prop('disabled', false);
-	    	if (idCustomer != ""){
-	    		console.log(strUrl);
-	    		$("#btnCliente").html("Nuevo Cliente");
-	    		$("#idCliente").attr("value", "");			    		
-	    	}	
-	    },
-	    error: function (xhr, status) {	    	
-	    	console.log("Error, su solicitud no pudo ser atendida");
-	    },	 
-	    complete: function(xhr) {
-	    	if (idCustomer == ""){
-		    	var strLocation = xhr.getResponseHeader('Location');	    	
-		    	var hrefArray = strLocation.split("/");
-		    	idUser = hrefArray[hrefArray.length -1];
-	    	}
-	    }
-	});		
-	strUrl = window.location.protocol + "//" + window.location.host + "/cabin-web/cliente";
-	if (idCustomer !== "") {
-		strUrl += "/" + idCustomer;	
-	}
+	var genderHtml = $("#genderCustomer li a");	
+	var gender = $(genderHtml).parents(".dropdown").find('.btn').val();
+	
+	var statusHtml = $("#statusCustomer li a");	
+	var idStatus = $(statusHtml).parents(".dropdown").find('.btn').val();
+	
+	var nivelCustomerHtml =  $("#nivelCustomer li a");	
+	var idNivel= $(nivelCustomerHtml).parents(".dropdown").find('.btn').val();
+	
+	var docTypeHtml =  $("#docTypeCustomer li a");	
+	var idDocType = $(docTypeHtml).parents(".dropdown").find('.btn').attr("value");	
+		
+	customer.name = trim( $( "#nameCustomer" ).val() );
+	customer.lastname = trim( $( "#lastnameCustomer" ).val() );
+	customer.email = trim( $( "#emailCustomer" ).val() );
+	customer.birthDate = trim( $("#birthDateCustomer").val() ) ;
+	customer.docCode =  trim( $( "#docCodeCustomer" ).val());
+	customer.docType.id = idDocType;	
+	customer.gender = gender;
+	customer.level.id = idNivel;
+	customer.status.id = idStatus;
+	customer.balance = trim( $( "#balanceCustomer" ).val() );
+	customer.points = trim( $( "#pointsCustomer" ).val() );;
+	customer.experience = trim( $( "#experienceCustomer" ).val() );;
+	customer.user.pass = trim( $( "#passwordCustomer" ).val() );
+	customer.user.name = trim( $( "#emailCustomer" ).val() );
+	
+	$( "#nameCustomer" ).val(""); 
+	$( "#passwordCustomer" ).val("");
+	$( "#confirmPasswordCustomer" ).val("");
+	$( "#emailCustomer" ).val("");	
+	$( "#birthDateCustomer" ).val("");
+	$( "#balanceCustomer" ).val("");
+	$( "#pointsCustomer" ).val("");
+	$( "#experienceCustomer" ).val(""); 
+	$( "#lastnameCustomer" ).val("");
+	$( "#docCodeCustomer" ).val("");
+	
+	$(genderHtml).parents(".dropdown").find('.btn').html('Seleccionar <span class="caret"></span>');
+	$(genderHtml).parents(".dropdown").find('.btn').val("");
+	$(docTypeHtml).parents(".dropdown").find('.btn').html(tipo_doc[0].name +' <span class="caret"></span>');
+	$(docTypeHtml).parents(".dropdown").find('.btn').val("1");
+	$(statusHtml).parents(".dropdown").find('.btn').html('Activo <span class="caret"></span>');
+	$(statusHtml).parents(".dropdown").find('.btn').val("1");
+	$(nivelCustomerHtml).parents(".dropdown").find('.btn').html( niveles[0].name + ' <span class="caret"></span>');
+	$(nivelCustomerHtml).parents(".dropdown").find('.btn').val("1");
+	
+	var strUrl = hostname + "/cabin-web/post/client";
 	console.log(JSON.stringify(customer));
 	$.ajax({
-		async: false,
-		type: idCustomer === "" ? "POST" : "PATCH",
+		async: true,
+		type: "POST",
 	    url: strUrl,			    
 	    dataType: 'json', 
 	    data: JSON.stringify(customer), 
 	    contentType: 'application/json',	    
 	    success: function (data) {
 	    	console.log("Send a user into DB");
+	    	$('#emailCustomer').prop('disabled', false);
+	    	$('#docCodeCustomer').prop('disabled', false);
+	    	$('#docTypeButtonCustomer').removeClass('disabled');
+	    	if (data.id != ""){
+	    		$("#btnCliente").html("Nuevo Cliente");
+	    		$("#idCliente").attr("value", "");
+	    	}
+	    	fillArrayCliente();
 	    },
 	    error: function (xhr, status) {	    	
 	    	console.log("Error, su solicitud no pudo ser atendida");
-	    },	 
-	    complete: function(xhr) {	    	
-	    	if(idCustomer == ""){
-	    		var strLocation = xhr.getResponseHeader('Location');
-	    		var hrefArray = strLocation.split("/");
-	    		idCustomer = hrefArray[hrefArray.length -1];
-	    	}	    	
 	    }
 	});	
-	var strUrlStatus = window.location.protocol + "//" + window.location.host + "/cabin-web/estado/" + idStatus;
-	var strUrlNivel = window.location.protocol + "//" + window.location.host + "/cabin-web/nivel/" + idNivel;
-	var strUrlPerfil = window.location.protocol + "//" + window.location.host + "/cabin-web/perfil/" + 3;
-	var strUrlUser = window.location.protocol + "//" + window.location.host + "/cabin-web/usuario/"+idUser;
-	var strUrlCustomer = window.location.protocol + "//" + window.location.host + "/cabin-web/cliente/"+idCustomer+"/status";
-	//Solo para cliente
-	
-	$.ajax({
-		async: false,
-		type: "PUT",
-	    url:strUrlCustomer,			
-	    data: strUrlStatus, 
-	    contentType: 'text/uri-list',
-	    success: function (data) {
-	    	console.log("Se asigno estado a cliente" + idCustomer);
-	    },
-	    error: function (xhr, status) {	    	
-	    	console.log("Error, su solicitud no pudo ser atendida");
-	    },
-	    complete: function () {
-	    	strUrlCustomer = window.location.protocol + "//" + window.location.host + "/cabin-web/cliente/"+idCustomer+"/level";
-	    	$.ajax({
-	    		async: false,
-	    		type: "PUT",
-	    	    url:strUrlCustomer,			
-	    	    data: strUrlNivel, 
-	    	    contentType: 'text/uri-list',
-	    	    success: function (data) {
-	    	    	console.log("Se asigno nivel a cliente " + idCustomer);
-	    	    },
-	    	    error: function (xhr, status) {	    	
-	    	    	console.log("Error, su solicitud no pudo ser atendida");
-	    	    },	    	
-	    	    complete: function(xhr){
-	    	    	strUrlCustomer = window.location.protocol + "//" + window.location.host + "/cabin-web/cliente/"+idCustomer+"/user";
-	    	    	$.ajax({
-	    	    		async: false,
-	    	    		type: "PUT",
-	    	    	    url:strUrlCustomer,			
-	    	    	    data: strUrlUser, 
-	    	    	    contentType: 'text/uri-list',
-	    	    	    success: function (data) {
-	    	    	    	console.log("Se asigno usuario a cliente " + idCustomer);
-	    	    	    },
-	    	    	    error: function (xhr, status) {	    	
-	    	    	    	console.log("Error, su solicitud no pudo ser atendida");
-	    	    	    },
-	    	    	    complete: function(){
-	    	    	    	if (newCliente == 1){			    		
-	    	    	    		fillArrayCliente();
-	    	    	    	}
-	    	    	    }
-	    	    	});
-	    	    }
-	    	});
-	    }
-	});	
-	//Para usuario	
-	strUrlUser = window.location.protocol + "//" + window.location.host + "/cabin-web/usuario/"+idUser+"/profile";	
-	$.ajax({
-		async: false,
-		type: "PUT",
-	    url:strUrlUser,			
-	    data: strUrlPerfil, 
-	    contentType: 'text/uri-list',
-	    success: function (data) {
-	    	console.log("Se asigno perfil a usuario " + idUser);
-	    },
-	    error: function (xhr, status) {	    	
-	    	console.log("Error, su solicitud no pudo ser atendida");
-	    },
-	    complete: function(xhr){
-	    	
-	    }
-	});
 	
 }
 
 function saveEmpleado(){
 	var hostname = window.location.protocol + "//" + window.location.host;
-	
+	var idUser;
 	var employee = {};
 	employee.docType = {};
 	employee.status = {};
 	employee.user = {};
+	employee.user.profile = {};
 	
 	var idEmpleado = $("#idEmpleado").attr("value");
 	if (idEmpleado !== "") {
 		employee.id = idEmpleado;
+		var strUsuario = hostname + "/cabin-web/empleado/" + idEmpleado+"/user";		
+		$.ajax({
+			async:false,
+		    url:strUsuario,
+		    crossDomain: true,
+		    dataType: "json",
+		    success: function (json) {
+		    	var hrefArray = json._links.self.href.split("/");
+		    	idUser = hrefArray[hrefArray.length -1];
+		    	employee.user.id = idUser;
+		    },
+		    error: function (xhr, status) {    	
+		    	console.log("Error, su solicitud no pudo ser atendida");
+		    }
+		});	
 	}
 	console.log("Inside form-empleado " + idEmpleado);
 	
@@ -2259,9 +2182,10 @@ function saveEmpleado(){
 	var idPerfil = $(profileHtml).parents(".dropdown").find('.btn').val();
 	
 	var docTypeHtml =  $("#docType li a");	
-	var idDocType = $(docTypeHtml).parents(".dropdown").find('.btn').val();	
+	var idDocType = $(docTypeHtml).parents(".dropdown").find('.btn').attr("value");	
 	
 	employee.name = trim( $( "#nameEmployee" ).val());
+	employee.lastname = trim( $( "#lastnameEmployee" ).val());
 	employee.email = trim( $( "#emailEmployee" ).val());
 	employee.docType.id = idDocType;
 	employee.docCode =  trim( $( "#docCode" ).val());
@@ -2270,8 +2194,10 @@ function saveEmpleado(){
 	employee.status.id = idStatus;
 	employee.user.pass = trim( $( "#passwordEmployee" ).val());
 	employee.user.name = trim( $( "#emailEmployee" ).val());
+	employee.user.profile.id = idPerfil;
 	
 	$( "#nameEmployee" ).val("");
+	$( "#lastnameEmployee" ).val("");
 	$( "#passwordEmployee" ).val("");
 	$( "#confirmPasswordEmployee" ).val("");
 	$( "#emailEmployee" ).val("");
@@ -2330,15 +2256,13 @@ function editCliente( code, index ){
 	    	var hrefArray = json._links.self.href.split("/");
 	    	var idCliente = hrefArray[hrefArray.length -1];
 	    	$( "#nameCustomer" ).val(json.name);
-			$( "#emailCustomer" ).val(json.email);
-			$( "#emailCustomer" ).prop('disabled', true);
+	    	$( "#lastnameCustomer" ).val(json.lastname);
+			$( "#emailCustomer" ).val(json.email);			
+			$( "#docCodeCustomer" ).val(json.docCode);
 			$( "#balanceCustomer" ).val(json.balance);
 			$( "#pointsCustomer" ).val(json.points);
-			$( "#experienceCustomer" ).val(json.experience);
-			var date = json.birthDate.substring(0,10);
-			var arrayDate = date.split("-");
-			var birthDate = arrayDate[2]+"/" + arrayDate[1]+"/" + arrayDate[0];
-			$("#birthDateCustomer").val(birthDate);			
+			$( "#experienceCustomer" ).val(json.experience);			
+			$("#birthDateCustomer").val(json.birthDate);			
 			$("#idCliente").attr('value', idCliente);
 			$("#btnCliente").html("Actualizar Cliente");	
 			var genderHtml = $("#genderCustomer li a");
@@ -2350,6 +2274,9 @@ function editCliente( code, index ){
 				genderHtml.parents(".dropdown").find('.btn').html( 'Femenino <span class="caret"></span>');				
 				genderHtml.parents(".dropdown").find('.btn').val("F");
 			}
+			$('#docTypeButtonCustomer').addClass('disabled');			
+			$('#docCodeCustomer').prop('disabled', true);
+			$( "#emailCustomer" ).prop('disabled', true);	
 	    },
 	    error: function (xhr, status) {	    	
 	    	console.log("Error, su solicitud no pudo ser atendida");
@@ -2409,6 +2336,33 @@ function editCliente( code, index ){
 	    	console.log("Error, su solicitud no pudo ser atendida");
 	    }
 	});	
+	var strDocType = hostname + "/cabin-web/cliente/" + code+"/docType";
+	var idDocType;
+	$.ajax({
+		async:false,
+	    url:strDocType,
+	    crossDomain: true,
+	    dataType: "json",
+	    success: function (json) {
+	    	var hrefArray = json._links.self.href.split("/");
+	    	idDocType = hrefArray[hrefArray.length -1];
+	    	var docTypeHtml = $("#docTypeCustomer li a"); 
+			docTypeHtml.parents(".dropdown").find('.btn').val(idDocType);
+			if ( idDocType == 1){
+				docTypeHtml.parents(".dropdown").find('.btn').html( 'DNI <span class="caret"></span>');
+			}else if ( idDocType == 2){
+				docTypeHtml.parents(".dropdown").find('.btn').html( 'RUC <span class="caret"></span>');
+		    }else if ( idDocType == 3){
+				docTypeHtml.parents(".dropdown").find('.btn').html( 'PASAPORTE <span class="caret"></span>');
+			}else if ( idDocType == 4){
+				docTypeHtml.parents(".dropdown").find('.btn').html( 'OTROS <span class="caret"></span>');	
+			}
+			docTypeHtml.parents(".disabled").find('.btn').attr("value", idDocType);
+	    },
+	    error: function (xhr, status) {    	
+	    	console.log("Error, su solicitud no pudo ser atendida");
+	    }
+	});	
 	
 }
 
@@ -2426,12 +2380,10 @@ function editEmpleado( code, index ){
 	    	var hrefArray = json._links.self.href.split("/");
 	    	var idEmployee = hrefArray[hrefArray.length -1];
 	    	$( "#nameEmployee" ).val(json.name);
+	    	$( "#lastnameEmployee" ).val(json.lastname);
 			$( "#emailEmployee" ).val(json.email);
-			$( "#docCode" ).val(json.docCode);			
-			var date = json.birthDate.substring(0,10);
-			var arrayDate = date.split("-");
-			var birthDate = arrayDate[2]+"/" + arrayDate[1]+"/" + arrayDate[0];
-			$("#birthDateEmployee").val(birthDate);			
+			$( "#docCode" ).val(json.docCode);
+			$("#birthDateEmployee").val(json.birthDate);			
 			$("#idEmpleado").attr('value', idEmployee);
 			$("#btnEmpleado").html("Actualizar Empleado");	
 			var genderHtml = $("#genderEmployee li a");
@@ -2443,22 +2395,9 @@ function editEmpleado( code, index ){
 				genderHtml.parents(".dropdown").find('.btn').html( 'Femenino <span class="caret"></span>');				
 				genderHtml.parents(".dropdown").find('.btn').val("F");
 			}
-			var docTypeHtml = $("#docType li a"); 
-			docTypeHtml.parents(".dropdown").find('.btn').val(json.docType);
-			if ( json.docType == 1){
-				docTypeHtml.parents(".dropdown").find('.btn').html( 'DNI <span class="caret"></span>');
-			}else if ( json.docType == 2){
-				docTypeHtml.parents(".dropdown").find('.btn').html( 'RUC <span class="caret"></span>');
-		    }else if ( json.docType == 3){
-				docTypeHtml.parents(".dropdown").find('.btn').html( 'PASAPORTE <span class="caret"></span>');
-			}else if ( json.docType == 4){
-				docTypeHtml.parents(".dropdown").find('.btn').html( 'OTROS <span class="caret"></span>');	
-			}
-			
 			$('#docTypeButton').addClass('disabled');			
 			$('#docCode').prop('disabled', true);
-			$('#emailEmployee').prop('disabled', true);
-			docTypeHtml.parents(".disabled").find('.btn').attr("value", json.docType);
+			$('#emailEmployee').prop('disabled', true);			
 	    },
 	    error: function (xhr, status) {	    	
 	    	console.log("Error, su solicitud no pudo ser atendida");
@@ -2500,6 +2439,33 @@ function editEmpleado( code, index ){
 	    	console.log("Error, su solicitud no pudo ser atendida");
 	    }
 	});	
+	var strDocType = hostname + "/cabin-web/empleado/" + code+"/docType";
+	var idDocType;
+	$.ajax({
+		async:false,
+	    url:strDocType,
+	    crossDomain: true,
+	    dataType: "json",
+	    success: function (json) {
+	    	var hrefArray = json._links.self.href.split("/");
+	    	idDocType = hrefArray[hrefArray.length -1];
+	    	var docTypeHtml = $("#docType li a"); 
+			docTypeHtml.parents(".dropdown").find('.btn').val(idDocType);
+			if ( idDocType == 1){
+				docTypeHtml.parents(".dropdown").find('.btn').html( 'DNI <span class="caret"></span>');
+			}else if ( idDocType == 2){
+				docTypeHtml.parents(".dropdown").find('.btn').html( 'RUC <span class="caret"></span>');
+		    }else if ( idDocType == 3){
+				docTypeHtml.parents(".dropdown").find('.btn').html( 'PASAPORTE <span class="caret"></span>');
+			}else if ( idDocType == 4){
+				docTypeHtml.parents(".dropdown").find('.btn').html( 'OTROS <span class="caret"></span>');	
+			}
+			docTypeHtml.parents(".disabled").find('.btn').attr("value", idDocType);
+	    },
+	    error: function (xhr, status) {    	
+	    	console.log("Error, su solicitud no pudo ser atendida");
+	    }
+	});	
 	strSede = hostname + "/cabin-web/usuario/" + idUser +"/profile";
 	var idProfile;
 	$.ajax({
@@ -2518,6 +2484,7 @@ function editEmpleado( code, index ){
 	    	console.log("Error, su solicitud no pudo ser atendida");
 	    }
 	});	
+	
 	
 }
 
@@ -2612,7 +2579,7 @@ function fillArrayCliente(){
 	    	$.each(json._embedded.cliente, function(index, value) {		    		
 	    		var hrefArray = value._links.self.href.split("/");
 		    	var idCliente = hrefArray[hrefArray.length -1];
-		    	fillCliente(idCliente, value.name, value.email, 
+		    	fillCliente(idCliente, value.name, value.lastname, value.email,  
 		    			value.gender, value.birthDate, value.balance, value.points, value.experience);				
 			});
 	    	fillClientetbl();		    	
@@ -2638,6 +2605,7 @@ function fillArrayEmpleado(){
 	    		empleados.push({
 	    			id: value.id,
 	    			name: value.name,
+	    			lastname: value.lastname,
 	    			email: value.email,
 	    			gender: value.gender,
 	    			docTypeName: value.docType.name,	    			
@@ -2940,7 +2908,8 @@ function fillStatus( ){
 }
 function fillDocTypes( ){
 	var strUrl = window.location.protocol + "//" + window.location.host + "/cabin-web/tipo_documento/";
-	var ulDocType = $("#docType");
+	var ulDocTypeEmployee = $("#docType");
+	var ulDocTypeCustomer = $("#docTypeCustomer");
 	var line = "";
 	$.ajax({
 	    url:strUrl,
@@ -2961,8 +2930,14 @@ function fillDocTypes( ){
 	    	console.log("Error, su solicitud no pudo ser atendida");
 	    },
 	    complete: function (){
-	    	ulDocType.html(line);
+	    	ulDocTypeEmployee.html(line);
+	    	ulDocTypeCustomer.html(line);
+	    	
 	    	var docTypeHtml =  $("#docType li a");	    	
+	    	$(docTypeHtml).parents(".dropdown").find('.btn').html(tipo_doc[0].name +' <span class="caret"></span>');
+	    	$(docTypeHtml).parents(".dropdown").find('.btn').val("1");
+	    	
+	    	docTypeHtml =  $("#docTypeCustomer li a");	    	
 	    	$(docTypeHtml).parents(".dropdown").find('.btn').html(tipo_doc[0].name +' <span class="caret"></span>');
 	    	$(docTypeHtml).parents(".dropdown").find('.btn').val("1");
 	    }
@@ -3326,6 +3301,19 @@ $(document).on("click", "#docType li a", function(){
 	}	
 } )
 
+$(document).on("click", "#docTypeCustomer li a", function(){
+	console.log("Entro aqui: " + $(this).text() );
+	var docType = $(this).text();
+	docType = docType.toLowerCase();
+	$(this).parents(".dropdown").find('.btn').html($(this).text() + ' <span class="caret"></span>');
+	  //Correr el arreglo paui-state-highlightra ver cual es el id y nombre correo del nivel
+	var length = tipo_doc.length;
+	for ( i = 0; i< length ; i++){
+		if (docType == tipo_doc[i].name.toLowerCase() ){ $(this).parents(".dropdown").find('.btn').val(tipo_doc[i].id); break;}
+	}	
+} )
+
+
 
 $(document).on("click", "#profileEmployee li a", function(){
 	console.log("Entro aqui: " + $(this).text() );
@@ -3589,8 +3577,22 @@ function addCliente() {
 	var valid = true;
 	$("*").removeClass( "ui-state-error");
 	valid = valid && checkRequired( $("#nameCustomer"), "Debe ingresar el nombre del cliente.",1, clienteValidation);
-	valid = valid && checkRegexp( $("#nameCustomer"), /.+/i, "El nombre ingresado no es válido.",  clienteValidation);	
-	valid = valid && checkRequired( $("#birthDateCustomer"), "Debe ingresar la fecha de nacimiento del cliente",1, clienteValidation);	
+	valid = valid && checkRegexp( $("#nameCustomer"), /.+/i, "El nombre ingresado no es válido.",  clienteValidation);
+	valid = valid && checkRequired( $("#lastnameCustomer"), "Debe ingresar los apellidos del cliente.",1, clienteValidation);
+	valid = valid && checkRegexp( $("#lastnameCustomer"), /.+/i, "Los apellidos ingresados no son válidos.",  clienteValidation);
+	valid = valid && checkRequired( $("#birthDateCustomer"), "Debe ingresar la fecha de nacimiento del cliente",1, clienteValidation);
+	if(!$("#docCodeCustomer").is(':disabled')) {
+		var docTypeHtml = $("#docTypeCustomer li a");		
+		docTypeHtml = $(docTypeHtml).parents(".dropdown").find('.btn');
+		valid = valid && checkRequired( docTypeHtml, "Debe seleccionar un tipo de documento.",1, clienteValidation);
+		//valid = valid && checkRegexp( $("#docCode"), /^[0-9]\d{0,15}$/i, "Debe ingresar número de documento correcto", empleadoValidation);
+		if ( $(docTypeHtml).val() == 1) //En caso DNI
+			valid = valid && checkRegexp( $("#docCodeCustomer"), /^[0-9]\d{7}$/i, "El DNI ingresado no es válido" , clienteValidation);
+		else if( $(docTypeHtml).val() == 2) //En caso RUC
+			valid = valid && checkRegexp( $("#docCodeCustomer"), /^[1-9]\d{10}$/i, "El RUC ingresado no es válido", clienteValidation );
+	    else if( $(docTypeHtml).val > 2) //En cualquier otro documento
+	    	valid = valid && checkRequired($("#docCodeCustomer"),"Debe ingresar el número de documento.",1, clienteValidation);		
+	}
 	var genderHtml = $("#genderCustomer li a");		
 	genderHtml = $(genderHtml).parents(".dropdown").find('.btn');
 	valid = valid && checkRequired( genderHtml, "Debe seleccionar un género.",1, clienteValidation);	
@@ -3609,6 +3611,9 @@ function addCliente() {
 	statusHtml = $(statusHtml).parents(".dropdown").find('.btn');
 	valid = valid && checkRequired( statusHtml, "Debe seleccionar un estado.",1, clienteValidation);
 	valid = valid && checkEmail( $("#emailCustomer"), "El email ya se encuentra registrado.", clienteValidation);
+	if(!$("#docCodeCustomer").is(':disabled')) {
+		valid = valid && checkDocCode( $("#docCodeCustomer"), "El número de documento ya se encuentra registrado.", clienteValidation);
+	}
 	return valid;
 }
 
@@ -3616,7 +3621,9 @@ function addEmpleado() {
 	var valid = true;
 	$("*").removeClass( "ui-state-error");
 	valid = valid && checkRequired( $("#nameEmployee"), "Debe ingresar el nombre del empleado.",1, empleadoValidation);
-	valid = valid && checkRegexp( $("#nameEmployee"), /.+/i, "El nombre ingresado no es válido.",  empleadoValidation);	
+	valid = valid && checkRegexp( $("#nameEmployee"), /.+/i, "El nombre ingresado no es válido.",  empleadoValidation);
+	valid = valid && checkRequired( $("#lastnameEmployee"), "Debe ingresar los apellidos del empleado.",1, empleadoValidation);
+	valid = valid && checkRegexp( $("#lastnameEmployee"), /.+/i, "Los apellidos ingresados no son válidos.",  empleadoValidation);
 	valid = valid && checkRequired( $("#birthDateEmployee"), "Debe ingresar la fecha de nacimiento del empleado",1, empleadoValidation);	
 	var genderHtml = $("#genderEmployee li a");		
 	genderHtml = $(genderHtml).parents(".dropdown").find('.btn');
