@@ -3,6 +3,7 @@ package com.cabin.core.controller.rest;
 import java.math.BigInteger;
 import java.security.SecureRandom;
 import java.text.ParseException;
+import java.util.Calendar;
 import java.util.List;
 
 import javax.servlet.http.HttpSession;
@@ -16,13 +17,17 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.cabin.core.enums.SessionEnum;
 import com.cabin.core.persistence.domain.Client;
+import com.cabin.core.persistence.domain.Employee;
 import com.cabin.core.persistence.domain.Experience;
 import com.cabin.core.persistence.domain.Level;
+import com.cabin.core.persistence.domain.Profile;
 import com.cabin.core.persistence.domain.PunctuationRule;
+import com.cabin.core.persistence.domain.User;
 import com.cabin.core.persistence.repository.ClientRepository;
 import com.cabin.core.persistence.repository.ExperienceRepository;
 import com.cabin.core.persistence.repository.LevelRepository;
 import com.cabin.core.persistence.repository.PunctuationRuleRepository;
+import com.cabin.core.persistence.repository.UserRepository;
 import com.cabin.core.view.Recharge;
 
 @RestController
@@ -42,6 +47,9 @@ public class ClientRestController {
 
     @Autowired
     private HttpSession httpSession;
+    
+    @Autowired
+    private UserRepository userRepository;
 
     @RequestMapping(value = "/get/allClients", method = RequestMethod.GET, produces = { "application/json;charset=UTF-8" })
     public List<Client> getAllClient() {
@@ -54,7 +62,27 @@ public class ClientRestController {
         System.out.println("clientId ::: " + id);
         return clientRepository.findOne(id);
     }
+    
+    @RequestMapping(value = "/post/client", method = RequestMethod.POST, produces = { "application/json;charset=UTF-8" })
+    public Client postClient(@RequestBody(required = true) Client client) throws ParseException {
+        Long clientId = client.getId();
+        client.getBirthDate().set(Calendar.HOUR_OF_DAY, 12);
+        User user = client.getUser();
 
+        if (clientId != null && clientId != 0) {
+            Client original = clientRepository.findOne(clientId);
+            original.getUser().setName(client.getUser().getName());
+            original.getUser().setPass(client.getUser().getPass());
+        } else {
+            user.setAnonymous("0");
+            user.setProfile(new Profile());
+            user.getProfile().setId(Profile.CLIENT);
+            client.setUser(userRepository.saveAndFlush(user));
+        }
+
+        return clientRepository.saveAndFlush(client);
+    }
+    
     @RequestMapping(value = "/post/recharge", method = RequestMethod.POST, produces = { "application/json;charset=UTF-8" })
     public Client recharge(@RequestBody(required = true) Recharge recharge) throws ParseException {
         Client client = clientRepository.findOne(recharge.getClientId());
@@ -101,4 +129,6 @@ public class ClientRestController {
     private Integer getRechargeExperience(Experience experience, Double recharge) {
         return Math.toIntExact(Math.round(recharge * experience.getExperienceToGive() / experience.getRechargeFraction()));
     }
+    
+    
 }

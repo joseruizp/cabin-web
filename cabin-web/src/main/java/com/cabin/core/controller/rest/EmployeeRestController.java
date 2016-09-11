@@ -46,10 +46,11 @@ public class EmployeeRestController {
             Employee original = employeeRepository.findOne(employeeId);
             original.getUser().setName(employee.getUser().getName());
             original.getUser().setPass(employee.getUser().getPass());
+            original.getUser().setProfile(employee.getUser().getProfile());
         } else {
             user.setAnonymous("0");
-            user.setProfile(new Profile());
-            user.getProfile().setId(Profile.EMPLOYEE);
+            //user.setProfile(new Profile());
+            //user.getProfile().setId(Profile.EMPLOYEE);
             employee.setUser(userRepository.saveAndFlush(user));
         }
 

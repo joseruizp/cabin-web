@@ -64,21 +64,26 @@
 	  `id` bigint(20) NOT NULL AUTO_INCREMENT,
 	  `correo` varchar(80) DEFAULT NULL,
 	  `nombre` varchar(100) DEFAULT NULL,
+	  `apellido` varchar(100) DEFAULT NULL,
 	  `sexo` varchar(1) DEFAULT NULL,
 	  `fecha_nacimiento` date DEFAULT NULL,
+	  `n_documento` varchar(15) DEFAULT NULL,
 	  `saldo` double DEFAULT NULL,
 	  `puntos` int(11) DEFAULT NULL,
 	  `experiencia` int(11) DEFAULT NULL,
 	  `id_estado` bigint(20) DEFAULT NULL,
 	  `id_nivel` bigint(20) DEFAULT NULL,
+	  `id_tipo_documento` bigint(20) DEFAULT NULL,
 	  `id_usuario` bigint(20) DEFAULT NULL,
 	  PRIMARY KEY (`id`),
 	  KEY `id_estado` (`id_estado`),
 	  KEY `id_nivel` (`id_nivel`),
-	  KEY `cliente_ibfk_3` (`id_usuario`),
+	  KEY `id_usuario` (`id_usuario`),
+	  KEY `id_tipo_documento` (`id_tipo_documento`),
 	  CONSTRAINT `cliente_ibfk_1` FOREIGN KEY (`id_estado`) REFERENCES `estado` (`id`),
 	  CONSTRAINT `cliente_ibfk_2` FOREIGN KEY (`id_nivel`) REFERENCES `nivel` (`id`),
-	  CONSTRAINT `cliente_ibfk_3` FOREIGN KEY (`id_usuario`) REFERENCES `usuario` (`id`)
+	  CONSTRAINT `cliente_ibfk_3` FOREIGN KEY (`id_tipo_documento`) REFERENCES `tipo_documento` (`id`),
+	  CONSTRAINT `cliente_ibfk_4` FOREIGN KEY (`id_usuario`) REFERENCES `usuario` (`id`)
 	) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
 	/*!40101 SET character_set_client = @saved_cs_client */;
 	
@@ -88,7 +93,7 @@
 	
 	LOCK TABLES `cliente` WRITE;
 	/*!40000 ALTER TABLE `cliente` DISABLE KEYS */;
-	INSERT INTO `cliente` VALUES (1,'erick.gonzales@bbva.com','erick','M','2000-01-05',0,2,9,1,2,5),(2,'ivan@pucp.pe','ivan','M','2000-01-01',12,10,10,1,1,6),(3,'je@pucp.pe','Junior','M','2000-01-01',10,100,50,1,1,7),(4,'userlab01@cabinas.com','userlab01','M','2000-01-01',0,0,0,2,1,12),(5,'userlab02@cabinas.com','userlab02','M','2000-01-01',0,0,0,2,1,13),(6,'userlab03@cabinas.com','userlab03','M','2000-01-01',0,0,0,2,1,14),(7,'userlab04@cabinas.com','userlab04','M','2000-01-01',0,0,0,2,1,15),(8,'userlab05@cabinas.com','userlab05','M','2000-01-01',0,0,0,2,1,16),(9,'userlab06@cabinas.com','userlab06','M','2000-01-01',0,0,0,2,1,17),(10,'userlab07@cabinas.com','userlab07','M','2000-01-01',0,0,0,2,1,18),(11,'userlab08@cabinas.com','userlab08','M','2000-01-01',0,0,0,2,1,19),(12,'userlab09@cabinas.com','userlab09','M','2000-01-01',0,0,0,2,1,20),(13,'userlab10@cabinas.com','userlab10','M','2000-01-01',0,0,0,2,1,21);
+	INSERT INTO `cliente` VALUES (1,'erick.gonzales@bbva.com','erick','Gonzales','M','2000-01-05',12345678,0,2,9,1,2,1,5),(2,'ivan@pucp.pe','ivan','Gonzales','M','2000-01-01',12345678,12,10,10,1,1,1,6),(3,'je@pucp.pe','Junior','Gonzales','M','2000-01-01',12345678,10,100,50,1,1,1,7),(4,'userlab01@cabinas.com','userlab01','Gonzales','M','2000-01-01',12345678,0,0,0,2,1,1,12),(5,'userlab02@cabinas.com','userlab02','Gonzales','M','2000-01-01',12345678,0,0,0,2,1,1,13),(6,'userlab03@cabinas.com','userlab03','Gonzales','M','2000-01-01',12345678,0,0,0,2,1,1,14),(7,'userlab04@cabinas.com','userlab04','Gonzales','M','2000-01-01',12345678,0,0,0,2,1,1,15),(8,'userlab05@cabinas.com','userlab05','Gonzales','M','2000-01-01',12345678,0,0,0,2,1,1,16),(9,'userlab06@cabinas.com','userlab06','Gonzales','M','2000-01-01',12345678,0,0,0,2,1,1,17),(10,'userlab07@cabinas.com','userlab07','Gonzales','M','2000-01-01',12345678,0,0,0,2,1,1,18),(11,'userlab08@cabinas.com','userlab08','Gonzales','M','2000-01-01',12345678,0,0,0,2,1,1,19),(12,'userlab09@cabinas.com','userlab09','Gonzales','M','2000-01-01',12345678,0,0,0,2,1,1,20),(13,'userlab10@cabinas.com','userlab10','Gonzales','M','2000-01-01',12345678,0,0,0,2,1,1,21);
 	/*!40000 ALTER TABLE `cliente` ENABLE KEYS */;
 	UNLOCK TABLES;
 	
@@ -137,6 +142,7 @@
 	  `id` bigint(20) NOT NULL AUTO_INCREMENT,
 	  `correo` varchar(80) DEFAULT NULL,
 	  `nombre` varchar(100) DEFAULT NULL,
+	  `apellido` varchar(100) DEFAULT NULL,
 	  `telefono` varchar(15) DEFAULT NULL,  
 	  `n_documento` varchar(15) DEFAULT NULL,
 	  `sexo` varchar(1) DEFAULT NULL,
@@ -160,7 +166,7 @@
 	
 	LOCK TABLES `empleado` WRITE;
 	/*!40000 ALTER TABLE `empleado` DISABLE KEYS */;
-	INSERT INTO `empleado` VALUES (1,'user1@email.com','Erick','954604372','71844756','M','1993-05-04',1,1,1),(2,'user5@email.com','Erick',NULL,'71844756','M','1993-05-04',2,1,8),(3,'user6@email.com','Erick',NULL,'71844756','M','1993-05-04',1,1,9),(4,'j@pucp.pe','Junior',NULL,'71844756','M','2000-06-03',1,1,10),(5,'e@pucp.pe','e',NULL,'71844756','F','2000-01-01',1,1,11);
+	INSERT INTO `empleado` VALUES (1,'user1@email.com','Erick','Gonzales','954604372','71844756','M','1993-05-04',1,1,1),(2,'user5@email.com','Erick','Gonzales',NULL,'71844756','M','1993-05-04',2,1,8),(3,'user6@email.com','Erick','Gonzales',NULL,'71844756','M','1993-05-04',1,1,9),(4,'j@pucp.pe','Junior','Gonzales',NULL,'71844756','M','2000-06-03',1,1,10),(5,'e@pucp.pe','e','Gonzales',NULL,'71844756','F','2000-01-01',1,1,11);
 	/*!40000 ALTER TABLE `empleado` ENABLE KEYS */;
 	UNLOCK TABLES;
 	

@@ -29,6 +29,9 @@ public class Employee implements Serializable {
     @Column(name = "nombre", length = 100)
     private String name;
 
+    @Column(name = "apellido", length = 100)
+	private String lastname;
+    
     @Column(name = "telefono", length = 15)
     private String cellphone;
 
@@ -133,5 +136,12 @@ public class Employee implements Serializable {
     public void setDocCode(String docCode) {
         this.docCode = docCode;
     }
+    
+    public String getLastname() {
+		return lastname;
+	}
 
+	public void setLastname(String lastname) {
+		this.lastname = lastname;
+	}
 }
