@@ -12,6 +12,7 @@ function getComputers(headquarterId) {
 	    	
 	    	$.each(pcs, function (index, value) {
 			    $('#computer-multiple').append($('<option/>', { 
+			    	id: "computer_" + value.id,
 			        value: value.id,
 			        text : value.name,
 			        'class' : 'option-multiple computer-multiple'
@@ -47,6 +48,7 @@ function getConsoles(headquarterId) {
 	    	
 	    	$.each(consoles, function (index, value) {
 			    $('#console-multiple').append($('<option/>', { 
+			    	id: "console_" + value.id,
 			        value: value.id,
 			        text : value.name,
 			        'class' : 'option-multiple console-multiple'
@@ -92,17 +94,3 @@ function showConsoleDialog(console) {
 		  width: 700
 	}); 	
 };
-
-(function computersStatuspoll(headquarterId){
-	var consoleUrl = window.location.protocol + "//" + window.location.host + "/cabin-web/get/computersStatus";
-    $.ajax({
-    	url: consoleUrl, 
-    	data: {id: headquarterId},
-    	success: function(data){
-    		console.log("in computersStatuspoll");
-    	}, 
-    	dataType: "json", 
-    	complete: computersStatuspoll, 
-    	timeout: 3000 
-    });
-})();
