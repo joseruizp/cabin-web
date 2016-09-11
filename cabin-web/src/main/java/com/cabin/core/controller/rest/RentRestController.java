@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.cabin.core.controller.websocket.ComputerWebSocketController;
 import com.cabin.core.enums.RentStatusEnum;
 import com.cabin.core.persistence.domain.Client;
 import com.cabin.core.persistence.domain.Computer;
@@ -21,6 +22,7 @@ import com.cabin.core.persistence.repository.ComputerRepository;
 import com.cabin.core.persistence.repository.PrizesRuleRepository;
 import com.cabin.core.persistence.repository.RentRepository;
 import com.cabin.core.persistence.repository.RentStatusRepository;
+import com.cabin.core.websocket.ComputerStatus;
 
 @RestController
 public class RentRestController {
@@ -42,6 +44,9 @@ public class RentRestController {
 
     @Autowired
     private PrizesRuleRepository prizesRuleRepository;
+
+    @Autowired
+    private ComputerWebSocketController computerWebSocketController;
 
     @RequestMapping(value = "/get/statusComputer", method = RequestMethod.GET, produces = { "application/json;charset=UTF-8" })
     public Long getStatusComputer(@RequestParam(value = "id", required = true) Long clientId) {
@@ -77,6 +82,8 @@ public class RentRestController {
         rent.setRentStatus(rentStatusRepository.getOne(RentStatusEnum.RENTED.getId()));
         rent.setClient(clientRepository.getOne(clientId));
 
+        computerWebSocketController.getComputersStatus(new ComputerStatus(computerId, ComputerStatus.OCUPIED));
+
         Rent rentSaved = rentRepository.saveAndFlush(rent);
         return rentSaved.getId();
     }
@@ -101,6 +108,10 @@ public class RentRestController {
         if (User.IS_ANONYMOUS.equals(client.getUser().getAnonymous())) {
             client.setStatus(new Status());
             client.getStatus().setId(Status.INACTIVE);
+        }
+
+        if (Status.ACTIVE == rent.getComputer().getStatus().getId()) {
+            computerWebSocketController.getComputersStatus(new ComputerStatus(rent.getComputer().getId(), ComputerStatus.AVALIABLE));
         }
 
         return rentRepository.saveAndFlush(rent);

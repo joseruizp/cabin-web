@@ -15,8 +15,6 @@ public class ComputerWebSocketController {
     @Autowired
     private SimpMessagingTemplate webSocket;
 
-//    @MessageMapping("/status")
-//    @SendTo("/cabin/computer")
     @RequestMapping(value = "/post/computerStatus", method = RequestMethod.POST, produces = { "application/json;charset=UTF-8" })
     public ComputerStatus getComputersStatus(@RequestBody(required = true) ComputerStatus computerStatus) {
         webSocket.convertAndSend("/cabin/computer", computerStatus);

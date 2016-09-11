@@ -16,6 +16,15 @@ public class ComputerStatus implements Serializable {
     private Long computerId;
     private Long statusId;
 
+    public ComputerStatus() {
+    }
+
+    public ComputerStatus(Long computerId, Long statusId) {
+        super();
+        this.computerId = computerId;
+        this.statusId = statusId;
+    }
+
     public Long getComputerId() {
         return computerId;
     }

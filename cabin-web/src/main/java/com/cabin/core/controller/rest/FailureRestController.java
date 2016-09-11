@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.cabin.core.controller.websocket.ComputerWebSocketController;
 import com.cabin.core.persistence.domain.Computer;
 import com.cabin.core.persistence.domain.Failure;
 import com.cabin.core.persistence.domain.FailureByComputer;
@@ -18,6 +19,7 @@ import com.cabin.core.persistence.repository.ComputerRepository;
 import com.cabin.core.persistence.repository.FailureByComputerRepository;
 import com.cabin.core.persistence.repository.FailureRepository;
 import com.cabin.core.persistence.repository.ParameterRepository;
+import com.cabin.core.websocket.ComputerStatus;
 
 @RestController
 public class FailureRestController {
@@ -33,6 +35,9 @@ public class FailureRestController {
 
     @Autowired
     private ParameterRepository parameterRepository;
+
+    @Autowired
+    private ComputerWebSocketController computerWebSocketController;
 
     @RequestMapping(value = "/get/allFailures", method = RequestMethod.GET, produces = { "application/json;charset=UTF-8" })
     public List<Failure> getAllFailures() {
@@ -59,6 +64,8 @@ public class FailureRestController {
             Computer computer = computerRepository.findOne(computerId);
             computer.setStatus(new Status());
             computer.getStatus().setId(Status.INACTIVE);
+
+            computerWebSocketController.getComputersStatus(new ComputerStatus(computerId, ComputerStatus.MAINTENANCE));
             computerRepository.saveAndFlush(computer);
         }
 
