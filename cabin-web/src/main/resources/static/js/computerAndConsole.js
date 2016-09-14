@@ -19,7 +19,7 @@ function getComputers(headquarterId) {
 			    }));
 			});  
 	    	
-	    	$('#computer-multiple').click(function(e) {
+	    	$('#computer-multiple').dblclick(function(e) {
 	    		e.preventDefault();
 	    		var index = $(this).prop('selectedIndex');
 	    		var pc = pcs[index];
@@ -55,7 +55,7 @@ function getConsoles(headquarterId) {
 			    }));
 			});  
 	    	
-	    	$('#console-multiple').click(function(e) {
+	    	$('#console-multiple').dblclick(function(e) {
 	    		e.preventDefault();
 	    		var index = $(this).prop('selectedIndex');
 	    		var console = consoles[index];

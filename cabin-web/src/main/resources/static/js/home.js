@@ -7,6 +7,7 @@ operarios = []; clientes = [];
 sedes = []; sedeIndex = -1;
 tarifas = []; tarifaIndex = -1;
 tariffDetails = []; tariffDetailIndex = -1;
+viewTariffDetails = []; viewTariffDetails = -1;
 reglas = []; reglaIndex = -1;
 niveles = []; nivelIndex = -1;
 premios = []; premioIndex = -1;
@@ -815,6 +816,7 @@ function fillTarifatbl(  ){
     t.clear();
 	for(i=0; i<size;i++){		
 		t.row.add( [
+		        "<td><a href='#' class='tariff-detail'><i class='fa fa-plus' title='Ver Detalle'></i></a></td>",
                 tarifas[i].id,
                 tarifas[i].description,
                 tarifas[i].price,                
@@ -827,9 +829,31 @@ function fillTarifatbl(  ){
 		    var remove = "<td><a onclick='fnOpenCloseDialog(2,"+ tarifas[j].id +","+ j+")'><i class='fa fa-trash icons' title='Eliminar'></i></a></td>";
 		    j++;
 		    var tr = $(this);
-		    tr.find('td:last').after(edit); tr.find('td:last').after(remove);
+		    tr.find('td:last').after(edit);
+		    tr.find('td:last').after(remove);
 	    });
 	}
+	var d = 0;
+	$('.tariff-detail').click(function (e) {
+		e.preventDefault();
+		var tr = $(this).closest('tr');
+        var row = t.row( tr );
+        var iElement = $(this).find('i')[0];
+        var rowIndex = $('#tarifaTbl > tbody  > tr').index(tr);
+		var divTable = fillViewTariffDetailstbl(tarifas[rowIndex].tariffDetails);
+        
+ 
+        if ( row.child.isShown() ) {
+            row.child.hide();
+            $(iElement).removeClass('fa-minus');
+            $(iElement).addClass('fa-plus');
+        }
+        else {
+            row.child( divTable.html() ).show();
+            $(iElement).removeClass('fa-plus');
+            $(iElement).addClass('fa-minus');
+        }
+    } );
 }
 
 function fillTariffDetailstbl(  ){
@@ -853,6 +877,51 @@ function fillTariffDetailstbl(  ){
 	    var tr = $(this);
 	    tr.find('td:last').after(edit); tr.find('td:last').after(remove);
     });
+}
+
+function fillViewTariffDetailstbl(tariffDetails){
+	var divTable = $('<div></div>');
+	var table = $('<table class="table table-striped display" style="min-height: 100px"></table>');
+	var head = $('<thead></thead>').appendTo(table);
+	var headRow = $('<tr></tr>').appendTo(head);
+	var body = $('<tbody></tbody>').appendTo(table);
+	$('<th>Codigo</th>').appendTo(headRow);
+	$('<th>Dias</th>').appendTo(headRow);
+	$('<th>Precio</th>').appendTo(headRow);
+	$('<th>Hora Inicio</th>').appendTo(headRow);
+	$('<th>Hora Fin</th>').appendTo(headRow);
+	
+	for (var i = 0; i < tariffDetails.length; i++) {
+		var row = $('<tr></tr>').appendTo(body)
+		$('<td></td>').text(tariffDetails[i].id).appendTo(row);
+		$('<td></td>').text(tariffDetails[i].days).appendTo(row);
+		$('<td></td>').text(tariffDetails[i].price).appendTo(row);
+		$('<td></td>').text(tariffDetails[i].startTime).appendTo(row);
+		$('<td></td>').text(tariffDetails[i].endTime).appendTo(row);
+	}
+	
+	table.appendTo(divTable);
+	
+	console.log(divTable.html());
+	
+    var t = table.DataTable({
+	    paging: true,
+		ordering: true,
+		searching: false,
+		bLengthChange: false,
+		bInfo: false,
+		language: {	     
+		     emptyTable: "No hay datos disponibles",
+		     paginate: {
+			        "first":      "Primero",
+			        "last":       "Ultimo",
+			        "next":       "Siguiente",
+			        "previous":   "Anterior"
+			    }
+		},
+	});
+    
+    return divTable;
 }
 
 function editTarifa( code, index ){
@@ -2637,7 +2706,7 @@ function fillArrayTarifa(){
 	    dataType: "json",
 	    success: function (json) {
 	    	$.each(json, function(index, value) {
-	    		fillTarifa(value.id, value.description,value.price);				
+	    		fillTarifa(value.id, value.description,value.price, value.tariffDetails);				
 			});
 	    	fillTarifatbl();
 	    },
@@ -2647,7 +2716,7 @@ function fillArrayTarifa(){
 	});	
 }
 
-function fillTarifa(idTarifa, description, price){
+function fillTarifa(idTarifa, description, price, tariffDetails){
 	var hostname = window.location.protocol + "//" + window.location.host 
 	var status;	
 	var strUrl = hostname + "/cabin-web/tarifa/"+idTarifa+"/status";
@@ -2668,6 +2737,7 @@ function fillTarifa(idTarifa, description, price){
 		description: description,
 		price: price,
 		estado: status,				 
+		tariffDetails: tariffDetails
 	});
 }
 
