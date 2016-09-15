@@ -1045,12 +1045,6 @@ function saveTarifa() {
         tariffDetail.days = days;
         tariffDetail.price =  trim($("#price").val());
         
-        daysTarifa.splice(0,length);
-
-        setTimeout(function() {
-            $(".checkboxTarifa").prop( 'checked', false ) 
-        }, 0);
-
         tariff.tariffDetails.push(tariffDetail);
         hasDetails = true;
     }
@@ -1072,6 +1066,10 @@ function saveTarifa() {
             $( "#endTime" ).val("");
             $(statusHtml).parents(".dropdown").find('.btn').html('Activo <span class="caret"></span>');
             $(statusHtml).parents(".dropdown").find('.btn').val("1");
+            setTimeout(function() {
+                $(".checkboxTarifa").prop( 'checked', false ) 
+            }, 0);
+            daysTarifa = [];
 
             $('#descriptionTarifa').val("");
             $('#priceTariff').val("");
