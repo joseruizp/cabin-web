@@ -351,7 +351,11 @@ map = {
 			if ( addTarifa() ){
 				var idTarifa = $("#idTarifa").attr("value");
 				if (idTarifa !== ""){
-					fnOpenEditDialog(2);
+					if (daysTarifa.length > 0) {
+						saveTarifaDetail();
+					} else {
+						fnOpenEditDialog(2);
+					}
 				}
 				else{
 					saveTarifa();
@@ -466,6 +470,7 @@ map = {
 		 $( '.checkboxTarifa' ).on( 'click', function( event ) {
 		    var val = $(this).val();
 		    var idx = daysTarifa.indexOf( val );
+		    var idTarifa = trim($("#idTarifa").val());
 
 		    if ( idx > -1 ) {
 			    daysTarifa.splice( idx, 1 );
@@ -480,10 +485,24 @@ map = {
 		    	$('#startTime').prop('disabled', true);
 		    	$('#endTime').prop('disabled', true);
 		    	$('#price').prop('disabled', true);
+		    	
+		    	if (idTarifa != '') {
+		    		$('#descriptionTarifa').prop('disabled', false);
+		    		$('#priceTariff').prop('disabled', false);
+		    		$('#statusTariffBtn').prop('disabled', false);
+		    		$('#btnTarifa').html('Actualizar Tarifa');
+		    	}
 		    } else {
 		    	$('#startTime').prop('disabled', false);
 		    	$('#endTime').prop('disabled', false);
 		    	$('#price').prop('disabled', false);
+		    	
+		    	if (idTarifa != '') {
+		    		$('#descriptionTarifa').prop('disabled', true);
+		    		$('#priceTariff').prop('disabled', true);
+		    		$('#statusTariffBtn').prop('disabled', true);
+		    		$('#btnTarifa').html('Nuevo Detalle');
+		    	}
 		    }
         });
 	}); // End document ready
@@ -926,6 +945,7 @@ function fillViewTariffDetailstbl(tariffDetails){
 
 function editTarifa( code, index ){
 	tarifaIndex = index;
+	daysTarifa = [];
 	$(".checkboxTarifa").prop( 'checked', false );
 	var strUrl = window.location.protocol + "//" + window.location.host + "/cabin-web/get/tariff";	
 	$.ajax({
@@ -977,6 +997,11 @@ function editTariffDetail( code, index ){
 		$(".checkboxTarifa[value="+ days[i] +"]").prop( 'checked', true );
 		daysTarifa.push(days[i]);
 	}
+	
+	$('#descriptionTarifa').prop('disabled', true);
+	$('#priceTariff').prop('disabled', true);
+	$('#statusTariffBtn').prop('disabled', true);
+	$('#btnTarifa').html('Nuevo Detalle');
 	
 	$('#startTime').prop('disabled', false);
 	$('#endTime').prop('disabled', false);
@@ -1076,6 +1101,70 @@ function saveTarifa() {
             $("#divTariffBtn").show();
             $("#divTariffDetailBtn").hide();
             fillArrayTarifa();
+        },
+        error: function (xhr, status) {
+            console.log("Error, su solicitud no pudo ser atendida");
+        },
+    });
+    
+}
+
+function saveTarifaDetail() {
+    var tariff = {};
+    tariff.tariffDetails = [];
+
+    var idTarifa = trim($("#idTarifa").val());
+    var idTariffDetail = trim($("#idTariffDetail").val());
+    if (idTarifa !== "") {
+    	tariff.id = idTarifa;
+    }
+    console.log("Inside form-tarifaDetail " + idTarifa + " - " + idTariffDetail);
+
+    dateSort(); 
+    var days = "";
+    var daysLength = daysTarifa.length;
+    for (i = 0; i < daysLength ; i++) {
+        if (i == (daysLength - 1)) {
+            days +=  daysTarifa[i];
+            break;
+        }
+        days +=  daysTarifa[i] + "-";
+    }
+
+    var tariffDetail = {};
+    if (idTariffDetail !== "") {
+    	tariffDetail.id = idTariffDetail;
+    }
+    tariffDetail.startTime = trim($("#startTime").val());
+    tariffDetail.endTime = $("#endTime").val();
+    tariffDetail.days = days;
+    tariffDetail.price =  trim($("#price").val());
+    
+    tariff.tariffDetails.push(tariffDetail);
+
+    console.log(JSON.stringify(tariff));
+
+    var strUrl = window.location.protocol + "//" + window.location.host + "/cabin-web/post/tariffDetail";
+
+    $.ajax({
+        type: "POST",
+        url:strUrl,
+        dataType: 'json', 
+        data: JSON.stringify(tariff), 
+        contentType: 'application/json',
+        success: function (data) {
+            console.log("Send a tarifa into DB");
+            $('#descriptionTarifa').prop('disabled', false);
+    		$('#priceTariff').prop('disabled', false);
+    		$('#statusTariffBtn').prop('disabled', false);
+    		$('#btnTarifa').html('Actualizar Tarifa');
+    		
+    		daysTarifa = [];
+    		$(".checkboxTarifa").prop( 'checked', false );
+    		$('#startTime').prop('disabled', true);
+	    	$('#endTime').prop('disabled', true);
+	    	$('#price').prop('disabled', true);
+            fillArrayTarifaDetails(idTarifa);
         },
         error: function (xhr, status) {
             console.log("Error, su solicitud no pudo ser atendida");
