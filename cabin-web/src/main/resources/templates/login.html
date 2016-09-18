@@ -19,14 +19,16 @@
 
 	<body>
 	
-		<form class="login">
+		<form th:action="@{/login}" method="post">
+		
+			<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
 	
 			<fieldset>
 	
 				<legend class="legend">Login</legend>
 				
 				<div class="input">
-					<select id="userType">
+					<select id="userType" name="profileId">
 						<option value="2">Administrador</option>
 						<option value="1">Operador</option>
 						<option value="3" selected="selected">Cliente</option>
@@ -35,31 +37,29 @@
 				</div>
 	
 				<div class="input">
-					<input id="email" type="email" placeholder="Email" required="required" /> <span><i
+					<input id="email" type="email" name="email" placeholder="Email" required="required"/> <span><i
 						class="fa fa-envelope-o"></i></span>
 				</div>
 	
 				<div class="input">
-					<input id="password" type="password" placeholder="Password" required="required" /> <span><i
+					<input id="password" type="password" name="password" placeholder="Password" required="required" /> <span><i
 						class="fa fa-lock"></i></span>
 				</div>
 				
 				<div id="headquarterDiv" class="input">
-					<select id="headquarter">
+					<select id="headquarter" name="headquarterId">
 					</select>
 				</div>
 				<div class="form-group">
 					<a href="#" onclick="newUser()"><span>Registrarse</span></a>
 				</div>	
 				<div class="form-group" id="anonymousDiv">
-				<br/>
+					<br/>
 					<a href="#" onclick="newUser()" id="anonymousBtn"><span>Anonimo</span></a>
 				</div>
 				<br/>
 				<br/>				
-				<button class="submit" id="loginBtn">
-					<i class="fa fa-long-arrow-right"></i>
-				</button>
+				<input type="submit" class="submit"/>
 	
 			</fieldset>
 	

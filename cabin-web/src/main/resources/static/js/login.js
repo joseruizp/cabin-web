@@ -35,7 +35,7 @@
 	$(document).ready(function(){
 		addEventUserType();
 		getHeadquarters();
-		addEventLogin();
+//		addEventLogin();
 		addEventAnonymous();
 	});
 	
