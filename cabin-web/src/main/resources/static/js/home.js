@@ -350,9 +350,14 @@ map = {
 			event.preventDefault();
 			if ( addTarifa() ){
 				var idTarifa = $("#idTarifa").attr("value");
+				var idTariffDetail = trim($("#idTariffDetail").val());
 				if (idTarifa !== ""){
 					if (daysTarifa.length > 0) {
-						saveTarifaDetail();
+						if (idTariffDetail !== "") {
+							fnOpenEditDialog(11);
+						} else {
+							saveTarifaDetail();
+						}
 					} else {
 						fnOpenEditDialog(2);
 					}
@@ -1001,7 +1006,7 @@ function editTariffDetail( code, index ){
 	$('#descriptionTarifa').prop('disabled', true);
 	$('#priceTariff').prop('disabled', true);
 	$('#statusTariffBtn').prop('disabled', true);
-	$('#btnTarifa').html('Nuevo Detalle');
+	$('#btnTarifa').html('Actualizar Detalle');
 	
 	$('#startTime').prop('disabled', false);
 	$('#endTime').prop('disabled', false);
@@ -1161,6 +1166,9 @@ function saveTarifaDetail() {
     		
     		daysTarifa = [];
     		$(".checkboxTarifa").prop( 'checked', false );
+    		$('#startTime').val('');
+	    	$('#endTime').val('');
+	    	$('#price').val('');
     		$('#startTime').prop('disabled', true);
 	    	$('#endTime').prop('disabled', true);
 	    	$('#price').prop('disabled', true);
@@ -2070,6 +2078,8 @@ function fnOpenEditDialog(val) {
 	                	saveParametro();
 	                }else if (val == '10'){
 	                	saveBonificacion();
+	                }else if (val == '11'){
+	                	saveTarifaDetail();
 	                }
 	            }, "class":"btn btn-default",
 	         },
