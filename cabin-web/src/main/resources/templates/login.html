@@ -19,7 +19,7 @@
 
 	<body>
 	
-		<form th:action="@{/login}" method="post">
+		<form th:action="@{/login}" method="post" id="loginForm">
 		
 			<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
 	
@@ -67,6 +67,9 @@
 				login successful <br /> redirecting...
 			</div>
 	
+		</form>
+		
+		<form th:action="@{/login}" method="post" id="anonymousForm">
 		</form>
 	
 		<script type="text/javascript" th:src="@{plugins/jquery.min.js}"></script>

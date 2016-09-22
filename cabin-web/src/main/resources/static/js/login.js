@@ -134,17 +134,32 @@
 			user.headquarterId = headquarterId;
 			
 			var hostname = window.location.protocol + "//" + window.location.host;
-			var strUrl = hostname + "/cabin-web/post/loginAnonymous";
+			var strUrl = hostname + "/cabin-web/get/anonymous";
 			
 			$.ajax({
-				type: "POST",
+				type: "GET",
 			    url:strUrl,
 			    contentType: 'application/json',
 			    dataType: "json",
-			    data: JSON.stringify(user),
 			    success: function (json) {
 		    		console.log("go to user page");
-		    		window.location.href = hostname + "/cabin-web/client";
+		    		var inputEmail = $("<input>")
+		               .attr("type", "hidden")
+		               .attr("name", "email").val(json.name);
+		    		var inputPassword = $("<input>")
+		               .attr("type", "hidden")
+		               .attr("name", "password").val(json.pass);
+		    		var inputProfile = $("<input>")
+		               .attr("type", "hidden")
+		               .attr("name", "profileId").val(json.profile.id);
+		    		var inputHeadquarter = $("<input>")
+		               .attr("type", "hidden")
+		               .attr("name", "headquarterId").val($("#headquarter").val());
+		    		$('#anonymousForm').append($(inputEmail));
+		    		$('#anonymousForm').append($(inputPassword));
+		    		$('#anonymousForm').append($(inputProfile));
+		    		$('#anonymousForm').append($(inputHeadquarter));
+		    		document.getElementById("anonymousForm").submit();
 			    },
 			    error: function (xhr, status) {	    	
 			    	console.log("Error, su solicitud no pudo ser atendida");

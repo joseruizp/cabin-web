@@ -44,7 +44,7 @@ public class UserRestController {
 
         List<Client> clients = clientRepository.findByUserId(users.get(0).getId());
         Client client = clients.get(0);
-        
+
         if (Status.INACTIVE == client.getStatus().getId()) {
             return null;
         }
@@ -108,6 +108,15 @@ public class UserRestController {
         httpSession.setAttribute(SessionEnum.HEADQUARTER_ID.name(), userRequest.getHeadquarterId());
         httpSession.setAttribute(SessionEnum.USER_NAME.name(), user.getName());
 
+        return user;
+    }
+
+    @RequestMapping(value = "/get/anonymous", method = RequestMethod.GET, produces = { "application/json;charset=UTF-8" })
+    public User getAnonymousUser() throws ParseException {
+
+        List<Client> inactiveClients = clientRepository.findByStatusIdAndUserAnonymous(Status.INACTIVE, User.IS_ANONYMOUS);
+        Client client = inactiveClients.get(0);
+        User user = client.getUser();
         return user;
     }
 

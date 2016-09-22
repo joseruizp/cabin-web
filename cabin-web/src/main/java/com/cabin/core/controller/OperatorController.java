@@ -1,7 +1,6 @@
 package com.cabin.core.controller;
 
-import java.util.Locale;
-
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import org.slf4j.Logger;
@@ -25,24 +24,23 @@ public class OperatorController {
     private static final Logger logger = LoggerFactory.getLogger(OperatorController.class);
 
     @Autowired
-    private HttpSession httpSession;
-
-    @Autowired
     private HeadquarterRepository headquarterRepository;
 
     /**
      * Simply selects the home view to render by returning its name.
      */
     @RequestMapping(value = "/operator", method = RequestMethod.GET)
-    public String home(Locale locale, Model model) {
-        logger.info("Welcome home! The client locale is {}.", locale);
-
-        Long userId = (Long) httpSession.getAttribute(SessionEnum.USER_ID.name());
+    public String home(HttpServletRequest request, Model model) {
+        HttpSession session = request.getSession();
+        Long userId = (Long) session.getAttribute(SessionEnum.USER_ID.name());
 
         Headquarter headquarter = headquarterRepository.findByUserId(userId);
-        httpSession.setAttribute(SessionEnum.HEADQUARTER_ID.name(), headquarter.getId());
+        session.setAttribute(SessionEnum.HEADQUARTER_ID.name(), headquarter.getId());
+        
+        logger.info("Client id is:'" + userId + "'");
+        logger.info("Headquarter id is:'" + headquarter.getId() + "'");
 
-        model.addAttribute("employeeId", httpSession.getAttribute(SessionEnum.EMPLOYEE_ID.name()));
+        model.addAttribute("employeeId", session.getAttribute(SessionEnum.EMPLOYEE_ID.name()));
         model.addAttribute("headquarterId", headquarter.getId());
 
         return "operator";

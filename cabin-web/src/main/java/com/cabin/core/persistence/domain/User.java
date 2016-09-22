@@ -57,6 +57,10 @@ public class User implements Serializable {
     public void setPass(String pass) {
         this.pass = pass;
     }
+    
+    public boolean isAnonymous() {
+        return IS_ANONYMOUS.equals(this.anonymous);
+    }
 
     public String getAnonymous() {
         return anonymous;

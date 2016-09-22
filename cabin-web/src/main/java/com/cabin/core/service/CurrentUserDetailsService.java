@@ -21,7 +21,6 @@ public class CurrentUserDetailsService implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         List<User> users = userRepository.findByName(username);
-        User user = users.get(0);
         return new CurrentUser(users.get(0));
     }
 
