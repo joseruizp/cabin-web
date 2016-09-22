@@ -6,6 +6,7 @@ import java.text.ParseException;
 import java.util.Calendar;
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +18,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.cabin.core.enums.SessionEnum;
 import com.cabin.core.persistence.domain.Client;
-import com.cabin.core.persistence.domain.Employee;
 import com.cabin.core.persistence.domain.Experience;
 import com.cabin.core.persistence.domain.Level;
 import com.cabin.core.persistence.domain.Profile;
@@ -46,9 +46,6 @@ public class ClientRestController {
     private LevelRepository levelRepository;
 
     @Autowired
-    private HttpSession httpSession;
-    
-    @Autowired
     private UserRepository userRepository;
 
     @RequestMapping(value = "/get/allClients", method = RequestMethod.GET, produces = { "application/json;charset=UTF-8" })
@@ -62,7 +59,7 @@ public class ClientRestController {
         System.out.println("clientId ::: " + id);
         return clientRepository.findOne(id);
     }
-    
+
     @RequestMapping(value = "/post/client", method = RequestMethod.POST, produces = { "application/json;charset=UTF-8" })
     public Client postClient(@RequestBody(required = true) Client client) throws ParseException {
         Long clientId = client.getId();
@@ -82,13 +79,14 @@ public class ClientRestController {
 
         return clientRepository.saveAndFlush(client);
     }
-    
+
     @RequestMapping(value = "/post/recharge", method = RequestMethod.POST, produces = { "application/json;charset=UTF-8" })
-    public Client recharge(@RequestBody(required = true) Recharge recharge) throws ParseException {
+    public Client recharge(@RequestBody(required = true) Recharge recharge, HttpServletRequest request) throws ParseException {
         Client client = clientRepository.findOne(recharge.getClientId());
         client.setBalance(client.getBalance() + recharge.getAmount());
 
-        Boolean isAnonymous = (Boolean) httpSession.getAttribute(SessionEnum.IS_ANONYMOUS.name());
+        HttpSession session = request.getSession();
+        Boolean isAnonymous = (Boolean) session.getAttribute(SessionEnum.IS_ANONYMOUS.name());
 
         if (isAnonymous) {
             String password = generatePassword();
@@ -129,6 +127,5 @@ public class ClientRestController {
     private Integer getRechargeExperience(Experience experience, Double recharge) {
         return Math.toIntExact(Math.round(recharge * experience.getExperienceToGive() / experience.getRechargeFraction()));
     }
-    
-    
+
 }

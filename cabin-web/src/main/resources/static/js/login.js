@@ -35,7 +35,6 @@
 	$(document).ready(function(){
 		addEventUserType();
 		getHeadquarters();
-//		addEventLogin();
 		addEventAnonymous();
 	});
 	
@@ -70,54 +69,6 @@
 		    error: function (xhr, status) {	    	
 		    	console.log("Error, su solicitud no pudo ser atendida");
 		    }
-		});
-	}
-	
-	function addEventLogin() {
-		$("#loginBtn").click(function() {
-			var email = $("#email").val();
-			var password = $("#password").val();
-			var headquarterId = $("#headquarter").val();
-			var profileId = $("#userType").val();
-			console.log("headquarterId value: " + headquarterId);
-			var user = {};
-			user.name = email;
-			user.pass = password;
-			user.profileId = profileId;
-			if ($("#headquarterDiv").is(":visible")) {
-				user.headquarterId = headquarterId;
-			}
-			
-			var hostname = window.location.protocol + "//" + window.location.host;
-			var strUrl = hostname + "/cabin-web/post/login";
-			
-			$.ajax({
-				type: "POST",
-			    url:strUrl,
-			    contentType: 'application/json',
-			    dataType: "json",
-			    data: JSON.stringify(user),
-			    success: function (json) {
-			    	console.log(json);
-			    	console.log("id profile ::: " + profileId);
-			    	if (profileId === "1") {
-			    		console.log("go to operator page");
-			    		window.location.href = hostname + "/cabin-web/operator";
-			    	} else if (profileId === "2") {
-			    		console.log("go to admin page");
-			    		window.location.href = hostname + "/cabin-web/admin";
-			    	} else if (profileId === "3") {
-			    		console.log("go to user page");
-			    		window.location.href = hostname + "/cabin-web/client";
-			    	} else if (profileId === "4") {
-			    		console.log("go to user page");
-			    		window.location.href = hostname + "/cabin-web/incidence";
-			    	}
-			    },
-			    error: function (xhr, status) {	    	
-			    	console.log("Error, su solicitud no pudo ser atendida");
-			    }
-			});
 		});
 	}
 	
