@@ -3648,24 +3648,56 @@ function addTarifa() {
 		valid = valid && checkRegexp( $("#endTime"), /([01]\d|2[0-3]):([0-5]\d)/ , "La hora de fin no es válida, formato permitido desde 00:00 hasta 23:59.",  tarifaValidation);
 		valid = valid && checkRegexp( $("#price"), /^[0-9]\d{0,3}($|\.\d{0,2}$)/i, "Debe ingresar un monto válido, no mayor de 999.99 soles y de dos decimales.", tarifaValidation );
 		
-		var startStr = trim( $( "#startTime" ).val());
-		var endStr = trim( $( "#endTime" ).val());
-		var arrayStartTime = startStr.split(':');
-		var arrayEndTime = endStr.split(':'); 
-		var startTime = new Date();
-		startTime.setHours(arrayStartTime[0]-5);
-		startTime.setMinutes(arrayStartTime[1]);
-		var endTime = new Date();
-		endTime.setHours(arrayEndTime[0]-5);
-		endTime.setMinutes(arrayEndTime[1]);
-		if ( startTime.getTime() >= endTime.getTime() ){
+		var startTime = trim( $( "#startTime" ).val());
+		var endTime = trim( $( "#endTime" ).val());
+		
+		if (!isValidTime(startTime, endTime)){
+			console.log("is validTime: " + valid);
 			$("#startTime").addClass( "ui-state-error" );
 			$("#endTime").addClass( "ui-state-error" );
-			updateTips( "La hora de inicio no puede ser mayor que la hora de fin", tarifaValidation );
+			updateTips( "La hora de inicio no puede ser mayor que la hora de fin.", tarifaValidation );
+			valid = false;
+		}
+		
+		if (!isTimeOverlaping(startTime, endTime)){
+			console.log("is valid overlap: " + valid);
+			$("#startTime").addClass( "ui-state-error" );
+			$("#endTime").addClass( "ui-state-error" );
+			updateTips( "Las horas se sobreponen con otra(s) de la lista.", tarifaValidation );
 			valid = false;
 		}
 	}
 	return valid;
+}
+
+function isValidTime(startTime, endTime) {
+	if (getDate(endTime) <= getDate(startTime)) {
+		return false;
+	}
+	return true;
+}
+
+function isTimeOverlaping(startTime, endTime) {
+	var table = $('#tariffDetailTbl').DataTable();
+	table.rows().every( function () {
+	    var data = this.data();
+	    var days = data[1];
+	    console.log("data: " + data);
+	    if ((getDate(startTime) <= getDate(data[4]))  &&  (getDate(endTime) >= getDate(data[3]))) {
+	    	for (var i = 0; i < daysTarifa.length; i++) {
+	    		if (days.indexOf(daysTarifa[i])) {
+	    			return false;
+	    		}
+	    	}
+	    }
+	} );
+	return true;
+}
+
+function getDate(time) {
+	var today = new Date();
+	today.setHours(time.split(":")[0], time.split(":")[1], 0, 0);
+	return today;
 }
 
 function addRegla() {
