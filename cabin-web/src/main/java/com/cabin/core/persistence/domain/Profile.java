@@ -15,8 +15,8 @@ public class Profile implements Serializable {
 
     private static final long serialVersionUID = -2185823049272069007L;
 
-    public static final Long ADMIN = 1L;
-    public static final Long EMPLOYEE = 2L;
+    public static final Long EMPLOYEE = 1L;
+    public static final Long ADMIN = 2L;
     public static final Long CLIENT = 3L;
     public static final Long INCIDENCE = 4L;
 

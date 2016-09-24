@@ -92,6 +92,11 @@ public class TariffRestController {
     public Tariff getTariff(@RequestParam(value = "id", required = true) Long idTariff) {
         return tariffRepository.findOne(idTariff);
     }
+    
+    @RequestMapping(value = "/delete/tariffDetail", method = RequestMethod.DELETE, produces = { "application/json;charset=UTF-8" })
+    public void deleteTariffDetail(@RequestParam(value = "id", required = true) Long idTariffDetail) {
+        tariffDetailRepository.delete(idTariffDetail);
+    }
 
     @RequestMapping(value = "/get/tariffPrice", method = RequestMethod.GET, produces = { "application/json;charset=UTF-8" })
     public Double getTariffPrice(@RequestParam(value = "idGroup", required = true) Long idGroup, @RequestParam(value = "idHeadquarter", required = true) Long idHeadquarter,

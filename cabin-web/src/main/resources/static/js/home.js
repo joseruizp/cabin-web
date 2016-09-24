@@ -896,7 +896,7 @@ function fillTariffDetailstbl(  ){
 	};
     $('#tariffDetailTbl > tbody  > tr').each(function() {	    
     	var edit = "<td><a onclick='editTariffDetail("+ tariffDetails[j].id +","+ j+")'><i class='fa fa-pencil icons' title='Editar'></i></a></td>";
-	    var remove = "<td><a onclick='fnOpenCloseDialog(2,"+ tariffDetails[j].id +","+ j+")'><i class='fa fa-trash icons' title='Eliminar'></i></a></td>";
+	    var remove = "<td><a onclick='fnOpenCloseDialog(11,"+ tariffDetails[j].id +","+ j+")'><i class='fa fa-trash icons' title='Eliminar'></i></a></td>";
 	    j++;
 	    var tr = $(this);
 	    tr.find('td:last').after(edit); tr.find('td:last').after(remove);
@@ -1027,6 +1027,23 @@ function deleteTarifa( code, index ){
 	    	console.log("Se asigno estado a Tarifa" + code);
 	    	tarifas[index].estado = "Inactivo";
 	    	fillTarifatbl();
+	    },
+	    error: function (xhr, status) {	    	
+	    	console.log("Error, su solicitud no pudo ser atendida");
+	    }	    
+	});		
+}
+
+function deleteTarifaDetail( code, index ){	
+	var strUrl = window.location.protocol + "//" + window.location.host + "/cabin-web/delete/tariffDetail?id="+code;
+	console.log("Inside deleteTarifaDetail " + code);
+	$.ajax({
+		type: "DELETE",
+	    url:strUrl,			
+	    contentType: 'application/json',
+	    success: function () {
+	    	tariffDetails.splice(index, 1);
+	    	$('#tariffDetailTbl').DataTable().row(index).remove().draw();
 	    },
 	    error: function (xhr, status) {	    	
 	    	console.log("Error, su solicitud no pudo ser atendida");
@@ -2029,6 +2046,8 @@ function fnOpenCloseDialog(val, code, index) {
 	                	deleteParametro(code, index);
 	                }else if (val == "10") {
 	                	deleteBonificacion(code, index);
+	                }else if (val == '11'){
+	                	deleteTarifaDetail(code, index);
 	                }
 	                
 	         	}, "class":"btn btn-default",

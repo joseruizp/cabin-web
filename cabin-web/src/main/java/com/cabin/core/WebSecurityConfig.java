@@ -71,13 +71,26 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
             CurrentUser currentUser = (CurrentUser) authentication.getPrincipal();
             System.out.println("currentUser: " + currentUser.getId());
 
-            Long profileId = Long.parseLong(request.getParameter("profileId"));
-            boolean isAnonymous = currentUser.getUser().isAnonymous();
-
             HttpSession session = request.getSession();
+
+            Long profileId = Long.parseLong(request.getParameter("profileId"));
+
+            if (profileId != currentUser.getProfile()) {
+                session.invalidate();
+                redirectStrategy.sendRedirect(request, response, "/login?error");
+            }
+
+            boolean isAnonymous = currentUser.isAnonymous();
+
             if (Profile.CLIENT == profileId) {
                 List<Client> clients = clientRepository.findByUserId(currentUser.getId());
                 Client client = clients.get(0);
+                
+                if (Status.ACTIVE != client.getStatus().getId()) {
+                    session.invalidate();
+                    redirectStrategy.sendRedirect(request, response, "/login?error");
+                }
+                
                 session.setAttribute(SessionEnum.CLIENT_ID.name(), client.getId());
 
                 if (isAnonymous) {
@@ -92,6 +105,11 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
             } else {
                 List<Employee> employees = employeeRepository.findByUserId(currentUser.getId());
                 Employee employee = employees.get(0);
+                if (Status.ACTIVE != employee.getStatus().getId()) {
+                    session.invalidate();
+                    redirectStrategy.sendRedirect(request, response, "/login?error");
+                }
+                
                 session.setAttribute(SessionEnum.EMPLOYEE_ID.name(), employee.getId());
             }
 
@@ -122,7 +140,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         public void onLogoutSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
             CurrentUser currentUser = (CurrentUser) authentication.getPrincipal();
 
-            boolean isAnonymous = currentUser.getUser().isAnonymous();
+            boolean isAnonymous = currentUser.isAnonymous();
 
             if (isAnonymous) {
                 List<Client> clients = clientRepository.findByUserId(currentUser.getId());

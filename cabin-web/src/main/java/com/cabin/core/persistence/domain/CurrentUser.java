@@ -15,10 +15,6 @@ public class CurrentUser extends org.springframework.security.core.userdetails.U
         this.user = user;
     }
 
-    public User getUser() {
-        return user;
-    }
-
     public Long getId() {
         return user.getId();
     }
@@ -29,5 +25,13 @@ public class CurrentUser extends org.springframework.security.core.userdetails.U
 
     public Role getRole() {
         return Profile.getRole(user.getProfile().getId());
+    }
+
+    public Long getProfile() {
+        return user.getProfile().getId();
+    }
+
+    public boolean isAnonymous() {
+        return user.isAnonymous();
     }
 }
