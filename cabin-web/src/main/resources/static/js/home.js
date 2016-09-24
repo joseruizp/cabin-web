@@ -1108,6 +1108,7 @@ function saveTarifa() {
         contentType: 'application/json',
         success: function (data) {
             console.log("Send a tarifa into DB");
+            $("#idTarifa").val("");
             $( "#price" ).val("");
             $( "#startTime" ).val("");
             $( "#endTime" ).val("");
@@ -1120,8 +1121,7 @@ function saveTarifa() {
 
             $('#descriptionTarifa').val("");
             $('#priceTariff').val("");
-            $("#divTariffBtn").show();
-            $("#divTariffDetailBtn").hide();
+            $("#btnTarifa").html("Nueva Tarifa");
             fillArrayTarifa();
         },
         error: function (xhr, status) {
