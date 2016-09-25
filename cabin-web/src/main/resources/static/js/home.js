@@ -4,6 +4,7 @@
  */
 estados = []; tipo_doc = []; perfiles = []; 
 operarios = []; clientes = [];
+tipoOperarios = [];
 sedes = []; sedeIndex = -1;
 tarifas = []; tarifaIndex = -1;
 tariffDetails = []; tariffDetailIndex = -1;
@@ -182,10 +183,11 @@ map = {
 			scrollY: 300,
 		    paging: true,
 			ordering: true,
-			searching: false,
+			searching: true,
 			bLengthChange: false,
 			bInfo: false,
-			language: {	     
+			language: {
+				 search: "Buscar Regla de puntos: ",
 			     emptyTable: "No hay datos disponibles",
 			     paginate: {
 				        "first":      "Primero",
@@ -216,10 +218,11 @@ map = {
 		    pscrollY: 300,
 		    paging: true,
 		    ordering: true,
-		    searching: false,
+		    searching: true,
 			bLengthChange: false,
 			bInfo: false,
-			language: {	     
+			language: {	   
+				 search: "Buscar Premio: ",
 			     emptyTable: "No hay datos disponibles",
 			     paginate: {
 				        "first":      "Primero",
@@ -271,10 +274,11 @@ map = {
 		    pscrollY: 300,
 		    paging: true,
 		    ordering: true,
-		    searching: false,
+		    searching: true,
 			bLengthChange: false,
 			bInfo: false,
-			language: {	     
+			language: {	   
+				search: "Buscar Experiencia: ",
 			    emptyTable: "No hay datos disponibles",
 			    paginate: {
 			        "first":      "Primero",
@@ -305,10 +309,11 @@ map = {
 		    pscrollY: 300,
 		    paging: true,
 		    ordering: true,
-		    searching: false,
+		    searching: true,
 			bLengthChange: false,
 			bInfo: false,
-			language: {	     
+			language: {	  
+				search: "Buscar Bonificación: ",
 			    emptyTable: "No hay datos disponibles",
 			    paginate: {
 			        "first":      "Primero",
@@ -326,7 +331,8 @@ map = {
 		fillStatus();
 		fillDocTypes();
 		fillProfiles();
-		fillOperarios();
+		fillTipoOperarios();
+		//fillOperarios();
 		fillArrayCliente();
 		fillArrayEmpleado();		
 		fillArrayExperience();
@@ -636,8 +642,9 @@ function fillSedetbl(  ){
                 sedes[i].id,
                 sedes[i].name,
                 sedes[i].address,
-                sedes[i].employee,
-                sedes[i].estado,
+                sedes[i].operatorType,
+                sedes[i].maxAmountOperator,
+                sedes[i].status,
                 "",
         ] ).draw( false );
 	};
@@ -656,79 +663,45 @@ function fillSedetbl(  ){
 
 function editSede( code, index ){
 	var hostname = window.location.protocol + "//" + window.location.host;
-	var strUrl = hostname + "/cabin-web/sede/" + code;
+	var strUrl = hostname + "/cabin-web/get/Headquarter";
 	sedeIndex = index;
 	$.ajax({
 		async:false,
 	    url:strUrl,
+	    data: {id: code},
 	    crossDomain: true,
 	    dataType: "json",
-	    success: function (json) {
-	    	var hrefArray = json._links.self.href.split("/");
-	    	var idSede = hrefArray[hrefArray.length -1];
+	    success: function (json) {	    	
 	    	$( "#name" ).val(json.name);
 			$( "#address" ).val(json.address);
-			//$("#numberPcs").val(json.numberPcs);
-			//$("#numberConsoles").val(json.numberConsoles);	
-			$("#idSede").attr('value', idSede);
-			$("#btnSede").html("Actualizar Sede");	
+			$( "#maxAmountOperator" ).val(json.maxAmountOperator);
+			
+			var statusHtml = $("#statusSede li a");
+			var statusName = "";
+			for ( i = 0; i< estados.length ; i++){
+				if (json.status.id == estados[i].id ){ statusName = estados[i].name; break;}
+			}
+	    	$(statusHtml).parents(".dropdown").find('.btn').html(statusName + ' <span class="caret"></span>');
+	    	$(statusHtml).parents(".dropdown").find('.btn').attr('value', json.status.id);
+			
+	    	
+	    	var operatorTypeHtml = $("#operario li a");
+			var operatorTypeName = "";
+			for ( i = 0; i< tipoOperarios.length ; i++){
+				if (json.operatorType.id == tipoOperarios[i].id ){ operatorTypeName = tipoOperarios[i].name; break;}
+			}
+	    	$(operatorTypeHtml).parents(".dropdown").find('.btn').html(operatorTypeName + ' <span class="caret"></span>');
+	    	$(operatorTypeHtml).parents(".dropdown").find('.btn').attr('value', json.operatorType.id);
+	    	
+			
+			$("#idSede").attr('value', json.id);
+			$("#btnSede").html("Actualizar Sede");			
 	    },
 	    error: function (xhr, status) {	    	
 	    	console.log("Error, su solicitud no pudo ser atendida");
 	    }
 	});
-	var email, idUser;
-	var strSede = hostname + "/cabin-web/sede/" + code+"/user";
-	$.ajax({
-		async:false,
-	    url:strSede,
-	    crossDomain: true,
-	    dataType: "json",
-	    success: function (json) {
-	    	var hrefArray = json._links.self.href.split("/");
-	    	idUser = hrefArray[hrefArray.length -1];
-	    	email = json.name;	    	
-	    },
-	    error: function (xhr, status) {    	
-	    	console.log("Error, su solicitud no pudo ser atendida");
-	    }
-	});	
-	strUrl = hostname + "/cabin-web/empleado/search/findByEmail?email=" + email;
-	$.ajax({
-		async:false,
-	    url:strUrl,
-	    crossDomain: true,
-	    dataType: "json",
-	    success: function (json) {
-	    	$.each(json._embedded.empleado, function(index, value) {
-		    	var operarioHtml = $("#operario li a");
-		    	$(operarioHtml).parents(".dropdown").find('.btn').html(value.name + ' <span class="caret"></span>');
-		    	$(operarioHtml).parents(".dropdown").find('.btn').attr('value', idUser);	    		
-	    	});
-	    },
-	    error: function (xhr, status) {    	
-	    	console.log("Error, su solicitud no pudo ser atendida");
-	    }
-	});
 	
-	strUrl = hostname + "/cabin-web/sede/" + code+"/status";
-	var idStatus;
-	$.ajax({
-		async:false,
-	    url:strUrl,
-	    crossDomain: true,
-	    dataType: "json",
-	    success: function (json) {
-	    	var hrefArray = json._links.self.href.split("/");
-	    	idStatus = hrefArray[hrefArray.length -1];
-	    	var statusHtml = $("#statusSede li a");			
-			statusHtml.parents(".dropdown").find('.btn').html( json.name +' <span class="caret"></span>');				
-			statusHtml.parents(".dropdown").find('.btn').val( idStatus);
-	    },
-	    error: function (xhr, status) {    	
-	    	console.log("Error, su solicitud no pudo ser atendida");
-	    }
-	});	
 }
 
 function deleteSede( code, index ){	
@@ -755,39 +728,39 @@ function deleteSede( code, index ){
 function saveSede(){
 	var idSede = $("#idSede").attr("value");
 	console.log("Inside form-Sede " + idSede);
-	var sede = {};  var newSede = 1;
+	var sede = {};  
+	
 	sede.name = trim( $( "#name" ).val() );
-	sede.address = trim( $( "#address" ).val() );			
-	$( "#name" ).val("");	$( "#address" ).val("");
+	sede.address = trim( $( "#address" ).val() );
+	sede.maxAmountOperator = trim( $( "#maxAmountOperator" ).val() );
+	
 	var operarioHtml = $("#operario li a");	
-	var idUser = $(operarioHtml).parents(".dropdown").find('.btn').val();
-	$(operarioHtml).parents(".dropdown").find('.btn').html('Seleccionar <span class="caret"></span>');
-	$(operarioHtml).parents(".dropdown").find('.btn').val("");	
-	//$("#numberPcs").val(""); $("#numberConsoles").val("");
+	var idOperatorType = $(operarioHtml).parents(".dropdown").find('.btn').val();
 	var statusHtml = $("#statusSede li a");	
 	var idStatus = $(statusHtml).parents(".dropdown").find('.btn').val();
-	$(statusHtml).parents(".dropdown").find('.btn').html('Activo <span class="caret"></span>');
-	$(statusHtml).parents(".dropdown").find('.btn').val("1");
 	
-	var strUrl = window.location.protocol + "//" + window.location.host + "/cabin-web/sede";			
-	if (idSede !== "") {
-		strUrl += "/" + idSede;
-		sede.id = idSede;
-		newSede = 0;
-		var length = operarios.length;
-		if( idStatus == estados[0].id){
-			sede.estado = estados[0].name; }
-		else{
-			sede.estado = estados[1].name; }	
-		for ( i = 0; i< length ; i++){
-			if (idUser == operarios[i].id ){sede.employee = operarios[i].name; break;}
-		}		
-		sedes.splice(sedeIndex, 1, sede);
-		fillSedetbl();
+	
+	$(statusHtml).parents(".dropdown").find('.btn').html('Activo <span class="caret"></span>');
+	$(statusHtml).parents(".dropdown").find('.btn').val("1");	
+	$(operarioHtml).parents(".dropdown").find('.btn').html( tipoOperarios[0] + '<span class="caret"></span>');
+	$(operarioHtml).parents(".dropdown").find('.btn').val("1");
+	
+	$( "#name" ).val("");	
+	$( "#address" ).val("");
+	$( "#maxAmountOperator" ).val("");
+	
+	sede.status = {};
+	sede.status.id = idStatus;
+	sede.operatorType = {};
+	sede.operatorType = idOperatorType;
+	
+	var strUrl = window.location.protocol + "//" + window.location.host + "/cabin-web/post/headquarter";			
+	if (idSede !== "") {		
+		sede.id = idSede;		
+		var length = operarios.length;		
 	}						
-	$.ajax({
-		async: false,
-		type: idSede === "" ? "POST" : "PATCH",
+	$.ajax({		
+		type: "POST",
 	    url:strUrl,			    
 	    dataType: 'json', 
 	    data: JSON.stringify(sede), 
@@ -803,33 +776,9 @@ function saveSede(){
 	    	console.log("Error, su solicitud no pudo ser atendida");
 	    },
 	    complete: function(xhr) {	    	
-	    	var strLocation = xhr.getResponseHeader('Location');
-	    	if(idSede == ""){
-	    		var hrefArray = strLocation.split("/");
-	    		idSede = hrefArray[hrefArray.length -1];
-	    	}	    	
+	    	fillArraySede();	    	
 	    }
 	});
-	
-	var strUrlStatus = window.location.protocol + "//" + window.location.host + "/cabin-web/estado/" + idStatus;	
-	var strUrlSede = window.location.protocol + "//" + window.location.host + "/cabin-web/sede/"+idSede+"/status";
-	//Se inserta el estado en la Sede	
-	$.ajax({
-		async: false,
-		type: "PUT",
-	    url:strUrlSede,			
-	    data: strUrlStatus, 
-	    contentType: 'text/uri-list',
-	    success: function (data) {	    	
-	    	console.log("Se asigno estado a sede" + idSede);
-	    },
-	    error: function (xhr, status) {	    	
-	    	console.log("Error, su solicitud no pudo ser atendida");
-	    },	
-	    complete: function(xhr){
-	    	associateUser(idSede, idUser, newSede);
-	    }
-	});	
 	
 }
 
@@ -2674,75 +2623,25 @@ function editEmpleado( code, index ){
 }
 
 
-
-function fillSede(idSede, name, address){
-	var hostname = window.location.protocol + "//" + window.location.host 
-	var strSede = hostname + "/cabin-web/sede/"+idSede+"/user";
-	var employee, email, status;
-	var strUrl = hostname + "/cabin-web/sede/"+idSede+"/status";
-	$.ajax({
-		async:false,
-	    url:strUrl,
-	    crossDomain: true,
-	    dataType: "json",
-	    success: function (json) {
-	    	status = json.name;
-	    },
-	    error: function (xhr, status) {    	
-	    	console.log("Error, su solicitud no pudo ser atendida");
-	    }
-	});		
-	$.ajax({
-		async:false,
-	    url:strSede,
-	    crossDomain: true,
-	    dataType: "json",
-	    success: function (json) {
-	    	email = json.name;
-	    },
-	    error: function (xhr, status) {    	
-	    	console.log("Error, su solicitud no pudo ser atendida");
-	    }
-	});
-	strUrl = hostname + "/cabin-web/empleado/search/findByEmail?email=" + email;
-	$.ajax({
-		async:false,
-	    url:strUrl,
-	    crossDomain: true,
-	    dataType: "json",
-	    success: function (json) {
-	    	$.each(json._embedded.empleado, function(index, value) {	
-	    		employee = value.name;
-	    	});
-	    },
-	    error: function (xhr, status) {    	
-	    	console.log("Error, su solicitud no pudo ser atendida");
-	    }
-	});
-	sedes.push({
-		id: idSede,
-		name: name,
-		address: address,
-		employee: employee,
-		estado: status,
-	});
-}
-
-
-
 function fillArraySede(){
 	var length = sedes.length;
 	sedes.splice(0, length);
-	var strUrl = window.location.protocol + "//" + window.location.host + "/cabin-web/sede/";
+	var strUrl = window.location.protocol + "//" + window.location.host + "/cabin-web/get/allHeadquarters";
 	$.ajax({
 	    url:strUrl,
 	    crossDomain: true,
 	    dataType: "json",
 	    success: function (json) {
-	    	$.each(json._embedded.sede, function(index, value) {		    		
-	    		var hrefArray = value._links.self.href.split("/");
-		    	var idSede = hrefArray[hrefArray.length -1];
-		    	fillSede(idSede, value.name, value.address)				
+	    	$.each(json, function(index, value) {		    		
+	    		sedes.push({
+	    			id: value.id,
+	    			name: value.name,
+	    			address: value.address,
+	    			employee: value.employee,
+	    			maxAmountOperator: value.maxAmountOperator,
+	    			operatorType: value.operatorType.name,
+	    			status: value.status.name,
+	    		})				
 			});
 	    	fillSedetbl();		    	
 	    },
@@ -3092,6 +2991,41 @@ function fillStatus( ){
 	    }
 	});
 }
+
+function fillTipoOperarios( ){
+	var strUrl = window.location.protocol + "//" + window.location.host + "/cabin-web/tipoOperario/";
+	var strLine = "";
+	var ulOperario = $("#operario");
+	$.ajax({
+	    url:strUrl,
+	    crossDomain: true,
+	    dataType: "json",
+	    success: function (json) {
+	    	$.each(json._embedded.estado, function(index, value) {		    		
+	    		var hrefArray = value._links.self.href.split("/");
+	    		var idTipoOperario = hrefArray[hrefArray.length -1];
+	    		TipoOperarios.push({
+					id: idTipoOperario,
+					name: value.name,					
+				});
+	    		strLine += "<li><a href='/' onclick='return false;'>"+value.name+"</a></li>";
+			});	    			    	
+	    },
+	    error: function (xhr, status) {    	
+	    	console.log("Error, su solicitud no pudo ser atendida");
+	    },
+	    complete: function (){
+	    	ulOperario.html(line);	    		    	
+	    	var operatorTypeHtml =  $("#operario li a");
+	    	
+	    	$(operatorTypeHtml).parents(".dropdown").find('.btn').html(tipoOperarios[0].name +' <span class="caret"></span>');
+	    	$(operatorTypeHtml).parents(".dropdown").find('.btn').val("1");
+	    	
+	    }
+	});
+}
+
+
 function fillDocTypes( ){
 	var strUrl = window.location.protocol + "//" + window.location.host + "/cabin-web/tipo_documento/";
 	var ulDocTypeEmployee = $("#docType");
@@ -3507,7 +3441,7 @@ $(document).on("click", "#profileEmployee li a", function(){
 	profileEmployee = profileEmployee.toLowerCase();
 	$(this).parents(".dropdown").find('.btn').html($(this).text() + ' <span class="caret"></span>');
 	  //Correr el arreglo paui-state-highlightra ver cual es el id y nombre correo del nivel
-	var length = tipo_doc.length;
+	var length = perfiles.length;
 	for ( i = 0; i< length ; i++){
 		if (profileEmployee == perfiles[i].name.toLowerCase() ){ $(this).parents(".dropdown").find('.btn').val(perfiles[i].id); break;}
 	}	
@@ -3564,12 +3498,12 @@ $(document).on("click", "#nivelCustomer li a", function(){
 
 $(document).on("click", "#operario li a", function(){
 	console.log("Entro aqui: " + $(this).text() );
-	var operario = $(this).text();
-	operario = operario.toLowerCase();
+	var tipoOperario = $(this).text();
+	tipoOperario = tipoOperario.toLowerCase();
 	$(this).parents(".dropdown").find('.btn').html($(this).text() + ' <span class="caret"></span>');	  
-	var length = operarios.length;
+	var length = tipoOperarios.length;
 	for ( i = 0; i< length ; i++){
-		if (operario == operarios[i].name.toLowerCase() ){ $(this).parents(".dropdown").find('.btn').val(operarios[i].id);}
+		if (tipoOperario == tipoOperarios[i].name.toLowerCase() ){ $(this).parents(".dropdown").find('.btn').val(tipoOperarios[i].id);}
 	}	
 } )
 
@@ -3627,9 +3561,10 @@ function addSede() {
 	valid = valid && checkRegexp( $("#name"), /.+/i, "El nombre ingresado para la sede no es válido.",  sedeValidation);	
 	valid = valid && checkRequired( $("#address"), "Debe ingresar la dirección de la sede.",1, sedeValidation);
 	valid = valid && checkRegexp( $("#address"), /.+/i, "La dirección ingresada para la sede no es válida.",  sedeValidation);	
+	valid = valid && checkRegexp( $("#maxAmountOperator"), /^[1-9]\d{0,1}$/i, "Debe ingresar una cantidad operadores máximo menor de 100, valor entero.", sedeValidation);
 	var genderHtml = $("#operario li a");		
 	genderHtml = $(genderHtml).parents(".dropdown").find('.btn');	
-	valid = valid && checkRequired( genderHtml, "Debe seleccionar un operario.",1, sedeValidation);
+	valid = valid && checkRequired( genderHtml, "Debe seleccionar un tipo operario.",1, sedeValidation);
 	return valid;
 }
 
@@ -3706,7 +3641,7 @@ function addRegla() {
 	valid = valid && checkRequired( $("#nameReglaPunt"), "Debe ingresar el nombre de la regla de puntuación.",1, reglaValidation);
 	valid = valid && checkRegexp( $("#nameReglaPunt"), /.+/i, "El nombre de la regla de puntación no es válido.",  reglaValidation);	
 	valid = valid && checkRegexp( $("#rechargingFraction"), /^[0-9]\d{0,3}($|\.\d{0,2}$)/i, "Debe ingresar ingresar un monto válido, no mayor de 999.99 soles y de dos decimales.", reglaValidation);	
-	valid = valid && checkRegexp( $("#pointsReglaPunt"), /^[0-9]\d{0,5}$/i, "Debe ingresar una cantidad  de puntos no mayor de 999 999, valor entero.", reglaValidation);
+	valid = valid && checkRegexp( $("#pointsReglaPunt"), /^[0-9]\d{0,5}$/i, "Debe ingresar una cantidad de puntos no mayor de 999 999, valor entero.", reglaValidation);
 	var statusHtml = $("#status li a");
 	var regla_nivelHtml = $("#regla_nivel li a");	
 	statusHtml = $(statusHtml).parents(".dropdown").find('.btn');

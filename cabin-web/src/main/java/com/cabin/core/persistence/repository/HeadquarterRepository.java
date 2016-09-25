@@ -9,6 +9,5 @@ import com.cabin.core.persistence.domain.Headquarter;
 
 @RepositoryRestResource(collectionResourceRel = "sede", path = "sede")
 public interface HeadquarterRepository extends JpaRepository<Headquarter, Long> {
-	Headquarter findById(@Param("id") Long id);
-	Headquarter findByUserId(@Param("userId") Long userId);
+	Headquarter findById(@Param("id") Long id);	
 }

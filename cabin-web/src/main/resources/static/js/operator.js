@@ -56,6 +56,18 @@ $(document).ready(function() {
 		fillArrayClients();
 		fillArrayTickets();
 		getComputersAndConsoles();
+		
+		$('#clientSelect').on("select2:selecting", function(e) { 
+			var idClient = $("#clientSelect").val();
+			var length = clients.length;
+			var i;
+			for (i = 0 ; i< length; i++){
+				if (idClient == clientes[i].id){
+					$("#balance").val(clientes[i].balance);
+					break;
+				}
+			}
+		});
 });
 
 function format(item) { return item.tag; }
@@ -73,7 +85,8 @@ function fillArrayClients(){
 		    	clients.push({
 					id: value.id,
 					name: value.name,
-					email: value.email,					
+					email: value.email,
+					balance: value.balance,
 				});
 		    	data.push({ 
 					id: value.id,
@@ -106,11 +119,13 @@ function fillArrayClients(){
 	});	
 }
 
+/*
 function getComputersAndConsoles() {
 	var headquarterId = $("#headquarterId").val();
 	getComputers(headquarterId);
 	getConsoles(headquarterId);
 }
+*/
 
 function fillArrayTicketsCierreCaja( idCierreCaja){
 	var length = ticketsCierreCaja.length;
@@ -142,9 +157,9 @@ function fillArrayTicketsCierreCaja( idCierreCaja){
 	    	console.log("Error, su solicitud no pudo ser atendida");
 	    },
 	    complete: function(){
-	    	fillCierreCajaTbl();	
-	    	clearTickets();
-	    	fillTickettbl();
+	    	//fillCierreCajaTbl();	
+	    	//clearTickets();
+	    	//fillTickettbl();
 	    	$( "#totalAmount" ).val("" + totalAmount);
 	    	totalAmount = 0;
 	    }
@@ -182,7 +197,7 @@ function fillArrayTickets(){
 	    	console.log("Error, su solicitud no pudo ser atendida");
 	    },
 	    complete: function () {
-	    	fillTickettbl();
+	    	//fillTickettbl();
 	    }
 	});	
 }
@@ -238,6 +253,7 @@ function saveTicket(){
 	ticket.rechargingAmount = trim( $( "#rechargingAmount" ).val() ); 
 	$( "#rechargingAmount" ).val("");
 	$("#clientSelect").val(null).trigger("change");
+	$( "#balance" ).val("");
 	//ticket.date = new Date();
 	ticket.client = {};
 	ticket.client.id = idClient; 
@@ -275,10 +291,10 @@ function saveCierreCaja(){
 	console.log("Inside form-cierreCaja");
 	var length = tickets.length;
 	var idCierreCaja;
-	$( "#ticketsAmount" ).val("" + length);		
+	//$( "#ticketsAmount" ).val("" + length);		
 	//ticket.date = new Date();
 	var cierreCaja = {};
-	cierreCaja.ticketsAmount = length;
+	//cierreCaja.ticketsAmount = length;
 	cierreCaja.totalAmount = totalAmount;
 	cierreCaja.employee = {};
 	cierreCaja.employee.id = 4; //Por ahora el id empleado en bruto
