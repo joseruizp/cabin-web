@@ -1,4 +1,9 @@
 (function($){
+	var errors = {};
+	errors['E001'] = 'Usuario no existe.';
+	errors['E002'] = 'Usuario no existe.';
+	errors['E003'] = 'Usuario inactivo.';
+	
 	$(".input").focusin(function() {
 		$(this).find("span").animate({
 			"opacity" : "0"
@@ -36,7 +41,16 @@
 		addEventUserType();
 		getHeadquarters();
 		addEventAnonymous();
+		showFailureLoginMessage();
 	});
+	
+	function showMessage(text, divId) {
+		var div = $('#' + divId);
+		div.text(text).show(1000);
+		setTimeout(function() {
+			div.hide(1000);
+		}, 5000);
+	}
 	
 	function addEventUserType(){
 		$("#userType").change(function() {			
@@ -117,6 +131,18 @@
 			    }
 			});
 		});
+	}
+	
+	function showFailureLoginMessage() {
+	    var url = window.location.href;
+	    name = name.replace(/[\[\]]/g, "\\$&");
+	    var regex = new RegExp("[?&]" + "error" + "(=([^&#]*)|&|#|$)"),
+	        results = regex.exec(url);
+	    if (results != null) {
+    		var errorCode = decodeURIComponent(results[2].replace(/\+/g, " "));
+    		var message = errors[errorCode];
+    		showMessage(message, 'errorAlert');
+	    }
 	}
 
 })(this.jQuery);

@@ -58,6 +58,7 @@
 					<a href="#" id="anonymousBtn"><span>Anonimo</span></a>
 				</div>
 				<br/>
+				<div id="errorAlert" align="center" class="alert alert-danger" style="display:none"></div>
 				<br/>				
 				<input type="submit" class="submit"/>
 	
@@ -71,6 +72,8 @@
 		
 		<form th:action="@{/login}" method="post" id="anonymousForm">
 		</form>
+		
+		<input type="hidden" id="error" th:value="${error}"></input>
 	
 		<script type="text/javascript" th:src="@{plugins/jquery.min.js}"></script>
 		<!-- Custom Scripts -->
