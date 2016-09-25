@@ -1,4 +1,9 @@
 (function($){
+	var errors = {};
+	errors['E001'] = 'Usuario no existe.';
+	errors['E002'] = 'Usuario no existe.';
+	errors['E003'] = 'Usuario inactivo.';
+	
 	$(".input").focusin(function() {
 		$(this).find("span").animate({
 			"opacity" : "0"
@@ -36,9 +41,7 @@
 		addEventUserType();
 		getHeadquarters();
 		addEventAnonymous();
-		if (isFailureLogin) {
-			showMessage("Usuario o Password invalido(s).", "errorAlert");
-		}
+		showFailureLoginMessage();
 	});
 	
 	function showMessage(text, divId) {
@@ -130,12 +133,16 @@
 		});
 	}
 	
-	function isFailureLogin() {
+	function showFailureLoginMessage() {
 	    var url = window.location.href;
 	    name = name.replace(/[\[\]]/g, "\\$&");
 	    var regex = new RegExp("[?&]" + "error" + "(=([^&#]*)|&|#|$)"),
 	        results = regex.exec(url);
-	    return (result != null);
+	    if (results != null) {
+    		var errorCode = decodeURIComponent(results[2].replace(/\+/g, " "));
+    		var message = errors[errorCode];
+    		showMessage(message, 'errorAlert');
+	    }
 	}
 
 })(this.jQuery);
