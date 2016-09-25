@@ -48,12 +48,19 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http.authorizeRequests().antMatchers("/", "/login/**").permitAll().antMatchers("/get/allHeadquarters", "/get/anonymous").permitAll()
-                .antMatchers("/css/**", "/images/**", "/fonts/**", "/plugins/**", "/js/**", "/sockjs-client/**", "/stomp-websocket/**").permitAll()
-                .antMatchers("/admin/**", "/headquarters/**").hasAuthority("ADMIN").antMatchers("/operator/**").hasAuthority("OPERATOR").antMatchers("/client/**")
-                .hasAuthority("USER").anyRequest().fullyAuthenticated().and().httpBasic().and().csrf().disable().formLogin().loginPage("/login").failureUrl("/login?error")
-                .successHandler(new SuccessHandler()).usernameParameter("email").permitAll().and().logout().logoutUrl("/logout").logoutSuccessHandler(new LogoutHandler())
-                .permitAll().and().rememberMe();
+        http.authorizeRequests().antMatchers("/", "/login/**", "/error/**").permitAll();
+        http.authorizeRequests().antMatchers("/get/allHeadquarters", "/get/anonymous").permitAll();
+        http.authorizeRequests().antMatchers("/css/**", "/images/**", "/bootstrap/**", "/fonts/**", "/plugins/**", "/js/**", "/sockjs-client/**", "/stomp-websocket/**").permitAll();
+
+        http.authorizeRequests().antMatchers("/admin/**", "/headquarters/**").hasAuthority("ADMIN");
+        http.authorizeRequests().antMatchers("/operator/**").hasAuthority("OPERATOR");
+        http.authorizeRequests().antMatchers("/client/**").hasAuthority("USER");
+
+        http.authorizeRequests().anyRequest().fullyAuthenticated().and().httpBasic().disable();
+        http.csrf().disable();
+
+        http.formLogin().loginPage("/login").failureUrl("/login?error").successHandler(new SuccessHandler()).usernameParameter("email").permitAll();
+        http.authorizeRequests().and().logout().logoutUrl("/logout").logoutSuccessHandler(new LogoutHandler()).permitAll().and().rememberMe();
     }
 
     @Override
@@ -85,12 +92,12 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
             if (Profile.CLIENT == profileId) {
                 List<Client> clients = clientRepository.findByUserId(currentUser.getId());
                 Client client = clients.get(0);
-                
+
                 if (Status.ACTIVE != client.getStatus().getId()) {
                     session.invalidate();
                     redirectStrategy.sendRedirect(request, response, "/login?error");
                 }
-                
+
                 session.setAttribute(SessionEnum.CLIENT_ID.name(), client.getId());
 
                 if (isAnonymous) {
@@ -109,7 +116,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                     session.invalidate();
                     redirectStrategy.sendRedirect(request, response, "/login?error");
                 }
-                
+
                 session.setAttribute(SessionEnum.EMPLOYEE_ID.name(), employee.getId());
             }
 

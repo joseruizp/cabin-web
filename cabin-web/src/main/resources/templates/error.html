@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<!--<![endif]-->
+	<head>
+		<meta charset="utf-8"/>
+		<title>Cabinas</title>
+		<meta name="description" content="Responsive HTML5 Template"/>
+		<meta name="author" content="webthemez"/>
+
+		<!-- Mobile Meta -->
+		<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+
+		<!-- Favicon -->
+		<link rel="shortcut icon" th:href="@{images/favicon.ico}"/>
+ 
+		<link th:href="@{bootstrap/css/bootstrap.css}" rel="stylesheet"/> 
+		<link th:href="@{fonts/font-awesome/css/font-awesome.css}" rel="stylesheet"/> 
+		<link th:href="@{css/animations.css}" rel="stylesheet"/> 
+		<link th:href="@{css/style.css}" rel="stylesheet"/> 
+		<link th:href="@{plugins/jquery-ui-1.11.4.custom/jquery-ui.min.css}" rel="stylesheet"/>
+		<link th:href="@{plugins/jquery.mCustomScrollbar.min.css}" rel="stylesheet"/>
+		<link th:href="@{css/custom.css}" rel="stylesheet"/>
+	</head>
+
+	<body class="no-trans">
+		<!-- scrollToTop --> 
+		<div class="scrollToTop"><i class="icon-up-open-big"></i></div>
+
+		<!-- header start --> 
+		<header class="header fixed clearfix navbar">
+			<div class="container">
+				<div class="row">
+					<div class="col-md-3">
+
+						<!-- header-left start --> 
+						<div class="header-left">
+
+							<!-- logo -->
+							<div class="logo smooth-scroll">
+								<a href="#banner"><img id="logo" th:src="@{images/logo.png}" alt="Worthy"></img></a>
+							</div>
+
+							<!-- name-and-slogan -->
+							<div class="logo-section smooth-scroll">
+								<div class="brand"><a href="#banner">Error</a></div>								
+							</div>
+
+						</div>
+						<!-- header-left end -->
+
+					</div>
+					<div class="col-md-8">
+
+						<!-- header-right start --> 
+						<div class="header-right">
+
+						</div>
+						<!-- header-right end -->
+
+					</div>
+					
+				</div>
+			</div>
+		</header>
+		<!-- header end -->
+
+		<!-- banner start --> 
+		<div id="recarga" role="main">
+			<div class="container">
+				<div class="row">
+					<div class="col-md-12" style="margin-top: 40px">
+						<h1 id="tituloEquipos" class="title text-center">Error <span>Autenticacion</span></h1>
+						<p class="lead text-center">No cuenta con permisos suficientes para ingresar a la aplicacion, o no esta debidamente autenticado.</p>
+					</div>
+				</div>
+				<div class="row" style="margin-left: 90px">
+					<div class="form-group">
+						<div class="col-sm-offset-5 col-sm-7">
+							<button id="btnCliente" type="submit" class="btn btn-default" th:onclick="@{/login}">Ir a Login</button>
+						</div>
+					</div>
+				</div>
+			</div>
+				<br/>
+				<br/>
+			
+		</div>
+		<!-- banner end -->
+
+		<!-- footer start --> 
+		<footer id="footer" style="width: 100%; position: absolute; bottom: 0 !important;">
+
+			<!-- .subfooter start --> 
+			<div class="subfooter">
+				<div class="container">
+					<div class="row">
+						<div class="col-md-12">
+							<p class="text-center">Copyright © 2015 Template by <a target="_blank" href="http://webthemez.com">webthemez.com</a>.</p>
+						</div>
+					</div>
+				</div>
+			</div>
+			<!-- .subfooter end -->
+
+		</footer>
+		<!-- footer end -->
+		
+		<!-- JavaScript --> 
+		<script type="text/javascript" th:src="@{plugins/jquery.min.js}"></script>
+		<script type="text/javascript" th:src="@{bootstrap/js/bootstrap.min.js}"></script>
+		<script type="text/javascript" th:src="@{plugins/modernizr.js}"></script>
+		<script type="text/javascript" th:src="@{plugins/isotope/isotope.pkgd.min.js}"></script>
+		<script type="text/javascript" th:src="@{plugins/jquery.backstretch.min.js}"></script>
+		<script type="text/javascript" th:src="@{plugins/jquery.appear.js}"></script>
+		<script type="text/javascript" th:src="@{plugins/jquery-ui-1.11.4.custom/jquery-ui.min.js}"></script>
+		<script type="text/javascript" th:src="@{plugins/jquery.mCustomScrollbar.concat.min.js}"></script>
+
+	</body>
+</html>

@@ -36,7 +36,18 @@
 		addEventUserType();
 		getHeadquarters();
 		addEventAnonymous();
+		if (isFailureLogin) {
+			showMessage("Usuario o Password invalido(s).", "errorAlert");
+		}
 	});
+	
+	function showMessage(text, divId) {
+		var div = $('#' + divId);
+		div.text(text).show(1000);
+		setTimeout(function() {
+			div.hide(1000);
+		}, 5000);
+	}
 	
 	function addEventUserType(){
 		$("#userType").change(function() {			
@@ -117,6 +128,14 @@
 			    }
 			});
 		});
+	}
+	
+	function isFailureLogin() {
+	    var url = window.location.href;
+	    name = name.replace(/[\[\]]/g, "\\$&");
+	    var regex = new RegExp("[?&]" + "error" + "(=([^&#]*)|&|#|$)"),
+	        results = regex.exec(url);
+	    return (result != null);
 	}
 
 })(this.jQuery);
