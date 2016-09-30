@@ -109,14 +109,6 @@
 			});
 		}
 		
-		$( "#default-equipos, #vip-equipos, #mantenimiento-equipos, #nuevo-grupo-equipos" ).sortable({
-	      connectWith: ".connectedSortable"
-	    }).disableSelection();
-		
-		$( "#default-consolas, #vip-consolas, #mantenimiento-consolas, #nuevo-grupo-consolas" ).sortable({
-	      connectWith: ".connectedSortable"
-	    }).disableSelection();
-		
 		/*
 	    var daysSelected = [];
 

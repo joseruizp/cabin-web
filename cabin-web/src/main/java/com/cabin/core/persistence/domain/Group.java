@@ -12,6 +12,10 @@ import javax.persistence.Id;
 public class Group implements Serializable {
 
 	private static final long serialVersionUID = -3529581371885026518L;
+	
+	public static final Long DEFAULT = 1L;
+	public static final Long VIP = 2L;
+	public static final Long MAINTENANCE = 3L;
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)

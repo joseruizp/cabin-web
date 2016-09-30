@@ -3658,8 +3658,8 @@ function addTarifa() {
 			updateTips( "La hora de inicio no puede ser mayor que la hora de fin.", tarifaValidation );
 			valid = false;
 		}
-		
-		if (!isTimeOverlaping(startTime, endTime)){
+
+		if (isTimeOverlaping(startTime, endTime)){
 			console.log("is valid overlap: " + valid);
 			$("#startTime").addClass( "ui-state-error" );
 			$("#endTime").addClass( "ui-state-error" );
@@ -3679,19 +3679,24 @@ function isValidTime(startTime, endTime) {
 
 function isTimeOverlaping(startTime, endTime) {
 	var table = $('#tariffDetailTbl').DataTable();
+	var isOverlaping = false;
 	table.rows().every( function () {
 	    var data = this.data();
 	    var days = data[1];
 	    console.log("data: " + data);
 	    if ((getDate(startTime) <= getDate(data[4]))  &&  (getDate(endTime) >= getDate(data[3]))) {
 	    	for (var i = 0; i < daysTarifa.length; i++) {
-	    		if (days.indexOf(daysTarifa[i])) {
-	    			return false;
+	    		if (days.indexOf(daysTarifa[i]) !== -1) {
+	    			isOverlaping = true;
+	    			break;
 	    		}
 	    	}
 	    }
+	    if (isOverlaping){
+	    	return false;
+	    }
 	} );
-	return true;
+	return isOverlaping;
 }
 
 function getDate(time) {
