@@ -34,14 +34,14 @@ public class OperatorController {
         HttpSession session = request.getSession();
         Long userId = (Long) session.getAttribute(SessionEnum.USER_ID.name());
 
-        Headquarter headquarter = headquarterRepository.findByUserId(userId);
-        session.setAttribute(SessionEnum.HEADQUARTER_ID.name(), headquarter.getId());
+        //Headquarter headquarter = headquarterRepository.findByUserId(userId);
+        //session.setAttribute(SessionEnum.HEADQUARTER_ID.name(), headquarter.getId());
         
         logger.info("Client id is:'" + userId + "'");
-        logger.info("Headquarter id is:'" + headquarter.getId() + "'");
+        //logger.info("Headquarter id is:'" + headquarter.getId() + "'");
 
         model.addAttribute("employeeId", session.getAttribute(SessionEnum.EMPLOYEE_ID.name()));
-        model.addAttribute("headquarterId", headquarter.getId());
+        //model.addAttribute("headquarterId", headquarter.getId());
 
         return "operator";
     }

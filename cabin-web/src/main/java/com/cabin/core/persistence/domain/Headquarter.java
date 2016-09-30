@@ -25,9 +25,12 @@ public class Headquarter implements Serializable {
     @Column(name = "direccion", length = 200)
     private String address;
     
+    @Column(name = "cantidad_maxima_operador")
+	private Integer maxAmountOperator;
+    
     @ManyToOne
-	@JoinColumn(name = "id_usuario")
-	private User user;
+	@JoinColumn(name = "id_tipo_operario")
+	private OperatorType operatorType;
 
     @ManyToOne
 	@JoinColumn(name = "id_estado")
@@ -45,13 +48,7 @@ public class Headquarter implements Serializable {
         return name;
     }
 
-    public User getUser() {
-		return user;
-	}
-
-	public void setUser(User user) {
-		this.user = user;
-	}
+    
 
 	public void setName(String name) {
         this.name = name;
@@ -70,5 +67,21 @@ public class Headquarter implements Serializable {
 
 	public void setStatus(Status status) {
 		this.status = status;
+	}
+
+	public Integer getMaxAmountOperator() {
+		return maxAmountOperator;
+	}
+
+	public void setMaxAmountOperator(Integer maxAmountOperator) {
+		this.maxAmountOperator = maxAmountOperator;
+	}
+
+	public OperatorType getOperatorType() {
+		return operatorType;
+	}
+
+	public void setOperatorType(OperatorType operatorType) {
+		this.operatorType = operatorType;
 	}
 }

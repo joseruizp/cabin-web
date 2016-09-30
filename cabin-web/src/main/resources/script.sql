@@ -15,6 +15,31 @@
 	/*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
 	/*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 	
+	
+	--
+	-- Table structure for table `tipo_operario`
+	--
+	
+	DROP TABLE IF EXISTS `tipo_operario`;
+	/*!40101 SET @saved_cs_client     = @@character_set_client */;
+	/*!40101 SET character_set_client = utf8 */;
+	CREATE TABLE `tipo_operario` (
+	  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+	  `nombre` varchar(20) DEFAULT NULL,
+	  PRIMARY KEY (`id`)
+	) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
+	/*!40101 SET character_set_client = @saved_cs_client */;
+	
+	--
+	-- Dumping data for table `tipo_recarga`
+	--
+	
+	LOCK TABLES `tipo_operario` WRITE;
+	/*!40000 ALTER TABLE `tipo_operario` DISABLE KEYS */;
+	INSERT INTO `tipo_operario` VALUES (1,'Automático'),(2,'Manual');
+	/*!40000 ALTER TABLE `tipo_operario` ENABLE KEYS */;
+	UNLOCK TABLES;
+	
 	--
 	-- Table structure for table `alquiler`
 	--
@@ -608,12 +633,13 @@
 	  `id` bigint(20) NOT NULL AUTO_INCREMENT,
 	  `nombre` varchar(20) DEFAULT NULL,
 	  `direccion` varchar(200) DEFAULT NULL,
-	  `id_usuario` bigint(20) DEFAULT NULL,
-	  `id_estado` bigint(20) DEFAULT NULL,
+	  `cantidad_maxima_operador` int(2) DEFAULT NULL,
+	  `id_tipo_operario` bigint(20) DEFAULT NULL,
+	  `id_estado` bigint(20) DEFAULT NULL,	  	  
 	  PRIMARY KEY (`id`),
-	  KEY `id_usuario_idx` (`id_usuario`),
+	  KEY `id_tipo_operario_idx` (`id_tipo_operario`),
 	  KEY `id_estado_idx` (`id_estado`),
-	  CONSTRAINT `id_usuario` FOREIGN KEY (`id_usuario`) REFERENCES `usuario` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+	  CONSTRAINT `id_tipo_operario` FOREIGN KEY (`id_tipo_operario`) REFERENCES `tipo_operario` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
 	  CONSTRAINT `id_sede_estado` FOREIGN KEY (`id_estado`) REFERENCES `estado` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
 	) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8;
 	/*!40101 SET character_set_client = @saved_cs_client */;
@@ -624,7 +650,7 @@
 	
 	LOCK TABLES `sede` WRITE;
 	/*!40000 ALTER TABLE `sede` DISABLE KEYS */;
-	INSERT INTO `sede` VALUES (1,'sede UNI 10','av. tupac amaru 10',1,1),(2,'sede prueba 2','direccion prueba 2 edit',8,1),(5,'sede prueba 5','dirección prueba 5 edit',9,1),(6,'Sede Fiori','jr Verona 425',10,1);
+	INSERT INTO `sede` VALUES (1,'sede UNI 10','av. tupac amaru 10',10,1,1),(2,'sede prueba 2','direccion prueba 2 edit',10,1,1),(5,'sede prueba 5','dirección prueba 5 edit',10,1,1),(6,'Sede Fiori','jr Verona 425',10,1,1);
 	/*!40000 ALTER TABLE `sede` ENABLE KEYS */;
 	UNLOCK TABLES;
 	

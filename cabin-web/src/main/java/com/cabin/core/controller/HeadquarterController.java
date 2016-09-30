@@ -37,8 +37,8 @@ public class HeadquarterController {
 	public String home(Locale locale, Model model, @ModelAttribute("headquarter") final Headquarter headquarter) {
 		logger.info("Welcome home! The client locale is {}.", locale);
 		model.addAttribute("headquarter", headquarter);
-		List<Employee> employeeList =  repository.findByEmail(headquarter.getUser().getName());		
-		model.addAttribute("employee", employeeList.get(0));
+		//List<Employee> employeeList =  repository.findByEmail(headquarter.getUser().getName());		
+		//model.addAttribute("employee", employeeList.get(0));
 		//materialService.findByCriteria("Hola");		
 		return "headquarters";
 	}
