@@ -13,6 +13,7 @@ import com.cabin.core.controller.websocket.ComputerWebSocketController;
 import com.cabin.core.persistence.domain.Computer;
 import com.cabin.core.persistence.domain.Failure;
 import com.cabin.core.persistence.domain.FailureByComputer;
+import com.cabin.core.persistence.domain.Group;
 import com.cabin.core.persistence.domain.Parameter;
 import com.cabin.core.persistence.domain.Status;
 import com.cabin.core.persistence.repository.ComputerRepository;
@@ -64,6 +65,8 @@ public class FailureRestController {
             Computer computer = computerRepository.findOne(computerId);
             computer.setStatus(new Status());
             computer.getStatus().setId(Status.INACTIVE);
+            computer.setGroup(new Group());
+            computer.getGroup().setId(Group.MAINTENANCE);
 
             computerWebSocketController.getComputersStatus(new ComputerStatus(computerId, ComputerStatus.MAINTENANCE));
             computerRepository.saveAndFlush(computer);

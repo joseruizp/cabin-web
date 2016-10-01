@@ -11,6 +11,8 @@ public interface RentRepository extends JpaRepository<Rent, Long> {
 
     Rent findByClientId(@Param("client_id") Long clientId);
 
+    Rent findByComputerId(@Param("computer_id") Long computerId);
+
     Rent findByClientIdAndComputerId(@Param("client_id") Long clientId, @Param("computer_id") Long computerId);
 
     Rent findByClientIdAndConsoleId(@Param("client_id") Long clientId, @Param("console_id") Long consoleId);

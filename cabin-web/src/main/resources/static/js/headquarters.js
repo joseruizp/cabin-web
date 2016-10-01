@@ -25,6 +25,7 @@
 	function addEventDragAndDrop() {
 		$( "#default-equipos, #vip-equipos, #mantenimiento-equipos, #nuevo-grupo-equipos" ).sortable({
 	      connectWith: ".connectedSortable",
+	      cancel: ".equipo-activo",
 	      receive: function( event, ui ) {
 	    	  var computerId = $(ui.item).attr('computerId');
 	    	  var groupId = $(event.target).attr('groupId');
@@ -75,8 +76,8 @@
 		    contentType: 'application/json',
 		    success: function (data) {
 		    	$.each(data, function(index, value) {
-		    		var classLi = ((1 === value.status.id) ? "equipo-activo" : "ui-state-default");
-		    		var li = '<li class=' +classLi + ' computerId=' + value.id + '>' + value.name + '</li>';
+		    		var classLi = ((value.rented) ? "equipo-activo" : "ui-state-default");
+		    		var li = '<li class="' +classLi + '" computerId="' + value.id + '">' + value.name + '</li>';
 		    		$(ID_BY_GROUP[value.group.id]).append(li);
 		    	});
 		    },

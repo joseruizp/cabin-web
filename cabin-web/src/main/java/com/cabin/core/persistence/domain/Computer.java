@@ -9,6 +9,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.Transient;
 
 @Entity(name = "equipo")
 public class Computer implements Serializable {
@@ -42,6 +43,9 @@ public class Computer implements Serializable {
     @ManyToOne
     @JoinColumn(name = "id_sede")
     private Headquarter headquarter;
+
+    @Transient
+    private boolean rented;
 
     public Long getId() {
         return id;
@@ -105,6 +109,14 @@ public class Computer implements Serializable {
 
     public void setHeadquarter(Headquarter headquarter) {
         this.headquarter = headquarter;
+    }
+
+    public boolean isRented() {
+        return rented;
+    }
+
+    public void setRented(boolean rented) {
+        this.rented = rented;
     }
 
 }

@@ -13,6 +13,7 @@ import com.cabin.core.persistence.domain.Computer;
 import com.cabin.core.persistence.domain.Group;
 import com.cabin.core.persistence.repository.ComputerRepository;
 import com.cabin.core.persistence.repository.GroupRepository;
+import com.cabin.core.persistence.repository.RentRepository;
 import com.cabin.core.view.ComputerGroup;
 
 @RestController
@@ -22,12 +23,17 @@ public class ComputerRestController {
     private ComputerRepository computerRepository;
     
     @Autowired
+    private RentRepository rentRepository;
+    
+    @Autowired
     private GroupRepository groupRepository;
     
     @RequestMapping(value = "/get/computersByHeadquarter", method = RequestMethod.GET, produces = { "application/json;charset=UTF-8" })
     public List<Computer> getComputersByHeadquarter(@RequestParam(value = "id", required = true) Long id) {
         System.out.println("headquarterId ::: " + id);
-        return computerRepository.findByHeadquarterId(id);
+        List<Computer> computers = computerRepository.findByHeadquarterId(id);
+        computers.forEach(c -> c.setRented(rentRepository.findByComputerId(c.getId()) != null));
+        return computers;
     }
 
     @RequestMapping(value = "/get/computer", method = RequestMethod.GET, produces = { "application/json;charset=UTF-8" })
