@@ -3,8 +3,9 @@
  * License: Creative Commons Attribution 3.0 License (https://creativecommons.org/licenses/by/3.0/)
  */
 estados = []; tipo_doc = []; perfiles = []; 
-operarios = []; clientes = [];
-tipoOperarios = [];
+operarios = []; clientes = []; 
+tipoOperarios = []; clients = [];
+data = [];
 sedes = []; sedeIndex = -1;
 tarifas = []; tarifaIndex = -1;
 tariffDetails = []; tariffDetailIndex = -1;
@@ -18,9 +19,11 @@ bonificaciones = []; bonificacionIndex = -1;
 sedeValidation = ""; tarifaValidation = "";
 reglaValidation = ""; nivelValidation = "";
 premioValidation = ""; clienteValidation = "";
-empleadoValidation = ""; parametroValidation = "" 
-clienteIndex = -1;
-daysTarifa = []; empleados = []; empleadoIndex = -1;
+empleadoValidation = ""; parametroValidation = ""
+recargaValidation = ""; 
+clienteIndex = -1; empleadoIndex = -1;
+daysTarifa = []; empleados = []; 
+rechargeInfo = {};
 map = {
         "Lun" : 0,
         "Mar" : 1,
@@ -64,6 +67,7 @@ map = {
 		empleadoValidation = $("#empleadoValidation");		
 		parametroValidation = $("#parametroValidation");
 		bonificacionValidation = $("#bonificacionValidation");
+		recargaValidation = $("#recargaValidation");
 		//Select
 		$("#status li a").click(function(){
 			$(this).parents(".dropdown").find('.btn').html($(this).text() + ' <span class="caret"></span>');
@@ -338,6 +342,8 @@ map = {
 		fillArrayExperience();
 		fillArrayParametro();
 		fillArrayBonificacion();
+		fillArrayClients();		
+		getRechargeInformation();
 		//Sede save - update
 		$( "#form-sede" ).submit(function( event ) {
 			event.preventDefault();
@@ -475,6 +481,13 @@ map = {
 				else{
 					saveBonificacion();
 				}	
+			}
+		});
+		
+		$( "#form-recarga" ).submit(function( event ) {
+			event.preventDefault();
+			if ( addTicket() ){				
+				addRechargeEvent();
 			}
 		});
 		
@@ -663,7 +676,7 @@ function fillSedetbl(  ){
 
 function editSede( code, index ){
 	var hostname = window.location.protocol + "//" + window.location.host;
-	var strUrl = hostname + "/cabin-web/get/Headquarter";
+	var strUrl = hostname + "/cabin-web/get/headquarter";
 	sedeIndex = index;
 	$.ajax({
 		async:false,
@@ -2268,6 +2281,7 @@ function saveCliente(){
 	    		$("#idCliente").attr("value", "");
 	    	}
 	    	fillArrayCliente();
+	    	fillArrayClients();
 	    },
 	    error: function (xhr, status) {	    	
 	    	console.log("Error, su solicitud no pudo ser atendida");
@@ -2993,7 +3007,7 @@ function fillStatus( ){
 }
 
 function fillTipoOperarios( ){
-	var strUrl = window.location.protocol + "//" + window.location.host + "/cabin-web/tipoOperario/";
+	var strUrl = window.location.protocol + "//" + window.location.host + "/cabin-web/tipo_operario/";
 	var strLine = "";
 	var ulOperario = $("#operario");
 	$.ajax({
@@ -3001,10 +3015,10 @@ function fillTipoOperarios( ){
 	    crossDomain: true,
 	    dataType: "json",
 	    success: function (json) {
-	    	$.each(json._embedded.estado, function(index, value) {		    		
+	    	$.each(json._embedded.tipo_operario, function(index, value) {		    		
 	    		var hrefArray = value._links.self.href.split("/");
 	    		var idTipoOperario = hrefArray[hrefArray.length -1];
-	    		TipoOperarios.push({
+	    		tipoOperarios.push({
 					id: idTipoOperario,
 					name: value.name,					
 				});
@@ -3015,7 +3029,7 @@ function fillTipoOperarios( ){
 	    	console.log("Error, su solicitud no pudo ser atendida");
 	    },
 	    complete: function (){
-	    	ulOperario.html(line);	    		    	
+	    	ulOperario.html(strLine);	    		    	
 	    	var operatorTypeHtml =  $("#operario li a");
 	    	
 	    	$(operatorTypeHtml).parents(".dropdown").find('.btn').html(tipoOperarios[0].name +' <span class="caret"></span>');
@@ -3932,3 +3946,187 @@ function checkDocCode( docCode, cad, div) {
 	    return false;	    
 	  }
 }
+
+function format(item) { return item.tag; }
+
+function fillArrayClients(){
+	var length = clients.length;
+	clients.splice(0, length);
+	var strUrl = window.location.protocol + "//" + window.location.host + "/cabin-web/get/allClients/";		
+	$.ajax({
+	    url:strUrl,
+	    crossDomain: true,
+	    dataType: "json",
+	    success: function (json) {
+	    	$.each(json, function(index, value) {		    		
+		    	clients.push({
+					id: value.id,
+					name: value.name,
+					email: value.email,
+					balance: value.balance,
+				});
+		    	data.push({ 
+					id: value.id,
+					text: value.name + " - " + value.email,
+				});
+			});
+	    },
+	    complete: function(){	    	
+	    	var placeholder = "<i class='fa fa-search'></i>  " + "Seleccione un cliente";
+	    	$("#clientSelect").select2({
+				width: "100%",	
+				data: data,
+			    formatSelection: format,
+			    formatResult: format,
+			    placeholder: placeholder,
+				allowClear: true,
+				escapeMarkup: function(m) { 
+				       return m; 
+				},
+				language: {
+				       "noResults": function(){
+				           return "No se encontraron resultados";
+				       }
+				},
+			});
+	    },	    
+	    error: function (xhr, status) {    	
+	    	console.log("Error, su solicitud no pudo ser atendida");
+	    }
+	});	
+}
+
+
+
+function saveTicket(){
+	var idTicket = $("#idRecarga").attr("value");
+	console.log("Inside form-ticket " + idTicket);
+	var ticket = {};
+	var idClient = $("#clientSelect").val();
+	var idEmpleado = $("#adminId").val();
+	
+	ticket.rechargingAmount = trim( $( "#rechargingAmount" ).val() ); 
+	$( "#rechargingAmount" ).val("");
+	$("#clientSelect").val(null).trigger("change");
+	$( "#balanceClientRecharge" ).val("");	
+	//ticket.date = new Date();
+	ticket.client = {};
+	ticket.client.id = idClient; 
+	ticket.cashClosingFlag = 0; 	
+	ticket.status = {};
+	ticket.status.id = 3;
+	ticket.employee = {};
+	ticket.employee.id = idEmpleado; 
+	ticket.rechargingType = {};
+	ticket.rechargingType.id = 2;
+	//ticket.cashClosing = {};
+	
+	var strUrl = window.location.protocol + "//" + window.location.host + "/cabin-web/post/ticket";			
+						
+	console.log(JSON.stringify(ticket));
+	$.ajax({
+		type:"POST",
+	    url:strUrl,			    
+	    dataType: 'json', 
+	    data: JSON.stringify(ticket), 
+	    contentType: 'application/json',
+	    success: function (data) {
+	    	console.log("Send a ticket into DB");
+	    },
+	    error: function (xhr, status) {	    	
+	    	console.log("Error, su solicitud no pudo ser atendida");
+	    },
+	});
+}
+
+function addTicket() {
+	var valid = true;
+	$("*").removeClass( "ui-state-error");
+	valid = valid && checkRequired( $("#clientSelect"), "Debe seleccionar un cliente.",1, recargaValidation);
+	var value = $("#rechargingAmount").val();
+	if ( value == 0){
+		$("#rechargingAmount").addClass( "ui-state-error" );
+		updateTips( "Debe ingresar un monto mayor a 0", recargaValidation );
+		return false;
+	}
+	valid = valid && checkRegexp( $("#rechargingAmount"), /^[0-9]\d{0,3}($|\.\d{0,1}$)/i, "Debe ingresar ingresar un monto válido, no mayor de 999.90 soles y de un decimal.", recargaValidation);	
+	return valid;
+}
+function getRechargeInformation() {
+	var hostname = window.location.protocol + "//" + window.location.host;
+	var strUrl = hostname + "/cabin-web/get/parametersRecharge";
+	$.ajax({
+		type: "GET",
+	    url:strUrl,			    
+	    dataType: 'json', 
+	    contentType: 'application/json',
+	    success: function (data) {	    	
+	    	rechargeInfo.rechargeFraction = Number(data.rechargeFraction);
+	    	rechargeInfo.minimumFraction = Number(data.minimumFraction);
+	    	rechargeInfo.maximumFraction = Number(data.maximumFraction);
+	    },
+	    error: function (xhr, status) {	    	
+	    	console.log("Error, su solicitud no pudo ser atendida");
+	    }
+	});
+}
+function addRechargeEvent() {	
+	var idClient = $("#clientSelect").val();
+	var enterAmount = Number($("#enterAmount").val());
+	var amount = Number($("#rechargingAmount").val());
+	
+	if (amount < rechargeInfo.minimumFraction) {    		
+		updateTips("El monto es menor que el mínimo de recarga requerido.", recargaValidation); 
+		return;
+	} else if (amount > rechargeInfo.maximumFraction) {    		
+		updateTips("El monto es mayor que el mínimo de recarga requerido..", recargaValidation);
+		return;
+	}
+	
+	amount = (amount - (amount % rechargeInfo.rechargeFraction).toFixed(1));
+	
+	$("#rechargingAmount").val("");
+	$("#enterAmount").val("");
+	
+	var change = enterAmount - amount;
+	var recharge = {};
+	recharge.clientId = idClient;
+	recharge.amount = amount;
+	
+	console.log("rechargeInfo: " + rechargeInfo);
+	
+	var hostname = window.location.protocol + "//" + window.location.host;
+	var strUrl = hostname + "/cabin-web/post/recharge";
+	
+	$.ajax({
+		type: "POST",
+	    url:strUrl,			    
+	    dataType: 'json', 
+	    data: JSON.stringify(recharge),
+	    contentType: 'application/json',
+	    success: function (data) {
+	    	console.log("recharge is done");
+	    	updateTips("Recarga realizada satisfactoriamente.", recargaValidation);		    	
+	    	saveTicket();
+	    	fillArrayClients();
+	    },
+	    error: function (xhr, status) {	    	
+	    	console.log("Error, su solicitud no pudo ser atendida");
+	    }
+	});	
+}
+
+$(document).on("change", "#clientSelect", function(){
+console.log( "Entro a la seleccion de cliente");
+var idClient = $("#clientSelect").val();
+var length = clients.length;
+var i;
+for (i = 0 ; i< length; i++){
+	if (idClient == clients[i].id){
+		console.log( "El cliente es " + clients[i].name + " y su saldo es: " + clients[i].balance + " el id es " + clients[i].id);
+		$("#balanceClientRecharge").val(clients[i].balance);
+		return;
+	}
+}	
+$("#balanceClientRecharge").val("");
+})

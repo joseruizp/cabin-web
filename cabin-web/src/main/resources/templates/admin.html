@@ -22,6 +22,7 @@
 		<link th:href="@{plugins/dataTables/css/jquery.dataTables.css}" rel="stylesheet"/>
 		<link th:href="@{css/custom.css}" rel="stylesheet"/>
 		<link th:href="@{bootstrap/css/bootstrap-datepicker.css}" rel="stylesheet"/>
+		<link th:href="@{plugins/select2-4.0.3/css/select2.min.css}" rel="stylesheet" />
 	</head>
 
 	<body class="no-trans">
@@ -86,6 +87,7 @@
 												<li class="active"><a href="#experiencias">Experiencias</a></li>
 												<li class="active"><a href="#parametros">Parámetros</a></li>
 												<li class="active"><a href="#bonificaciones">Bonificaciones</a></li>
+												<li class="active"><a href="#nuevaRecarga">Recarga</a></li>
 											</ul>
 										</div>
 
@@ -1153,6 +1155,79 @@
 		</div>
 		<!-- banner end -->
 		
+		<!-- banner start --> 
+		<div id="nuevaRecarga">
+			<div class="container">
+				<br/>				
+				<br/>
+				<br/>
+				<br/>
+				<br/>
+				<div class="row">
+					<div class="col-md-12" style="margin-top: 40px">
+						<h1 id="tituloEquipos" class="title text-center">Nueva <span>Recarga</span></h1>
+						<p class="lead text-center">Lorem ipsum dolor sit amet, consectetur adipisicing elit. laudantium culpa tenetur.</p>
+					</div>
+				</div>
+				<div class="row" style="margin-left: 110px; margin-right: 110px">
+					<form class="form-horizontal" role="form" id="form-recarga">
+						<input type="hidden" id="idRecarga" value=""/>						
+						<div class="form-group">
+							<label class="control-label col-sm-2" for="clientSelect">Cliente:</label>
+							<div class="col-sm-4">
+								<select id="clientSelect">
+									<option></option>
+								</select>
+							</div>
+							<label class="control-label col-sm-2" for="balanceClientRecharge">Saldo:</label>
+							<div class="col-sm-4">
+								<input disabled="true" class="form-control" id="balanceClientRecharge"
+									placeholder="Saldo" maxlength="7"/>
+							</div>		
+						</div>
+						<div class="form-group">						
+							<label class="control-label col-sm-2" for="enterAmount">Monto Ingresado:</label>
+							<div class="col-sm-4">
+								<input type="text" class="form-control" id="enterAmount"
+									placeholder="Monto Ingresado"/>
+							</div>								
+							<label class="control-label col-sm-2" for="rechargingAmount">Monto de Recarga:</label>
+							<div class="col-sm-4">
+								<input class="form-control" id="rechargingAmount"
+									placeholder="Monto de Recarga" maxlength="7"/>
+							</div>				
+						</div>						
+						<div class="form-group">
+							<div class="col-sm-offset-5 col-sm-7">
+								<button id="btnRecarga" type="submit" class="btn btn-default">Nueva Recarga</button>
+							</div>
+						</div>
+					</form>
+					<div id="recargaValidation" class="alert alert-danger" style="display:none"></div>
+				</div>
+				<div class="space"></div>
+				<!--
+			    <div role="tabpanel" class="table-responsive" id="listaRecargasDiv">
+			        <table id="recargaTbl" class="table table-striped display">
+			            <thead>
+			                <tr>	                				                	
+			                	<th>Nro. Ticket</th>
+			                    <th>Cliente</th>
+			                    <th>Monto de Recarga</th>
+			                    <th>Tipo de Recarga</th>
+			                    <th>Fecha y Hora</th>			                    
+			                    <th>Estado</th>       
+			                    <th colspan="2">Opciones</th>			                    
+			                </tr>
+			            </thead>
+			            <tbody>			                
+			            </tbody>
+			        </table>
+			    </div>
+			    -->
+			</div>
+		</div>
+		<!-- banner end -->
 		
 		<br/><br/><br/>
 		<br/><br/><br/>
@@ -1175,6 +1250,8 @@
 		</footer>
 		<!-- footer end -->
 
+		<input type="hidden" id="adminId" th:value="${adminId}"></input>
+		
 		<!-- JavaScript --> 
 		<script type="text/javascript" th:src="@{plugins/jquery.min.js}"></script>
 		<script type="text/javascript" th:src="@{bootstrap/js/bootstrap.min.js}"></script>
@@ -1185,6 +1262,7 @@
 		<script type="text/javascript" th:src="@{plugins/jquery-ui-1.11.4.custom/jquery-ui.min.js}"></script>		
 		<script type="text/javascript" th:src="@{plugins/jquery.mCustomScrollbar.concat.min.js}"></script>
 		<!--  <script type="text/javascript" th:src="@{plugins/ng-table/ng-table.min.js}"></script> -->
+		<script type="text/javascript" th:src="@{plugins/select2-4.0.3/js/select2.min.js}"></script>
 		<script type="text/javascript" th:src="@{plugins/dataTables/js/jquery.dataTables.js}"></script>
 		<script type="text/javascript" th:src="@{bootstrap/js/bootstrap-datepicker.js}"></script>
 		<script type="text/javascript" th:src="@{bootstrap/js/bootstrap-datepicker.es.min.js}"></script>

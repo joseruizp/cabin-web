@@ -5,8 +5,10 @@ ticketsCierreCaja = [];
 recargaValidation = "";
 cierreCajaValidation = "";
 totalAmount = 0;
+rechargeInfo = {};
+
 $(document).ready(function() {
-		
+				
 		$('#recargaTbl').DataTable({			
 			scrollY: 300,
 		    paging: false,
@@ -38,7 +40,7 @@ $(document).ready(function() {
 		$( "#form-recarga" ).submit(function( event ) {
 			event.preventDefault();
 			if ( addTicket() ){				
-					saveTicket();
+				addRechargeEvent();
 			}
 		});
 		
@@ -55,19 +57,11 @@ $(document).ready(function() {
 		
 		fillArrayClients();
 		fillArrayTickets();
-		getComputersAndConsoles();
+		//getComputersAndConsoles();
 		
-		$('#clientSelect').on("select2:selecting", function(e) { 
-			var idClient = $("#clientSelect").val();
-			var length = clients.length;
-			var i;
-			for (i = 0 ; i< length; i++){
-				if (idClient == clientes[i].id){
-					$("#balance").val(clientes[i].balance);
-					break;
-				}
-			}
-		});
+		//Carga la información de los parámetros de recarga
+		getRechargeInformation();
+			
 });
 
 function format(item) { return item.tag; }
@@ -250,10 +244,12 @@ function saveTicket(){
 	console.log("Inside form-ticket " + idTicket);
 	var ticket = {};
 	var idClient = $("#clientSelect").val();
+	var idEmpleado = $("#employeeId").val();
+	
 	ticket.rechargingAmount = trim( $( "#rechargingAmount" ).val() ); 
 	$( "#rechargingAmount" ).val("");
 	$("#clientSelect").val(null).trigger("change");
-	$( "#balance" ).val("");
+	$( "#balance" ).val("");	
 	//ticket.date = new Date();
 	ticket.client = {};
 	ticket.client.id = idClient; 
@@ -261,7 +257,7 @@ function saveTicket(){
 	ticket.status = {};
 	ticket.status.id = 3;
 	ticket.employee = {};
-	ticket.employee.id = 4; //Por ahora el id empleado en bruto
+	ticket.employee.id = idEmpleado; 
 	ticket.rechargingType = {};
 	ticket.rechargingType.id = 2;
 	//ticket.cashClosing = {};
@@ -282,7 +278,7 @@ function saveTicket(){
 	    	console.log("Error, su solicitud no pudo ser atendida");
 	    },
 	    complete: function(){
-			fillArrayTickets()		    	
+			fillArrayTickets();			
 		}
 	});
 }
@@ -470,3 +466,88 @@ function clearTickets() {
 	} 
 	console.log("Tamaño del arreglo" + tickets.length);
 }
+
+
+function getRechargeInformation() {
+	var hostname = window.location.protocol + "//" + window.location.host;
+	var strUrl = hostname + "/cabin-web/get/parametersRecharge";
+	$.ajax({
+		type: "GET",
+	    url:strUrl,			    
+	    dataType: 'json', 
+	    contentType: 'application/json',
+	    success: function (data) {	    	
+	    	rechargeInfo.rechargeFraction = Number(data.rechargeFraction);
+	    	rechargeInfo.minimumFraction = Number(data.minimumFraction);
+	    	rechargeInfo.maximumFraction = Number(data.maximumFraction);
+	    },
+	    error: function (xhr, status) {	    	
+	    	console.log("Error, su solicitud no pudo ser atendida");
+	    }
+	});
+}
+
+
+
+function addRechargeEvent() {	
+		var idClient = $("#clientSelect").val();
+		var enterAmount = Number($("#enterAmount").val());
+    	var amount = Number($("#rechargingAmount").val());
+    	
+    	if (amount < rechargeInfo.minimumFraction) {    		
+    		updateTips("El monto es menor que el mínimo de recarga requerido.", recargaValidation); 
+    		return;
+    	} else if (amount > rechargeInfo.maximumFraction) {    		
+    		updateTips("El monto es mayor que el mínimo de recarga requerido..", recargaValidation);
+    		return;
+    	}
+    	
+    	amount = (amount - (amount % rechargeInfo.rechargeFraction).toFixed(1));
+    	
+    	$("#rechargingAmount").val("");
+    	$("#enterAmount").val("");
+    	
+    	var change = enterAmount - amount;
+    	var recharge = {};
+    	recharge.clientId = idClient;
+    	recharge.amount = amount;
+    	
+    	console.log("rechargeInfo: " + rechargeInfo);
+    	
+    	var hostname = window.location.protocol + "//" + window.location.host;
+		var strUrl = hostname + "/cabin-web/post/recharge";
+		
+    	$.ajax({
+			type: "POST",
+		    url:strUrl,			    
+		    dataType: 'json', 
+		    data: JSON.stringify(recharge),
+		    contentType: 'application/json',
+		    success: function (data) {
+		    	console.log("recharge is done");
+		    	updateTips("Recarga realizada satisfactoriamente.", recargaValidation);		    	
+		    	saveTicket();
+		    	fillArrayClients();
+		    },
+		    error: function (xhr, status) {	    	
+		    	console.log("Error, su solicitud no pudo ser atendida");
+		    }
+		});	
+}
+
+
+
+$(document).on("change", "#clientSelect", function(){
+	console.log( "Entro a la seleccion de cliente");
+	var idClient = $("#clientSelect").val();
+	var length = clients.length;
+	var i;
+	for (i = 0 ; i< length; i++){
+		if (idClient == clients[i].id){
+			console.log( "El cliente es " + clients[i].name + " y su saldo es: " + clients[i].balance + " el id es " + clients[i].id);
+			$("#balance").val(clients[i].balance);
+			return;
+		}
+	}	
+	$("#balance").val("");
+})
