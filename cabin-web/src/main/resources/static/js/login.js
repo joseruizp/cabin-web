@@ -56,7 +56,7 @@
 		$("#userType").change(function() {			
 			var value = $(this).val();
 			console.log("userType value: " + value);
-			if (value === "3") {
+			if (value === "1" || value === "3") {
 				$("#headquarterDiv").show();
 				$("#anonymousDiv").show();
 			} else {
