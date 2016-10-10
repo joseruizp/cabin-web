@@ -8,13 +8,10 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
-@Entity(name = "tipo_recarga")
-public class RechargingType implements Serializable {
+@Entity(name = "tipo_gasto")
+public class ExpenseType implements Serializable {
 
-    private static final long serialVersionUID = 3018012749173085005L;
-
-    public static final Long AUTOMATIC = 1L;
-    public static final Long MANUAL = 2L;
+    private static final long serialVersionUID = 1L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)

@@ -8,6 +8,8 @@ public class Recharge implements Serializable {
 
     private Long clientId;
     private Double amount;
+    private Long employeeId;
+    private Long cashId;
 
     public Long getClientId() {
         return clientId;
@@ -23,6 +25,22 @@ public class Recharge implements Serializable {
 
     public void setAmount(Double amount) {
         this.amount = amount;
+    }
+
+    public Long getEmployeeId() {
+        return employeeId;
+    }
+
+    public void setEmployeeId(Long employeeId) {
+        this.employeeId = employeeId;
+    }
+
+    public Long getCashId() {
+        return cashId;
+    }
+
+    public void setCashId(Long cashId) {
+        this.cashId = cashId;
     }
 
 }

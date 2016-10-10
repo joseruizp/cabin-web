@@ -34,4 +34,8 @@ public class CurrentUser extends org.springframework.security.core.userdetails.U
     public boolean isAnonymous() {
         return user.isAnonymous();
     }
+
+    public User getUser() {
+        return user;
+    }
 }

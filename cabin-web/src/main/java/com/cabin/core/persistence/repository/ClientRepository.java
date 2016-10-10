@@ -17,5 +17,7 @@ public interface ClientRepository extends JpaRepository<Client, Long> {
 
     public List<Client> findByStatusIdAndUserAnonymous(@Param("statusId") Long statusId, @Param("anonymous") String anonymous);
 
+    public List<Client> findByUserHeadquarterIdAndUserAnonymous(@Param("headquarterId") Long headquarterId, @Param("anonymous") String anonymous);
+
     public List<Client> findByName(@Param("name") String name);
 }

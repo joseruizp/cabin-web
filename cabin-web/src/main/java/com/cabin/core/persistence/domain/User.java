@@ -34,6 +34,14 @@ public class User implements Serializable {
     @JoinColumn(name = "id_perfil")
     private Profile profile;
 
+    @ManyToOne
+    @JoinColumn(name = "id_estado")
+    private Status status;
+
+    @ManyToOne
+    @JoinColumn(name = "id_sede")
+    private Headquarter headquarter;
+
     public Long getId() {
         return id;
     }
@@ -57,7 +65,7 @@ public class User implements Serializable {
     public void setPass(String pass) {
         this.pass = pass;
     }
-    
+
     public boolean isAnonymous() {
         return IS_ANONYMOUS.equals(this.anonymous);
     }
@@ -76,6 +84,22 @@ public class User implements Serializable {
 
     public void setProfile(Profile profile) {
         this.profile = profile;
+    }
+
+    public Status getStatus() {
+        return status;
+    }
+
+    public void setStatus(Status status) {
+        this.status = status;
+    }
+
+    public Headquarter getHeadquarter() {
+        return headquarter;
+    }
+
+    public void setHeadquarter(Headquarter headquarter) {
+        this.headquarter = headquarter;
     }
 
 }

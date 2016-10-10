@@ -3,6 +3,7 @@
 	errors['E001'] = 'Usuario no existe.';
 	errors['E002'] = 'Usuario no existe.';
 	errors['E003'] = 'Usuario inactivo.';
+	errors['E004'] = 'Maximo numero de operadores en la sede se ha exedido.';
 	
 	$(".input").focusin(function() {
 		$(this).find("span").animate({
@@ -58,7 +59,9 @@
 			console.log("userType value: " + value);
 			if (value === "1" || value === "3") {
 				$("#headquarterDiv").show();
-				$("#anonymousDiv").show();
+				if (value === "1") {
+					$("#anonymousDiv").show();	
+				}
 			} else {
 				$("#headquarterDiv").hide();
 				$("#anonymousDiv").hide();

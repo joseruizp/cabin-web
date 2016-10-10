@@ -11,7 +11,6 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
-
 import com.fasterxml.jackson.annotation.JsonFormat;
 
 @Entity(name = "ticket")
@@ -22,38 +21,34 @@ public class Ticket implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-    
-    @JsonFormat(pattern="dd-MM-yyyy HH:mm:ss", timezone="America/Lima")
-	@Column(name = "fecha")
-	private Calendar date;
-    
-    @Column(name = "monto_recarga")
-	private Double rechargingAmount;
-    
-	@Column(name = "flag_cierre_caja")
-	private Integer cashClosingFlag;
-    
-    @ManyToOne
-	@JoinColumn(name = "id_cliente")
-	private Client client;
+
+    @JsonFormat(pattern = "dd-MM-yyyy HH:mm:ss", timezone = "America/Lima")
+    @Column(name = "fecha")
+    private Calendar date;
+
+    @Column(name = "monto")
+    private Double amount;
 
     @ManyToOne
-	@JoinColumn(name = "id_empleado")
-	private Employee employee;
+    @JoinColumn(name = "id_cliente")
+    private Client client;
 
     @ManyToOne
-	@JoinColumn(name = "id_tipo_recarga")
-	private RechargingType rechargingType;
-    
-    @ManyToOne
-   	@JoinColumn(name = "id_cierre_caja")
-   	private CashClosing cashClosing;
+    @JoinColumn(name = "id_empleado")
+    private Employee employee;
 
     @ManyToOne
-	@JoinColumn(name = "id_estado")
-	private Status status;
-    
-    
+    @JoinColumn(name = "id_tipo_recarga")
+    private RechargingType rechargingType;
+
+    @ManyToOne
+    @JoinColumn(name = "id_caja")
+    private Cash cash;
+
+    @ManyToOne
+    @JoinColumn(name = "id_tipo_gasto")
+    private ExpenseType expenseType;
+
     public Long getId() {
         return id;
     }
@@ -62,67 +57,59 @@ public class Ticket implements Serializable {
         this.id = id;
     }
 
-    public Status getStatus() {
-		return status;
-	}
+    public Calendar getDate() {
+        return date;
+    }
 
-	public void setStatus(Status status) {
-		this.status = status;
-	}
+    public void setDate(Calendar date) {
+        this.date = date;
+    }
 
-	public Calendar getDate() {
-		return date;
-	}
+    public Double getAmount() {
+        return amount;
+    }
 
-	public void setDate(Calendar date) {
-		this.date = date;
-	}
+    public void setAmount(Double amount) {
+        this.amount = amount;
+    }
 
-	public Double getRechargingAmount() {
-		return rechargingAmount;
-	}
+    public Client getClient() {
+        return client;
+    }
 
-	public void setRechargingAmount(Double rechargingAmount) {
-		this.rechargingAmount = rechargingAmount;
-	}
+    public void setClient(Client client) {
+        this.client = client;
+    }
 
-	public Integer getCashClosingFlag() {
-		return cashClosingFlag;
-	}
+    public Employee getEmployee() {
+        return employee;
+    }
 
-	public void setCashClosingFlag(Integer cashClosingFlag) {
-		this.cashClosingFlag = cashClosingFlag;
-	}
+    public void setEmployee(Employee employee) {
+        this.employee = employee;
+    }
 
-	public Client getClient() {
-		return client;
-	}
+    public RechargingType getRechargingType() {
+        return rechargingType;
+    }
 
-	public void setClient(Client client) {
-		this.client = client;
-	}
+    public void setRechargingType(RechargingType rechargingType) {
+        this.rechargingType = rechargingType;
+    }
 
-	public Employee getEmployee() {
-		return employee;
-	}
+    public Cash getCash() {
+        return cash;
+    }
 
-	public void setEmployee(Employee employee) {
-		this.employee = employee;
-	}
+    public void setCash(Cash cash) {
+        this.cash = cash;
+    }
 
-	public RechargingType getRechargingType() {
-		return rechargingType;
-	}
+    public ExpenseType getExpenseType() {
+        return expenseType;
+    }
 
-	public void setRechargingType(RechargingType rechargingType) {
-		this.rechargingType = rechargingType;
-	}
-
-	public CashClosing getCashClosing() {
-		return cashClosing;
-	}
-
-	public void setCashClosing(CashClosing cashClosing) {
-		this.cashClosing = cashClosing;
-	}
+    public void setExpenseType(ExpenseType expenseType) {
+        this.expenseType = expenseType;
+    }
 }

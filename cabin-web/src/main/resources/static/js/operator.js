@@ -1,17 +1,17 @@
 clients = [];
 data = [];
 tickets = []; ticketIndex = -1;
-ticketsCierreCaja = [];
 recargaValidation = "";
 cierreCajaValidation = "";
 totalAmount = 0;
 rechargeInfo = {};
+var cashId = 0;
 
 $(document).ready(function() {
 				
 		$('#recargaTbl').DataTable({			
 			scrollY: 300,
-		    paging: false,
+		    paging: true,
 			ordering: true,
 			searching: true,
 			bLengthChange: false,
@@ -25,7 +25,7 @@ $(document).ready(function() {
 		
 		$('#cierreCajaTbl').DataTable({			
 			scrollY: 300,
-		    paging: false,
+		    paging: true,
 			ordering: true,
 			searching: true,
 			bLengthChange: false,
@@ -37,27 +37,20 @@ $(document).ready(function() {
 			},
 		});
 		
-		$( "#form-recarga" ).submit(function( event ) {
-			event.preventDefault();
-			if ( addTicket() ){				
-				addRechargeEvent();
-			}
-		});
-		
-		$( "#form-cierreCaja" ).submit(function( event ) {
-			event.preventDefault();
-			//if ( addTicket() ){				
-				saveCierreCaja();
-			//}
-		});
+		cashId = $("#cashId").val();
 		
 		//Initialize validation divs
 		recargaValidation = $("#recargaValidation");
 		cierreCajaValidation = $("#cierreCajaValidation");
 		
+		addRechargeEvent();
+		addCloseCashEvent();
 		fillArrayClients();
 		fillArrayTickets();
-		//getComputersAndConsoles();
+		getComputersAndConsoles();
+		showStartCashDialog();
+		addEventStartCash();
+		addEventExpenses();
 		
 		//Carga la información de los parámetros de recarga
 		getRechargeInformation();
@@ -113,85 +106,80 @@ function fillArrayClients(){
 	});	
 }
 
-/*
 function getComputersAndConsoles() {
 	var headquarterId = $("#headquarterId").val();
 	getComputers(headquarterId);
 	getConsoles(headquarterId);
 }
-*/
 
-function fillArrayTicketsCierreCaja( idCierreCaja){
-	var length = ticketsCierreCaja.length;
-	ticketsCierreCaja.splice(0, length);
-	var strUrl = window.location.protocol + "//" + window.location.host + "/cabin-web/get/allTicketsByCashClosing";	
-	console.log(strUrl);
-	$.ajax({
-		type: "GET",
-		url: strUrl,
-		data: {id : idCierreCaja},
-		dataType: "json",
-	    success: function (json) {
-	    	$.each(json, function(index, value) {
-		    	ticketsCierreCaja.push({
-					id: value.id,
-					rechargingAmount: value.rechargingAmount,
-					date: value.date,
-					cashClosingFlag: value.cashClosingFlag,
-					client: value.client.name,
-					employee: value.employee.name,
-					rechargingType : value.rechargingType.name,
-					status: value.status.name
-				});		
-		    	if ( value.status.id == 3)		    	
-		    		totalAmount = totalAmount + value.rechargingAmount;	
-			});	    	
-	    },
-	    error: function (xhr, status) {    	
-	    	console.log("Error, su solicitud no pudo ser atendida");
-	    },
-	    complete: function(){
-	    	//fillCierreCajaTbl();	
-	    	//clearTickets();
-	    	//fillTickettbl();
-	    	$( "#totalAmount" ).val("" + totalAmount);
-	    	totalAmount = 0;
-	    }
-	});	
+function showStartCashDialog() {
+	var isFirst = $("#isFirst").val();
+	if (isFirst === "true") {
+		$( "#startCashDialog" ).dialog({
+			closeOnEscape: false,
+			  width: 700,
+			  dialogClass: "noclose"
+		});	
+	}
+}
+
+function addEventStartCash() {
+	$("#btnStartCash").click(function(e) {
+		e.preventDefault();
+		if (addStartCash()) {
+			var startCash = {};
+			startCash.amount = $("#startCashAmount").val();
+			startCash.employeeId = $("#employeeId").val();
+			startCash.headquarterId = $("#headquarterId").val();
+			console.log("cash post: " + JSON.stringify(startCash));
+			$.ajax({
+				type: "POST",
+				url: window.location.protocol + "//" + window.location.host + "/cabin-web/post/startCash",
+				data: JSON.stringify(startCash),
+				contentType: 'application/json',
+				dataType: 'json', 
+			    success: function (json) {
+			    	cashId = json.id;
+			    	console.log("Cash Id: " + cashId);
+			    	$( "#startCashDialog" ).dialog( "close" )
+			    },
+			    error: function (xhr, status) {    	
+			    	console.log("Error, su solicitud no pudo ser atendida");
+			    }
+			});
+		}
+	});
 }
 
 function fillArrayTickets(){
 	var length = tickets.length;
 	tickets.splice(0, length);
-	var strUrl = window.location.protocol + "//" + window.location.host + "/cabin-web/get/allTicketsByOperator";
-	var employeeId = 4; //Se pone en bruto porq no guarda la sesion
-	var cashClosingFlag = 0; //Aquellos que aun no se han cerrado caja
+	var strUrl = window.location.protocol + "//" + window.location.host + "/cabin-web/get/allTicketsByCash";
 	console.log(strUrl);
 	$.ajax({
 		async: false,
 		type: "GET",
 		url: strUrl,
-		data: {id : employeeId, cashClosingFlag : cashClosingFlag},
+		data: {id : cashId},
 		dataType: "json",
 	    success: function (json) {
-	    	$.each(json, function(index, value) {		    		
+	    	$.each(json, function(index, value) {
 		    	tickets.push({
 					id: value.id,
-					rechargingAmount: value.rechargingAmount,
+					amount: value.amount,
 					date: value.date,
-					cashClosingFlag: value.cashClosingFlag,
-					client: value.client.name,
+					client: value.client == null ? "" : value.client.name,
 					employee: value.employee.name,
 					rechargingType : value.rechargingType.name,
-					status: value.status.name
-				});	  
+					expenseType: value.expenseType == null? "" : value.expenseType.name
+				});
 			});	    			    	
+	    	fillTickettbl();
+	    	fillCierreCajaTbl();
+	    	
 	    },
 	    error: function (xhr, status) {    	
 	    	console.log("Error, su solicitud no pudo ser atendida");
-	    },
-	    complete: function () {
-	    	//fillTickettbl();
 	    }
 	});	
 }
@@ -202,14 +190,15 @@ function fillTickettbl(  ){
     var t = $('#recargaTbl').DataTable(); t.clear(); t.draw();
     console.log("Entro al llenado de la tabla");
 	for(i=0; i<size;i++){
-		t.row.add( [
-                tickets[i].id,
-                tickets[i].client,
-                parseFloat(tickets[i].rechargingAmount).toFixed(2),
-                tickets[i].rechargingType,
-                tickets[i].date,
-                tickets[i].status,                
-        ] ).draw( false );
+		if (tickets[i].client !== "") {
+			t.row.add( [
+	                tickets[i].id,
+	                tickets[i].client,
+	                parseFloat(tickets[i].amount).toFixed(2),
+	                tickets[i].rechargingType,
+	                tickets[i].date,
+	        ] ).draw( false );
+		}
 	};
 	
 	if (size > 0 ){
@@ -223,126 +212,50 @@ function fillTickettbl(  ){
 }
 
 function fillCierreCajaTbl(  ){
-	var size = ticketsCierreCaja.length;	
+	var size = tickets.length;	
     var j = 0;
     var t = $('#cierreCajaTbl').DataTable(); t.clear();
 	for(i=0; i<size;i++){
 		t.row.add( [
-                ticketsCierreCaja[i].id,
-                ticketsCierreCaja[i].client,
-                parseFloat(ticketsCierreCaja[i].rechargingAmount).toFixed(2),
-                ticketsCierreCaja[i].rechargingType,
-                ticketsCierreCaja[i].date,
-                ticketsCierreCaja[i].status,                
+                tickets[i].id,
+                tickets[i].client,
+                parseFloat(tickets[i].amount).toFixed(2),
+                tickets[i].rechargingType,
+                tickets[i].expenseType,
+                tickets[i].date,
         ] ).draw( false );
 	};
 }
 
-
-function saveTicket(){
-	var idTicket = $("#idRecarga").attr("value");
-	console.log("Inside form-ticket " + idTicket);
-	var ticket = {};
-	var idClient = $("#clientSelect").val();
-	var idEmpleado = $("#employeeId").val();
-	
-	ticket.rechargingAmount = trim( $( "#rechargingAmount" ).val() ); 
-	$( "#rechargingAmount" ).val("");
-	$("#clientSelect").val(null).trigger("change");
-	$( "#balance" ).val("");	
-	//ticket.date = new Date();
-	ticket.client = {};
-	ticket.client.id = idClient; 
-	ticket.cashClosingFlag = 0; 	
-	ticket.status = {};
-	ticket.status.id = 3;
-	ticket.employee = {};
-	ticket.employee.id = idEmpleado; 
-	ticket.rechargingType = {};
-	ticket.rechargingType.id = 2;
-	//ticket.cashClosing = {};
-	
-	var strUrl = window.location.protocol + "//" + window.location.host + "/cabin-web/post/ticket";			
-						
-	console.log(JSON.stringify(ticket));
-	$.ajax({
-		type:"POST",
-	    url:strUrl,			    
-	    dataType: 'json', 
-	    data: JSON.stringify(ticket), 
-	    contentType: 'application/json',
-	    success: function (data) {
-	    	console.log("Send a ticket into DB");
-	    },
-	    error: function (xhr, status) {	    	
-	    	console.log("Error, su solicitud no pudo ser atendida");
-	    },
-	    complete: function(){
-			fillArrayTickets();			
+function addCloseCashEvent(){
+	$("#btnCierreCaja").click(function(e) {
+		e.preventDefault();
+		if (addCloseCash()) {
+			var cashClose = {};
+			cashClose.enteredAmount = $("#totalAmount").val();
+			$.ajax({
+				type: "PUT",
+				url: window.location.protocol + "//" + window.location.host + "/cabin-web/put/closeCash/" + cashId,
+				data: JSON.stringify(cashClose),
+				contentType: 'application/json',
+				dataType: 'json', 
+			    success: function (json) {
+			    	cashId = 0;
+			    	$("#enteredAmount").text(json.enteredAmount);
+			    	$("#justifiedAmount").text(json.justifiedAmount);
+			    	$("#restAmount").text(json.rest);
+			    	$("#totalAmount").prop('disabled', true);
+			    	$( "#closeCashDialog" ).dialog({
+						  width: 700
+					});
+			    },
+			    error: function (xhr, status) {    	
+			    	console.log("Error, su solicitud no pudo ser atendida");
+			    }
+			});
 		}
 	});
 }
-
-function saveCierreCaja(){	
-	console.log("Inside form-cierreCaja");
-	var length = tickets.length;
-	var idCierreCaja;
-	//$( "#ticketsAmount" ).val("" + length);		
-	//ticket.date = new Date();
-	var cierreCaja = {};
-	//cierreCaja.ticketsAmount = length;
-	cierreCaja.totalAmount = totalAmount;
-	cierreCaja.employee = {};
-	cierreCaja.employee.id = 4; //Por ahora el id empleado en bruto
-	var cashClosingFlag = 1; // Para cambiar el flag
-	var strUrl = window.location.protocol + "//" + window.location.host + "/cabin-web/post/cashClosing";			
-						
-	console.log(JSON.stringify(cierreCaja));
-	$.ajax({
-		async: false,
-		type:"POST",
-	    url:strUrl,			    
-	    dataType: 'json', 
-	    data: JSON.stringify(cierreCaja), 
-	    contentType: 'application/json',
-	    success: function (data) {
-	    	console.log("Send a ticket into DB");
-	    	idCierreCaja = data.id;
-	    	console.log("idCierreCaja: " + idCierreCaja);
-	    	console.log(data);
-	    },
-	    error: function (xhr, status) {	    	
-	    	console.log("Error, su solicitud no pudo ser atendida");
-	    },
-	});
-	for ( var i = 0; i < length ; i++){		
-		tickets[i].cashClosing = {};
-		tickets[i].cashClosing.id = idCierreCaja;
-		tickets[i].cashClosingFlag = cashClosingFlag;
-		tickets[i].status = {};
-		tickets[i].client = {};
-		tickets[i].employee = {};
-		tickets[i].rechargingType = {};		
-		strUrl = window.location.protocol + "//" + window.location.host + "/cabin-web/post/ticket";
-		console.log(JSON.stringify(tickets[i]));
-		$.ajax({
-			async: false,
-			type:"POST",
-		    url:strUrl,			    
-		    dataType: 'json', 
-		    data: JSON.stringify(tickets[i]), 
-		    contentType: 'application/json',
-		    success: function (data) {
-		    	console.log("Send a ticket into DB");
-		    },
-		    error: function (xhr, status) {	    	
-		    	console.log("Error, su solicitud no pudo ser atendida");
-		    },		    
-		});
-	}
-	fillArrayTicketsCierreCaja( idCierreCaja );	
-}
-
 
 function deleteTicket( code, index ){
 	var strUrlStatus = window.location.protocol + "//" + window.location.host + "/cabin-web/estado/" + 4;
@@ -364,8 +277,6 @@ function deleteTicket( code, index ){
 	    }	    
 	});	
 }
-
-
 
 function fnOpenCloseDialog(val, code, index) {
     $("#dialog-confirm").html("¿Está seguro que desea anular este registro?");
@@ -419,7 +330,6 @@ function updateTips( t, div ) {
   }, 5000 );
 }
 
-
 function checkRequired( o, n, min, div) {
 	var field = o.val();
 	field = trim(field);
@@ -444,7 +354,6 @@ function checkRegexp( o, regexp, n, div ) {
 	}
 }
 
-
 function addTicket() {
 	var valid = true;
 	$("*").removeClass( "ui-state-error");
@@ -456,6 +365,18 @@ function addTicket() {
 		return false;
 	}
 	valid = valid && checkRegexp( $("#rechargingAmount"), /^[0-9]\d{0,3}($|\.\d{0,1}$)/i, "Debe ingresar ingresar un monto válido, no mayor de 999.90 soles y de un decimal.", recargaValidation);	
+	return valid;
+}
+
+function addStartCash() {
+	var valid = true;
+	valid = valid && checkRegexp( $("#startCashAmount"), /^[0-9]\d{0,3}($|\.\d{0,1}$)/i, "Debe ingresar ingresar un monto válido, no mayor de 999.90 soles y de un decimal.", recargaValidation);	
+	return valid;
+}
+
+function addCloseCash() {
+	var valid = true;
+	valid = valid && checkRegexp( $("#totalAmount"), /^[0-9]\d{0,3}($|\.\d{0,1}$)/i, "Debe ingresar ingresar un monto válido, no mayor de 999.90 soles y de un decimal.", recargaValidation);	
 	return valid;
 }
 
@@ -489,53 +410,54 @@ function getRechargeInformation() {
 
 
 
-function addRechargeEvent() {	
-		var idClient = $("#clientSelect").val();
-		var enterAmount = Number($("#enterAmount").val());
-    	var amount = Number($("#rechargingAmount").val());
-    	
-    	if (amount < rechargeInfo.minimumFraction) {    		
-    		updateTips("El monto es menor que el mínimo de recarga requerido.", recargaValidation); 
-    		return;
-    	} else if (amount > rechargeInfo.maximumFraction) {    		
-    		updateTips("El monto es mayor que el mínimo de recarga requerido..", recargaValidation);
-    		return;
-    	}
-    	
-    	amount = (amount - (amount % rechargeInfo.rechargeFraction).toFixed(1));
-    	
-    	$("#rechargingAmount").val("");
-    	$("#enterAmount").val("");
-    	
-    	var change = enterAmount - amount;
-    	var recharge = {};
-    	recharge.clientId = idClient;
-    	recharge.amount = amount;
-    	
-    	console.log("rechargeInfo: " + rechargeInfo);
-    	
-    	var hostname = window.location.protocol + "//" + window.location.host;
-		var strUrl = hostname + "/cabin-web/post/recharge";
-		
-    	$.ajax({
-			type: "POST",
-		    url:strUrl,			    
-		    dataType: 'json', 
-		    data: JSON.stringify(recharge),
-		    contentType: 'application/json',
-		    success: function (data) {
-		    	console.log("recharge is done");
-		    	updateTips("Recarga realizada satisfactoriamente.", recargaValidation);		    	
-		    	saveTicket();
-		    	fillArrayClients();
-		    },
-		    error: function (xhr, status) {	    	
-		    	console.log("Error, su solicitud no pudo ser atendida");
-		    }
-		});	
+function addRechargeEvent() {
+	$("#btnCierreCaja").click(function(e) {
+		e.preventDefault();
+		if (addTicket()) {
+			var idClient = $("#clientSelect").val();
+			var enterAmount = Number($("#enterAmount").val());
+	    	var amount = Number($("#rechargingAmount").val());
+	    	
+	    	if (amount < rechargeInfo.minimumFraction) {    		
+	    		updateTips("El monto es menor que el mínimo de recarga requerido.", recargaValidation); 
+	    		return;
+	    	} else if (amount > rechargeInfo.maximumFraction) {    		
+	    		updateTips("El monto es mayor que el mínimo de recarga requerido..", recargaValidation);
+	    		return;
+	    	}
+	    	
+	    	amount = (amount - (amount % rechargeInfo.rechargeFraction).toFixed(1));
+	    	
+	    	$("#rechargingAmount").val("");
+	    	$("#enterAmount").val("");
+	    	
+	    	var change = enterAmount - amount;
+	    	var recharge = {};
+	    	recharge.clientId = idClient;
+	    	recharge.amount = amount;
+	    	
+	    	console.log("rechargeInfo: " + rechargeInfo);
+	    	
+	    	var hostname = window.location.protocol + "//" + window.location.host;
+			var strUrl = hostname + "/cabin-web/post/recharge";
+			
+	    	$.ajax({
+				type: "POST",
+			    url:strUrl,			    
+			    dataType: 'json', 
+			    data: JSON.stringify(recharge),
+			    contentType: 'application/json',
+			    success: function (data) {
+			    	console.log("recharge is done");
+			    	updateTips("Recarga realizada satisfactoriamente.", recargaValidation);
+			    },
+			    error: function (xhr, status) {	    	
+			    	console.log("Error, su solicitud no pudo ser atendida");
+			    }
+			});	
+		}
+	});
 }
-
-
 
 $(document).on("change", "#clientSelect", function(){
 	console.log( "Entro a la seleccion de cliente");
@@ -551,3 +473,38 @@ $(document).on("change", "#clientSelect", function(){
 	}	
 	$("#balance").val("");
 })
+
+function addEventExpenses() {
+	$("#expenseSelect").change(function(e) {
+		var type = $(this).val();
+		if (type === "1") {
+			$("#expenseClientDiv").hide();
+		} else {
+			$("#expenseClientDiv").show();
+			fillClients(type === "2");
+		}
+		
+	})
+}
+
+function fillClients(anonymous) {
+	var headquarterId = $("#headquarterId").val();
+	$.ajax({
+		type: "GET",
+	    url:strUrl,			    
+	    dataType: 'json', 
+	    data: {headquarterId: headquarterId, anonymous: anonymous},
+	    contentType: 'application/json',
+	    success: function (data) {
+	    	$.each(data, function (index, value) {
+			    $('#expenseClientSelect').append($('<option/>', { 
+			        value: value.id,
+			        text : value.name
+			    }));
+			});
+	    },
+	    error: function (xhr, status) {	    	
+	    	console.log("Error, su solicitud no pudo ser atendida");
+	    }
+	});	
+}

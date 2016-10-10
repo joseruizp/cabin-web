@@ -8,5 +8,6 @@ public enum SessionEnum {
     IS_ANONYMOUS,
     USER_ID,
     USER_NAME,
-    HEADQUARTER_ID;
+    HEADQUARTER_ID,
+    FIRST_OPERATOR_IN_HEADQUARTER;
 }

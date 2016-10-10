@@ -8,9 +8,9 @@ import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 
 import com.cabin.core.persistence.domain.Ticket;
 
-
 @RepositoryRestResource(collectionResourceRel = "ticket", path = "ticket")
 public interface TicketRepository extends JpaRepository<Ticket, Long> {
-	public List<Ticket> findByEmployeeIdAndCashClosingFlag(@Param("employeeId") Long employeeId, @Param("cashClosingFlag") Integer cashClosingFlag);
-	public List<Ticket> findByCashClosingId(@Param("cashClosingId") Long cashClosingId);
+    // public List<Ticket> findByEmployeeIdAndCashClosingFlag(@Param("employeeId") Long employeeId,
+    // @Param("cashClosingFlag") Integer cashClosingFlag);
+    public List<Ticket> findByCashId(@Param("cashId") Long cashId);
 }

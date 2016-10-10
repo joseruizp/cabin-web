@@ -11,6 +11,10 @@ import com.cabin.core.persistence.domain.User;
 @RepositoryRestResource(collectionResourceRel = "usuario", path = "usuario")
 public interface UserRepository extends JpaRepository<User, Long> {
 
-	public List<User> findByNameAndPass(@Param("name") String name, @Param("pass") String pass);
-	public List<User> findByName(@Param("name") String name);
+    public List<User> findByNameAndPass(@Param("name") String name, @Param("pass") String pass);
+
+    public List<User> findByName(@Param("name") String name);
+
+    public List<User> findByProfileIdAndStatusIdAndHeadquarterId(@Param("profileId") Long ProfileId, @Param("statusId") Long statusId,
+            @Param("headquarterId") Long headquarterId);
 }

@@ -9,6 +9,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.security.SecurityProperties;
 import org.springframework.context.annotation.Configuration;
@@ -28,10 +29,14 @@ import com.cabin.core.enums.SessionEnum;
 import com.cabin.core.persistence.domain.Client;
 import com.cabin.core.persistence.domain.CurrentUser;
 import com.cabin.core.persistence.domain.Employee;
+import com.cabin.core.persistence.domain.Headquarter;
 import com.cabin.core.persistence.domain.Profile;
 import com.cabin.core.persistence.domain.Status;
+import com.cabin.core.persistence.domain.User;
 import com.cabin.core.persistence.repository.ClientRepository;
 import com.cabin.core.persistence.repository.EmployeeRepository;
+import com.cabin.core.persistence.repository.HeadquarterRepository;
+import com.cabin.core.persistence.repository.UserRepository;
 
 @Configuration
 @EnableGlobalMethodSecurity(prePostEnabled = true)
@@ -47,11 +52,20 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Autowired
     private EmployeeRepository employeeRepository;
 
+    @Autowired
+    private UserRepository userRepository;
+
+    @Autowired
+    private HeadquarterRepository headquarterRepository;
+
+    private RedirectStrategy redirectStrategy = new DefaultRedirectStrategy();
+
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.authorizeRequests().antMatchers("/", "/login/**", "/error/**").permitAll();
         http.authorizeRequests().antMatchers("/get/allHeadquarters", "/get/anonymous").permitAll();
-        http.authorizeRequests().antMatchers("/css/**", "/images/**", "/bootstrap/**", "/fonts/**", "/plugins/**", "/js/**", "/sockjs-client/**", "/stomp-websocket/**").permitAll();
+        http.authorizeRequests().antMatchers("/css/**", "/images/**", "/bootstrap/**", "/fonts/**", "/plugins/**", "/js/**", "/sockjs-client/**", "/stomp-websocket/**")
+                .permitAll();
 
         http.authorizeRequests().antMatchers("/admin/**", "/headquarters/**").hasAuthority("ADMIN");
         http.authorizeRequests().antMatchers("/operator/**").hasAuthority("OPERATOR");
@@ -72,90 +86,132 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     private class SuccessHandler implements AuthenticationSuccessHandler {
 
-        private RedirectStrategy redirectStrategy = new DefaultRedirectStrategy();
-
         @Override
         public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
             CurrentUser currentUser = (CurrentUser) authentication.getPrincipal();
+            User user = currentUser.getUser();
+            Long profileId = currentUser.getProfile();
             System.out.println("currentUser: " + currentUser.getId());
+            System.out.println("currentUser isAuthenticated: " + authentication.isAuthenticated());
 
             HttpSession session = request.getSession();
 
-            Long profileId = Long.parseLong(request.getParameter("profileId"));
-
-            if (profileId != currentUser.getProfile()) {
-                session.invalidate();
-                redirectStrategy.sendRedirect(request, response, "/login?error=E002");
-            }
-
-            boolean isAnonymous = currentUser.isAnonymous();
+            validateProfile(currentUser.getProfile(), request, response);
 
             if (Profile.CLIENT == profileId) {
-                List<Client> clients = clientRepository.findByUserId(currentUser.getId());
-                if (CollectionUtils.isEmpty(clients)) {
-                    session.invalidate();
-                    redirectStrategy.sendRedirect(request, response, "/login?error=E002");
-                }
-                Client client = clients.get(0);
-
-                if (Status.ACTIVE != client.getStatus().getId()) {
-                    session.invalidate();
-                    redirectStrategy.sendRedirect(request, response, "/login?error=E003");
-                }
-
-                session.setAttribute(SessionEnum.CLIENT_ID.name(), client.getId());
-
-                if (isAnonymous) {
-                    client.setStatus(new Status());
-                    client.getStatus().setId(Status.ACTIVE);
-                    client.setBalance(0.0);
-                    client.setPoints(0);
-                    client.setExperience(0);
-
-                    clientRepository.saveAndFlush(client);
-                }
+                authenticateClient(currentUser, request, response);
             } else {
-                List<Employee> employees = employeeRepository.findByUserId(currentUser.getId());
-                if (CollectionUtils.isEmpty(employees)) {
-                    session.invalidate();
-                    redirectStrategy.sendRedirect(request, response, "/login?error=E002");
-                }
-                
-                Employee employee = employees.get(0);
-                if (Status.ACTIVE != employee.getStatus().getId()) {
-                    session.invalidate();
-                    redirectStrategy.sendRedirect(request, response, "/login?error=E003");
-                }
-
-                session.setAttribute(SessionEnum.EMPLOYEE_ID.name(), employee.getId());
+                authenticateEmployee(currentUser, request, response);
             }
 
-            session.setAttribute(SessionEnum.IS_ANONYMOUS.name(), isAnonymous);
+            updateUserStatus(user, request);
+
             session.setAttribute(SessionEnum.USER_PROFILE.name(), profileId);
-            session.setAttribute(SessionEnum.HEADQUARTER_ID.name(), request.getParameter("headquarterId"));
             session.setAttribute(SessionEnum.USER_ID.name(), currentUser.getId());
             session.setAttribute(SessionEnum.USER_NAME.name(), currentUser.getUsername());
 
-            if (Profile.ADMIN == profileId) {
-                redirectStrategy.sendRedirect(request, response, "/admin");
-            } else if (Profile.CLIENT == profileId) {
-                redirectStrategy.sendRedirect(request, response, "/client");
-            } else if (Profile.EMPLOYEE == profileId) {
-                redirectStrategy.sendRedirect(request, response, "/operator");
-            } else if (Profile.INCIDENCE == profileId) {
-                redirectStrategy.sendRedirect(request, response, "/incidence");
-            }
+            redirect(profileId, request, response);
         }
 
     }
 
-    private class LogoutHandler implements LogoutSuccessHandler {
+    private void validateProfile(Long currentProfile, HttpServletRequest request, HttpServletResponse response) throws IOException {
+        Long profileId = Long.parseLong(request.getParameter("profileId"));
+        if (profileId != currentProfile) {
+            request.getSession().invalidate();
+            redirectStrategy.sendRedirect(request, response, "/login?error=E002");
+        }
+    }
 
-        private RedirectStrategy redirectStrategy = new DefaultRedirectStrategy();
+    private void authenticateClient(CurrentUser currentUser, HttpServletRequest request, HttpServletResponse response) throws IOException {
+        List<Client> clients = clientRepository.findByUserId(currentUser.getId());
+        if (CollectionUtils.isEmpty(clients)) {
+            request.getSession().invalidate();
+            redirectStrategy.sendRedirect(request, response, "/login?error=E002");
+        }
+        Client client = clients.get(0);
+
+        if (Status.ACTIVE != client.getStatus().getId()) {
+            request.getSession().invalidate();
+            redirectStrategy.sendRedirect(request, response, "/login?error=E003");
+        }
+
+        request.getSession().setAttribute(SessionEnum.CLIENT_ID.name(), client.getId());
+
+        if (currentUser.isAnonymous()) {
+            client.setStatus(new Status());
+            client.getStatus().setId(Status.ACTIVE);
+            client.setBalance(0.0);
+            client.setPoints(0);
+            client.setExperience(0);
+            clientRepository.saveAndFlush(client);
+        }
+
+        request.getSession().setAttribute(SessionEnum.IS_ANONYMOUS.name(), currentUser.isAnonymous());
+    }
+
+    private void authenticateEmployee(CurrentUser currentUser, HttpServletRequest request, HttpServletResponse response) throws IOException {
+        List<Employee> employees = employeeRepository.findByUserId(currentUser.getId());
+        if (CollectionUtils.isEmpty(employees)) {
+            request.getSession().invalidate();
+            redirectStrategy.sendRedirect(request, response, "/login?error=E002");
+        }
+
+        Employee employee = employees.get(0);
+        if (Status.ACTIVE != employee.getStatus().getId()) {
+            request.getSession().invalidate();
+            redirectStrategy.sendRedirect(request, response, "/login?error=E003");
+        }
+
+        if (Profile.EMPLOYEE == currentUser.getProfile()) {
+            validateOperator(request, response);
+        }
+
+        request.getSession().setAttribute(SessionEnum.EMPLOYEE_ID.name(), employee.getId());
+    }
+
+    private void validateOperator(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        Long headquarterId = Long.parseLong(request.getParameter("headquarterId"));
+        Headquarter headquarter = headquarterRepository.findById(headquarterId);
+
+        List<User> users = userRepository.findByProfileIdAndStatusIdAndHeadquarterId(Profile.EMPLOYEE, Status.ACTIVE, headquarterId);
+        if (users.size() > headquarter.getMaxAmountOperator()) {
+            redirectStrategy.sendRedirect(request, response, "/login?error=E004");
+        }
+    }
+
+    private void updateUserStatus(User user, HttpServletRequest request) {
+        user.setStatus(new Status());
+        user.getStatus().setId(Status.ACTIVE);
+
+        String headquarterId = request.getParameter("headquarterId");
+        if (StringUtils.isNotBlank(headquarterId)) {
+            user.setHeadquarter(new Headquarter());
+            user.getHeadquarter().setId(Long.parseLong(headquarterId));
+            request.getSession().setAttribute(SessionEnum.HEADQUARTER_ID.name(), headquarterId);
+        }
+
+        userRepository.saveAndFlush(user);
+    }
+
+    private void redirect(Long profileId, HttpServletRequest request, HttpServletResponse response) throws IOException {
+        if (Profile.ADMIN == profileId) {
+            redirectStrategy.sendRedirect(request, response, "/admin");
+        } else if (Profile.CLIENT == profileId) {
+            redirectStrategy.sendRedirect(request, response, "/client");
+        } else if (Profile.EMPLOYEE == profileId) {
+            redirectStrategy.sendRedirect(request, response, "/operator");
+        } else if (Profile.INCIDENCE == profileId) {
+            redirectStrategy.sendRedirect(request, response, "/incidence");
+        }
+    }
+
+    private class LogoutHandler implements LogoutSuccessHandler {
 
         @Override
         public void onLogoutSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
             CurrentUser currentUser = (CurrentUser) authentication.getPrincipal();
+            User user = currentUser.getUser();
 
             boolean isAnonymous = currentUser.isAnonymous();
 
@@ -170,6 +226,11 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
                 clientRepository.saveAndFlush(client);
             }
+
+            user.setStatus(new Status());
+            user.getStatus().setId(Status.INACTIVE);
+
+            userRepository.saveAndFlush(user);
 
             request.getSession().invalidate();
 

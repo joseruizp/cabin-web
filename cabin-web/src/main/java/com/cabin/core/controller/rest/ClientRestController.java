@@ -17,16 +17,22 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.cabin.core.enums.SessionEnum;
+import com.cabin.core.persistence.domain.Cash;
 import com.cabin.core.persistence.domain.Client;
+import com.cabin.core.persistence.domain.Employee;
 import com.cabin.core.persistence.domain.Experience;
 import com.cabin.core.persistence.domain.Level;
 import com.cabin.core.persistence.domain.Profile;
 import com.cabin.core.persistence.domain.PunctuationRule;
+import com.cabin.core.persistence.domain.RechargingType;
+import com.cabin.core.persistence.domain.Ticket;
 import com.cabin.core.persistence.domain.User;
+import com.cabin.core.persistence.repository.CashRepository;
 import com.cabin.core.persistence.repository.ClientRepository;
 import com.cabin.core.persistence.repository.ExperienceRepository;
 import com.cabin.core.persistence.repository.LevelRepository;
 import com.cabin.core.persistence.repository.PunctuationRuleRepository;
+import com.cabin.core.persistence.repository.TicketRepository;
 import com.cabin.core.persistence.repository.UserRepository;
 import com.cabin.core.view.Recharge;
 
@@ -47,11 +53,23 @@ public class ClientRestController {
 
     @Autowired
     private UserRepository userRepository;
+    
+    @Autowired
+    private CashRepository cashRepository;
+    
+    @Autowired
+    private TicketRepository ticketRepository;
 
     @RequestMapping(value = "/get/allClients", method = RequestMethod.GET, produces = { "application/json;charset=UTF-8" })
     public List<Client> getAllClient() {
         long status = 1;
         return clientRepository.findByStatusId(status);
+    }
+
+    @RequestMapping(value = "/get/allActiveUsersByHeadquarter", method = RequestMethod.GET, produces = { "application/json;charset=UTF-8" })
+    public List<Client> getAllActiveUsersByHeadquarter(@RequestParam(value = "headquarterId", required = true) Long headquarterId,
+            @RequestParam(value = "anonymous", required = true) Boolean anonymous) {
+        return clientRepository.findByUserHeadquarterIdAndUserAnonymous(headquarterId, anonymous ? "1" : "0");
     }
 
     @RequestMapping(value = "/get/client", method = RequestMethod.GET, produces = { "application/json;charset=UTF-8" })
@@ -111,6 +129,22 @@ public class ClientRestController {
                 }
             }
         }
+        
+        Calendar now = Calendar.getInstance();
+        Cash cash = cashRepository.findOne(recharge.getCashId());
+        cash.setModificationDate(now);
+        cashRepository.saveAndFlush(cash);
+        
+        Ticket ticket = new Ticket();
+        ticket.setCash(cash);
+        ticket.setAmount(recharge.getAmount());
+        ticket.setClient(client);
+        ticket.setEmployee(new Employee());
+        ticket.getEmployee().setId(recharge.getEmployeeId());
+        ticket.setDate(Calendar.getInstance());
+        ticket.setRechargingType(new RechargingType());
+        ticket.getRechargingType().setId(RechargingType.MANUAL);
+        ticketRepository.saveAndFlush(ticket);
 
         return clientRepository.saveAndFlush(client);
     }

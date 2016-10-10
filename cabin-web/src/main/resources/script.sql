@@ -350,6 +350,30 @@
 	/*!40000 ALTER TABLE `estado_alquiler` ENABLE KEYS */;
 	UNLOCK TABLES;
 	
+	--
+	-- Table structure for table `estado_alquiler`
+	--
+	
+	DROP TABLE IF EXISTS `tipo_gasto`;
+	/*!40101 SET @saved_cs_client     = @@character_set_client */;
+	/*!40101 SET character_set_client = utf8 */;
+	CREATE TABLE `tipo_gasto` (
+	  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+	  `nombre` varchar(50) DEFAULT NULL,
+	  PRIMARY KEY (`id`)
+	) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
+	/*!40101 SET character_set_client = @saved_cs_client */;
+	
+	--
+	-- Dumping data for table `estado_alquiler`
+	--
+	
+	LOCK TABLES `tipo_gasto` WRITE;
+	/*!40000 ALTER TABLE `tipo_gasto` DISABLE KEYS */;
+	INSERT INTO `tipo_gasto` VALUES (1,'ALIMENTACION'),(2,'DEVOLUCION USUARIO ANONIMO'),(3,'DEVOLUCION USUARIO REGISTRADO');
+	/*!40000 ALTER TABLE `tipo_gasto` ENABLE KEYS */;
+	UNLOCK TABLES;
+	
 	
 	--
 	-- Table structure for table `ticket`
@@ -360,25 +384,24 @@
 	/*!40101 SET character_set_client = utf8 */;
 	CREATE TABLE `ticket` (
 	  `id` bigint(20) NOT NULL AUTO_INCREMENT,  
-	  `monto_recarga` double DEFAULT NULL,
+	  `monto` double DEFAULT NULL,
 	  `fecha` datetime DEFAULT NULL,
-	  `flag_cierre_caja` int(2) DEFAULT NULL,
 	  `id_empleado` bigint(20) DEFAULT NULL,
 	  `id_cliente` bigint(20) DEFAULT NULL,
 	  `id_tipo_recarga` bigint(20) DEFAULT NULL,
-	  `id_cierre_caja` bigint(20) DEFAULT NULL,
-	  `id_estado` bigint(20) DEFAULT NULL,
+	  `id_tipo_gasto` bigint(20) DEFAULT NULL,
+	  `id_caja` bigint(20) DEFAULT NULL,
 	  PRIMARY KEY (`id`),
 	  KEY `ticket_cliente_idx` (`id_cliente`),
 	  KEY `ticket_empleado_idx` (`id_empleado`),
 	  KEY `ticket_tipo_recarga_idx` (`id_tipo_recarga`),
-	  KEY `ticket_cierre_caja_idx` (`id_cierre_caja`),
-	  KEY `ticket_estado_idx` (`id_estado`),
+	  KEY `ticket_caja_idx` (`id_caja`),
+	  KEY `ticket_tipo_gasto_idx` (`id_tipo_gasto`),
 	  CONSTRAINT `ticket_cliente` FOREIGN KEY (`id_cliente`) REFERENCES `cliente` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
 	  CONSTRAINT `ticket_empleado` FOREIGN KEY (`id_empleado`) REFERENCES `empleado` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
 	  CONSTRAINT `ticket_tipo_recarga` FOREIGN KEY (`id_tipo_recarga`) REFERENCES `tipo_recarga` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-	  CONSTRAINT `ticket_cierre_caja` FOREIGN KEY (`id_cierre_caja`) REFERENCES `cierre_caja` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-	  CONSTRAINT `ticket_estado` FOREIGN KEY (`id_estado`) REFERENCES `estado` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+	  CONSTRAINT `ticket_caja` FOREIGN KEY (`id_caja`) REFERENCES `caja` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+	  CONSTRAINT `ticket_tipo_gasto` FOREIGN KEY (`id_tipo_gasto`) REFERENCES `tipo_gasto` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
 	) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
 	/*!40101 SET character_set_client = @saved_cs_client */;
 	
@@ -391,18 +414,23 @@
 	-- Table structure for table `cierre_caja`
 	--
 	
-	DROP TABLE IF EXISTS `cierre_caja`;
+	DROP TABLE IF EXISTS `caja`;
 	/*!40101 SET @saved_cs_client     = @@character_set_client */;
 	/*!40101 SET character_set_client = utf8 */;
-	CREATE TABLE `cierre_caja` (
+	CREATE TABLE `caja` (
 	  `id` bigint(20) NOT NULL AUTO_INCREMENT,
-	  `cantidad_tickets` int(11) DEFAULT NULL,
-	  `monto_total` double DEFAULT NULL,
-	  `fecha` datetime DEFAULT NULL,  
+	  `fecha_apertura` datetime DEFAULT NULL,
+	  `fecha_modificacion` datetime DEFAULT NULL,
+	  `id_estado` bigint(20) DEFAULT NULL,
 	  `id_empleado` bigint(20) DEFAULT NULL,
+	  `id_sede` bigint(20) DEFAULT NULL,
 	  PRIMARY KEY (`id`),
-	  KEY `cierre_caja_empleado_idx` (`id_empleado`),
-	  CONSTRAINT `cierre_caja_empleado` FOREIGN KEY (`id_empleado`) REFERENCES `empleado` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION  
+	  KEY `caja_estado_idx` (`id_estado`),
+	  KEY `caja_empleado_idx` (`id_empleado`),
+	  KEY `caja_sede_idx` (`id_sede`),
+	  CONSTRAINT `caja_estado` FOREIGN KEY (`id_estado`) REFERENCES `estado` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+	  CONSTRAINT `caja_empleado` FOREIGN KEY (`id_empleado`) REFERENCES `empleado` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+	  CONSTRAINT `caja_sede` FOREIGN KEY (`id_sede`) REFERENCES `sede` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
 	) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
 	/*!40101 SET character_set_client = @saved_cs_client */;
 	
@@ -859,9 +887,15 @@
 	  `clave` varchar(20) DEFAULT NULL,
 	  `id_perfil` bigint(20) DEFAULT NULL,
 	  `anonimo` varchar(1),
+	  `id_estado` bigint(20) DEFAULT NULL,
+	  `id_sede` bigint(20) DEFAULT NULL,
 	  PRIMARY KEY (`id`),
-	  KEY `id_perfil` (`id_perfil`),
-	  CONSTRAINT `usuario_ibfk_1` FOREIGN KEY (`id_perfil`) REFERENCES `perfil` (`id`)
+	  KEY `usuario_perfil_idx` (`id_perfil`),
+	  KEY `usuario_estado_idx` (`id_estado`),
+	  KEY `usuario_sede_idx` (`id_sede`),
+	  CONSTRAINT `usuario_perfil` FOREIGN KEY (`id_perfil`) REFERENCES `perfil` (`id`),
+	  CONSTRAINT `usuario_estado` FOREIGN KEY (`id_estado`) REFERENCES `estado` (`id`),
+	  CONSTRAINT `usuario_sede` FOREIGN KEY (`id_sede`) REFERENCES `sede` (`id`)
 	) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8;
 	/*!40101 SET character_set_client = @saved_cs_client */;
 	
@@ -871,7 +905,7 @@
 	
 	LOCK TABLES `usuario` WRITE;
 	/*!40000 ALTER TABLE `usuario` DISABLE KEYS */;
-	INSERT INTO `usuario` VALUES (1,'user1@email.com','Ee12',1,'0'),(2,'user2@email.com','inicio',2,'0'),(3,'user3@email.com','inicio',3,'0'),(4,'user4@email.com','inicio',3,'0'),(5,'erick.gonzales@bbva.com','Ee12',3,'0'),(6,'ivan@pucp.pe','Ee12',3,'0'),(7,'je@pucp.pe','Ee12',3,'0'),(8,'user5@email.com','Ee12',1,'0'),(9,'user6@email.com','Ee12',2,'0'),(10,'j@pucp.pe','Ee12',1,'0'),(11,'e@pucp.pe','eE12',4,'0'),(12,'userlab01@cabinas.com','067e6162-3b6f-4ae2-a171-2470b63dff00',3,'1'),(13,'userlab02@cabinas.com','067e6162-3b6f-4ae2-a171-2470b63dff00',3,'1'),(14,'userlab03@cabinas.com','067e6162-3b6f-4ae2-a171-2470b63dff00',3,'1'),(15,'userlab04@cabinas.com','067e6162-3b6f-4ae2-a171-2470b63dff00',3,'1'),(16,'userlab05@cabinas.com','067e6162-3b6f-4ae2-a171-2470b63dff00',3,'1'),(17,'userlab06@cabinas.com','067e6162-3b6f-4ae2-a171-2470b63dff00',3,'1'),(18,'userlab07@cabinas.com','067e6162-3b6f-4ae2-a171-2470b63dff00',3,'1'),(19,'userlab08@cabinas.com','067e6162-3b6f-4ae2-a171-2470b63dff00',3,'1'),(20,'userlab09@cabinas.com','067e6162-3b6f-4ae2-a171-2470b63dff00',3,'1'),(21,'userlab10@cabinas.com','067e6162-3b6f-4ae2-a171-2470b63dff00',3,'1');
+	INSERT INTO `usuario` VALUES (1,'user1@email.com','Ee12',1,'0',2,null),(2,'user2@email.com','inicio',2,'0',2,null),(3,'user3@email.com','inicio',3,'0',2,null),(4,'user4@email.com','inicio',3,'0',2,null),(5,'erick.gonzales@bbva.com','Ee12',3,'0',2,null),(6,'ivan@pucp.pe','Ee12',3,'0',2,null),(7,'je@pucp.pe','Ee12',3,'0',2,null),(8,'user5@email.com','Ee12',1,'0',2,null),(9,'user6@email.com','Ee12',2,'0',2,null),(10,'j@pucp.pe','Ee12',1,'0',2,null),(11,'e@pucp.pe','eE12',4,'0',2,null),(12,'userlab01@cabinas.com','067e6162-3b6f-4ae2-a171-2470b63dff00',3,'1',2,null),(13,'userlab02@cabinas.com','067e6162-3b6f-4ae2-a171-2470b63dff00',3,'1',2,null),(14,'userlab03@cabinas.com','067e6162-3b6f-4ae2-a171-2470b63dff00',3,'1',2,null),(15,'userlab04@cabinas.com','067e6162-3b6f-4ae2-a171-2470b63dff00',3,'1',2,null),(16,'userlab05@cabinas.com','067e6162-3b6f-4ae2-a171-2470b63dff00',3,'1',2,null),(17,'userlab06@cabinas.com','067e6162-3b6f-4ae2-a171-2470b63dff00',3,'1',2,null),(18,'userlab07@cabinas.com','067e6162-3b6f-4ae2-a171-2470b63dff00',3,'1',2,null),(19,'userlab08@cabinas.com','067e6162-3b6f-4ae2-a171-2470b63dff00',3,'1',2,null),(20,'userlab09@cabinas.com','067e6162-3b6f-4ae2-a171-2470b63dff00',3,'1',2,null),(21,'userlab10@cabinas.com','067e6162-3b6f-4ae2-a171-2470b63dff00',3,'1',2,null);
 	/*!40000 ALTER TABLE `usuario` ENABLE KEYS */;
 	UNLOCK TABLES;
 	/*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;

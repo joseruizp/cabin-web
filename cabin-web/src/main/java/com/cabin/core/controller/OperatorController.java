@@ -1,5 +1,7 @@
 package com.cabin.core.controller;
 
+import java.util.List;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
@@ -12,36 +14,44 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import com.cabin.core.enums.SessionEnum;
-import com.cabin.core.persistence.domain.Headquarter;
-import com.cabin.core.persistence.repository.HeadquarterRepository;
+import com.cabin.core.persistence.domain.Cash;
+import com.cabin.core.persistence.domain.Profile;
+import com.cabin.core.persistence.domain.Status;
+import com.cabin.core.persistence.domain.User;
+import com.cabin.core.persistence.repository.CashRepository;
+import com.cabin.core.persistence.repository.UserRepository;
 
-/**
- * Handles requests for the application home page.
- */
 @Controller
 public class OperatorController {
 
     private static final Logger logger = LoggerFactory.getLogger(OperatorController.class);
 
     @Autowired
-    private HeadquarterRepository headquarterRepository;
+    private UserRepository userRepository;
 
-    /**
-     * Simply selects the home view to render by returning its name.
-     */
+    @Autowired
+    private CashRepository cashRepository;
+
     @RequestMapping(value = "/operator", method = RequestMethod.GET)
     public String home(HttpServletRequest request, Model model) {
         HttpSession session = request.getSession();
         Long userId = (Long) session.getAttribute(SessionEnum.USER_ID.name());
+        Long headquarterId = Long.parseLong((String) session.getAttribute(SessionEnum.HEADQUARTER_ID.name()));
+        Long employeeId = (Long) session.getAttribute(SessionEnum.EMPLOYEE_ID.name());
 
-        //Headquarter headquarter = headquarterRepository.findByUserId(userId);
-        //session.setAttribute(SessionEnum.HEADQUARTER_ID.name(), headquarter.getId());
-        
+        List<User> users = userRepository.findByProfileIdAndStatusIdAndHeadquarterId(Profile.EMPLOYEE, Status.ACTIVE, headquarterId);
+        boolean isFirst = users.size() == 0;
+
+        if (!isFirst) {
+            Cash cash = cashRepository.findByEmployeeIdAndHeadquarterIdAndStatusId(employeeId, headquarterId, Status.ACTIVE);
+            model.addAttribute("cashId", cash.getId());
+        }
+
         logger.info("Client id is:'" + userId + "'");
-        //logger.info("Headquarter id is:'" + headquarter.getId() + "'");
 
-        model.addAttribute("employeeId", session.getAttribute(SessionEnum.EMPLOYEE_ID.name()));
-        //model.addAttribute("headquarterId", headquarter.getId());
+        model.addAttribute("employeeId", employeeId);
+        model.addAttribute("headquarterId", headquarterId);
+        model.addAttribute("isFirst", isFirst);
 
         return "operator";
     }

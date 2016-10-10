@@ -145,3 +145,8 @@ border-radius: 15px;
     float: none;
     margin: 0 auto;
 }
+
+.noclose .ui-dialog-titlebar-close
+{
+    display:none;
+}
