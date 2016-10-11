@@ -410,13 +410,13 @@ function addTicket() {
 
 function addStartCash() {
     var valid = true;
-    valid = valid && checkRegexp( $("#startCashAmount"), /^[0-9]\d{0,3}($|\.\d{0,1}$)/i, "Debe ingresar ingresar un monto válido, no mayor de 999.90 soles y de un decimal.", recargaValidation);    
+    valid = valid && checkRegexp( $("#startCashAmount"), /^[0-9]\d{0,3}($|\.\d{0,1}$)/i, "Debe ingresar ingresar un monto válido, no mayor de 999.90 soles y de un decimal.", $("#startCashValidation"));    
     return valid;
 }
 
 function addCloseCash() {
     var valid = true;
-    valid = valid && checkRegexp( $("#totalAmount"), /^[0-9]\d{0,3}($|\.\d{0,1}$)/i, "Debe ingresar ingresar un monto válido, no mayor de 999.90 soles y de un decimal.", recargaValidation);    
+    valid = valid && checkRegexp( $("#totalAmount"), /^[0-9]\d{0,3}($|\.\d{0,1}$)/i, "Debe ingresar ingresar un monto válido, no mayor de 999.90 soles y de un decimal.", $("#cierreCajaValidation"));    
     return valid;
 }
 
@@ -554,6 +554,12 @@ function addEventExpenses() {
             });
         }
     });
+}
+
+function addExpenses() {
+    var valid = true;
+    valid = valid && checkRegexp( $("#expenseAmount"), /^[0-9]\d{0,3}($|\.\d{0,1}$)/i, "Debe ingresar ingresar un monto válido, no mayor de 999.90 soles y de un decimal.", $("#gastosValidation"));    
+    return valid;
 }
 
 function fillClients(anonymous) {
