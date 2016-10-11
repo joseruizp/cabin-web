@@ -546,6 +546,7 @@ function addEventExpenses() {
                 contentType: 'application/json',
                 success: function (data) {
                     console.log("expenses is done");
+                    fillArrayTickets();
                     updateTips("Justificacion de gastos realizada satisfactoriamente.", $("#gastosValidation"));
                 },
                 error: function (xhr, status) {
