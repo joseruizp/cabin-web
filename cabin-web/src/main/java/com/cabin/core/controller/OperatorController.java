@@ -40,7 +40,7 @@ public class OperatorController {
         Long employeeId = (Long) session.getAttribute(SessionEnum.EMPLOYEE_ID.name());
 
         List<User> users = userRepository.findByProfileIdAndStatusIdAndHeadquarterId(Profile.EMPLOYEE, Status.ACTIVE, headquarterId);
-        boolean isFirst = users.size() == 0;
+        boolean isFirst = users.size() == 1;
 
         if (!isFirst) {
             Cash cash = cashRepository.findByEmployeeIdAndHeadquarterIdAndStatusId(employeeId, headquarterId, Status.ACTIVE);
