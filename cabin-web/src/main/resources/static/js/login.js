@@ -59,8 +59,10 @@
 			console.log("userType value: " + value);
 			if (value === "1" || value === "3") {
 				$("#headquarterDiv").show();
-				if (value === "1") {
+				if (value === "3") {
 					$("#anonymousDiv").show();	
+				} else {
+					$("#anonymousDiv").hide();
 				}
 			} else {
 				$("#headquarterDiv").hide();
