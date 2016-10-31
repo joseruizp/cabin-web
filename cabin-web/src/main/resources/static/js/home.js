@@ -765,7 +765,7 @@ function saveSede(){
 	sede.status = {};
 	sede.status.id = idStatus;
 	sede.operatorType = {};
-	sede.operatorType = idOperatorType;
+	sede.operatorType.id = idOperatorType;
 	
 	var strUrl = window.location.protocol + "//" + window.location.host + "/cabin-web/post/headquarter";			
 	if (idSede !== "") {		
