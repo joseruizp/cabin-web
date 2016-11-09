@@ -198,7 +198,6 @@
 					<div class="col-md-12">
 						<h1 id="about" class="title text-center">Definicion de <span>Tarifas</span></h1>
 						<p class="lead text-center">Lorem ipsum dolor sit amet, consectetur adipisicing elit. laudantium culpa tenetur.</p>
-						<div class="space"></div>
 						<div class="row">
 							<form class="form-horizontal" role="form" style="margin-left: 170px">
 								<div class="form-group">
@@ -293,35 +292,36 @@
 		<!-- section end -->
 		
 		<!-- banner start --> 
-		<div id="datosGenerales" class="banner">
-			<div class="banner-image"></div>
-			<div class="banner-caption">
-				<div class="container">
-					<div class="row">
-						<div class="col-md-12">
-							<h1 id="about" class="title text-center">Datos <span>Generales</span></h1>
-							<p class="lead text-center">Lorem ipsum dolor sit amet, consectetur adipisicing elit. laudantium culpa tenetur.</p>
-							<div class="space"></div>
-							<div class="row">
-								<form class="form-horizontal" role="form" style="margin-left: 170px">
-									<div class="form-group">
-										<label class="control-label col-md-4"  for="sede"><b>Nombre Sede</b></label>
-										<label class="control-label col-md-6" th:text="${headquarter.name}" th:unless="${headquarter.name == null}" for="sedeName"></label>
-									</div>
-									<div class="form-group">
-										<label class="control-label col-md-4" for="sede"><b>Direccion</b></label>
-										<label class="control-label col-md-6" th:text="${headquarter.address}" th:unless="${headquarter.name == null}" for="sedeAddress"></label>
-									</div>
-									<!-- 
-									<div class="form-group">
-										<label class="control-label col-md-4" for="sede"><b>Personal Asignado</b></label>
-										<label class="control-label col-md-6" th:text="${employee.name}" th:unless="${employee.name == null}" for="sedeOperario"></label>
-									</div>
-									 -->
-								</form>
-							</div>
-							<div class="space"></div>
+		<div id="datosGenerales">
+			<div class="container">
+				<div class="row">
+					<div class="col-md-12">
+						<h1 id="about" class="title text-center">Datos <span>Generales</span></h1>
+						<p class="lead text-center">Lorem ipsum dolor sit amet, consectetur adipisicing elit. laudantium culpa tenetur.</p>
+						<div class="row">
+							<form class="form-horizontal" role="form" style="margin-left: 170px">
+								<div class="form-group">
+									<label class="control-label col-md-4"  for="sede"><b>Nombre Sede</b></label>
+									<label class="control-label col-md-4" th:text="${headquarter.name}" th:unless="${headquarter.name == null}" for="sedeName"></label>
+								</div>
+								<div class="form-group">
+									<label class="control-label col-md-4" for="sede"><b>Direccion</b></label>
+									<label class="control-label col-md-4" th:text="${headquarter.address}" th:unless="${headquarter.name == null}" for="sedeAddress"></label>
+								</div>
+								<div class="form-group">
+									<label class="control-label col-md-4" for="sede"><b>Operadores</b></label>
+									<span class="control-label col-md-4" id="operatorsSpan"></span>
+								</div>
+								<!-- 
+								<div class="form-group">
+									<label class="control-label col-md-4" for="sede"><b>Personal Asignado</b></label>
+									<label class="control-label col-md-6" th:text="${employee.name}" th:unless="${employee.name == null}" for="sedeOperario"></label>
+								</div>
+								 -->
+							</form>
 						</div>
+						<div class="space"></div>
+						<div class="space"></div>
 					</div>
 				</div>
 			</div>

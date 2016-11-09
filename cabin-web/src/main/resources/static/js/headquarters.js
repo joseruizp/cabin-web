@@ -20,6 +20,7 @@
 		fillComputers(idHeadquarter)
 		addEventSaveTariff();
 		fillTariffs(idHeadquarter);
+		getOperators(idHeadquarter);
 	});
 	
 	function addEventDragAndDrop() {
@@ -199,6 +200,28 @@
 		    		button.attr("value", value.tariff.id);
 	    			button.html(value.tariff.description + ' <span class="caret"></span>');
 		    	});
+		    },
+		    error: function (xhr, status) {	    	
+		    	console.log("Error, su solicitud no pudo ser atendida");
+		    }
+		});
+	}
+	
+	function getOperators(idHeadquarter) {
+		var hostname = window.location.protocol + "//" + window.location.host;
+		var strUrl = hostname + "/cabin-web/get/operators";
+		var operators = "";
+		$.ajax({
+			type: "GET",
+		    url:strUrl,
+		    dataType: 'json', 
+		    data: {id: idHeadquarter},
+		    contentType: 'application/json',
+		    success: function (data) {
+		    	$.each(data, function(index, value) {
+		    		operators += value.lastname + ", " + value.name + "<br/>";
+		    	});
+		    	$("#operatorsSpan").html(operators);
 		    },
 		    error: function (xhr, status) {	    	
 		    	console.log("Error, su solicitud no pudo ser atendida");
