@@ -327,6 +327,9 @@ map = {
 			    }
 			},
 		});
+		
+		$("#reportsTabs").tabs();
+		
 		fillArraySede();
 		fillArrayTarifa();
 		fillArrayRegla();
