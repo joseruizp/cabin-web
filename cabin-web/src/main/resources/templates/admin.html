@@ -1239,7 +1239,14 @@
 						<li><a href="#ticketsTab">Tickets</a></li>
 					</ul>
 					<div id="systemLabTab">
-						systemLabTab
+						<div class="row">
+							<div class="col-md-5">
+								<div id="todayRevenueChart" style="height: 300px; width: 100%;"></div>
+							</div>
+							<div class="col-md-7">
+								<div id="todaySalesChart" style="height: 300px; width: 100%;"></div>
+							</div>
+						</div>
 					</div>
 					<div id="headquartersTab">
 						headquartersTab
@@ -1290,6 +1297,7 @@
 		<script type="text/javascript" th:src="@{plugins/dataTables/js/jquery.dataTables.js}"></script>
 		<script type="text/javascript" th:src="@{bootstrap/js/bootstrap-datepicker.js}"></script>
 		<script type="text/javascript" th:src="@{bootstrap/js/bootstrap-datepicker.es.min.js}"></script>
+		<script type="text/javascript" th:src="@{canvasJS/jquery.canvasjs.min.js}"></script>
 		<!-- Custom Scripts -->
 		<script type="text/javascript" th:src="@{js/custom.js}"></script>
 		<script type="text/javascript" th:src="@{js/home.js}"></script>
