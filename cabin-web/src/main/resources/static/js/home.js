@@ -4159,10 +4159,10 @@ function fillRevenueReport() {
 function fillSalesReport() {
     var options = {
         title:{
-            text: "Coal Reserves of Countries"   
+            text: ""   
         },
         axisY:{
-            title:"Coal (mn tonnes)"   
+            title:""   
         },
         animationEnabled: true,
         data: [
