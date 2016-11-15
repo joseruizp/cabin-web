@@ -849,7 +849,7 @@
 	
 	LOCK TABLES `parametro` WRITE;
 	/*!40000 ALTER TABLE `parametro` DISABLE KEYS */;
-	INSERT INTO `parametro` VALUES (1,'Fracción de recarga', 0.5,1),(2,'Fracción mínima.', 0.5,1),(3,'Fracción manima.', 5,1),(4,'Numero maximo de fallas.', '3',1),(5,'Aletas fin de Saldo (Minutos).', '10,5,3',1);
+	INSERT INTO `parametro` VALUES (1,'Fracción de recarga', 0.5,1),(2,'Fracción mínima.', 0.5,1),(3,'Fracción manima.', 5,1),(4,'Numero maximo de fallas.', '3',1),(5,'Aletas fin de Saldo (Minutos).', '10,5,3',1),(6,'Objetivo del Mes', '1000',1);
 	/*!40000 ALTER TABLE `parametro` ENABLE KEYS */;
 	UNLOCK TABLES;
 	

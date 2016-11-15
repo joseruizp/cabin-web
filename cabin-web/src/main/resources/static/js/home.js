@@ -33,6 +33,20 @@ map = {
         "Sab" : 5,
         "Dom" : 6,
 };
+months = {
+	1: "Enero",
+	2: "Febrero",
+	3: "Marzo",
+	4: "Abril",
+	5: "Mayo",
+	6: "Junio",
+	7: "Julio",
+	8: "Agosto",
+	9: "Septiembre",
+	10: "Octubre",
+	11: "Noviembre",
+	12: "Diciembre"
+};
 
 (function($){
 	$(document).ready(function(){
@@ -2659,7 +2673,12 @@ function fillArraySede(){
 	    			maxAmountOperator: value.maxAmountOperator,
 	    			operatorType: value.operatorType.name,
 	    			status: value.status.name,
-	    		})				
+	    		});
+	    		
+	    		$('#reportHeadquarterSelect').append($('<option/>', { 
+			        value: value.id,
+			        text : value.name,
+			    }));
 			});
 	    	fillSedetbl();		    	
 	    },
@@ -4121,16 +4140,39 @@ function addRechargeEvent() {
 }
 
 function fillReports() {
-    fillRevenueReport();
-    fillSalesReport();
-    $(".canvasjs-chart-credit").remove();
+	var hostname = window.location.protocol + "//" + window.location.host;
+	var strUrl = hostname + "/cabin-web/get/reportAnalytics";
+	$.ajax({
+		type: "GET",
+	    url:strUrl,			    
+	    dataType: 'json', 
+	    contentType: 'application/json',
+	    success: function (data) {
+	    	console.log("fillReports is done");
+	    	$("#monthlyRevenue").text(data.revenue.monthly);
+	    	$("#monthlyTickets").text(data.numberOfTickets);
+	    	$("#ocupiedPcs").text(data.ocupiedComputers);
+	    	$("#ocupiedConsoles").text(data.ocupiedConsoles);
+	    	
+	    	$("#todayRevenue").text(data.revenue.today);
+	    	$("#targetRevenue").text(data.revenue.targetMonthly);
+	    	$("#lastWeekRevenue").text(data.revenue.lastWeek);
+	    	$("#lastMonthRevenue").text(data.revenue.lastMont);
+	    	fillRevenueReport(data.revenue.targetToday);
+	        fillSalesReport(data.sales.computerSalesByMonth, data.sales.consoleSalesByMonth);
+	        $(".canvasjs-chart-credit").remove();
+	    },
+	    error: function (xhr, status) {	    	
+	    	console.log("Error, su solicitud no pudo ser atendida");
+	    }
+	});
 }
 
-function fillRevenueReport() {
+function fillRevenueReport(targetToday) {
     var options = {
         title:{
-            text: "50",
-            fontSize: 70,
+            text: targetToday,
+            fontSize: 50,
             horizontalAlign: "center",
             verticalAlign: "center"
         },
@@ -4147,8 +4189,8 @@ function fillRevenueReport() {
             innerRadius: "85%",
 			radius: "90%",
             dataPoints: [
-                {y: 67.34},
-                {y: 28.6 },
+                {y: Number(targetToday)},
+                {y: Number(targetToday) * 0.1},
             ]
         }]
     };
@@ -4156,7 +4198,15 @@ function fillRevenueReport() {
     $("#todayRevenueChart").CanvasJSChart(options);
 }
 
-function fillSalesReport() {
+function fillSalesReport(computerSalesByMonth, consoleSalesByMonth) {
+	var computerSales =[], consoleSales = [];
+	$.each( computerSalesByMonth, function( key, value ) {
+		computerSales.push({y:value, label:months[key]});
+	});
+	$.each( consoleSalesByMonth, function( key, value ) {
+		consoleSales.push({y:value, label:months[key]});
+	});
+	
     var options = {
         title:{
             text: ""   
@@ -4169,29 +4219,15 @@ function fillSalesReport() {
         {
             type: "stackedColumn",
             toolTipContent: "{label}<br/><span style='\"'color: {color};'\"'><strong>{name}</strong></span>: {y}mn tonnes",
-            name: "Anthracite and Bituminous",
+            name: "Computadoras",
             showInLegend: "true",
-            dataPoints: [
-                {  y: 111338 , label: "USA"},
-                {  y: 49088, label: "Russia" },
-                {  y: 62200, label: "China" },
-                {  y: 90085, label: "India" },
-                {  y: 38600, label: "Australia"},
-                {  y: 48750, label: "SA"}
-            ]
+            dataPoints: computerSales
         }, {
             type: "stackedColumn",
             toolTipContent: "{label}<br/><span style='\"'color: {color};'\"'><strong>{name}</strong></span>: {y}mn tonnes",
-            name: "SubBituminous and Lignite",
+            name: "Consolas",
             showInLegend: "true",
-            dataPoints: [
-                {  y: 135305 , label: "USA"},
-                {  y: 107922, label: "Russia" },
-                {  y: 52300, label: "China" },
-                {  y: 3360, label: "India" },
-                {  y: 39900, label: "Australia"},
-                {  y: 0, label: "SA"}
-            ]
+            dataPoints: consoleSales
         }],
         legend:{
             cursor:"pointer",

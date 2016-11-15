@@ -1,6 +1,7 @@
 package com.cabin.core.persistence.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 
@@ -16,5 +17,17 @@ public interface RentRepository extends JpaRepository<Rent, Long> {
     Rent findByClientIdAndComputerId(@Param("client_id") Long clientId, @Param("computer_id") Long computerId);
 
     Rent findByClientIdAndConsoleId(@Param("client_id") Long clientId, @Param("console_id") Long consoleId);
+
+    @Query("SELECT count(c) FROM com.cabin.core.persistence.domain.Rent c WHERE MONTH(c.startDate) = MONTH(CURRENT_DATE) AND YEAR(c.startDate) = YEAR(CURRENT_DATE) AND c.rentStatus.id = 1 AND c.computer != NULL")
+    Integer getNumberOfRentedComputersInCurrentMonth();
+
+    @Query("SELECT count(c) FROM com.cabin.core.persistence.domain.Rent c WHERE MONTH(c.startDate) = MONTH(CURRENT_DATE) AND YEAR(c.startDate) = YEAR(CURRENT_DATE) AND c.rentStatus.id = 1 AND c.console != NULL")
+    Integer getNumberOfRentedConsolesInCurrentMonth();
+
+    @Query("SELECT count(c) FROM com.cabin.core.persistence.domain.Rent c WHERE c.computer.headquarter.id = ?1 AND MONTH(c.startDate) = MONTH(CURRENT_DATE) AND YEAR(c.startDate) = YEAR(CURRENT_DATE) AND c.rentStatus.id = 1 AND c.computer != NULL")
+    Integer getNumberOfRentedComputersInCurrentMonthByHeadquarter(Long headquarterId);
+
+    @Query("SELECT count(c) FROM com.cabin.core.persistence.domain.Rent c WHERE c.console.headquarter.id = ?1 AND MONTH(c.startDate) = MONTH(CURRENT_DATE) AND YEAR(c.startDate) = YEAR(CURRENT_DATE) AND c.rentStatus.id = 1 AND c.console != NULL")
+    Integer getNumberOfRentedConsolesInCurrentMonthByHeadquarter(Long headquarterId);
 
 }

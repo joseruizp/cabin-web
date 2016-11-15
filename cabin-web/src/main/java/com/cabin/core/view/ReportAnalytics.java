@@ -8,6 +8,7 @@ public class ReportAnalytics implements Serializable {
 
     private RevenueAnalytics revenue;
     private SalesAnalytics sales;
+    private Integer numberOfTickets;
     private Integer ocupiedComputers;
     private Integer ocupiedConsoles;
 
@@ -25,6 +26,14 @@ public class ReportAnalytics implements Serializable {
 
     public void setSales(SalesAnalytics sales) {
         this.sales = sales;
+    }
+
+    public Integer getNumberOfTickets() {
+        return numberOfTickets;
+    }
+
+    public void setNumberOfTickets(Integer numberOfTickets) {
+        this.numberOfTickets = numberOfTickets;
     }
 
     public Integer getOcupiedComputers() {
