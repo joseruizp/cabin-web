@@ -19,30 +19,57 @@ public interface TicketRepository extends JpaRepository<Ticket, Long> {
     
     @Query("SELECT count(t.amount) FROM com.cabin.core.persistence.domain.Ticket t WHERE MONTH(t.date) = MONTH(CURRENT_DATE) AND YEAR(t.date) = YEAR(CURRENT_DATE)")
     public Integer getNumberOfTicketsCurrentMonth();
+    
+    @Query("SELECT count(t.amount) FROM com.cabin.core.persistence.domain.Ticket t WHERE t.cash.headquarter.id = ?1 AND MONTH(t.date) = MONTH(CURRENT_DATE) AND YEAR(t.date) = YEAR(CURRENT_DATE)")
+    public Integer getNumberOfTicketsCurrentMonthByHeadquarter(Long headquarterId);
 
     @Query("SELECT sum(t.amount) FROM com.cabin.core.persistence.domain.Ticket t WHERE MONTH(t.date) = MONTH(CURRENT_DATE) AND YEAR(t.date) = YEAR(CURRENT_DATE) AND t.rechargingType != NULL")
     public BigDecimal getTotalRechargesCurrentMonth();
+    
+    @Query("SELECT sum(t.amount) FROM com.cabin.core.persistence.domain.Ticket t WHERE t.cash.headquarter.id = ?1 AND MONTH(t.date) = MONTH(CURRENT_DATE) AND YEAR(t.date) = YEAR(CURRENT_DATE) AND t.rechargingType != NULL")
+    public BigDecimal getTotalRechargesCurrentMonthByHeadquarter(Long headquarterId);
 
     @Query("SELECT sum(t.amount) FROM com.cabin.core.persistence.domain.Ticket t WHERE MONTH(t.date) = MONTH(CURRENT_DATE) AND YEAR(t.date) = YEAR(CURRENT_DATE) AND t.expenseType != NULL")
     public BigDecimal getTotalExpensesCurrentMonth();
+    
+    @Query("SELECT sum(t.amount) FROM com.cabin.core.persistence.domain.Ticket t WHERE t.cash.headquarter.id = ?1 AND MONTH(t.date) = MONTH(CURRENT_DATE) AND YEAR(t.date) = YEAR(CURRENT_DATE) AND t.expenseType != NULL")
+    public BigDecimal getTotalExpensesCurrentMonthByHeadquarter(Long headquarterId);
 
     @Query("SELECT sum(t.amount) FROM com.cabin.core.persistence.domain.Ticket t WHERE MONTH(t.date) = (MONTH(CURRENT_DATE) -1) AND YEAR(t.date) = YEAR(CURRENT_DATE) AND t.rechargingType != NULL")
     public BigDecimal getTotalRechargesLastMonth();
+    
+    @Query("SELECT sum(t.amount) FROM com.cabin.core.persistence.domain.Ticket t WHERE t.cash.headquarter.id = ?1 AND MONTH(t.date) = (MONTH(CURRENT_DATE) -1) AND YEAR(t.date) = YEAR(CURRENT_DATE) AND t.rechargingType != NULL")
+    public BigDecimal getTotalRechargesLastMonthByHeadquarter(Long headquarterId);
 
     @Query("SELECT sum(t.amount) FROM com.cabin.core.persistence.domain.Ticket t WHERE MONTH(t.date) = (MONTH(CURRENT_DATE) -1) AND YEAR(t.date) = YEAR(CURRENT_DATE) AND t.expenseType != NULL")
     public BigDecimal getTotalExpensesLastMonth();
+    
+    @Query("SELECT sum(t.amount) FROM com.cabin.core.persistence.domain.Ticket t WHERE t.cash.headquarter.id = ?1 AND MONTH(t.date) = (MONTH(CURRENT_DATE) -1) AND YEAR(t.date) = YEAR(CURRENT_DATE) AND t.expenseType != NULL")
+    public BigDecimal getTotalExpensesLastMonthByHeadquarter(Long headquarterId);
 
     @Query("SELECT sum(t.amount) FROM com.cabin.core.persistence.domain.Ticket t WHERE t.date = CURRENT_DATE AND t.rechargingType != NULL")
     public BigDecimal getTotalRechargesCurrentDate();
+    
+    @Query("SELECT sum(t.amount) FROM com.cabin.core.persistence.domain.Ticket t WHERE t.cash.headquarter.id = ?1 AND t.date = CURRENT_DATE AND t.rechargingType != NULL")
+    public BigDecimal getTotalRechargesCurrentDateByHeadquarter(Long headquarterId);
 
     @Query("SELECT sum(t.amount) FROM com.cabin.core.persistence.domain.Ticket t WHERE t.date = CURRENT_DATE AND t.expenseType != NULL")
     public BigDecimal getTotalExpensesCurrentDate();
+    
+    @Query("SELECT sum(t.amount) FROM com.cabin.core.persistence.domain.Ticket t WHERE t.cash.headquarter.id = ?1 AND t.date = CURRENT_DATE AND t.expenseType != NULL")
+    public BigDecimal getTotalExpensesCurrentDateByHeadquarter(Long headquarterId);
 
     @Query("SELECT sum(t.amount) FROM com.cabin.core.persistence.domain.Ticket t WHERE t.date between ?1 and ?2 AND t.rechargingType != NULL")
     public BigDecimal getTotalRechargesBetween(Calendar startDate, Calendar endDate);
+    
+    @Query("SELECT sum(t.amount) FROM com.cabin.core.persistence.domain.Ticket t WHERE t.cash.headquarter.id = ?1 AND t.date between ?1 and ?2 AND t.rechargingType != NULL")
+    public BigDecimal getTotalRechargesBetweenByHeadquarter(Calendar startDate, Calendar endDate, Long headquarterId);
 
     @Query("SELECT sum(t.amount) FROM com.cabin.core.persistence.domain.Ticket t WHERE t.date between ?1 and ?2 AND t.expenseType != NULL")
     public BigDecimal getTotalExpensesBetween(Calendar startDate, Calendar endDate);
+    
+    @Query("SELECT sum(t.amount) FROM com.cabin.core.persistence.domain.Ticket t WHERE t.cash.headquarter.id = ?1 AND t.date between ?1 and ?2 AND t.expenseType != NULL")
+    public BigDecimal getTotalExpensesBetweenByHeadquarter(Calendar startDate, Calendar endDate, Long headquarterId);
 
     @Query("SELECT new com.cabin.core.valueobject.AmountByMonth(MONTH(t.date), sum(t.amount)) FROM com.cabin.core.persistence.domain.Ticket t WHERE YEAR(t.date) = YEAR(CURRENT_DATE) AND t.rechargingType != NULL GROUP BY MONTH(t.date) ORDER BY MONTH(t.date)")
     public List<AmountByMonth> getTotalRechargesByMonth();

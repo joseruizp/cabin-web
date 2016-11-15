@@ -48,10 +48,10 @@ public class ReportRestController {
         reportAnalytics.getRevenue().setTargetMonthly(targetRevenue);
         reportAnalytics.getRevenue().setTargetToday(getTargetRevenueToday(targetRevenue));
 
-        reportAnalytics.getRevenue().setMonthly(getRevenueCurrentMonth());
-        reportAnalytics.getRevenue().setLastMont(getRevenueLastMonth());
-        reportAnalytics.getRevenue().setLastWeek(getRevenueLastWeek());
-        reportAnalytics.getRevenue().setToday(getRevenueCurrentDate());
+        reportAnalytics.getRevenue().setMonthly(getRevenueCurrentMonth(null));
+        reportAnalytics.getRevenue().setLastMont(getRevenueLastMonth(null));
+        reportAnalytics.getRevenue().setLastWeek(getRevenueLastWeek(null));
+        reportAnalytics.getRevenue().setToday(getRevenueCurrentDate(null));
 
         reportAnalytics.setSales(new SalesAnalytics());
         reportAnalytics.getSales().setComputerSalesByMonth(getAmountByMonth(ticketRepository.getTotalRechargesByMonth()));
@@ -67,7 +67,28 @@ public class ReportRestController {
 
     @RequestMapping(value = "/get/reportAnalytics/{headquarterId}", method = RequestMethod.GET, produces = { "application/json;charset=UTF-8" })
     public ReportAnalytics getReportAnalytics(@PathVariable(value = "headquarterId") Long headquarterId) {
-        return null;
+        ReportAnalytics reportAnalytics = new ReportAnalytics();
+        reportAnalytics.setRevenue(new RevenueAnalytics());
+
+        BigDecimal targetRevenue = getTargetRevenue();
+        reportAnalytics.getRevenue().setTargetMonthly(targetRevenue);
+        reportAnalytics.getRevenue().setTargetToday(getTargetRevenueToday(targetRevenue));
+
+        reportAnalytics.getRevenue().setMonthly(getRevenueCurrentMonth(headquarterId));
+        reportAnalytics.getRevenue().setLastMont(getRevenueLastMonth(headquarterId));
+        reportAnalytics.getRevenue().setLastWeek(getRevenueLastWeek(headquarterId));
+        reportAnalytics.getRevenue().setToday(getRevenueCurrentDate(headquarterId));
+
+        reportAnalytics.setSales(new SalesAnalytics());
+        reportAnalytics.getSales().setComputerSalesByMonth(getAmountByMonth(ticketRepository.getTotalRechargesByMonth()));
+        reportAnalytics.getSales().setConsoleSalesByMonth(getAmountByMonth(ticketRepository.getTotalExpensesByMonth()));
+
+        reportAnalytics.setOcupiedComputers(rentRepository.getNumberOfRentedComputersInCurrentMonth());
+        reportAnalytics.setOcupiedConsoles(rentRepository.getNumberOfRentedConsolesInCurrentMonth());
+
+        reportAnalytics.setNumberOfTickets(ticketRepository.getNumberOfTicketsCurrentMonth());
+
+        return reportAnalytics;
     }
 
     private BigDecimal getTargetRevenue() {
@@ -79,15 +100,25 @@ public class ReportRestController {
         return targetRevenue.divide(new BigDecimal(localDate.lengthOfMonth()), 2, RoundingMode.HALF_UP);
     }
 
-    private BigDecimal getRevenueCurrentMonth() {
-        return substractAmounts(ticketRepository.getTotalRechargesCurrentMonth(), ticketRepository.getTotalExpensesCurrentMonth());
+    private BigDecimal getRevenueCurrentMonth(Long headquarterId) {
+        if (headquarterId == null) {
+            return substractAmounts(ticketRepository.getTotalRechargesCurrentMonth(), ticketRepository.getTotalExpensesCurrentMonth());
+        } else {
+            return substractAmounts(ticketRepository.getTotalRechargesCurrentMonthByHeadquarter(headquarterId),
+                    ticketRepository.getTotalExpensesCurrentMonthByHeadquarter(headquarterId));
+        }
     }
 
-    private BigDecimal getRevenueLastMonth() {
-        return substractAmounts(ticketRepository.getTotalRechargesLastMonth(), ticketRepository.getTotalExpensesLastMonth());
+    private BigDecimal getRevenueLastMonth(Long headquarterId) {
+        if (headquarterId == null) {
+            return substractAmounts(ticketRepository.getTotalRechargesLastMonth(), ticketRepository.getTotalExpensesLastMonth());
+        } else {
+            return substractAmounts(ticketRepository.getTotalRechargesLastMonthByHeadquarter(headquarterId),
+                    ticketRepository.getTotalExpensesLastMonthByHeadquarter(headquarterId));
+        }
     }
 
-    private BigDecimal getRevenueLastWeek() {
+    private BigDecimal getRevenueLastWeek(Long headquarterId) {
         LocalDate localDate = LocalDate.now();
         java.util.Date startDate = java.sql.Date.valueOf(localDate.with(DayOfWeek.MONDAY).with(TemporalAdjusters.previous(DayOfWeek.MONDAY)));
         java.util.Date endDate = java.sql.Date.valueOf(localDate.with(TemporalAdjusters.next(DayOfWeek.SUNDAY)));
@@ -98,12 +129,22 @@ public class ReportRestController {
         Calendar endCalendar = Calendar.getInstance();
         endCalendar.setTime(endDate);
 
-        return substractAmounts(ticketRepository.getTotalRechargesBetween(startCalendar, endCalendar),
-                ticketRepository.getTotalExpensesBetween(startCalendar, endCalendar));
+        if (headquarterId == null) {
+            return substractAmounts(ticketRepository.getTotalRechargesBetween(startCalendar, endCalendar),
+                    ticketRepository.getTotalExpensesBetween(startCalendar, endCalendar));
+        } else {
+            return substractAmounts(ticketRepository.getTotalRechargesBetweenByHeadquarter(startCalendar, endCalendar, headquarterId),
+                    ticketRepository.getTotalExpensesBetweenByHeadquarter(startCalendar, endCalendar, headquarterId));
+        }
     }
 
-    private BigDecimal getRevenueCurrentDate() {
-        return substractAmounts(ticketRepository.getTotalRechargesCurrentDate(), ticketRepository.getTotalExpensesCurrentDate());
+    private BigDecimal getRevenueCurrentDate(Long headquarterId) {
+        if (headquarterId == null) {
+            return substractAmounts(ticketRepository.getTotalRechargesCurrentDate(), ticketRepository.getTotalExpensesCurrentDate());
+        } else {
+            return substractAmounts(ticketRepository.getTotalRechargesCurrentDateByHeadquarter(headquarterId),
+                    ticketRepository.getTotalExpensesCurrentDateByHeadquarter(headquarterId));
+        }
     }
 
     private BigDecimal substractAmounts(BigDecimal firstValue, BigDecimal secondValue) {
