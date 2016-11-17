@@ -1311,17 +1311,18 @@
 							</div>
 							<div class="col-md-11">
 								<select id="reportHeadquarterSelect">
+									<option>Seleccionar Sede</option>
 								</select>
 							</div>
 						</div>
 						<div class="space"></div>
-						<div class="row">
+						<div class="row" id="detailReportHeadquarters">
 							<div class="col-md-3">
 								<div class="col-md-4">
 									<img id="revenueIcon" th:src="@{images/dollar-icon.png}" alt="Ingresos"></img>
 								</div>
 								<div class="col-md-8">
-									<div style="width: 100%; text-align: right; font-weight: bold">11,900</div>
+									<div style="width: 100%; text-align: right; font-weight: bold">S/.<span id="monthlyRevenueHeadquarter"></span></div>
 									<div style="width: 100%; text-align: right; font-size: 11px">Total de Ingresos Mensual</div>
 								</div>
 							</div>
@@ -1330,7 +1331,7 @@
 									<img id="ticketIcon" th:src="@{images/cart-icon.png}" alt="Tickets"></img>
 								</div>
 								<div class="col-md-8">
-									<div style="width: 100%; text-align: right; font-weight: bold">1,900</div>
+									<div style="width: 100%; text-align: right; font-weight: bold">S/.<span id="monthlyTicketsHeadquarter"></span></div>
 									<div style="width: 100%; text-align: right; font-size: 11px">Total de Tickets Mensual</div>
 								</div>
 							</div>
@@ -1339,7 +1340,7 @@
 									<img id="ticketIcon" th:src="@{images/chart-icon.png}" alt="Tickets"></img>
 								</div>
 								<div class="col-md-8">
-									<div style="width: 100%; text-align: right; font-weight: bold">40</div>
+									<div style="width: 100%; text-align: right; font-weight: bold"><span id="ocupiedPcsHeadquarter"></span></div>
 									<div style="width: 100%; text-align: right; font-size: 11px">PCs Ocupadas</div>
 								</div>
 							</div>
@@ -1348,7 +1349,7 @@
 									<img id="ticketIcon" th:src="@{images/view-icon.png}" alt="Tickets"></img>
 								</div>
 								<div class="col-md-8">
-									<div style="width: 100%; text-align: right; font-weight: bold">50</div>
+									<div style="width: 100%; text-align: right; font-weight: bold"><span id="ocupiedConsolesHeadquarter"></span></div>
 									<div style="width: 100%; text-align: right; font-size: 11px">Consolas Ocupadas</div>
 								</div>
 							</div>
@@ -1357,26 +1358,26 @@
 						<div class="row">
 							<div class="col-md-5" style="text-align: center; font-size: 16px">
 								<div style="text-align: left; font-weight: bold">TOTAL DE INGRESOS MENSUAL</div>
-								<div id="todayRevenueChart" style="height: 200px; width: 100%"></div>
+								<div id="todayRevenueChartHeadquarter" style="height: 200px; width: 100%"></div>
 								<div>Total de Ingresos del dia</div>
-								<div style="font-weight: bold">S/.80</div>
+								<div style="font-weight: bold">S/.<span id="todayRevenueHeadquarter"></span></div>
 								<div class="space"></div>
 								<div class="col-md-4" style="font-size: 13px">
 									<div>Objetivo</div>
-									<div style="font-weight: bold">S/. 1000</div>
+									<div style="font-weight: bold">S/.<span id="targetRevenueHeadquarter"></span></div>
 								</div>
 								<div class="col-md-4" style="font-size: 13px">
 									<div>Semana Pasada</div>
-									<div style="font-weight: bold">S/. 800</div>
+									<div style="font-weight: bold">S/.<span id="lastWeekRevenueHeadquarter"></span></div>
 								</div>
 								<div class="col-md-4" style="font-size: 13px">
 									<div>Mes Pasado</div>
-									<div style="font-weight: bold">S/. 4000</div>
+									<div style="font-weight: bold">S/.<span id="lastMonthRevenueHeadquarter"></span></div>
 								</div>
 							</div>
 							<div class="col-md-7">
 								<div style="text-align: left; font-weight: bold; font-size: 16px">ANALISIS DE VENTAS</div>
-								<div id="todaySalesChart" style="height: 300px; width: 100%; margin-top: 16px"></div>
+								<div id="todaySalesChartHeadquarter" style="height: 300px; width: 100%; margin-top: 16px"></div>
 							</div>
 						</div>
 					</div>

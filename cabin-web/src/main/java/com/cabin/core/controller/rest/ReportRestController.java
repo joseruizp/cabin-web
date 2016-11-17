@@ -54,8 +54,8 @@ public class ReportRestController {
         reportAnalytics.getRevenue().setToday(getRevenueCurrentDate(null));
 
         reportAnalytics.setSales(new SalesAnalytics());
-        reportAnalytics.getSales().setComputerSalesByMonth(getAmountByMonth(ticketRepository.getTotalRechargesByMonth()));
-        reportAnalytics.getSales().setConsoleSalesByMonth(getAmountByMonth(ticketRepository.getTotalExpensesByMonth()));
+        reportAnalytics.getSales().setComputerSalesByMonth(getAmountByMonth(rentRepository.getTotalRentedComputersByMonth()));
+        reportAnalytics.getSales().setConsoleSalesByMonth(getAmountByMonth(rentRepository.getTotalRentedConsolesByMonth()));
 
         reportAnalytics.setOcupiedComputers(rentRepository.getNumberOfRentedComputersInCurrentMonth());
         reportAnalytics.setOcupiedConsoles(rentRepository.getNumberOfRentedConsolesInCurrentMonth());
@@ -80,8 +80,8 @@ public class ReportRestController {
         reportAnalytics.getRevenue().setToday(getRevenueCurrentDate(headquarterId));
 
         reportAnalytics.setSales(new SalesAnalytics());
-        reportAnalytics.getSales().setComputerSalesByMonth(getAmountByMonth(ticketRepository.getTotalRechargesByMonth()));
-        reportAnalytics.getSales().setConsoleSalesByMonth(getAmountByMonth(ticketRepository.getTotalExpensesByMonth()));
+        reportAnalytics.getSales().setComputerSalesByMonth(getAmountByMonth(rentRepository.getTotalRentedComputersByMonthByHeadquarter(headquarterId)));
+        reportAnalytics.getSales().setConsoleSalesByMonth(getAmountByMonth(rentRepository.getTotalRentedConsolesByMonthByHeadquarter(headquarterId)));
 
         reportAnalytics.setOcupiedComputers(rentRepository.getNumberOfRentedComputersInCurrentMonth());
         reportAnalytics.setOcupiedConsoles(rentRepository.getNumberOfRentedConsolesInCurrentMonth());

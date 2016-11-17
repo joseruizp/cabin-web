@@ -361,6 +361,7 @@ months = {
 		fillArrayBonificacion();
 		fillArrayClients();		
 		getRechargeInformation();
+		addHeaquarterReportSelectEvent();
 		fillReports();
 		//Sede save - update
 		$( "#form-sede" ).submit(function( event ) {
@@ -4139,7 +4140,19 @@ function addRechargeEvent() {
 	});	
 }
 
-function fillReports() {
+function addHeaquarterReportSelectEvent() {
+	$("#reportHeadquarterSelect").change(function(e) {
+		e.preventDefault();
+		$("#todayRevenueChartHeadquarter").empty();
+		$("#todaySalesChartHeadquarter").empty();
+		fillReports($(this).val());
+	});
+}
+
+function fillReports(headquarterId) {
+	var headquarterSuffix = headquarterId ? "Headquarter" : "";
+	var isHeadquarter = headquarterSuffix !== "";
+	
 	var hostname = window.location.protocol + "//" + window.location.host;
 	var strUrl = hostname + "/cabin-web/get/reportAnalytics";
 	$.ajax({
@@ -4149,17 +4162,17 @@ function fillReports() {
 	    contentType: 'application/json',
 	    success: function (data) {
 	    	console.log("fillReports is done");
-	    	$("#monthlyRevenue").text(data.revenue.monthly);
-	    	$("#monthlyTickets").text(data.numberOfTickets);
-	    	$("#ocupiedPcs").text(data.ocupiedComputers);
-	    	$("#ocupiedConsoles").text(data.ocupiedConsoles);
+	    	$("#monthlyRevenue" + headquarterSuffix).text(data.revenue.monthly);
+	    	$("#monthlyTickets" + headquarterSuffix).text(data.numberOfTickets);
+	    	$("#ocupiedPcs" + headquarterSuffix).text(data.ocupiedComputers);
+	    	$("#ocupiedConsoles" + headquarterSuffix).text(data.ocupiedConsoles);
 	    	
-	    	$("#todayRevenue").text(data.revenue.today);
-	    	$("#targetRevenue").text(data.revenue.targetMonthly);
-	    	$("#lastWeekRevenue").text(data.revenue.lastWeek);
-	    	$("#lastMonthRevenue").text(data.revenue.lastMont);
-	    	fillRevenueReport(data.revenue.targetToday);
-	        fillSalesReport(data.sales.computerSalesByMonth, data.sales.consoleSalesByMonth);
+	    	$("#todayRevenue" + headquarterSuffix).text(data.revenue.today);
+	    	$("#targetRevenue" + headquarterSuffix).text(data.revenue.targetMonthly);
+	    	$("#lastWeekRevenue" + headquarterSuffix).text(data.revenue.lastWeek);
+	    	$("#lastMonthRevenue" + headquarterSuffix).text(data.revenue.lastMont);
+	    	fillRevenueReport(data.revenue.targetToday, isHeadquarter);
+	        fillSalesReport(data.sales.computerSalesByMonth, data.sales.consoleSalesByMonth, isHeadquarter);
 	        $(".canvasjs-chart-credit").remove();
 	    },
 	    error: function (xhr, status) {	    	
@@ -4168,7 +4181,8 @@ function fillReports() {
 	});
 }
 
-function fillRevenueReport(targetToday) {
+function fillRevenueReport(targetToday, isHeadquarter) {
+	var headquarterSuffix = isHeadquarter ? "Headquarter" : "";
     var options = {
         title:{
             text: targetToday,
@@ -4195,10 +4209,11 @@ function fillRevenueReport(targetToday) {
         }]
     };
 
-    $("#todayRevenueChart").CanvasJSChart(options);
+    $("#todayRevenueChart" + headquarterSuffix).CanvasJSChart(options);
 }
 
-function fillSalesReport(computerSalesByMonth, consoleSalesByMonth) {
+function fillSalesReport(computerSalesByMonth, consoleSalesByMonth, isHeadquarter) {
+	var headquarterSuffix = isHeadquarter ? "Headquarter" : "";
 	var computerSales =[], consoleSales = [];
 	$.each( computerSalesByMonth, function( key, value ) {
 		computerSales.push({y:value, label:months[key]});
@@ -4241,7 +4256,7 @@ function fillSalesReport(computerSalesByMonth, consoleSalesByMonth) {
         }
     };
 
-    $("#todaySalesChart").CanvasJSChart(options);
+    $("#todaySalesChart" + headquarterSuffix).CanvasJSChart(options);
 }
 
 $(document).on("change", "#clientSelect", function(){
