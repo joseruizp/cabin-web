@@ -47,7 +47,7 @@ public class CashClosingRestController {
         cash = cashRepository.saveAndFlush(cash);
 
         Ticket ticket = new Ticket();
-        ticket.setAmount(startCash.getAmount());
+        ticket.setRechargeAmount(startCash.getAmount());
         ticket.setEmployee(new Employee());
         ticket.getEmployee().setId(startCash.getEmployeeId());
         ticket.setDate(now);
@@ -77,10 +77,10 @@ public class CashClosingRestController {
         cash.getStatus().setId(Status.INACTIVE);
 
         List<Ticket> tickets = ticketRepository.findByCashId(cashId);
-        Double income = tickets.stream().filter(t -> t.getExpenseType() == null).collect(Collectors.summingDouble(t -> t.getAmount()));
-        Double expense = tickets.stream().filter(t -> t.getExpenseType() != null).collect(Collectors.summingDouble(t -> t.getAmount()));
+        Double income = tickets.stream().collect(Collectors.summingDouble(t -> t.getRechargeAmount()));
+        Double expense = tickets.stream().collect(Collectors.summingDouble(t -> t.getExpenseAmount()));
         Double totalAmount = income - expense;
-        
+
         cashRepository.saveAndFlush(cash);
 
         closeCash.setJustifiedAmount(totalAmount);

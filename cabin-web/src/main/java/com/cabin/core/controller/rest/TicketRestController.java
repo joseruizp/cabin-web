@@ -52,7 +52,7 @@ public class TicketRestController {
         cashRepository.saveAndFlush(cash);
 
         Ticket ticket = new Ticket();
-        ticket.setAmount(expenseCash.getAmount());
+        ticket.setExpenseAmount(expenseCash.getAmount());
         ticket.setCash(cash);
 
         if (expenseCash.getClientId() != null) {

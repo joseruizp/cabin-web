@@ -2,6 +2,8 @@ package com.cabin.core.controller.rest;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.temporal.TemporalAdjusters;
@@ -16,6 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.cabin.core.persistence.domain.Parameter;
@@ -26,9 +29,12 @@ import com.cabin.core.valueobject.AmountByMonth;
 import com.cabin.core.view.ReportAnalytics;
 import com.cabin.core.view.RevenueAnalytics;
 import com.cabin.core.view.SalesAnalytics;
+import com.cabin.core.view.TicketReport;
 
 @RestController
 public class ReportRestController {
+
+    private static final SimpleDateFormat DATE_FORMTAT = new SimpleDateFormat("dd/MM/yyyy");
 
     @Autowired
     private TicketRepository ticketRepository;
@@ -91,6 +97,19 @@ public class ReportRestController {
         return reportAnalytics;
     }
 
+    @RequestMapping(value = "/get/ticketReport/{headquarterId}", method = RequestMethod.GET, produces = { "application/json;charset=UTF-8" })
+    public List<TicketReport> getTicketReport(@PathVariable(value = "headquarterId") Long headquarterId, @RequestParam(value = "startDate") String startDate,
+            @RequestParam(value = "endDate") String endDate) throws ParseException {
+
+        Calendar startCalendar = Calendar.getInstance();
+        startCalendar.setTime(DATE_FORMTAT.parse(startDate));
+
+        Calendar endCalendar = Calendar.getInstance();
+        endCalendar.setTime(DATE_FORMTAT.parse(endDate));
+
+        return ticketRepository.getTicketReport(headquarterId, startCalendar, endCalendar);
+    }
+
     private BigDecimal getTargetRevenue() {
         return new BigDecimal(parameterRepository.findOne(Parameter.TARGET_REVENUE).getValue());
     }
@@ -102,19 +121,17 @@ public class ReportRestController {
 
     private BigDecimal getRevenueCurrentMonth(Long headquarterId) {
         if (headquarterId == null) {
-            return substractAmounts(ticketRepository.getTotalRechargesCurrentMonth(), ticketRepository.getTotalExpensesCurrentMonth());
+            return getAmount(ticketRepository.getTotalRevenueCurrentMonth());
         } else {
-            return substractAmounts(ticketRepository.getTotalRechargesCurrentMonthByHeadquarter(headquarterId),
-                    ticketRepository.getTotalExpensesCurrentMonthByHeadquarter(headquarterId));
+            return getAmount(ticketRepository.getTotalRevenueCurrentMonthByHeadquarter(headquarterId));
         }
     }
 
     private BigDecimal getRevenueLastMonth(Long headquarterId) {
         if (headquarterId == null) {
-            return substractAmounts(ticketRepository.getTotalRechargesLastMonth(), ticketRepository.getTotalExpensesLastMonth());
+            return getAmount(ticketRepository.getTotalRevenueLastMonth());
         } else {
-            return substractAmounts(ticketRepository.getTotalRechargesLastMonthByHeadquarter(headquarterId),
-                    ticketRepository.getTotalExpensesLastMonthByHeadquarter(headquarterId));
+            return getAmount(ticketRepository.getTotalRevenueLastMonthByHeadquarter(headquarterId));
         }
     }
 
@@ -130,28 +147,22 @@ public class ReportRestController {
         endCalendar.setTime(endDate);
 
         if (headquarterId == null) {
-            return substractAmounts(ticketRepository.getTotalRechargesBetween(startCalendar, endCalendar),
-                    ticketRepository.getTotalExpensesBetween(startCalendar, endCalendar));
+            return getAmount(ticketRepository.getTotalRevenueBetween(startCalendar, endCalendar));
         } else {
-            return substractAmounts(ticketRepository.getTotalRechargesBetweenByHeadquarter(startCalendar, endCalendar, headquarterId),
-                    ticketRepository.getTotalExpensesBetweenByHeadquarter(startCalendar, endCalendar, headquarterId));
+            return getAmount(ticketRepository.getTotalRevenueBetweenByHeadquarter(startCalendar, endCalendar, headquarterId));
         }
     }
 
     private BigDecimal getRevenueCurrentDate(Long headquarterId) {
         if (headquarterId == null) {
-            return substractAmounts(ticketRepository.getTotalRechargesCurrentDate(), ticketRepository.getTotalExpensesCurrentDate());
+            return getAmount(ticketRepository.getTotalRevenueCurrentDate());
         } else {
-            return substractAmounts(ticketRepository.getTotalRechargesCurrentDateByHeadquarter(headquarterId),
-                    ticketRepository.getTotalExpensesCurrentDateByHeadquarter(headquarterId));
+            return getAmount(ticketRepository.getTotalRevenueCurrentDateByHeadquarter(headquarterId));
         }
     }
 
-    private BigDecimal substractAmounts(BigDecimal firstValue, BigDecimal secondValue) {
-        firstValue = firstValue == null ? BigDecimal.ZERO : firstValue;
-        secondValue = secondValue == null ? BigDecimal.ZERO : secondValue;
-
-        return firstValue.subtract(secondValue);
+    private BigDecimal getAmount(BigDecimal amount) {
+        return amount == null ? BigDecimal.ZERO : amount;
     }
 
     private Map<Integer, Double> getAmountByMonth(List<AmountByMonth> amountByMonth) {

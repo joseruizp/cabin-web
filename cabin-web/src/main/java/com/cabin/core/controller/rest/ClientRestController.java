@@ -137,7 +137,7 @@ public class ClientRestController {
         
         Ticket ticket = new Ticket();
         ticket.setCash(cash);
-        ticket.setAmount(recharge.getAmount());
+        ticket.setRechargeAmount(recharge.getAmount());
         ticket.setClient(client);
         ticket.setEmployee(new Employee());
         ticket.getEmployee().setId(recharge.getEmployeeId());

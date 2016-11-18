@@ -26,8 +26,11 @@ public class Ticket implements Serializable {
     @Column(name = "fecha")
     private Calendar date;
 
-    @Column(name = "monto")
-    private Double amount;
+    @Column(name = "monto_recarga")
+    private Double rechargeAmount;
+
+    @Column(name = "monto_gasto")
+    private Double expenseAmount;
 
     @ManyToOne
     @JoinColumn(name = "id_cliente")
@@ -65,12 +68,20 @@ public class Ticket implements Serializable {
         this.date = date;
     }
 
-    public Double getAmount() {
-        return amount;
+    public Double getRechargeAmount() {
+        return rechargeAmount;
     }
 
-    public void setAmount(Double amount) {
-        this.amount = amount;
+    public void setRechargeAmount(Double rechargeAmount) {
+        this.rechargeAmount = rechargeAmount;
+    }
+
+    public Double getExpenseAmount() {
+        return expenseAmount;
+    }
+
+    public void setExpenseAmount(Double expenseAmount) {
+        this.expenseAmount = expenseAmount;
     }
 
     public Client getClient() {

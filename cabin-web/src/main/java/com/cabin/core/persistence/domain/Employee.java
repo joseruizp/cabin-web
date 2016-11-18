@@ -144,4 +144,8 @@ public class Employee implements Serializable {
 	public void setLastname(String lastname) {
 		this.lastname = lastname;
 	}
+	
+	public String getFullName() {
+	    return this.name + "" + this.lastname;
+	}
 }

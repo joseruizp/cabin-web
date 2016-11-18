@@ -341,6 +341,24 @@ months = {
 			    }
 			},
 		});
+		$('#ticketReportTbl').DataTable({
+		    pscrollY: 300,
+		    paging: true,
+		    ordering: true,
+		    searching: true,
+			bLengthChange: false,
+			bInfo: false,
+			language: {	  
+				search: "Buscar: ",
+			    emptyTable: "No hay datos disponibles",
+			    paginate: {
+			        "first":      "Primero",
+			        "last":       "Ultimo",
+			        "next":       "Siguiente",
+			        "previous":   "Anterior"
+			    }
+			},
+		});
 		
 		$("#reportsTabs").tabs();
 		
@@ -362,7 +380,9 @@ months = {
 		fillArrayClients();		
 		getRechargeInformation();
 		addHeaquarterReportSelectEvent();
+		addSearchTicketReportEvent();
 		fillReports();
+		
 		//Sede save - update
 		$( "#form-sede" ).submit(function( event ) {
 			event.preventDefault();
@@ -2680,6 +2700,11 @@ function fillArraySede(){
 			        value: value.id,
 			        text : value.name,
 			    }));
+	    		
+	    		$('#ticketReportSelect').append($('<option/>', { 
+			        value: value.id,
+			        text : value.name,
+			    }));
 			});
 	    	fillSedetbl();		    	
 	    },
@@ -4257,6 +4282,69 @@ function fillSalesReport(computerSalesByMonth, consoleSalesByMonth, isHeadquarte
     };
 
     $("#todaySalesChart" + headquarterSuffix).CanvasJSChart(options);
+}
+
+function addSearchTicketReportEvent() {
+	$("#btnTicketReport").click(function(e) {
+		e.preventDefault();
+		if (addSearchTicket) {
+			var hostname = window.location.protocol + "//" + window.location.host;
+			var strUrl = hostname + "/cabin-web/get/ticketReport/" + $("#ticketReportSelect").val();
+			$.ajax({
+				type: "GET",
+			    url:strUrl,			    
+			    dataType: 'json', 
+			    data: {startDate : $("#startDateTicket").val(), endDate : $("#endDateTicket").val()},
+			    contentType: 'application/json',
+			    success: function (data) {
+			    	var ticketReportArray = [];
+			    	$.each(data, function(index, value) {
+				    	ticketReportArray.push({
+							id: value.cashId,
+							employee: value.name + ' ' + value.lastname,
+							startDate: value.startDate,
+							totalRevenue: Number(value.rechargeAmount == null ? 0 : value.rechargeAmount) + Number(value.expenseAmount == null ? 0 : value.expenseAmount),
+							totalRecharges: Number(value.rechargeAmount == null ? 0 : value.rechargeAmount) + Number(value.expenseAmount == null ? 0 : value.expenseAmount),
+							totalExpenses: Number(value.expenseAmount == null ? 0 : value.expenseAmount),
+							endDate: value.modificationDate
+						});
+			    	});
+			    	fillTicketReport(ticketReportArray);
+			    },
+			    error: function (xhr, status) {	    	
+			    	console.log("Error, su solicitud no pudo ser atendida");
+			    }
+			});
+		}
+	})
+}
+
+function addSearchTicket() {
+	var valid = true;
+	var divError = $("#recargaValidation");
+	$("*").removeClass( "ui-state-error");
+	valid = valid && checkRequired( $("#ticketReportSelect"), "Debe ingresar la sede.",1, divError);
+	valid = valid && checkRequired( $("#endDateTicket"), "Debe ingresar la fecha inicio.",1, divError);
+	valid = valid && checkRequired( $("#endDateTicket"), "Debe ingresar la fecha fin.",1, divError);
+	return valid;
+}
+
+function fillTicketReport(ticketReportArray) {
+	var size = ticketReportArray.length;
+	var j = 0;
+    var t = $('#ticketReportTbl').DataTable();
+    t.clear();
+	for(i=0; i<size;i++){
+		t.row.add( [
+                ticketReportArray[i].id,
+                ticketReportArray[i].employee,
+                ticketReportArray[i].startDate,
+                ticketReportArray[i].totalRevenue,
+                ticketReportArray[i].totalRecharges,
+                ticketReportArray[i].totalExpenses,
+                ticketReportArray[i].endDate,
+        ] ).draw( false );
+	};
 }
 
 $(document).on("change", "#clientSelect", function(){

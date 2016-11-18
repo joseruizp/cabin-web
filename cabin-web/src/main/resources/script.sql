@@ -384,7 +384,8 @@
 	/*!40101 SET character_set_client = utf8 */;
 	CREATE TABLE `ticket` (
 	  `id` bigint(20) NOT NULL AUTO_INCREMENT,  
-	  `monto` double DEFAULT NULL,
+	  `monto_recarga` double DEFAULT NULL,
+	  `monto_gasto` double DEFAULT NULL,
 	  `fecha` datetime DEFAULT NULL,
 	  `id_empleado` bigint(20) DEFAULT NULL,
 	  `id_cliente` bigint(20) DEFAULT NULL,
