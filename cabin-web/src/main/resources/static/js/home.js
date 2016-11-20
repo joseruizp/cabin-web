@@ -4299,14 +4299,16 @@ function addSearchTicketReportEvent() {
 			    success: function (data) {
 			    	var ticketReportArray = [];
 			    	$.each(data, function(index, value) {
+			    		var startDate = new Date(value.startDate);
+			    		var modificationDate = new Date(value.modificationDate);
 				    	ticketReportArray.push({
 							id: value.cashId,
 							employee: value.name + ' ' + value.lastname,
-							startDate: value.startDate,
+							startDate: startDate.toString("dd/MM/yyyy"),
 							totalRevenue: Number(value.rechargeAmount == null ? 0 : value.rechargeAmount) + Number(value.expenseAmount == null ? 0 : value.expenseAmount),
 							totalRecharges: Number(value.rechargeAmount == null ? 0 : value.rechargeAmount) + Number(value.expenseAmount == null ? 0 : value.expenseAmount),
 							totalExpenses: Number(value.expenseAmount == null ? 0 : value.expenseAmount),
-							endDate: value.modificationDate
+							endDate: modificationDate.toString("dd/MM/yyyy")
 						});
 			    	});
 			    	fillTicketReport(ticketReportArray);
