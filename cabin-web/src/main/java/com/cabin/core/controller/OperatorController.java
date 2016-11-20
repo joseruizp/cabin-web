@@ -1,7 +1,5 @@
 package com.cabin.core.controller;
 
-import java.util.List;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
@@ -15,19 +13,13 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 import com.cabin.core.enums.SessionEnum;
 import com.cabin.core.persistence.domain.Cash;
-import com.cabin.core.persistence.domain.Profile;
 import com.cabin.core.persistence.domain.Status;
-import com.cabin.core.persistence.domain.User;
 import com.cabin.core.persistence.repository.CashRepository;
-import com.cabin.core.persistence.repository.UserRepository;
 
 @Controller
 public class OperatorController {
 
     private static final Logger logger = LoggerFactory.getLogger(OperatorController.class);
-
-    @Autowired
-    private UserRepository userRepository;
 
     @Autowired
     private CashRepository cashRepository;
@@ -39,11 +31,10 @@ public class OperatorController {
         Long headquarterId = Long.parseLong((String) session.getAttribute(SessionEnum.HEADQUARTER_ID.name()));
         Long employeeId = (Long) session.getAttribute(SessionEnum.EMPLOYEE_ID.name());
 
-        List<User> users = userRepository.findByProfileIdAndStatusIdAndHeadquarterId(Profile.EMPLOYEE, Status.ACTIVE, headquarterId);
-        boolean isFirst = users.size() == 1;
+        Cash cash = cashRepository.findByEmployeeIdAndHeadquarterIdAndStatusId(employeeId, headquarterId, Status.ACTIVE);
+        boolean isFirst = cash == null;
 
         if (!isFirst) {
-            Cash cash = cashRepository.findByEmployeeIdAndHeadquarterIdAndStatusId(employeeId, headquarterId, Status.ACTIVE);
             model.addAttribute("cashId", cash.getId());
         }
 
