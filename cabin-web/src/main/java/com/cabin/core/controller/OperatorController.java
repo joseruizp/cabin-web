@@ -31,7 +31,7 @@ public class OperatorController {
         Long headquarterId = Long.parseLong((String) session.getAttribute(SessionEnum.HEADQUARTER_ID.name()));
         Long employeeId = (Long) session.getAttribute(SessionEnum.EMPLOYEE_ID.name());
 
-        Cash cash = cashRepository.findByEmployeeIdAndHeadquarterIdAndStatusId(employeeId, headquarterId, Status.ACTIVE);
+        Cash cash = cashRepository.findByEmployeeIdAndStatusId(employeeId, Status.ACTIVE);
         boolean isFirst = cash == null;
 
         if (!isFirst) {

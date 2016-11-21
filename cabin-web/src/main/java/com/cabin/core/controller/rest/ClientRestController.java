@@ -9,6 +9,7 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
+import org.apache.commons.lang.BooleanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -106,7 +107,7 @@ public class ClientRestController {
         HttpSession session = request.getSession();
         Boolean isAnonymous = (Boolean) session.getAttribute(SessionEnum.IS_ANONYMOUS.name());
 
-        if (isAnonymous) {
+        if (BooleanUtils.isTrue(isAnonymous)) {
             String password = generatePassword();
             client.getUser().setPass(password);
         } else {

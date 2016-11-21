@@ -11,6 +11,8 @@ import com.cabin.core.persistence.domain.Cash;
 public interface CashRepository extends JpaRepository<Cash, Long> {
 
     Cash findByEmployeeIdAndHeadquarterIdAndStatusId(Long employeeId, Long headquarterId, Long active);
+    
+    Cash findByEmployeeIdAndStatusId(Long employeeId, Long active);
 
     List<Cash> findByHeadquarterIdAndStatusId(Long headquarterId, Long statusId);
 

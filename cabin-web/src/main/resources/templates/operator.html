@@ -77,10 +77,10 @@
 										<div class="collapse navbar-collapse scrollspy smooth-scroll" id="navbar-collapse-1">
 											<ul class="nav navbar-nav navbar-right">
 												<li class="active"><a href="#nuevaRecarga">Recargas</a></li>
+												<li><a href="#gastos">Gastos</a></li>
 												<li><a href="#equipos">Equipos</a></li>
 												<li><a href="#consolas">Consolas</a></li>
 												<li><a href="#nuevaCierreCaja">Cierre de Caja</a></li>
-												<li><a href="#gastos">Gastos</a></li>
 											</ul>
 										</div>
 
@@ -158,24 +158,56 @@
 					</form>
 					<div id="recargaValidation" class="alert alert-danger" style="display:none"></div>
 				</div>
-				<div class="space"></div>
+			</div>
+		</div>
+		<!-- banner end -->
+		
+		<!-- banner start --> 
+		<div id="gastos">
+			<div class="container">
+				<div class="row">
+					<div class="col-md-12" style="margin-top: 40px">
+						<h1 id="tituloEquipos" class="title text-center"><span>Justificacion de Gastos</span></h1>
+						<p class="lead text-center">Lorem ipsum dolor sit amet, consectetur adipisicing elit. laudantium culpa tenetur.</p>
+					</div>
+				</div>
+				<div class="row" style="margin-left: 110px; margin-right: 110px">
+					<form class="form-horizontal" role="form" id="form-recarga">
+						<input type="hidden" id="idRecarga" value=""/>						
+						<div class="form-group">
+							<label class="control-label col-sm-2" for="name">Tipo de Gastos:</label>
+							<div class="col-sm-10">
+								<select id="expenseSelect">
+									<option value="1">Alimentacion</option>
+									<option value="2">Devolucion Usuario Anonimo</option>
+									<option value="3">Devolucion Usuario Registrado</option>
+								</select>
+							</div>
+						</div>
+						<div class="form-group">						
+							<label class="control-label col-sm-2" for="expenseAmount">Monto:</label>
+							<div class="col-sm-4">
+								<input type="text" class="form-control" id="expenseAmount"
+									placeholder="Monto"/>
+							</div>
+							<div id="expenseClientDiv" style="display: none;">
+								<label class="control-label col-sm-2" for="expenseClientSelect">Cliente:</label>
+								<div class="col-sm-4">
+									<select id="expenseClientSelect">
+										<option></option>
+									</select>
+								</div>
+							</div>
+						</div>
+						<div class="form-group">
+							<div class="col-sm-offset-5 col-sm-7">
+								<button id="btnExpenses" type="submit" class="btn btn-default">Justificar</button>
+							</div>
+						</div>
+					</form>
+					<div id="gastosValidation" class="alert alert-danger" style="display:none"></div>
+				</div>
 				
-			    <div role="tabpanel" class="table-responsive" id="listaRecargasDiv">
-			        <table id="recargaTbl" class="table table-striped display">
-			            <thead>
-			                <tr>	                				                	
-			                	<th>Nro. Ticket</th>
-			                    <th>Cliente</th>
-			                    <th>Monto de Recarga</th>
-			                    <th>Tipo de Recarga</th>
-			                    <th>Fecha y Hora</th>			                    
-			                    <th colspan="2">Opciones</th>			                    
-			                </tr>
-			            </thead>
-			            <tbody>			                
-			            </tbody>
-			        </table>
-			    </div>
 			</div>
 		</div>
 		<!-- banner end -->
@@ -276,95 +308,10 @@
 					</form>
 					<div id="cierreCajaValidation" class="alert alert-danger" style="display:none"></div>
 				</div>
-				<div class="space"></div>
-				
-			    <div role="tabpanel" class="table-responsive" id="listaCierreCajasDiv">
-			        <table id="cierreCajaTbl" class="table table-striped display">
-			            <thead>
-			                <tr>	                				                	
-			                	<th>Nro. Ticket</th>
-			                    <th>Cliente</th>
-			                    <th>Monto del Ticket</th>
-			                    <th>Tipo de Recarga</th>
-			                    <th>Tipo de Gasto</th>
-			                    <th>Fecha y Hora</th>
-			                </tr>
-			            </thead>
-			            <tbody>			                
-			            </tbody>
-			        </table>
-			    </div>
 			</div>
 		</div>
 		<!-- banner end -->
 		
-		<!-- banner start --> 
-		<div id="gastos">
-			<div class="container">
-				<div class="row">
-					<div class="col-md-12" style="margin-top: 40px">
-						<h1 id="tituloEquipos" class="title text-center"><span>Justificacion de Gastos</span></h1>
-						<p class="lead text-center">Lorem ipsum dolor sit amet, consectetur adipisicing elit. laudantium culpa tenetur.</p>
-					</div>
-				</div>
-				<div class="row" style="margin-left: 110px; margin-right: 110px">
-					<form class="form-horizontal" role="form" id="form-recarga">
-						<input type="hidden" id="idRecarga" value=""/>						
-						<div class="form-group">
-							<label class="control-label col-sm-2" for="name">Tipo de Gastos:</label>
-							<div class="col-sm-10">
-								<select id="expenseSelect">
-									<option value="1">Alimentacion</option>
-									<option value="2">Devolucion Usuario Anonimo</option>
-									<option value="3">Devolucion Usuario Registrado</option>
-								</select>
-							</div>
-						</div>
-						<div class="form-group">						
-							<label class="control-label col-sm-2" for="expenseAmount">Monto:</label>
-							<div class="col-sm-4">
-								<input type="text" class="form-control" id="expenseAmount"
-									placeholder="Monto"/>
-							</div>
-							<div id="expenseClientDiv" style="display: none;">
-								<label class="control-label col-sm-2" for="expenseClientSelect">Cliente:</label>
-								<div class="col-sm-4">
-									<select id="expenseClientSelect">
-										<option></option>
-									</select>
-								</div>
-							</div>
-						</div>
-						<div class="form-group">
-							<div class="col-sm-offset-5 col-sm-7">
-								<button id="btnExpenses" type="submit" class="btn btn-default">Justificar</button>
-							</div>
-						</div>
-					</form>
-					<div id="gastosValidation" class="alert alert-danger" style="display:none"></div>
-				</div>
-				<div class="space"></div>
-				
-				<div role="tabpanel" class="table-responsive" id="listaExpensesDiv">
-			        <table id="expensesTbl" class="table table-striped display">
-			            <thead>
-			                <tr>	                				                	
-			                	<th>Nro. Ticket</th>
-			                    <th>Cliente</th>
-			                    <th>Monto del Ticket</th>
-			                    <th>Tipo de Gasto</th>
-			                    <th>Fecha y Hora</th>
-			                </tr>
-			            </thead>
-			            <tbody>			                
-			            </tbody>
-			        </table>
-			    </div>
-				
-			</div>
-		</div>
-		<!-- banner end -->
-
 		<div id="dialog-confirm"></div>		
 		<!-- footer start --> 
 		<footer id="footer">
