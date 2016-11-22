@@ -35,16 +35,16 @@ public interface TicketRepository extends JpaRepository<Ticket, Long> {
     @Query("SELECT coalesce(SUM(t.rechargeAmount),0) - coalesce(SUM(t.expenseAmount),0) FROM com.cabin.core.persistence.domain.Ticket t WHERE t.cash.headquarter.id = ?1 AND MONTH(t.date) = (MONTH(CURRENT_DATE) -1) AND YEAR(t.date) = YEAR(CURRENT_DATE)")
     public BigDecimal getTotalRevenueLastMonthByHeadquarter(Long headquarterId);
 
-    @Query("SELECT coalesce(SUM(t.rechargeAmount),0) - coalesce(SUM(t.expenseAmount),0) FROM com.cabin.core.persistence.domain.Ticket t WHERE t.date = CURRENT_DATE")
+    @Query("SELECT coalesce(SUM(t.rechargeAmount),0) - coalesce(SUM(t.expenseAmount),0) FROM com.cabin.core.persistence.domain.Ticket t WHERE DATE(t.date) = CURRENT_DATE")
     public BigDecimal getTotalRevenueCurrentDate();
 
-    @Query("SELECT coalesce(SUM(t.rechargeAmount),0) - coalesce(SUM(t.expenseAmount),0) FROM com.cabin.core.persistence.domain.Ticket t WHERE t.cash.headquarter.id = ?1 AND t.date = CURRENT_DATE")
+    @Query("SELECT coalesce(SUM(t.rechargeAmount),0) - coalesce(SUM(t.expenseAmount),0) FROM com.cabin.core.persistence.domain.Ticket t WHERE t.cash.headquarter.id = ?1 AND DATE(t.date) = CURRENT_DATE")
     public BigDecimal getTotalRevenueCurrentDateByHeadquarter(Long headquarterId);
 
     @Query("SELECT coalesce(SUM(t.rechargeAmount),0) - coalesce(SUM(t.expenseAmount),0) FROM com.cabin.core.persistence.domain.Ticket t WHERE t.date between ?1 and ?2")
     public BigDecimal getTotalRevenueBetween(Calendar startDate, Calendar endDate);
 
-    @Query("SELECT coalesce(SUM(t.rechargeAmount),0) - coalesce(SUM(t.expenseAmount),0) FROM com.cabin.core.persistence.domain.Ticket t WHERE t.cash.headquarter.id = ?1 AND t.date between ?1 and ?2")
+    @Query("SELECT coalesce(SUM(t.rechargeAmount),0) - coalesce(SUM(t.expenseAmount),0) FROM com.cabin.core.persistence.domain.Ticket t WHERE t.cash.headquarter.id = ?3 AND t.date between ?1 and ?2")
     public BigDecimal getTotalRevenueBetweenByHeadquarter(Calendar startDate, Calendar endDate, Long headquarterId);
 
     @Query("SELECT new com.cabin.core.view.TicketReport" +
@@ -55,4 +55,13 @@ public interface TicketRepository extends JpaRepository<Ticket, Long> {
             "GROUP BY t.cash.id, t.employee.name, t.employee.lastname, t.cash.startDate, t.cash.modificationDate " +
             "ORDER BY t.cash.id DESC")
     public List<TicketReport> getTicketReport(Long headquarterId, Calendar startCalendar, Calendar endCalendar);
+    
+    @Query("SELECT new com.cabin.core.view.TicketReport" +
+            "(t.cash.id, t.employee.name, t.employee.lastname, t.cash.startDate, t.cash.modificationDate, " +
+            "coalesce(SUM(t.rechargeAmount),0), coalesce(SUM(t.expenseAmount),0))" +
+            "FROM com.cabin.core.persistence.domain.Ticket t " +
+            "WHERE t.date between ?1 and ?2 " +
+            "GROUP BY t.cash.id, t.employee.name, t.employee.lastname, t.cash.startDate, t.cash.modificationDate " +
+            "ORDER BY t.cash.id DESC")
+    public List<TicketReport> getTicketReport(Calendar startCalendar, Calendar endCalendar);
 }

@@ -107,6 +107,9 @@ public class ReportRestController {
         Calendar endCalendar = Calendar.getInstance();
         endCalendar.setTime(DATE_FORMTAT.parse(endDate));
 
+        if (headquarterId == 0) {
+            return ticketRepository.getTicketReport(startCalendar, endCalendar);
+        }
         return ticketRepository.getTicketReport(headquarterId, startCalendar, endCalendar);
     }
 
@@ -138,7 +141,7 @@ public class ReportRestController {
     private BigDecimal getRevenueLastWeek(Long headquarterId) {
         LocalDate localDate = LocalDate.now();
         java.util.Date startDate = java.sql.Date.valueOf(localDate.with(DayOfWeek.MONDAY).with(TemporalAdjusters.previous(DayOfWeek.MONDAY)));
-        java.util.Date endDate = java.sql.Date.valueOf(localDate.with(TemporalAdjusters.next(DayOfWeek.SUNDAY)));
+        java.util.Date endDate = java.sql.Date.valueOf(localDate.with(DayOfWeek.SUNDAY).with(TemporalAdjusters.previous(DayOfWeek.SUNDAY)));
 
         Calendar startCalendar = Calendar.getInstance();
         startCalendar.setTime(startDate);

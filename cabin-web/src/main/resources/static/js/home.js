@@ -4180,6 +4180,7 @@ function fillReports(headquarterId) {
 	
 	var hostname = window.location.protocol + "//" + window.location.host;
 	var strUrl = hostname + "/cabin-web/get/reportAnalytics";
+	strUrl += isHeadquarter ? ("/" + headquarterId) : "";
 	$.ajax({
 		type: "GET",
 	    url:strUrl,			    
@@ -4196,7 +4197,7 @@ function fillReports(headquarterId) {
 	    	$("#targetRevenue" + headquarterSuffix).text(data.revenue.targetMonthly);
 	    	$("#lastWeekRevenue" + headquarterSuffix).text(data.revenue.lastWeek);
 	    	$("#lastMonthRevenue" + headquarterSuffix).text(data.revenue.lastMont);
-	    	fillRevenueReport(data.revenue.targetToday, isHeadquarter);
+	    	fillRevenueReport(data.revenue.targetToday, data.revenue.today, isHeadquarter);
 	        fillSalesReport(data.sales.computerSalesByMonth, data.sales.consoleSalesByMonth, isHeadquarter);
 	        $(".canvasjs-chart-credit").remove();
 	    },
@@ -4206,8 +4207,10 @@ function fillReports(headquarterId) {
 	});
 }
 
-function fillRevenueReport(targetToday, isHeadquarter) {
+function fillRevenueReport(targetToday, revenueToday, isHeadquarter) {
 	var headquarterSuffix = isHeadquarter ? "Headquarter" : "";
+	var rest = Number(targetToday) - Number(revenueToday);
+	rest = rest < 0 ? 0 : rest;
     var options = {
         title:{
             text: targetToday,
@@ -4228,8 +4231,8 @@ function fillRevenueReport(targetToday, isHeadquarter) {
             innerRadius: "85%",
 			radius: "90%",
             dataPoints: [
-                {y: Number(targetToday)},
-                {y: Number(targetToday) * 0.1},
+                {y: Number(revenueToday)},
+                {y: rest},
             ]
         }]
     };
@@ -4287,9 +4290,10 @@ function fillSalesReport(computerSalesByMonth, consoleSalesByMonth, isHeadquarte
 function addSearchTicketReportEvent() {
 	$("#btnTicketReport").click(function(e) {
 		e.preventDefault();
-		if (addSearchTicket) {
+		if (addSearchTicket()) {
+			var urlSufix = $("#ticketReportSelect").val() === "" ? 0 : $("#ticketReportSelect").val();
 			var hostname = window.location.protocol + "//" + window.location.host;
-			var strUrl = hostname + "/cabin-web/get/ticketReport/" + $("#ticketReportSelect").val();
+			var strUrl = hostname + "/cabin-web/get/ticketReport/" + urlSufix;
 			$.ajax({
 				type: "GET",
 			    url:strUrl,			    
@@ -4325,8 +4329,7 @@ function addSearchTicket() {
 	var valid = true;
 	var divError = $("#recargaValidation");
 	$("*").removeClass( "ui-state-error");
-	valid = valid && checkRequired( $("#ticketReportSelect"), "Debe ingresar la sede.",1, divError);
-	valid = valid && checkRequired( $("#endDateTicket"), "Debe ingresar la fecha inicio.",1, divError);
+	valid = valid && checkRequired( $("#startDateTicket"), "Debe ingresar la fecha inicio.",1, divError);
 	valid = valid && checkRequired( $("#endDateTicket"), "Debe ingresar la fecha fin.",1, divError);
 	return valid;
 }
