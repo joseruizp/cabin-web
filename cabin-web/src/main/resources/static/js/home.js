@@ -4331,9 +4331,31 @@ function addSearchTicket() {
 	$("*").removeClass( "ui-state-error");
 	valid = valid && checkRequired( $("#startDateTicket"), "Debe ingresar la fecha inicio.",1, divError);
 	valid = valid && checkRequired( $("#endDateTicket"), "Debe ingresar la fecha fin.",1, divError);
+	var startDate = stringToDate($("#startDateTicket").val());
+	var endDate = stringToDate($("#endDateTicket").val());
+	if (startDate > endDate) {
+		$("#startDateTicket").addClass( "ui-state-error" );
+		updateTips( "Fecha de inicio debe ser menor que la fecha de fin.", divError );
+		valid = false;
+	}
+	if (getDiffDays(startDate, endDate) > 61) {
+		$("#startDateTicket").addClass( "ui-state-error" );
+		updateTips( "La diferencia de dias no puede ser mayor de 61 dias (2 meses).", divError );
+		valid = false;
+	}
 	return valid;
 }
 
+function stringToDate(string) {
+	var split = string.split("/");
+	return new Date(split[2], split[1] - 1, split[0]);
+}
+
+function getDiffDays(date1, date2) {
+	var timeDiff = Math.abs(date2.getTime() - date1.getTime());
+	return Math.ceil(timeDiff / (1000 * 3600 * 24)); 
+}
+ 
 function fillTicketReport(ticketReportArray) {
 	var size = ticketReportArray.length;
 	var j = 0;
