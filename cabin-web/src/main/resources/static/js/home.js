@@ -4227,7 +4227,7 @@ function fillRevenueReport(targetToday, revenueToday, isHeadquarter) {
             startAngle:0,
             indexLabelFontColor: "dimgrey",
             indexLabelLineColor: "darkgrey", 
-            toolTipContent: "{y} %",
+            toolTipContent: "S/. {y}",
             innerRadius: "85%",
 			radius: "90%",
             dataPoints: [
@@ -4339,17 +4339,21 @@ function fillTicketReport(ticketReportArray) {
 	var j = 0;
     var t = $('#ticketReportTbl').DataTable();
     t.clear();
-	for(i=0; i<size;i++){
-		t.row.add( [
-                ticketReportArray[i].id,
-                ticketReportArray[i].employee,
-                ticketReportArray[i].startDate,
-                ticketReportArray[i].totalRevenue,
-                ticketReportArray[i].totalRecharges,
-                ticketReportArray[i].totalExpenses,
-                ticketReportArray[i].endDate,
-        ] ).draw( false );
-	};
+    if (size === 0) {
+    	t.draw();
+    } else {
+    	for(i=0; i<size;i++){
+    		t.row.add( [
+                    ticketReportArray[i].id,
+                    ticketReportArray[i].employee,
+                    ticketReportArray[i].startDate,
+                    ticketReportArray[i].totalRevenue,
+                    ticketReportArray[i].totalRecharges,
+                    ticketReportArray[i].totalExpenses,
+                    ticketReportArray[i].endDate,
+            ] ).draw( false );
+    	};
+    }
 }
 
 $(document).on("change", "#clientSelect", function(){

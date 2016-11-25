@@ -92,7 +92,7 @@ public class ReportRestController {
         reportAnalytics.setOcupiedComputers(rentRepository.getNumberOfRentedComputersInCurrentMonth());
         reportAnalytics.setOcupiedConsoles(rentRepository.getNumberOfRentedConsolesInCurrentMonth());
 
-        reportAnalytics.setNumberOfTickets(ticketRepository.getNumberOfTicketsCurrentMonth());
+        reportAnalytics.setNumberOfTickets(ticketRepository.getNumberOfTicketsCurrentMonthByHeadquarter(headquarterId));
 
         return reportAnalytics;
     }
