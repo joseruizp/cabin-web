@@ -8,6 +8,7 @@ import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import javax.transaction.Transactional;
 
 import org.apache.commons.lang.BooleanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.cabin.core.enums.RentStatusEnum;
 import com.cabin.core.enums.SessionEnum;
 import com.cabin.core.persistence.domain.Cash;
 import com.cabin.core.persistence.domain.Client;
@@ -26,6 +28,7 @@ import com.cabin.core.persistence.domain.Level;
 import com.cabin.core.persistence.domain.Profile;
 import com.cabin.core.persistence.domain.PunctuationRule;
 import com.cabin.core.persistence.domain.RechargingType;
+import com.cabin.core.persistence.domain.Rent;
 import com.cabin.core.persistence.domain.Ticket;
 import com.cabin.core.persistence.domain.User;
 import com.cabin.core.persistence.repository.CashRepository;
@@ -33,9 +36,11 @@ import com.cabin.core.persistence.repository.ClientRepository;
 import com.cabin.core.persistence.repository.ExperienceRepository;
 import com.cabin.core.persistence.repository.LevelRepository;
 import com.cabin.core.persistence.repository.PunctuationRuleRepository;
+import com.cabin.core.persistence.repository.RentRepository;
 import com.cabin.core.persistence.repository.TicketRepository;
 import com.cabin.core.persistence.repository.UserRepository;
 import com.cabin.core.view.Recharge;
+import com.cabin.core.websocket.RechargeClientEndpoint;
 
 @RestController
 public class ClientRestController {
@@ -54,12 +59,15 @@ public class ClientRestController {
 
     @Autowired
     private UserRepository userRepository;
-    
+
     @Autowired
     private CashRepository cashRepository;
-    
+
     @Autowired
     private TicketRepository ticketRepository;
+
+    @Autowired
+    private RentRepository rentRepository;
 
     @RequestMapping(value = "/get/allClients", method = RequestMethod.GET, produces = { "application/json;charset=UTF-8" })
     public List<Client> getAllClient() {
@@ -80,6 +88,7 @@ public class ClientRestController {
     }
 
     @RequestMapping(value = "/post/client", method = RequestMethod.POST, produces = { "application/json;charset=UTF-8" })
+    @Transactional
     public Client postClient(@RequestBody(required = true) Client client) throws ParseException {
         Long clientId = client.getId();
         client.getBirthDate().set(Calendar.HOUR_OF_DAY, 12);
@@ -100,6 +109,7 @@ public class ClientRestController {
     }
 
     @RequestMapping(value = "/post/recharge", method = RequestMethod.POST, produces = { "application/json;charset=UTF-8" })
+    @Transactional
     public Client recharge(@RequestBody(required = true) Recharge recharge, HttpServletRequest request) throws ParseException {
         Client client = clientRepository.findOne(recharge.getClientId());
         client.setBalance(client.getBalance() + recharge.getAmount());
@@ -130,12 +140,12 @@ public class ClientRestController {
                 }
             }
         }
-        
+
         Calendar now = Calendar.getInstance();
         Cash cash = cashRepository.findOne(recharge.getCashId());
         cash.setModificationDate(now);
         cashRepository.saveAndFlush(cash);
-        
+
         Ticket ticket = new Ticket();
         ticket.setCash(cash);
         ticket.setRechargeAmount(recharge.getAmount());
@@ -146,6 +156,13 @@ public class ClientRestController {
         ticket.setRechargingType(new RechargingType());
         ticket.getRechargingType().setId(RechargingType.MANUAL);
         ticketRepository.saveAndFlush(ticket);
+
+        Rent rent = rentRepository.findByClientIdAndRentStatusId(client.getId(), RentStatusEnum.RENTED.getId());
+        if (rent != null) {
+            System.out.println("client is active");
+            System.out.println("computer ip address: " + rent.getComputer().getIpAddress());
+            new RechargeClientEndpoint(rent.getComputer().getIpAddress()).sendMessage(String.valueOf(recharge.getAmount()));
+        }
 
         return clientRepository.saveAndFlush(client);
     }

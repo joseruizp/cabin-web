@@ -313,6 +313,7 @@ function addRechargeEvent() {
                 contentType: 'application/json',
                 success: function (data) {
                     console.log("recharge is done");
+                    updateClientBalanceArray(data.id, data.balance);
                     updateTips("Recarga realizada satisfactoriamente.", recargaValidation);
                 },
                 error: function (xhr, status) {
@@ -337,6 +338,16 @@ $(document).on("change", "#clientSelect", function(){
     }    
     $("#balance").val("");
 })
+
+function updateClientBalanceArray(clientId, balance) {
+	for (i = 0 ; i< clients.length; i++){
+        if (clientId == clients[i].id){
+            clients[i].balance = balance;
+            $("#balance").val(balance);
+            return;
+        }
+    }    
+}
 
 function addEventExpenses() {
     $("#expenseSelect").change(function(e) {

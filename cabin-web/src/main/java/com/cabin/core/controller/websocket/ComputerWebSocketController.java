@@ -10,8 +10,8 @@ import org.springframework.web.bind.annotation.RestController;
 import com.cabin.core.websocket.ComputerStatus;
 
 @RestController
-public class ComputerWebSocketController { 
-    
+public class ComputerWebSocketController {
+
     @Autowired
     private SimpMessagingTemplate webSocket;
 
@@ -21,4 +21,5 @@ public class ComputerWebSocketController {
         System.out.println("websocket message sent");
         return computerStatus;
     }
+
 }

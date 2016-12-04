@@ -14,6 +14,8 @@ import com.cabin.core.valueobject.AmountByMonth;
 public interface RentRepository extends JpaRepository<Rent, Long> {
 
     Rent findByClientId(@Param("client_id") Long clientId);
+    
+    Rent findByClientIdAndRentStatusId(@Param("client_id") Long clientId, @Param("rent_status_id") Long rentStatusId);
 
     Rent findByComputerId(@Param("computer_id") Long computerId);
 
