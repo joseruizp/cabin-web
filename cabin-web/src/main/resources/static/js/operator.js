@@ -284,7 +284,7 @@ function addRechargeEvent() {
                 updateTips("El monto es menor que el mínimo de recarga requerido.", recargaValidation); 
                 return;
             } else if (amount > rechargeInfo.maximumFraction) {
-                updateTips("El monto es mayor que el mínimo de recarga requerido..", recargaValidation);
+                updateTips("El monto es mayor que el máximo de recarga requerido.", recargaValidation);
                 return;
             }
             
