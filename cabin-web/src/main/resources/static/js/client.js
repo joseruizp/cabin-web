@@ -42,7 +42,7 @@ $(function() {
 		});
     }
     
-    function getRechargeInformation() {
+    function getRechargeInformation() {    	
     	var hostname = window.location.protocol + "//" + window.location.host;
 		var strUrl = hostname + "/cabin-web/get/parametersRecharge";
 		$.ajax({
@@ -56,7 +56,7 @@ $(function() {
 		    	$("#maximumRecharge").text(data.maximumFraction);
 		    	rechargeInfo.rechargeFraction = Number(data.rechargeFraction);
 		    	rechargeInfo.minimumFraction = Number(data.minimumFraction);
-		    	rechargeInfo.maximumFraction = Number(data.maximumFraction);
+		    	rechargeInfo.maximumFraction = Number(data.maximumFraction);		    	
 		    },
 		    error: function (xhr, status) {	    	
 		    	console.log("Error, su solicitud no pudo ser atendida");
@@ -72,13 +72,13 @@ $(function() {
         	var amount = Number($("#rechargeAmount").val());
         	
         	if (amount < rechargeInfo.minimumFraction) {
-        		$("#message").text("El monto es menor que el minimo de recarga requerido.");
+        		$("#message").text("El monto es menor que el mínimo de recarga requerido.");
         		$( "#messageDialog" ).dialog({
 		      		  width: 700
 		      	}); 
         		return;
         	} else if (amount > rechargeInfo.maximumFraction) {
-        		$("#message").text("El monto es mayor que el minimo de recarga requerido.");
+        		$("#message").text("El monto es mayor que el máximo de recarga requerido.");
         		$( "#messageDialog" ).dialog({
 		      		  width: 700
 		      	}); 
@@ -92,9 +92,7 @@ $(function() {
         	var recharge = {};
         	recharge.clientId = clientId;
         	recharge.amount = amount;
-        	
-        	console.log("rechargeInfo: " + rechargeInfo);
-        	
+        	        	
         	var hostname = window.location.protocol + "//" + window.location.host;
     		var strUrl = hostname + "/cabin-web/post/recharge";
     		
