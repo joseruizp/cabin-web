@@ -140,18 +140,21 @@ public class ClientRestController {
                 }
             }
         }
-
-        Calendar now = Calendar.getInstance();
-        Cash cash = cashRepository.findOne(recharge.getCashId());
-        cash.setModificationDate(now);
-        cashRepository.saveAndFlush(cash);
-
+        Cash cash = new Cash();
         Ticket ticket = new Ticket();
-        ticket.setCash(cash);
+        if ( recharge.getCashId() != null ){
+	        Calendar now = Calendar.getInstance();
+	        cash = cashRepository.findOne(recharge.getCashId());
+	        cash.setModificationDate(now);
+	        cashRepository.saveAndFlush(cash);
+	        ticket.setCash(cash);
+        }
         ticket.setRechargeAmount(recharge.getAmount());
         ticket.setClient(client);
-        ticket.setEmployee(new Employee());
-        ticket.getEmployee().setId(recharge.getEmployeeId());
+        if ( recharge.getEmployeeId() != null ){
+	        ticket.setEmployee(new Employee());
+	        ticket.getEmployee().setId(recharge.getEmployeeId());
+        }        
         ticket.setDate(Calendar.getInstance());
         ticket.setRechargingType(new RechargingType());
         ticket.getRechargingType().setId(RechargingType.MANUAL);
