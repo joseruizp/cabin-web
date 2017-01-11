@@ -76,7 +76,8 @@
 										<!-- Collect the nav links, forms, and other content for toggling -->
 										<div class="collapse navbar-collapse scrollspy smooth-scroll" id="navbar-collapse-1">
 											<ul class="nav navbar-nav navbar-right">
-												<li class="active"><a href="#nuevaRecarga">Recargas</a></li>
+												<li class="active"><a href="#nuevoCliente">Clientes</a></li>
+												<li><a href="#nuevaRecarga">Recargas</a></li>
 												<li><a href="#gastos">Gastos</a></li>
 												<li><a href="#equipos">Equipos</a></li>
 												<li><a href="#consolas">Consolas</a></li>
@@ -107,7 +108,170 @@
 			</div>
 		</header>
 		<!-- header end -->
-
+		
+		<!-- banner start --> 
+		<div id="nuevoCliente">
+			<div class="container">				
+				<br/>
+				<br/>
+				<br/>
+				<br/>
+				<br/>
+				<div class="row">
+					<div class="col-md-12" style="margin-top: 40px">
+						<h1 id="tituloEquipos" class="title text-center">Nuevo <span>Cliente</span></h1>
+						<p class="lead text-center">Lorem ipsum dolor sit amet, consectetur adipisicing elit. laudantium culpa tenetur.</p>
+					</div>
+				</div>
+				<div class="row" style="margin-left: 110px; margin-right: 110px">
+					<form class="form-horizontal" role="form" id="form-cliente">
+						<input type="hidden" id="idCliente" value=""/>
+						<div class="form-group">
+							<label class="control-label col-sm-2" for="nameCustomer">Nombre:</label>
+							<div class="col-sm-4">
+								<input class="form-control" id="nameCustomer"
+									placeholder="Nombre" maxlength="20"/>
+							</div>
+							<label class="control-label col-sm-2" for="lastnameCustomer">Apellidos:</label>
+							<div class="col-sm-4">
+								<input class="form-control" id="lastnameCustomer"
+									placeholder="Apellidos" maxlength="40"/> 
+							</div>
+						</div>						
+						<div class="form-group">
+							<label class="control-label col-sm-2" for="emailCustomer">Email:</label>
+							<div class="col-sm-4">
+								<input class="form-control" id="emailCustomer"
+									placeholder="Correo" maxlength="40"/> 
+							</div>
+							<label class="control-label col-sm-2" for="birthDateCustomer">Fecha nacimiento:</label>
+					        <div class="col-sm-4">
+					            <div class="input-group date">
+						            <input type="text" class="form-control input-date" name="birthDate" id="birthDateCustomer" placeholder="dd/mm/aaaa"/>
+						            <span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
+					            </div>
+				         	</div>													    
+						</div>
+						<div class="form-group">														
+							<label class="control-label col-sm-2" for="docTypeCustomer">Tipo Documento:</label>
+							<div class="col-sm-4">
+								<div class="dropdown">
+									<button class="btn btn-primary dropdown-toggle" type="button"
+										data-toggle="dropdown" id="docTypeButtonCustomer">
+										Seleccionar <span class="caret"></span>
+									</button>
+									<ul id="docTypeCustomer" class="dropdown-menu">																													
+									</ul>
+								</div>
+							</div>						
+							<label class="control-label col-sm-2" for="docCodeCustomer">N. Documento:</label>
+							<div class="col-sm-4">
+								<input  class="form-control" id="docCodeCustomer"
+									placeholder="N. Documento" maxlength="15"/>
+							</div>
+						</div>
+						<div class="form-group">
+							<label class="col-sm-2 control-label">Sexo:</label>
+						    <div class="col-sm-4">
+								<div class="dropdown">
+									<button class="btn btn-primary dropdown-toggle" type="button"
+										data-toggle="dropdown">
+										Seleccionar <span class="caret"></span>
+									</button>
+									<ul id="genderCustomer" class="dropdown-menu">
+										<li><a href="/" onclick="return false;">Masculino</a></li>
+										<li><a href="/" onclick="return false;">Femenino</a></li>
+									</ul>
+								</div>
+							</div>
+							<label class="control-label col-sm-2" for="pointsCustomer">Cantidad de puntos:</label>
+							<div class="col-sm-4">
+								<input readonly="true" class="form-control" id="pointsCustomer"
+									placeholder="Puntos" maxlength="20" value="0"/>
+							</div>
+						</div>						
+						<div class="form-group">
+							<label class="control-label col-sm-2" for="passwordCustomer">Contrase&ntilde;a:</label>
+							<div class="col-sm-4">
+								<input  type="password" class="form-control" id="passwordCustomer"
+									placeholder="Contraseña" maxlength="20"/>
+							</div>
+							<label class="control-label col-sm-2" for="confirmPasswordCustomer">Confirmar contrase&ntilde;a:</label>
+							<div class="col-sm-4">
+								<input  type="password" class="form-control" id="confirmPasswordCustomer"
+									placeholder="Confirmar contrase&ntilde;a" maxlength="20"/>
+							</div>
+						</div>
+						<div class="form-group">
+							<label class="control-label col-sm-2" for="nivelCustomer">Nivel:</label>
+							<div class="col-sm-4">
+								<div class="dropdown">
+									<button class="btn btn-primary dropdown-toggle disabled" type="button"
+										data-toggle="dropdown">
+										Seleccionar <span class="caret"></span>
+									</button>
+									<ul id="nivelCustomer" class="dropdown-menu">																													
+									</ul>
+								</div>
+							</div>							
+							<label class="control-label col-sm-2" for="statusCustomer">Estado:</label>
+							<div class="col-sm-4">
+								<div class="dropdown">
+									<button class="btn btn-primary dropdown-toggle" type="button"
+										data-toggle="dropdown" value="1" >
+										Activo <span class="caret"></span>
+									</button>
+									<ul id="statusCustomer" class="dropdown-menu">
+										<li><a href="/" onclick="return false;">Activo</a></li>
+										<li><a href="/" onclick="return false;">Inactivo</a></li>
+									</ul>
+								</div>
+							</div>
+						</div>
+						<div class="form-group">
+							<label class="control-label col-sm-2" for="experienceCustomer">Cantidad de experiencia:</label>
+							<div class="col-sm-4">
+								<input readonly="true" class="form-control" id="experienceCustomer"
+									placeholder="Cantidad de experiencia" maxlength="11" value="0"/>
+							</div>
+							<label class="control-label col-sm-2" for="balanceCustomer">Saldo (S/.):</label>
+							<div class="col-sm-4">
+								<input readonly="true" class="form-control" id="balanceCustomer"
+									placeholder="Saldo" maxlength="20" value="0" />
+							</div>							
+						</div>	
+						<div class="form-group">
+							<div class="col-sm-offset-5 col-sm-7">
+								<button id="btnCliente" type="submit" class="btn btn-default">Nuevo Cliente</button>
+							</div>
+						</div>
+					</form>
+					<div id="clienteValidation" class="alert alert-danger" style="display:none"></div>
+				</div>
+				<div class="space"></div>
+			    <div role="tabpanel" class="table-responsive" id="listaClientesDiv">
+			        <table id="clienteTbl" class="table table-striped display">
+			            <thead>
+			                <tr>	                				                	
+			                	<th>Código</th>
+			                    <th>Nombre</th>
+			                    <th>Correo</th>
+			                    <th>Sexo</th>
+			                    <th>Fecha Nacimiento</th>
+			                    <th>Saldo</th>
+			                    <th>Puntos</th>
+			                    <th>Experiencia</th>
+			                    <th>Estado</th>			                    
+			                    <th colspan="2">Opciones</th>			                    
+			                </tr>
+			            </thead>
+			            <tbody>			                
+			            </tbody>
+			        </table>
+			    </div>
+			</div>
+		</div>
+		<!-- banner end -->
 		<!-- banner start --> 
 		<div id="nuevaRecarga">
 			<div class="container">
