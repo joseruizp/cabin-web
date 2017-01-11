@@ -66,7 +66,9 @@ public class TicketRestController {
         ticket.setExpenseType(new ExpenseType());
         ticket.getExpenseType().setId(expenseCash.getExpenseTypeId());
         ticket.setDate(now);
-
+        Double rechargeAmount = 0.0;
+        ticket.setRechargeAmount(rechargeAmount);
+        
         return ticketRepository.saveAndFlush(ticket);
     }
 

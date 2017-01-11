@@ -149,7 +149,9 @@ public class ClientRestController {
 	        cashRepository.saveAndFlush(cash);
 	        ticket.setCash(cash);
         }
+        Double expenseAmount = 0.0;
         ticket.setRechargeAmount(recharge.getAmount());
+        ticket.setExpenseAmount(expenseAmount); 
         ticket.setClient(client);
         if ( recharge.getEmployeeId() != null ){
 	        ticket.setEmployee(new Employee());

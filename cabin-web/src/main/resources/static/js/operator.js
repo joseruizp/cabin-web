@@ -462,6 +462,7 @@ function addExpenses() {
 
 function fillClients(anonymous) {
     var headquarterId = $("#headquarterId").val();
+    var strUrl = window.location.protocol + "//" + window.location.host + "/cabin-web/get/allActiveUsersByHeadquarter";
     $.ajax({
         type: "GET",
         url:strUrl,

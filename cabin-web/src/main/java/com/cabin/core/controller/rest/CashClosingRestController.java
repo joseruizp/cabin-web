@@ -54,6 +54,8 @@ public class CashClosingRestController {
         ticket.setRechargingType(new RechargingType());
         ticket.getRechargingType().setId(RechargingType.MANUAL);
         ticket.setCash(cash);
+        Double expenseAmount = 0.0;
+        ticket.setExpenseAmount(expenseAmount); 
         ticketRepository.saveAndFlush(ticket);
 
         return cash;
