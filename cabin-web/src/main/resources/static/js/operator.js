@@ -350,7 +350,9 @@ function addRechargeEvent() {
                 return;
             }
             
-            amount = (amount - (amount % rechargeInfo.rechargeFraction).toFixed(1));
+            amount = (amount - (amount % rechargeInfo.rechargeFraction).toFixed(1)).toFixed(1);
+            
+            var change = enterAmount - amount;
             
             $("#rechargingAmount").val("");
             $("#enterAmount").val("");
@@ -376,6 +378,7 @@ function addRechargeEvent() {
                 success: function (data) {
                     console.log("recharge is done");
                     updateClientBalanceArray(data.id, data.balance);
+                    $("#rechargeChange").text(change);
                     updateTips("Recarga realizada satisfactoriamente.", recargaValidation);
                 },
                 error: function (xhr, status) {

@@ -1608,7 +1608,7 @@ function saveRegla(){
 	
 	if (idRegla !== "") {
 		regla.id = idRegla; newRegla = 0;		
-		reglas.splice(reglaIndex, 1, parametro);
+		reglas.splice(reglaIndex, 1, regla);
 		reglaIndex = -1;
 	}					
 	

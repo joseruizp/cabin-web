@@ -178,11 +178,11 @@ public class ClientRestController {
     }
 
     private Integer getRechargePoints(PunctuationRule rule, Double recharge) {
-        return Math.toIntExact(Math.round(recharge * rule.getPoints() / rule.getRechargingFraction()));
+        return Math.toIntExact( (long)(recharge * rule.getPoints() / rule.getRechargingFraction()));
     }
 
-    private Integer getRechargeExperience(Experience experience, Double recharge) {
-        return Math.toIntExact(Math.round(recharge * experience.getExperienceToGive() / experience.getRechargeFraction()));
+    private Integer getRechargeExperience(Experience experience, Double recharge) {    	
+        return Math.toIntExact( (long)(recharge * experience.getExperienceToGive() / experience.getRechargeFraction()));
     }
 
 }

@@ -87,7 +87,7 @@ $(function() {
         	
         	if ( !addTicket() )
         		return;
-        	amount = (amount - (amount % rechargeInfo.rechargeFraction).toFixed(1));
+        	amount = (amount - (amount % rechargeInfo.rechargeFraction).toFixed(1)).toFixed(1);
         	$("#rechargeAmount").val("" + amount);
         	
         	var change = enterAmount - amount;
