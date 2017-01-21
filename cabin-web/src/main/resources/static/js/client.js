@@ -72,13 +72,13 @@ $(function() {
         	var amount = Number($("#rechargeAmount").val());
         	
         	if (amount < rechargeInfo.minimumFraction) {
-        		$("#message").text("El monto es menor que el mínimo de recarga requerido.");
+        		$("#message").text("El monto es menor que el mínimo de recarga requerido: " + rechargeInfo.minimumFraction + " Soles.");
         		$( "#messageDialog" ).dialog({
 		      		  width: 700
 		      	}); 
         		return;
         	} else if (amount > rechargeInfo.maximumFraction) {
-        		$("#message").text("El monto es mayor que el máximo de recarga requerido.");
+        		$("#message").text("El monto es mayor que el máximo de recarga requerido: " + rechargeInfo.maximumFraction + " Soles.");
         		$( "#messageDialog" ).dialog({
 		      		  width: 700
 		      	}); 

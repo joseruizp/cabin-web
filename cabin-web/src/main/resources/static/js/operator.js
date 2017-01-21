@@ -343,10 +343,10 @@ function addRechargeEvent() {
             var amount = Number($("#rechargingAmount").val());
             
             if (amount < rechargeInfo.minimumFraction) {
-                updateTips("El monto es menor que el mínimo de recarga requerido.", recargaValidation); 
+                updateTips("El monto es menor que el mínimo de recarga requerido: " + rechargeInfo.minimumFraction + " Soles.", recargaValidation); 
                 return;
             } else if (amount > rechargeInfo.maximumFraction) {
-                updateTips("El monto es mayor que el máximo de recarga requerido.", recargaValidation);
+                updateTips("El monto es mayor que el máximo de recarga requerido: " + rechargeInfo.maximumFraction + " Soles.", recargaValidation);
                 return;
             }
             
