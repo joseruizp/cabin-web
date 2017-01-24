@@ -132,14 +132,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
             redirectStrategy.sendRedirect(request, response, "/login?error=E002");
         }
         Client client = clients.get(0);
-
-        if (Status.ACTIVE != client.getStatus().getId()) {
-            request.getSession().invalidate();
-            redirectStrategy.sendRedirect(request, response, "/login?error=E003");
-        }
-
-        request.getSession().setAttribute(SessionEnum.CLIENT_ID.name(), client.getId());
-
+        
         if (currentUser.isAnonymous()) {
             client.setStatus(new Status());
             client.getStatus().setId(Status.ACTIVE);
@@ -148,6 +141,13 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
             client.setExperience(0);
             clientRepository.saveAndFlush(client);
         }
+
+        if (Status.ACTIVE != client.getStatus().getId()) {
+            request.getSession().invalidate();
+            redirectStrategy.sendRedirect(request, response, "/login?error=E003");
+        }
+
+        request.getSession().setAttribute(SessionEnum.CLIENT_ID.name(), client.getId());
 
         request.getSession().setAttribute(SessionEnum.IS_ANONYMOUS.name(), currentUser.isAnonymous());
     }
