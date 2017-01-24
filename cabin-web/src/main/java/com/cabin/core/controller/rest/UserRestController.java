@@ -29,7 +29,9 @@ public class UserRestController {
     public Client loginClient(@RequestBody UserRequest user) throws ParseException {
 
         List<User> users = userRepository.findByNameAndPass(user.getName(), user.getPass());
-
+        
+        if ( users.isEmpty() ) 
+        	return null;
         List<Client> clients = clientRepository.findByUserId(users.get(0).getId());
         Client client = clients.get(0);
 

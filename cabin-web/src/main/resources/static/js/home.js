@@ -827,7 +827,8 @@ function saveSede(){
 	    error: function (xhr, status) {	    	
 	    	console.log("Error, su solicitud no pudo ser atendida");
 	    },
-	    complete: function(xhr) {	    	
+	    complete: function(xhr) {
+	    	updateTips("Sede creada satisfactoriamente.", sedeValidation);
 	    	fillArraySede();	    	
 	    }
 	});
@@ -1191,6 +1192,7 @@ function saveTarifaDetail() {
 	    	$('#endTime').prop('disabled', true);
 	    	$('#price').prop('disabled', true);
             fillArrayTarifaDetails(idTarifa);
+            updateTips("Tarifa creada satisfactoriamente.", tarifaValidation);
         },
         error: function (xhr, status) {
             console.log("Error, su solicitud no pudo ser atendida");
@@ -1525,6 +1527,7 @@ function saveBonificacion(){
 	    },	
 	    complete: function(xhr) {
 	    	fillArrayBonificacion();
+	    	updateTips("Bonificación creada satisfactoriamente.", bonificaciónValidation);
 	    }
 	});
 	
@@ -1571,6 +1574,7 @@ function saveParametro(){
 	    },	
 	    complete: function(xhr) {
 	    	fillArrayParametro();
+	    	updateTips("Parametro creado satisfactoriamente.", parametroValidation);
 	    }
 	});
 	
@@ -1597,24 +1601,17 @@ function saveRegla(){
 	$(regla_nivelHtml).parents(".dropdown").find('.btn').html('Seleccionar <span class="caret"></span>');
 	$(regla_nivelHtml).parents(".dropdown").find('.btn').val("");
 	//$("#numberPcs").val(""); $("#numberConsoles").val("");
-	var strUrl = window.location.protocol + "//" + window.location.host + "/cabin-web/post/punctuation_rule";			
+	var strUrl = window.location.protocol + "//" + window.location.host + "/cabin-web/post/punctuation_rule";
+	
+	regla.level.id = idNivel;
+	regla.status.id = idStatus;
+	
 	if (idRegla !== "") {
-		regla.id = idRegla; newRegla = 0;
-		if( idStatus == estados[0].id)
-			regla.status.name = idStatus;
-		else
-			regla.status.name = estados[1].name;				
-		regla.status.id = idStatus;
-		var length = niveles.length;
-		for ( i = 0; i< length ; i++){
-			if (idNivel == niveles[i].id ){
-				regla.level.name = niveles[i].name; break
-			}
-		}
-		regla.level.id = idNivel;
+		regla.id = idRegla; newRegla = 0;		
 		reglas.splice(reglaIndex, 1, regla);
-		fillReglatbl();
-	}						 
+		reglaIndex = -1;
+	}					
+	
 	console.log(JSON.stringify(regla));
 	$.ajax({
 		async: false,
@@ -1628,11 +1625,14 @@ function saveRegla(){
 	    	if (idRegla != ""){
 	    		$("#btnRegla").html("Nueva Regla");
 	    		$("#idRegla").attr("value", "");			    		
-	    	}
-	    	associateStatus(data.id, idStatus, idNivel, newRegla);
+	    	}	    	
 	    },
 	    error: function (xhr, status) {	    	
 	    	console.log("Error, su solicitud no pudo ser atendida");
+	    },
+	    complete: function(xhr) {
+	    	fillArrayRegla();
+	    	updateTips("Regla creada satisfactoriamente.", reglaValidation);
 	    }
 	});
 }
@@ -1800,7 +1800,8 @@ function saveNivel(){
 	    	console.log("Error, su solicitud no pudo ser atendida");
 	    },	 
 	    complete: function() {
-	    	fillArrayNivel();	    	
+	    	fillArrayNivel();	
+	    	updateTips("Nivel creado satisfactoriamente.", nivelValidation);
 	    }
 	});	
 }
@@ -2008,7 +2009,8 @@ function savePremio(){
 	    	console.log("Error, su solicitud no pudo ser atendida");
 	    },	
 	    complete: function(xhr) {	    	
-	    	fillArrayPremio()    	
+	    	fillArrayPremio()
+	    	updateTips("Premio creado satisfactoriamente.", premioValidation);
 	    }	    
 	});		
 }
@@ -2247,6 +2249,7 @@ function saveCliente(){
 		    	var hrefArray = json._links.self.href.split("/");
 		    	idUser = hrefArray[hrefArray.length -1];
 		    	customer.user.id = idUser;
+		    	updateTips("Cliente creado satisfactoriamente.", clienteValidation);
 		    },
 		    error: function (xhr, status) {    	
 		    	console.log("Error, su solicitud no pudo ser atendida");
@@ -2420,6 +2423,7 @@ function saveEmpleado(){
 	    		$("#idEmpleado").attr("value", "");
 	    	}
 	    	fillArrayEmpleado();
+	    	updateTips("Empleado creado satisfactoriamente.", empleadoValidation);
 	    },
 	    error: function (xhr, status) {	    	
 	    	console.log("Error, su solicitud no pudo ser atendida");
@@ -3406,46 +3410,6 @@ function completeOperarioName( idUser, email){
 	});
 	return line;
 		    			
-}
-
-function associateStatus( code, idStatus, idNivel, newRegla ) {
-	var strUrlStatus = window.location.protocol + "//" + window.location.host + "/cabin-web/estado/" + idStatus;
-	var strUrlNivel = window.location.protocol + "//" + window.location.host + "/cabin-web/nivel/" + idNivel;
-	var strUrlRegla = window.location.protocol + "//" + window.location.host + "/cabin-web/regla_puntuacion/"+code+"/status";
-	$.ajax({
-		async: false,
-		type: "PUT",
-	    url:strUrlRegla,			
-	    data: strUrlStatus, 
-	    contentType: 'text/uri-list',
-	    success: function (data) {
-	    	console.log("Se asigno estado a regla de puntuacion " + code);
-	    },
-	    error: function (xhr, status) {	    	
-	    	console.log("Error, su solicitud no pudo ser atendida");
-	    },
-	    complete: function () {
-	    	strUrlRegla = window.location.protocol + "//" + window.location.host + "/cabin-web/regla_puntuacion/"+code+"/level";
-	    	$.ajax({
-	    		async: false,
-	    		type: "PUT",
-	    	    url:strUrlRegla,			
-	    	    data: strUrlNivel, 
-	    	    contentType: 'text/uri-list',
-	    	    success: function (data) {
-	    	    	console.log("Se asigno nivel a regla de puntuacion " + code);
-	    	    },
-	    	    error: function (xhr, status) {	    	
-	    	    	console.log("Error, su solicitud no pudo ser atendida");
-	    	    },
-	    	    complete: function() {	    	
-	    	    	if (newRegla === 1){			    		
-	    	    		fillArrayRegla();
-	    	    	}
-	    	    }
-	    	});
-	    }
-	});	
 }
 
 function associateUser( idSede, idUser, newSede){

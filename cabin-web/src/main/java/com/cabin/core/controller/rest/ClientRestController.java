@@ -140,18 +140,23 @@ public class ClientRestController {
                 }
             }
         }
-
-        Calendar now = Calendar.getInstance();
-        Cash cash = cashRepository.findOne(recharge.getCashId());
-        cash.setModificationDate(now);
-        cashRepository.saveAndFlush(cash);
-
+        Cash cash = new Cash();
         Ticket ticket = new Ticket();
-        ticket.setCash(cash);
+        if ( recharge.getCashId() != null ){
+	        Calendar now = Calendar.getInstance();
+	        cash = cashRepository.findOne(recharge.getCashId());
+	        cash.setModificationDate(now);
+	        cashRepository.saveAndFlush(cash);
+	        ticket.setCash(cash);
+        }
+        Double expenseAmount = 0.0;
         ticket.setRechargeAmount(recharge.getAmount());
+        ticket.setExpenseAmount(expenseAmount); 
         ticket.setClient(client);
-        ticket.setEmployee(new Employee());
-        ticket.getEmployee().setId(recharge.getEmployeeId());
+        if ( recharge.getEmployeeId() != null ){
+	        ticket.setEmployee(new Employee());
+	        ticket.getEmployee().setId(recharge.getEmployeeId());
+        }        
         ticket.setDate(Calendar.getInstance());
         ticket.setRechargingType(new RechargingType());
         ticket.getRechargingType().setId(RechargingType.MANUAL);
@@ -173,11 +178,11 @@ public class ClientRestController {
     }
 
     private Integer getRechargePoints(PunctuationRule rule, Double recharge) {
-        return Math.toIntExact(Math.round(recharge * rule.getPoints() / rule.getRechargingFraction()));
+        return Math.toIntExact( (long)(recharge * rule.getPoints() / rule.getRechargingFraction()));
     }
 
-    private Integer getRechargeExperience(Experience experience, Double recharge) {
-        return Math.toIntExact(Math.round(recharge * experience.getExperienceToGive() / experience.getRechargeFraction()));
+    private Integer getRechargeExperience(Experience experience, Double recharge) {    	
+        return Math.toIntExact( (long)(recharge * experience.getExperienceToGive() / experience.getRechargeFraction()));
     }
 
 }

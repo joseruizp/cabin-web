@@ -72,20 +72,22 @@ $(function() {
         	var amount = Number($("#rechargeAmount").val());
         	
         	if (amount < rechargeInfo.minimumFraction) {
-        		$("#message").text("El monto es menor que el mínimo de recarga requerido.");
+        		$("#message").text("El monto es menor que el mínimo de recarga requerido: " + rechargeInfo.minimumFraction + " Soles.");
         		$( "#messageDialog" ).dialog({
 		      		  width: 700
 		      	}); 
         		return;
         	} else if (amount > rechargeInfo.maximumFraction) {
-        		$("#message").text("El monto es mayor que el máximo de recarga requerido.");
+        		$("#message").text("El monto es mayor que el máximo de recarga requerido: " + rechargeInfo.maximumFraction + " Soles.");
         		$( "#messageDialog" ).dialog({
 		      		  width: 700
 		      	}); 
         		return;
         	}
         	
-        	amount = (amount - (amount % rechargeInfo.rechargeFraction).toFixed(1));
+        	if ( !addTicket() )
+        		return;
+        	amount = (amount - (amount % rechargeInfo.rechargeFraction).toFixed(1)).toFixed(1);
         	$("#rechargeAmount").val("" + amount);
         	
         	var change = enterAmount - amount;
@@ -137,4 +139,46 @@ $(function() {
 		getComputers(headquarterId);
 		getConsoles(headquarterId);
     }
+    
+    function addTicket() {
+        var valid = true;
+        $("*").removeClass( "ui-state-error");        
+        var value = $("#rechargeAmount").val();
+        if ( value == 0){
+        	$("#message").text("Debe ingresar un monto mayor a 0.");
+    		$( "#messageDialog" ).dialog({
+	      		  width: 700
+	      	});            
+            return false;
+        }
+        valid = valid && checkRegexp( $("#rechargeAmount"), /^[0-9]\d{0,3}($|\.\d{0,1}$)/i);    
+        if ( !valid ){
+        	$("#message").text("Debe ingresar ingresar un monto válido, menor de 999.90 soles y de un solo decimal.");
+			$( "#messageDialog" ).dialog({
+      		  width: 700
+			});
+        }
+        return valid;
+    }
+
+   
+    function checkRegexp( o, regexp) {
+        var field = o.val();
+        field = trim(field);
+        if ( !( regexp.test( field ) ) ) {            
+            return false;
+        } else {
+            return true;
+        }
+    }
+    
+    //Validation
+    function trim(cadena){
+        // USO: Devuelve un string como el parámetro cadena pero quitando los espacios en blanco de los bordes.
+        var retorno=cadena.replace(/^\s+/g,'');
+        retorno=retorno.replace(/\s+$/g,'');
+        return retorno;
+    }
+
+    
 });
