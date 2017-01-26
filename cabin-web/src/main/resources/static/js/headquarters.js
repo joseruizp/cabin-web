@@ -211,6 +211,9 @@
 		var hostname = window.location.protocol + "//" + window.location.host;
 		var strUrl = hostname + "/cabin-web/get/operators";
 		var operators = "";
+		var ulOperator = $("#operatorsList");
+		var line = "";
+		var name = "", lastname = "";
 		$.ajax({
 			type: "GET",
 		    url:strUrl,
@@ -218,10 +221,14 @@
 		    data: {id: idHeadquarter},
 		    contentType: 'application/json',
 		    success: function (data) {
-		    	$.each(data, function(index, value) {
-		    		operators += value.lastname + ", " + value.name + "<br/>";
+		    	$.each(data, function(index, value) {		    		
+		    		name = value.name;
+		    		lastname = value.lastname;
+	    			line += "<li><a href='/' onclick='return false;'>"+ lastname + ", " + name + "</a></li>";	    			
 		    	});
-		    	$("#operatorsSpan").html(operators);
+		    	ulOperator.html(line);		    	
+		    	var opeatorHtml =  $("#operatorsList li a");	    	
+    	    	$(opeatorHtml).parents(".dropdown").find('.btn').html(lastname + ", " + name +' <span class="caret"></span>');
 		    },
 		    error: function (xhr, status) {	    	
 		    	console.log("Error, su solicitud no pudo ser atendida");

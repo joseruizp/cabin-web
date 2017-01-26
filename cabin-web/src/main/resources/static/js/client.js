@@ -30,7 +30,7 @@ $(function() {
 		    data: {id : clientId},
 		    contentType: 'application/json',
 		    success: function (data) {
-		    	$("#clientName").text(data.name);
+		    	$("#clientName").text(data.user.name);
 		    	$("#level").text(data.level.name);
 		    	$("#points").text(data.points);
 		    	$("#balance").text(data.balance);
@@ -90,7 +90,7 @@ $(function() {
         	amount = (amount - (amount % rechargeInfo.rechargeFraction).toFixed(1)).toFixed(1);
         	$("#rechargeAmount").val("" + amount);
         	
-        	var change = enterAmount - amount;
+        	var change = (enterAmount - amount).toFixed(1);
         	var recharge = {};
         	recharge.clientId = clientId;
         	recharge.amount = amount;

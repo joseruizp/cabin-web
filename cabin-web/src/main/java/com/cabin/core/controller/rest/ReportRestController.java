@@ -106,7 +106,8 @@ public class ReportRestController {
 
         Calendar endCalendar = Calendar.getInstance();
         endCalendar.setTime(DATE_FORMTAT.parse(endDate));
-
+        endCalendar.add(Calendar.DATE, 1);        
+        
         if (headquarterId == 0) {
             return ticketRepository.getTicketReport(startCalendar, endCalendar);
         }

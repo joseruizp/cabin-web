@@ -352,7 +352,7 @@ function addRechargeEvent() {
             
             amount = (amount - (amount % rechargeInfo.rechargeFraction).toFixed(1)).toFixed(1);
             
-            var change = enterAmount - amount;
+            var change = (enterAmount - amount).toFixed(1);
             
             $("#rechargingAmount").val("");
             $("#enterAmount").val("");
@@ -628,10 +628,9 @@ function fillClientetbl(){
                 clientes[i].points,
                 clientes[i].experience,
                 clientes[i].estado,
-                "",
-                "",
         ] ).draw( false );
 	};
+	/*
 	if (size > 0 ){
 	    $('#clienteTbl > tbody  > tr').each(function() {
 		    var edit = "<td><a onclick='editCliente("+ clientes[j].id +","+ j+")'><i class='fa fa-pencil icons' title='Editar'></i></a></td>";
@@ -641,6 +640,7 @@ function fillClientetbl(){
 		    tr.find('td:last').after(edit); tr.find('td:last').after(remove);
 	    });
 	}
+	*/
 }
 
 

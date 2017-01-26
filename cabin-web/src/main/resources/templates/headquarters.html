@@ -115,7 +115,7 @@
 				<div class="row">
 					<div class="col-md-12" style="margin-top: 40px">
 						<h1 id="tituloEquipos" class="title text-center">Definicion de <span>Equipos</span></h1>
-						<p class="lead text-center">Lorem ipsum dolor sit amet, consectetur adipisicing elit. laudantium culpa tenetur.</p>
+						<p class="lead text-center"></p>
 					</div>
 				</div>
 				<div class="row" style="margin-left: 156px">
@@ -155,7 +155,7 @@
 				<div class="row">
 					<div class="col-md-12" style="margin-top: 40px">
 						<h1 id="tituloEquipos" class="title text-center">Definicion de <span>Consolas</span></h1>
-						<p class="lead text-center">Lorem ipsum dolor sit amet, consectetur adipisicing elit. laudantium culpa tenetur.</p>
+						<p class="lead text-center"></p>
 					</div>
 				</div>
 				<div class="row" style="margin-left: 156px">
@@ -197,7 +197,7 @@
 				<div class="row">
 					<div class="col-md-12">
 						<h1 id="about" class="title text-center">Definicion de <span>Tarifas</span></h1>
-						<p class="lead text-center">Lorem ipsum dolor sit amet, consectetur adipisicing elit. laudantium culpa tenetur.</p>
+						<p class="lead text-center"></p>
 						<div class="row">
 							<form class="form-horizontal" role="form" style="margin-left: 170px">
 								<div class="form-group">
@@ -297,7 +297,7 @@
 				<div class="row">
 					<div class="col-md-12">
 						<h1 id="about" class="title text-center">Datos <span>Generales</span></h1>
-						<p class="lead text-center">Lorem ipsum dolor sit amet, consectetur adipisicing elit. laudantium culpa tenetur.</p>
+						<p class="lead text-center"></p>
 						<div class="row">
 							<form class="form-horizontal" role="form" style="margin-left: 170px">
 								<div class="form-group">
@@ -309,8 +309,20 @@
 									<label class="control-label col-md-4" th:text="${headquarter.address}" th:unless="${headquarter.name == null}" for="sedeAddress"></label>
 								</div>
 								<div class="form-group">
-									<label class="control-label col-md-4" for="sede"><b>Operadores</b></label>
-									<span class="control-label col-md-4" id="operatorsSpan"></span>
+																		
+									<label class="control-label col-sm-4" for="operatorsList">Operadores:</label>
+									<div class="col-sm-2">
+									<div class="col-sm-4">
+										<div class="dropdown">
+											<button class="btn btn-primary dropdown-toggle" type="button"
+												data-toggle="dropdown">
+												<span class="caret"></span>
+											</button>
+											<ul id="operatorsList" class="dropdown-menu">																													
+											</ul>
+										</div>
+									</div>
+							
 								</div>
 								<!-- 
 								<div class="form-group">

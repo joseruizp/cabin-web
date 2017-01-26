@@ -51,7 +51,7 @@ public interface TicketRepository extends JpaRepository<Ticket, Long> {
             "(t.cash.id, t.employee.name, t.employee.lastname, t.cash.startDate, t.cash.modificationDate, " +
             "coalesce(SUM(t.rechargeAmount),0), coalesce(SUM(t.expenseAmount),0))" +
             "FROM com.cabin.core.persistence.domain.Ticket t " +
-            "WHERE t.cash.headquarter.id = ?1 AND t.date between ?2 and ?3 AND t.client != null " +
+            "WHERE t.cash.headquarter.id = ?1 AND t.cash.modificationDate between ?2 and ?3 AND t.client != null " +
             "GROUP BY t.cash.id, t.employee.name, t.employee.lastname, t.cash.startDate, t.cash.modificationDate " +
             "ORDER BY t.cash.id DESC")
     public List<TicketReport> getTicketReport(Long headquarterId, Calendar startCalendar, Calendar endCalendar);
@@ -60,8 +60,9 @@ public interface TicketRepository extends JpaRepository<Ticket, Long> {
             "(t.cash.id, t.employee.name, t.employee.lastname, t.cash.startDate, t.cash.modificationDate, " +
             "coalesce(SUM(t.rechargeAmount),0), coalesce(SUM(t.expenseAmount),0))" +
             "FROM com.cabin.core.persistence.domain.Ticket t " +
-            "WHERE t.date between ?1 and ?2 AND t.client != null " +
+            "WHERE t.cash.modificationDate between ?1 and ?2 AND t.client != null " +
             "GROUP BY t.cash.id, t.employee.name, t.employee.lastname, t.cash.startDate, t.cash.modificationDate " +
             "ORDER BY t.cash.id DESC")
     public List<TicketReport> getTicketReport(Calendar startCalendar, Calendar endCalendar);
+        
 }
