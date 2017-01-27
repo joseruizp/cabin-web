@@ -30,7 +30,7 @@
 		<header class="header fixed clearfix navbar navbar-fixed-top">
 			<div class="container">
 				<div class="row">
-					<div class="col-md-3">
+					<div class="col-md-6">
 
 						<!-- header-left start --> 
 						<div class="header-left">
@@ -42,14 +42,14 @@
 
 							<!-- name-and-slogan -->
 							<div class="logo-section smooth-scroll">
-								<div class="brand"><a href="#banner">Sede: Local UNI</a></div>								
+								<div class="brand"><a href="#banner" th:text="${headquarter.name + ' | ' + client.name + ' ' + client.lastname}" th:unless="${headquarter.name == null}" > </a></div>								
 							</div>
 
 						</div>
 						<!-- header-left end -->
 
 					</div>
-					<div class="col-md-8">
+					<div class="col-md-5">
 
 						<!-- header-right start --> 
 						<div class="header-right">
@@ -76,7 +76,7 @@
 											<ul class="nav navbar-nav navbar-right">
 												<li class="active"><a href="#recarga">Recarga</a></li>
 												<li class="active"><a href="#equipos">Equipos</a></li>
-												<li><a href="#consolas">Consolas</a></li>
+												<li class="active"><a href="#consolas">Consolas</a></li>
 											</ul>
 										</div>
 
@@ -95,7 +95,7 @@
 					<div class="col-md-1">
 						<div class="header-right">
 							<div class="logo smooth-scroll">
-								<a th:href="@{/logout}"><img id="logo" th:src="@{images/logout_icon.png}" alt="Logout"></img></a>
+								<a th:href="@{/logout}"><img id="logo" th:src="@{images/logout_icon.png}" alt="Logout"></img></a>								
 							</div>
 						</div>
 					</div>
@@ -347,6 +347,7 @@
 
 		<!-- Custom Scripts -->
 		<script type="text/javascript" th:src="@{js/computerAndConsole.js}"></script>
+		<script type="text/javascript" th:src="@{js/custom.js}"></script>
 		<script type="text/javascript" th:src="@{js/client.js}"></script>
 
 	</body>

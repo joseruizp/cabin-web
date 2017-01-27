@@ -13,8 +13,12 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 import com.cabin.core.enums.SessionEnum;
 import com.cabin.core.persistence.domain.Cash;
+import com.cabin.core.persistence.domain.Headquarter;
 import com.cabin.core.persistence.domain.Status;
 import com.cabin.core.persistence.repository.CashRepository;
+import com.cabin.core.persistence.repository.ClientRepository;
+import com.cabin.core.persistence.repository.EmployeeRepository;
+import com.cabin.core.persistence.repository.HeadquarterRepository;
 
 @Controller
 public class OperatorController {
@@ -23,14 +27,18 @@ public class OperatorController {
 
     @Autowired
     private CashRepository cashRepository;
-
+    @Autowired
+    private EmployeeRepository employeeRepository;
+    @Autowired
+	private HeadquarterRepository headquarterRepository;
+    
     @RequestMapping(value = "/operator", method = RequestMethod.GET)
     public String home(HttpServletRequest request, Model model) {
         HttpSession session = request.getSession();
         Long userId = (Long) session.getAttribute(SessionEnum.USER_ID.name());
         Long headquarterId = Long.parseLong((String) session.getAttribute(SessionEnum.HEADQUARTER_ID.name()));
         Long employeeId = (Long) session.getAttribute(SessionEnum.EMPLOYEE_ID.name());
-
+        
         Cash cash = cashRepository.findByEmployeeIdAndStatusId(employeeId, Status.ACTIVE);
         boolean isFirst = cash == null;
 
@@ -43,7 +51,8 @@ public class OperatorController {
         model.addAttribute("employeeId", employeeId);
         model.addAttribute("headquarterId", headquarterId);
         model.addAttribute("isFirst", isFirst);
-
+        model.addAttribute("employee", employeeRepository.findById(employeeId));        
+		model.addAttribute("headquarter", headquarterRepository.findById(headquarterId));
         return "operator";
     }
 

@@ -17,6 +17,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.cabin.core.enums.SessionEnum;
 import com.cabin.core.persistence.domain.Headquarter;
+import com.cabin.core.persistence.repository.EmployeeRepository;
 import com.cabin.core.persistence.repository.HeadquarterRepository;
 
 
@@ -29,7 +30,9 @@ public class AdminController {
 	private static final Logger logger = LoggerFactory.getLogger(AdminController.class);
 	
 	@Autowired
-	HeadquarterRepository repository; 
+	private HeadquarterRepository repository; 
+	@Autowired
+    private EmployeeRepository employeeRepository;
 	/**
 	 * Simply selects the home view to render by returning its name.
 	 */
@@ -37,7 +40,7 @@ public class AdminController {
 	public String home(HttpServletRequest request, Model model) {
         HttpSession session = request.getSession();
         Long userId = (Long) session.getAttribute(SessionEnum.USER_ID.name());
-
+        Long employeeId = (Long) session.getAttribute(SessionEnum.EMPLOYEE_ID.name());
         //Headquarter headquarter = headquarterRepository.findByUserId(userId);
         //session.setAttribute(SessionEnum.HEADQUARTER_ID.name(), headquarter.getId());
         
@@ -46,7 +49,8 @@ public class AdminController {
 
         model.addAttribute("adminId", session.getAttribute(SessionEnum.EMPLOYEE_ID.name()));
         //model.addAttribute("headquarterId", headquarter.getId());
-		
+        model.addAttribute("employee", employeeRepository.findById(employeeId));
+        
 		return "admin";
 	}
 	

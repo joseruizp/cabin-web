@@ -45,7 +45,7 @@
 
 							<!-- name-and-slogan -->
 							<div class="logo-section smooth-scroll">
-								<div class="brand"><a href="#banner">Cabinas</a></div>								
+								<div class="brand"><a href="#banner" th:text="${ ' Cabinas | ' + employee.name + ' ' + employee.lastname}" th:unless="${employee.name == null}" > </a></div>								
 							</div>
 
 						</div>
@@ -107,7 +107,7 @@
 					<div class="col-md-1">
 						<div class="header-right">
 							<div class="logo smooth-scroll">
-								<a th:href="@{/logout}"><img id="logo" th:src="@{images/logout_icon.png}" alt="Logout"></img></a>
+								<a th:href="@{/logout}"><img id="logo" th:src="@{images/logout_icon.png}" alt="Logout"></img></a>								
 							</div>
 						</div>
 					</div>
@@ -119,10 +119,10 @@
 		<!-- banner start --> 
 		<div id="sedes">
 			<div class="container">
-				<br/>
-				<br/>
-				<br/>
-				<br/>				
+				<br/><br/>
+				<br/><br/>
+				<br/><br/>
+				<br/><br/>				
 			</div>
 		</div>
 		<!-- banner end -->

@@ -5,6 +5,7 @@ import javax.servlet.http.HttpSession;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -12,6 +13,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import com.cabin.core.enums.SessionEnum;
+import com.cabin.core.persistence.repository.ClientRepository;
+import com.cabin.core.persistence.repository.HeadquarterRepository;
 
 /**
  * Handles requests for the application home page.
@@ -20,7 +23,11 @@ import com.cabin.core.enums.SessionEnum;
 public class ClientController {
 
     private static final Logger logger = LoggerFactory.getLogger(ClientController.class);
-
+    @Autowired
+	private ClientRepository clientRepository;
+    @Autowired
+	private HeadquarterRepository headquarterRepository;
+    
     @PreAuthorize("hasAuthority('USER')")
     @RequestMapping(value = "/client", method = RequestMethod.GET)
     public String home(HttpServletRequest request, Model model) {
@@ -28,10 +35,15 @@ public class ClientController {
         
         logger.info("Client id is:'" + session.getAttribute(SessionEnum.CLIENT_ID.name()) + "'");
         logger.info("Headquarter id is:'" + session.getAttribute(SessionEnum.HEADQUARTER_ID.name()) + "'");
-
-        model.addAttribute("clientId", session.getAttribute(SessionEnum.CLIENT_ID.name()));
+        Long headquarterId = Long.parseLong((String) session.getAttribute(SessionEnum.HEADQUARTER_ID.name()));
+        model.addAttribute("clientId", headquarterId);
         model.addAttribute("headquarterId", session.getAttribute(SessionEnum.HEADQUARTER_ID.name()));
         logger.info("adding attribute headquarter for client");
+        
+        Long clientId = (Long) session.getAttribute(SessionEnum.CLIENT_ID.name());
+        model.addAttribute("client", clientRepository.findById(clientId));
+        model.addAttribute("headquarter", headquarterRepository.findById(headquarterId));
+        
         return "client";
     }
 

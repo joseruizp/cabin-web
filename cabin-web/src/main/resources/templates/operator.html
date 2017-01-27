@@ -32,7 +32,7 @@
 		<header class="header fixed clearfix navbar navbar-fixed-top">
 			<div class="container">
 				<div class="row">
-					<div class="col-md-3">
+					<div class="col-md-5">
 
 						<!-- header-left start --> 
 						<div class="header-left">
@@ -44,14 +44,14 @@
 
 							<!-- name-and-slogan -->
 							<div class="logo-section smooth-scroll">
-								<div class="brand"><a href="#banner">Sede: Local UNI</a></div>								
+								<div class="brand"><a href="#banner" th:text="${headquarter.name + ' | ' + employee.name + ' ' + employee.lastname}" th:unless="${headquarter.name == null}" ></a></div>								
 							</div>
 
 						</div>
 						<!-- header-left end -->
 
 					</div>
-					<div class="col-md-8">
+					<div class="col-md-6">
 
 						<!-- header-right start --> 
 						<div class="header-right">
@@ -77,11 +77,11 @@
 										<div class="collapse navbar-collapse scrollspy smooth-scroll" id="navbar-collapse-1">
 											<ul class="nav navbar-nav navbar-right">
 												<li class="active"><a href="#nuevoCliente">Clientes</a></li>
-												<li><a href="#nuevaRecarga">Recargas</a></li>
-												<li><a href="#gastos">Gastos</a></li>
-												<li><a href="#equipos">Equipos</a></li>
-												<li><a href="#consolas">Consolas</a></li>
-												<li><a href="#nuevaCierreCaja">Cierre de Caja</a></li>
+												<li class="active"><a href="#nuevaRecarga">Recargas</a></li>
+												<li class="active"><a href="#gastos">Gastos</a></li>
+												<li class="active"><a href="#equipos">Equipos</a></li>
+												<li class="active"><a href="#consolas">Consolas</a></li>
+												<li class="active"><a href="#nuevaCierreCaja">Cierre de Caja</a></li>
 											</ul>
 										</div>
 
@@ -100,7 +100,7 @@
 					<div class="col-md-1">
 						<div class="header-right">
 							<div class="logo smooth-scroll">
-								<a th:href="@{/logout}"><img id="logo" th:src="@{images/logout_icon.png}" alt="Logout"></img></a>
+								<a th:href="@{/logout}"><img id="logo" th:src="@{images/logout_icon.png}" alt="Logout"></img></a>								
 							</div>
 						</div>
 					</div>
@@ -112,9 +112,9 @@
 		<!-- banner start --> 
 		<div id="nuevoCliente">
 			<div class="container">				
-				<br/>
-				<br/>
-				<br/>
+				<br/><br/>
+				<br/><br/>
+				<br/><br/>
 				<br/>
 				<br/>
 				<div class="row">
@@ -274,11 +274,6 @@
 		<!-- banner start --> 
 		<div id="nuevaRecarga">
 			<div class="container">
-				<br/>
-				<br/>
-				<br/>
-				<br/>
-				<br/>
 				<div class="row">
 					<div class="col-md-12" style="margin-top: 40px">
 						<h1 id="tituloEquipos" class="title text-center">Nueva <span>Recarga</span></h1>
@@ -619,6 +614,7 @@
 		
 		<!-- Custom Scripts -->
 		<script type="text/javascript" th:src="@{js/operator.js}"></script>
+		<script type="text/javascript" th:src="@{js/custom.js}"></script>
 		<script type="text/javascript" th:src="@{js/computerAndConsole.js}"></script>
 		<script type="text/javascript" th:src="@{js/computerStatusClient.js}"></script>
 
