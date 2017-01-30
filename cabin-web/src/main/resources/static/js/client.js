@@ -113,10 +113,18 @@ $(function() {
     		    	showMessage("Recarga realizada satisfactoriamente", "rechargeAlert");
     		    	var isAnonymous = "1" === data.user.anonymous;
     		    	if (isAnonymous) {
+    		    		$("#generatedEmail").text(data.user.name);
     		    		$("#generatedPassword").text(data.user.pass);
     		    		$( "#passwordDialog" ).dialog({
-    		      		  width: 700
-    		      	}); 
+    		      		  	width: 700,
+	    		      		buttons:{ 
+	    		      			"1":
+	    		      			{ text: "Aceptar", click: function () {                	
+	    			                $(this).dialog('close');                
+	    		      				}, "class":"btn btn-default"
+	    		      			}
+	    		      		}
+    		    		}); 
     		    	}
     		    },
     		    error: function (xhr, status) {	    	

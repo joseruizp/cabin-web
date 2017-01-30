@@ -1,7 +1,6 @@
 clients = []; niveles = [];
 estados = []; tipo_doc = [];
 clientes = []; clienteIndex = -1;
-data = [];
 tickets = []; ticketIndex = -1;
 recargaValidation = "";
 clienteValidation = ""; 
@@ -12,6 +11,15 @@ var cashId = 0;
 
 $(document).ready(function() {
         cashId = $("#cashId").val();
+        
+        $(".input-group.date").datepicker({
+		    format: "dd/mm/yyyy",
+		    startDate: "01/01/1900", 
+		    language: "es",
+		    autoclose: true,
+		    todayHighlight: true
+		 });	
+		$('.input-group.date').datepicker('setDate',"");
         
         //Initialize validation divs
         recargaValidation = $("#recargaValidation");
@@ -49,6 +57,26 @@ $(document).ready(function() {
 			if (status.toLowerCase() == estados[0].name.toLowerCase() ){ $(this).parents(".dropdown").find('.btn').val(estados[0].id);}
 			else{ $(this).parents(".dropdown").find('.btn').val(estados[1].id); }
 		});  
+        
+        $("#expenseSelect li a").click(function(){
+			$(this).parents(".dropdown").find('.btn').html($(this).text() + ' <span class="caret"></span>');
+			var expenseSelect = $(this).text();
+			if (expenseSelect.toLowerCase() == "alimentación" ){
+				$("#expenseClientDiv").hide();
+				$(this).parents(".dropdown").find('.btn').val("1");
+			}
+			else if (expenseSelect.toLowerCase() == "devolución usuario anónimo" ) { 
+				$(this).parents(".dropdown").find('.btn').val("2");
+				$("#expenseClientDiv").show();
+				fillClients(true);
+			}
+			else {
+				$(this).parents(".dropdown").find('.btn').val("3");
+				$("#expenseClientDiv").show();
+				fillClients(false);
+			}			
+			
+		});
         
         
         $('#clienteTbl').DataTable({			
@@ -94,24 +122,28 @@ function format(item) { return item.tag; }
 function fillArrayClients(){
     var length = clients.length;
     clients.splice(0, length);
-    var strUrl = window.location.protocol + "//" + window.location.host + "/cabin-web/get/allClients/";
+    var strUrl = window.location.protocol + "//" + window.location.host + "/cabin-web/get/allClientsAndAnonymous/";
+    var data = [];
     $.ajax({
         url:strUrl,
         crossDomain: true,
         dataType: "json",
         success: function (json) {
             $.each(json, function(index, value) {
-                clients.push({
-                    id: value.id,
-                    name: value.name,
-                    email: value.email,
-                    balance: value.balance,
-                });
-                data.push({ 
-                    id: value.id,
-                    text: value.name + " - " + value.email,
-                });
+            	if ( (value.user.anonymous && value.user.status.id == 2 && value.balance == 0) || (value.user.anonymous == 0 && value.status.id == 1) ){
+	                clients.push({
+	                    id: value.id,
+	                    name: value.name,
+	                    email: value.email,
+	                    balance: value.balance,
+	                });
+	                data.push({ 
+	                    id: value.id,
+	                    text: value.name + " - " + value.email,
+	                });
+            	}
             });
+            
         },
         complete: function(){
             var placeholder = "<i class='fa fa-search'></i>  " + "Seleccione un cliente";
@@ -202,7 +234,17 @@ function addCloseCashEvent(){
                     $("#restAmount").text(json.rest);
                     $("#totalAmount").prop('disabled', true);
                     $( "#closeCashDialog" ).dialog({
-                          width: 700
+                          width: 700,
+                          resizable: false,
+                          buttons:{ 
+	    		      			"1":
+	    		      			{ text: "Aceptar", click: function () {                	
+	    			                $(this).dialog('close');
+	    			                window.location = ($("#logout").attr('href'));   
+	    		      				}, "class":"btn btn-default"
+	    		      			}
+	    		      	   },
+                    	   open: function(event, ui) { $(".ui-dialog-titlebar-close", ui.dialog).hide(); }
                     });
                 },
                 error: function (xhr, status) {
@@ -380,6 +422,21 @@ function addRechargeEvent() {
                     updateClientBalanceArray(data.id, data.balance);
                     $("#rechargeChange").text(change);
                     updateTips("Recarga realizada satisfactoriamente.", recargaValidation);
+                    var isAnonymous = "1" === data.user.anonymous;
+    		    	if (isAnonymous) {
+    		    		$("#generatedEmail").text(data.user.name);
+    		    		$("#generatedPassword").text(data.user.pass);
+    		    		$( "#passwordDialog" ).dialog({
+    		      		  	width: 700,
+	    		      		buttons:{ 
+	    		      			"1":
+	    		      			{ text: "Aceptar", click: function () {                	
+	    			                $(this).dialog('close');                
+	    		      				}, "class":"btn btn-default"
+	    		      			}
+	    		      		}
+    		    		}); 
+    		    	}
                 },
                 error: function (xhr, status) {
                     console.log("Error, su solicitud no pudo ser atendida");
@@ -414,30 +471,30 @@ function updateClientBalanceArray(clientId, balance) {
     }    
 }
 
-function addEventExpenses() {
-    $("#expenseSelect").change(function(e) {
-        var type = $(this).val();
-        if (type === "1") {
-            $("#expenseClientDiv").hide();
-        } else {
-            $("#expenseClientDiv").show();
-            fillClients(type === "2");
-        }
-    });
+function addEventExpenses() {   
     
     $("#btnExpenses").click(function(e) {
         e.preventDefault();
         if (addExpenses()) {
             var expenses = {};
             expenses.cashId = cashId;
-            expenses.expenseTypeId = $("#expenseSelect").val();
+            
+            var expenseSelectHtml = $("#expenseSelect li a");	
+        	var expenseSelect = $(expenseSelectHtml).parents(".dropdown").find('.btn').val();
+            
+            expenses.expenseTypeId = expenseSelect;            
             expenses.amount = $("#expenseAmount").val();
             expenses.employeeId = $("#employeeId").val();
             if ($("#expenseClientDiv").is(":visible")) {
-                expenses.clientId = $("#clientId").val();
+                expenses.clientId = $("#expenseClientSelect").val();
             }
             
-            console.log("expenses: " + JSON.stringify(expenses));
+            $(expenseSelectHtml).parents(".dropdown").find('.btn').html('Seleccionar <span class="caret"></span>');
+        	$(expenseSelectHtml).parents(".dropdown").find('.btn').val("");
+        	$("#expenseClientDiv").hide();
+            $("#expenseAmount").val("");
+            
+        	console.log("expenses: " + JSON.stringify(expenses));
             
             $.ajax({
                 type: "POST",
@@ -466,6 +523,7 @@ function addExpenses() {
 function fillClients(anonymous) {
     var headquarterId = $("#headquarterId").val();
     var strUrl = window.location.protocol + "//" + window.location.host + "/cabin-web/get/allActiveUsersByHeadquarter";
+    var dataClients = [];    
     $.ajax({
         type: "GET",
         url:strUrl,
@@ -473,17 +531,36 @@ function fillClients(anonymous) {
         data: {headquarterId: headquarterId, anonymous: anonymous},
         contentType: 'application/json',
         success: function (data) {
-            $.each(data, function (index, value) {
-                $('#expenseClientSelect').append($('<option/>', { 
-                    value: value.id,
-                    text : value.name
-                }));
-            });
+            $.each(data, function (index, value) {            	
+            	dataClients.push({ 
+                    id: value.id,
+                    text: value.name + " - " + value.email,
+                });            	
+            });            
+        },
+        complete: function(){
+            var placeholder = "<i class='fa fa-search'></i>  " + "Seleccione un cliente";
+            $("#expenseClientSelect").select2({
+                width: "100%",
+                data: dataClients,
+                formatSelection: format,
+                formatResult: format,
+                placeholder: placeholder,
+                allowClear: true,
+                escapeMarkup: function(m) { 
+                       return m; 
+                },
+                language: {
+                       "noResults": function(){
+                           return "No se encontraron resultados";
+                       }
+                },
+            });            
         },
         error: function (xhr, status) {
             console.log("Error, su solicitud no pudo ser atendida");
         }
-    });
+    });    
 }
 
 

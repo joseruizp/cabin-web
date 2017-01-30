@@ -117,19 +117,19 @@
 						<p class="lead text-center"></p>
 					</div>
 				</div>
-				<div class="row" style="margin-bottom: 40px">
+				<div class="row">
 					<div class="col-md-2"></div>
 					<div class="col-md-3">
 						<form class="form-horizontal" role="form">
 							<div class="form-group">
-								<label class="control-label col-sm-5">Usuario:</label>
+								<label class="control-label col-sm-5" >Usuario:</label>
 								<label class="control-label col-sm-2" id="clientName"></label>
 							</div>
-							<div class="form-group">
+							<div class="form-group" th:if="${client.user.anonymous == 0}" >
 								<label class="control-label col-sm-5">Nivel:</label>
 								<label class="control-label col-sm-2" id="level"></label>
 							</div>
-							<div class="form-group">
+							<div class="form-group hidden">	
                                 <label class="control-label col-sm-5">Minimo de Recarga:</label> <label
                                     class="control-label col-sm-2" id="minimumRecharge"></label>
                             </div>
@@ -137,7 +137,7 @@
 					</div>
 					<div class="col-md-3">
 						<form class="form-horizontal" role="form">
-							<div class="form-group">
+							<div class="form-group" th:if="${client.user.anonymous == 0}">
 								<label class="control-label col-sm-5">Puntos:</label> <label
 									class="control-label col-sm-2" id="points"></label>
 							</div>
@@ -145,7 +145,7 @@
 								<label class="control-label col-sm-5">Saldo:</label> <label
 									class="control-label col-sm-2" id="balance"></label>
 							</div>
-							<div class="form-group">
+							<div class="form-group hidden">
                                 <label class="control-label col-sm-5">Maximo de Recarga:</label> <label
                                     class="control-label col-sm-2" id="maximumRecharge"></label>
                             </div>
@@ -153,20 +153,44 @@
 					</div>
 					<div class="col-md-3">
 						<form class="form-horizontal" role="form">
-							<div class="form-group">
+							<div class="form-group" th:if="${client.user.anonymous == 0}">
 								<label class="control-label col-sm-5">Experiencia:</label> <label
 									class="control-label col-sm-2" id="experience"></label>
 							</div>
-							<div class="form-group">
+							<div class="form-group hidden">
                                 <label class="control-label col-sm-5">Fraccion de Recarga:</label> <label
                                     class="control-label col-sm-2" id="rechargeFraction"></label>
                             </div>
 						</form>
-					</div>
+					</div>					
+				</div>
+				<div class="row">					
+					<div class="col-md-2"></div>
+					<div class="col-md-8">
+						<form class="form-horizontal" role="form">
+							<div class="form-group">						
+									<label class="control-label col-sm-6">Para la recarga tener en cuenta lo siguiente:</label>									
+							</div>
+						</form>		
+					</div>			
+				</div>
+				<div class="row">					
+					<div class="col-md-2"></div>
+					<div class="col-md-8" style="margin-left:90px;">
+						<form class="form-horizontal" role="form">
+							<div class="form-group">
+									<ul class="control-label col-sm-6 list-group" style="text-align:left;">
+										  <li class="list-group-item list-group-item-warning">El monto mínimo para recargar es de <span th:text="${parameters[1].value}"> </span> soles</li>
+										  <li class="list-group-item list-group-item-warning">El monto máximo para recargar es de <span th:text="${parameters[2].value}"> </span> soles</li>
+										  <li class="list-group-item list-group-item-warning">Solo se puede recargar de <span th:text="${parameters[0].value}"></span> en <span th:text="${parameters[0].value}"> </span> </li>
+									</ul>
+							</div>
+						</form>		
+					</div>			
 				</div>
 				<div class="row" style="margin-left: 90px">
 					<div class="form-group" style="margin-top: 10px">
-						<div class="col-md-3"></div>
+						<div class="col-md-2"></div>
 						<div class="col-md-6">
 							<form role="form">
 								<div class="form-group">
@@ -181,7 +205,7 @@
 									<label>Vuelto:</label> 
 									<label id="rechargeChange"></label> 
 								</div>
-								<button type="submit" class="btn btn-default" id="rechargeBtn">Grabar</button>
+								<button type="submit" class="btn btn-default" id="rechargeBtn">Recargar</button>
 								<div id="rechargeAlert" class="alert alert-danger" style="display:none"></div>
 							</form>
 						</div>
@@ -319,6 +343,7 @@
 		<div id="passwordDialog" title="Informacion Consola" style="display: none;">
 			<div class="col-md-10" style="margin-bottom: 10px">
 				<form class="form-horizontal" role="form">
+					El usuario autogenerado es: <span id="generatedEmail"></span><br></br>
 					El password autogenerado es: <span id="generatedPassword"></span>
 				</form>
 			</div>

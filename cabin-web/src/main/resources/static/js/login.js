@@ -3,7 +3,7 @@
 	errors['E001'] = 'Usuario no existe.';
 	errors['E002'] = 'Usuario no existe.';
 	errors['E003'] = 'Usuario inactivo.';
-	errors['E004'] = 'Maximo numero de operadores en la sede se ha exedido.';
+	errors['E004'] = 'Se ha excedido el maximo número de operadores en la sede.';
 	
 	$(".input").focusin(function() {
 		$(this).find("span").animate({

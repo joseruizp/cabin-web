@@ -14,14 +14,33 @@ import com.cabin.core.persistence.domain.Cash;
 import com.cabin.core.persistence.domain.Client;
 import com.cabin.core.persistence.domain.Employee;
 import com.cabin.core.persistence.domain.ExpenseType;
+import com.cabin.core.persistence.domain.Experience;
+import com.cabin.core.persistence.domain.Level;
+import com.cabin.core.persistence.domain.PunctuationRule;
 import com.cabin.core.persistence.domain.Ticket;
 import com.cabin.core.persistence.repository.CashRepository;
+import com.cabin.core.persistence.repository.ClientRepository;
+import com.cabin.core.persistence.repository.ExperienceRepository;
+import com.cabin.core.persistence.repository.LevelRepository;
+import com.cabin.core.persistence.repository.PunctuationRuleRepository;
 import com.cabin.core.persistence.repository.TicketRepository;
 import com.cabin.core.view.ExpenseCash;
 
 @RestController
 public class TicketRestController {
 
+	@Autowired
+    private PunctuationRuleRepository punctuationRuleRepository;
+
+    @Autowired
+    private ExperienceRepository experienceRepository;
+
+    @Autowired
+    private LevelRepository levelRepository;
+
+	@Autowired
+    private ClientRepository clientRepository;
+	
     @Autowired
     private TicketRepository ticketRepository;
 
@@ -46,7 +65,35 @@ public class TicketRestController {
     @RequestMapping(value = "/post/expenses", method = RequestMethod.POST, produces = { "application/json;charset=UTF-8" })
     public Ticket saveExpenses(@RequestBody ExpenseCash expenseCash) {
         Calendar now = Calendar.getInstance();
+        
+        Client client = clientRepository.findOne(expenseCash.getClientId());
+        Double balance = client.getBalance() - expenseCash.getAmount();
+        if (balance <= 0)
+        	balance = 0.0;
+        client.setBalance(balance);
+        
+        if ( !client.getUser().isAnonymous() ){
+        	PunctuationRule punctuationRule = punctuationRuleRepository.findByLevelId(client.getLevel().getId());
 
+            Experience experience = experienceRepository.findByLevelId(client.getLevel().getId());
+
+            client.setPoints(client.getPoints() - getRechargePoints(punctuationRule, expenseCash.getAmount()));
+            Integer newExperience = client.getExperience() - getRechargeExperience(experience, expenseCash.getAmount());
+            client.setExperience(newExperience);
+
+            List<Level> levels = levelRepository.findAll();
+            for (Level level : levels) {
+                Integer finalExperience = level.getFinalExperience();
+                if (finalExperience == null) {
+                    finalExperience = Integer.MAX_VALUE;
+                }
+                if (newExperience >= level.getInitialExperience() && newExperience <= finalExperience) {
+                    client.setLevel(level);
+                }
+            }
+        }
+        clientRepository.saveAndFlush(client);
+        
         Cash cash = cashRepository.findOne(expenseCash.getCashId());
         cash.setModificationDate(now);
         cashRepository.saveAndFlush(cash);
@@ -71,5 +118,12 @@ public class TicketRestController {
         
         return ticketRepository.saveAndFlush(ticket);
     }
+    
+    private Integer getRechargePoints(PunctuationRule rule, Double recharge) {
+        return Math.toIntExact( (long)(recharge * rule.getPoints() / rule.getRechargingFraction()));
+    }
 
+    private Integer getRechargeExperience(Experience experience, Double recharge) {    	
+        return Math.toIntExact( (long)(recharge * experience.getExperienceToGive() / experience.getRechargeFraction()));
+    }
 }

@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.cabin.core.persistence.domain.Client;
+import com.cabin.core.persistence.domain.Level;
 import com.cabin.core.persistence.domain.Status;
 import com.cabin.core.persistence.domain.User;
 import com.cabin.core.persistence.repository.ClientRepository;
@@ -46,8 +47,15 @@ public class UserRestController {
     public User getAnonymousUser() throws ParseException {
 
         List<Client> inactiveClients = clientRepository.findByStatusIdAndUserAnonymous(Status.INACTIVE, User.IS_ANONYMOUS);
-        Client client = inactiveClients.get(0);
-        User user = client.getUser();
+        Client client = new Client();
+        User user = new User();
+        for (Client inactiveClient : inactiveClients ) {
+        	client = inactiveClient;
+        	if ( client.getBalance() == 0){
+        		user = client.getUser();
+        		return user;
+        	}            
+        }    
         return user;
     }
 }

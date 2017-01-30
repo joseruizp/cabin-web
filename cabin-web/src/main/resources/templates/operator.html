@@ -20,6 +20,7 @@
 		<link th:href="@{plugins/jquery-ui-1.11.4.custom/jquery-ui.min.css}" rel="stylesheet"/>
 		<link th:href="@{plugins/jquery.mCustomScrollbar.min.css}" rel="stylesheet"/>
 		<link th:href="@{plugins/dataTables/css/jquery.dataTables.css}" rel="stylesheet"/>
+		<link th:href="@{bootstrap/css/bootstrap-datepicker.css}" rel="stylesheet"/>
 		<link th:href="@{css/custom.css}" rel="stylesheet"/>
 		<link th:href="@{plugins/select2-4.0.3/css/select2.min.css}" rel="stylesheet" />		
 	</head>
@@ -100,7 +101,7 @@
 					<div class="col-md-1">
 						<div class="header-right">
 							<div class="logo smooth-scroll">
-								<a th:href="@{/logout}"><img id="logo" th:src="@{images/logout_icon.png}" alt="Logout"></img></a>								
+								<a id="logout" th:href="@{/logout}"><img id="logo" th:src="@{images/logout_icon.png}" alt="Logout"></img></a>								
 							</div>
 						</div>
 					</div>
@@ -284,7 +285,7 @@
 					<form class="form-horizontal" role="form" id="form-recarga">
 						<input type="hidden" id="idRecarga" value=""/>						
 						<div class="form-group">
-							<label class="control-label col-sm-2" for="name">Cliente:</label>
+							<label class="control-label col-sm-2" for="clientSelect">Cliente:</label>
 							<div class="col-sm-4">
 								<select id="clientSelect">
 									<option></option>
@@ -340,14 +341,20 @@
 						<input type="hidden" id="idRecarga" value=""/>						
 						<div class="form-group">
 							<label class="control-label col-sm-2" for="name">Tipo de Gastos:</label>
-							<div class="col-sm-10">
-								<select id="expenseSelect">
-									<option value="1">Alimentacion</option>
-									<option value="2">Devolucion Usuario Anonimo</option>
-									<option value="3">Devolucion Usuario Registrado</option>
-								</select>
+							<div class="col-sm-4">
+								<div class="dropdown">
+									<button class="btn btn-primary dropdown-toggle" type="button"
+											data-toggle="dropdown">
+											Seleccionar <span class="caret"></span>
+									</button>
+									<ul id="expenseSelect" class="dropdown-menu">
+										<li><a href="/" onclick="return false;">Alimentación</a></li>
+										<li><a href="/" onclick="return false;">Devolución Usuario Anónimo</a></li>
+										<li><a href="/" onclick="return false;">Devolución Usuario Registrado</a></li>
+									</ul>									
+								</div>	
 							</div>
-						</div>
+						</div>						
 						<div class="form-group">						
 							<label class="control-label col-sm-2" for="expenseAmount">Monto:</label>
 							<div class="col-sm-4">
@@ -356,10 +363,10 @@
 							</div>
 							<div id="expenseClientDiv" style="display: none;">
 								<label class="control-label col-sm-2" for="expenseClientSelect">Cliente:</label>
-								<div class="col-sm-4">
+								<div class="col-sm-4">																									
 									<select id="expenseClientSelect">
 										<option></option>
-									</select>
+									</select>								
 								</div>
 							</div>
 						</div>
@@ -590,7 +597,16 @@
 				</form>
 			</div>
 		</div>
-
+		
+		<div id="passwordDialog" title="Informacion Consola" style="display: none;">
+			<div class="col-md-10" style="margin-bottom: 10px">
+				<form class="form-horizontal" role="form">
+					El usuario autogenerado es: <span id="generatedEmail"></span><br></br>
+					El password autogenerado es: <span id="generatedPassword"></span>
+				</form>
+			</div>
+		</div>
+		
 		<input type="hidden" id="employeeId" th:value="${employeeId}"></input>
 		<input type="hidden" id="isFirst" th:value="${isFirst}"></input>
 		<input type="hidden" id="headquarterId" th:value="${headquarterId}"></input>
@@ -607,6 +623,8 @@
 		<script type="text/javascript" th:src="@{plugins/jquery.mCustomScrollbar.concat.min.js}"></script>
 		<script type="text/javascript" th:src="@{plugins/select2-4.0.3/js/select2.min.js}"></script>
 		<script type="text/javascript" th:src="@{plugins/dataTables/js/jquery.dataTables.js}"></script>
+		<script type="text/javascript" th:src="@{bootstrap/js/bootstrap-datepicker.js}"></script>
+		<script type="text/javascript" th:src="@{bootstrap/js/bootstrap-datepicker.es.min.js}"></script>
 		<script type="text/javascript" th:src="@{plugins/jquery-dateFormat.min.js}"></script>
 		
 		<script type="text/javascript" th:src="@{sockjs-client/sockjs.min.js}"></script>

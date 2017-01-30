@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import com.cabin.core.enums.SessionEnum;
 import com.cabin.core.persistence.repository.ClientRepository;
 import com.cabin.core.persistence.repository.HeadquarterRepository;
+import com.cabin.core.persistence.repository.ParameterRepository;
 
 /**
  * Handles requests for the application home page.
@@ -27,6 +28,8 @@ public class ClientController {
 	private ClientRepository clientRepository;
     @Autowired
 	private HeadquarterRepository headquarterRepository;
+    @Autowired
+	private ParameterRepository parameterRepository;
     
     @PreAuthorize("hasAuthority('USER')")
     @RequestMapping(value = "/client", method = RequestMethod.GET)
@@ -35,14 +38,15 @@ public class ClientController {
         
         logger.info("Client id is:'" + session.getAttribute(SessionEnum.CLIENT_ID.name()) + "'");
         logger.info("Headquarter id is:'" + session.getAttribute(SessionEnum.HEADQUARTER_ID.name()) + "'");
-        Long headquarterId = Long.parseLong((String) session.getAttribute(SessionEnum.HEADQUARTER_ID.name()));
-        model.addAttribute("clientId", headquarterId);
-        model.addAttribute("headquarterId", session.getAttribute(SessionEnum.HEADQUARTER_ID.name()));
+        Long headquarterId = Long.parseLong((String) session.getAttribute(SessionEnum.HEADQUARTER_ID.name()));        
+        model.addAttribute("headquarterId", headquarterId);
         logger.info("adding attribute headquarter for client");
         
         Long clientId = (Long) session.getAttribute(SessionEnum.CLIENT_ID.name());
+        model.addAttribute("clientId", clientId );
         model.addAttribute("client", clientRepository.findById(clientId));
         model.addAttribute("headquarter", headquarterRepository.findById(headquarterId));
+        model.addAttribute("parameters", parameterRepository.findAll());
         
         return "client";
     }

@@ -177,7 +177,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         Headquarter headquarter = headquarterRepository.findById(headquarterId);
 
         List<User> users = userRepository.findByProfileIdAndStatusIdAndHeadquarterId(Profile.EMPLOYEE, Status.ACTIVE, headquarterId);
-        if (users.size() > headquarter.getMaxAmountOperator()) {
+        if (users.size() >= headquarter.getMaxAmountOperator()) {
             redirectStrategy.sendRedirect(request, response, "/login?error=E004");
         }
     }

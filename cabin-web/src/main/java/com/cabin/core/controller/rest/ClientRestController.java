@@ -74,6 +74,11 @@ public class ClientRestController {
         long status = 1;
         return clientRepository.findByStatusId(status);
     }
+    
+    @RequestMapping(value = "/get/allClientsAndAnonymous", method = RequestMethod.GET, produces = { "application/json;charset=UTF-8" })
+    public List<Client> allClientsAndAnonymous() {        
+        return clientRepository.findAll();
+    }
 
     @RequestMapping(value = "/get/allActiveUsersByHeadquarter", method = RequestMethod.GET, produces = { "application/json;charset=UTF-8" })
     public List<Client> getAllActiveUsersByHeadquarter(@RequestParam(value = "headquarterId", required = true) Long headquarterId,
