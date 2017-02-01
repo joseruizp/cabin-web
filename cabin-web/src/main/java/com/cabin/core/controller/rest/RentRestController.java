@@ -101,7 +101,10 @@ public class RentRestController {
         rent.setPrice(price);
 
         Client client = rent.getClient();
-        client.setBalance(client.getBalance() - price);
+        Double balance = client.getBalance() - price;
+        if ( balance < 0 )
+        	balance = 0.0;
+        client.setBalance(balance);
 
         rent.setRentStatus(rentStatusRepository.getOne(RentStatusEnum.STOPPED.getId()));
 
