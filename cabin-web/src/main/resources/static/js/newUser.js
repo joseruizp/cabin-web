@@ -148,6 +148,7 @@ function saveCustomer(){
 	date.setMonth(dateArray[0] - 1); date.setFullYear(dateArray[2]);
 	customer.birthDate = date;
 	customer.balance = "0"; customer.points = "0";
+	customer.change_level = "0";
 	user.pass = trim( $( "#password" ).val() );
 	user.name = trim( $( "#email" ).val() );
 	$( "#name" ).val(""); $( "#password" ).val("");

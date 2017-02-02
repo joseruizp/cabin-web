@@ -40,6 +40,7 @@ import com.cabin.core.persistence.repository.RentRepository;
 import com.cabin.core.persistence.repository.TicketRepository;
 import com.cabin.core.persistence.repository.UserRepository;
 import com.cabin.core.view.Recharge;
+import com.cabin.core.websocket.ComputerStatus;
 import com.cabin.core.websocket.RechargeClientEndpoint;
 
 @RestController
@@ -117,8 +118,8 @@ public class ClientRestController {
     @Transactional
     public Client recharge(@RequestBody(required = true) Recharge recharge, HttpServletRequest request) throws ParseException {
         Client client = clientRepository.findOne(recharge.getClientId());
-        client.setBalance(client.getBalance() + recharge.getAmount());
-
+        client.setBalance(round(client.getBalance() + recharge.getAmount()));
+        String change_level= "1";
         HttpSession session = request.getSession();
         Boolean isAnonymous = (Boolean) session.getAttribute(SessionEnum.IS_ANONYMOUS.name());
 
@@ -141,6 +142,8 @@ public class ClientRestController {
                     finalExperience = Integer.MAX_VALUE;
                 }
                 if (newExperience >= level.getInitialExperience() && newExperience <= finalExperience) {
+                	if ( client.getLevel().getId() != level.getId() )
+                		client.setChange_level(change_level);
                     client.setLevel(level);
                 }
             }
@@ -175,8 +178,21 @@ public class ClientRestController {
         }
 
         return clientRepository.saveAndFlush(client);
-    }
+    }    
+    
+    @RequestMapping(value = "/put/changeLevel", method = RequestMethod.PUT, produces = { "application/json;charset=UTF-8" })
+    public Client changeLevel(@RequestParam(value = "rent_id", required = true) Long rentId, @RequestParam(value = "change_level", required = true) String change_level) {
+        
+    	Rent rent = rentRepository.findOne(rentId);
+    	System.out.println("Update change level, clientId ::: " + rent.getClient().getId());        
+        Client client = clientRepository.findOne(rent.getClient().getId());
+        client.setChange_level(change_level);
+        rent.setClient( clientRepository.saveAndFlush(client));
+        rentRepository.saveAndFlush(rent);
+        return rent.getClient();
 
+    }
+    
     private String generatePassword() {
         SecureRandom random = new SecureRandom();
         return new BigInteger(40, random).toString(32);
@@ -189,5 +205,11 @@ public class ClientRestController {
     private Integer getRechargeExperience(Experience experience, Double recharge) {    	
         return Math.toIntExact( (long)(recharge * experience.getExperienceToGive() / experience.getRechargeFraction()));
     }
-
+    
+    private double round(double value) {
+        long factor = (long) Math.pow(10, 2);
+        double factorValue = value * factor;
+        long tmp = Math.round(factorValue);
+        return (double) tmp / factor;
+    }
 }

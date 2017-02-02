@@ -134,7 +134,7 @@ public class RentRestController {
         rentRepository.saveAndFlush(rent);
         return rent.getClient();
     }
-
+    
     private Client updateBonusBalance(Client client, Integer bonusPoints) {
         if (bonusPoints != null) {
             Double bonusBalance = getBonusBalance(client.getLevel().getId(), bonusPoints);

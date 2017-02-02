@@ -26,7 +26,8 @@ public class PrizesRuleRestController {
     @RequestMapping(value = "/get/prizeByLevel", method = RequestMethod.GET, produces = { "application/json;charset=UTF-8" })
     public String getPrizeByLevel(@RequestParam(value = "id", required = true) Long idlevel, @RequestParam(value = "points", required = true) Integer points) {
         PrizesRule rule = prizesRuleRepository.findByLevelId(idlevel);
-        return DECIMAL_FORMAT.format(points * rule.getBalanceFraction() / rule.getPoints());
+        Double bonification = round(points * rule.getBalanceFraction() / rule.getPoints());
+        return DECIMAL_FORMAT.format(bonification);
     }
     
     @RequestMapping(value = "/get/allPrizesRules", method = RequestMethod.GET, produces = { "application/json;charset=UTF-8" })
@@ -42,5 +43,12 @@ public class PrizesRuleRestController {
     @RequestMapping(value = "/post/prizesRule", method = RequestMethod.POST, produces = { "application/json;charset=UTF-8" })
     public PrizesRule postPrizesRule(@RequestBody(required = true) PrizesRule prizesRule) throws ParseException {
         return prizesRuleRepository.save(prizesRule);
+    }
+    
+    private double round(double value) {
+        long factor = (long) Math.pow(10, 2);
+        double factorValue = value * factor;
+        long tmp = Math.round(factorValue);
+        return (double) tmp / factor;
     }
 }

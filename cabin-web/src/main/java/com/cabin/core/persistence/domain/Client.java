@@ -54,6 +54,9 @@ public class Client implements Serializable {
 	
 	@Column(name = "experiencia")
 	private Integer experience;
+	
+	@Column(name = "cambio_nivel", length = 1)
+    private String change_level;
 
 	@ManyToOne
 	@JoinColumn(name = "id_estado")
@@ -177,6 +180,14 @@ public class Client implements Serializable {
 
 	public void setDocCode(String docCode) {
 		this.docCode = docCode;
+	}
+
+	public String getChange_level() {
+		return change_level;
+	}
+
+	public void setChange_level(String change_level) {
+		this.change_level = change_level;
 	}
 
 }

@@ -2236,6 +2236,7 @@ function saveCliente(){
 	customer.status = {};	
 	customer.level = {};
 	customer.docType = {};
+	customer.change_level = "0";
 	console.log("Inside form-cliente " + idCustomer);
 	if (idCustomer !== "") {
 		customer.id = idCustomer;
@@ -4101,7 +4102,7 @@ function addRechargeEvent() {
 	$("#rechargingAmount").val("");
 	$("#enterAmount").val("");
 	
-	var change = enterAmount - amount;
+	var change = (enterAmount - amount).toFixed(1);
 	var recharge = {};
 	recharge.clientId = idClient;
 	recharge.amount = amount;
