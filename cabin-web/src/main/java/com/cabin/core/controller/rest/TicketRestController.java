@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.cabin.core.persistence.domain.Bonus;
 import com.cabin.core.persistence.domain.Cash;
 import com.cabin.core.persistence.domain.Client;
 import com.cabin.core.persistence.domain.Employee;
@@ -18,6 +19,7 @@ import com.cabin.core.persistence.domain.Experience;
 import com.cabin.core.persistence.domain.Level;
 import com.cabin.core.persistence.domain.PunctuationRule;
 import com.cabin.core.persistence.domain.Ticket;
+import com.cabin.core.persistence.repository.BonusRepository;
 import com.cabin.core.persistence.repository.CashRepository;
 import com.cabin.core.persistence.repository.ClientRepository;
 import com.cabin.core.persistence.repository.ExperienceRepository;
@@ -29,6 +31,9 @@ import com.cabin.core.view.ExpenseCash;
 @RestController
 public class TicketRestController {
 
+	@Autowired
+    private BonusRepository bonusRepository;
+	
 	@Autowired
     private PunctuationRuleRepository punctuationRuleRepository;
 
@@ -67,10 +72,7 @@ public class TicketRestController {
         Calendar now = Calendar.getInstance();
         
         Client client = clientRepository.findOne(expenseCash.getClientId());
-        Double balance = client.getBalance() - expenseCash.getAmount();
-        if (balance <= 0)
-        	balance = 0.0;
-        client.setBalance(balance);
+        Double balance = client.getBalance() - expenseCash.getAmount();        
         
         if ( !client.getUser().isAnonymous() ){
         	PunctuationRule punctuationRule = punctuationRuleRepository.findByLevelId(client.getLevel().getId());
@@ -81,7 +83,9 @@ public class TicketRestController {
             Integer newExperience = client.getExperience() - getRechargeExperience(experience, expenseCash.getAmount());
             client.setExperience(newExperience);
 
-            List<Level> levels = levelRepository.findAll();
+            Long statusId = (long) 1;
+            
+            List<Level> levels = levelRepository.findByStatusId(statusId);
             for (Level level : levels) {
                 Integer finalExperience = level.getFinalExperience();
                 if (finalExperience == null) {
@@ -91,7 +95,12 @@ public class TicketRestController {
                     client.setLevel(level);
                 }
             }
+            
         }
+        
+        if (balance <= 0)
+        	balance = 0.0;
+        client.setBalance(balance);
         clientRepository.saveAndFlush(client);
         
         Cash cash = cashRepository.findOne(expenseCash.getCashId());

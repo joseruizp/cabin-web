@@ -57,6 +57,9 @@ public class Client implements Serializable {
 	
 	@Column(name = "cambio_nivel", length = 1)
     private String change_level;
+	
+	@Column(name = "bonificacion", length = 1)
+    private String bonus;
 
 	@ManyToOne
 	@JoinColumn(name = "id_estado")
@@ -69,6 +72,17 @@ public class Client implements Serializable {
 	@OneToOne
 	@JoinColumn(name = "id_usuario")
 	private User user;
+	
+	@Column(name = "id_bonificacion")
+	private Long id_bonification;
+
+	public Long getId_bonification() {
+		return id_bonification;
+	}
+
+	public void setId_bonification(Long id_bonification) {
+		this.id_bonification = id_bonification;
+	}
 
 	public Long getId() {
 		return id;
@@ -188,6 +202,14 @@ public class Client implements Serializable {
 
 	public void setChange_level(String change_level) {
 		this.change_level = change_level;
+	}
+
+	public String getBonus() {
+		return bonus;
+	}
+
+	public void setBonus(String bonus) {
+		this.bonus = bonus;
 	}
 
 }

@@ -6,7 +6,7 @@ estados = []; tipo_doc = []; perfiles = [];
 operarios = []; clientes = []; 
 tipoOperarios = []; clients = [];
 data = [];
-sedes = []; sedeIndex = -1;
+sedes = []; sedeIndex = -1; BONUS = "0"; CHANGE_LEVEL = "0";
 tarifas = []; tarifaIndex = -1;
 tariffDetails = []; tariffDetailIndex = -1;
 viewTariffDetails = []; viewTariffDetails = -1;
@@ -1527,7 +1527,7 @@ function saveBonificacion(){
 	    },	
 	    complete: function(xhr) {
 	    	fillArrayBonificacion();
-	    	updateTips("Bonificación creada satisfactoriamente.", bonificaciónValidation);
+	    	updateTips("Bonificación creada satisfactoriamente.", bonificacionValidation);
 	    }
 	});
 	
@@ -2236,7 +2236,9 @@ function saveCliente(){
 	customer.status = {};	
 	customer.level = {};
 	customer.docType = {};
-	customer.change_level = "0";
+	customer.change_level = CHANGE_LEVEL;
+	customer.bonus = BONUS;
+	BONUS = "0"; CHANGE_LEVEL = "0";
 	console.log("Inside form-cliente " + idCustomer);
 	if (idCustomer !== "") {
 		customer.id = idCustomer;
@@ -2456,6 +2458,8 @@ function editCliente( code, index ){
 			$( "#experienceCustomer" ).val(json.experience);			
 			$("#birthDateCustomer").val(json.birthDate);			
 			$("#idCliente").attr('value', idCliente);
+			BONUS = json.bonus;
+			CHANGE_LEVEL = json.change_level;
 			$("#btnCliente").html("Actualizar Cliente");	
 			var genderHtml = $("#genderCustomer li a");
 			if ( json.gender == "M"){

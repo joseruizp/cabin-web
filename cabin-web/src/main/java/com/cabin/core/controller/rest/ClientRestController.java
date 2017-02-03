@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.cabin.core.enums.RentStatusEnum;
 import com.cabin.core.enums.SessionEnum;
+import com.cabin.core.persistence.domain.Bonus;
 import com.cabin.core.persistence.domain.Cash;
 import com.cabin.core.persistence.domain.Client;
 import com.cabin.core.persistence.domain.Employee;
@@ -31,6 +32,7 @@ import com.cabin.core.persistence.domain.RechargingType;
 import com.cabin.core.persistence.domain.Rent;
 import com.cabin.core.persistence.domain.Ticket;
 import com.cabin.core.persistence.domain.User;
+import com.cabin.core.persistence.repository.BonusRepository;
 import com.cabin.core.persistence.repository.CashRepository;
 import com.cabin.core.persistence.repository.ClientRepository;
 import com.cabin.core.persistence.repository.ExperienceRepository;
@@ -46,6 +48,9 @@ import com.cabin.core.websocket.RechargeClientEndpoint;
 @RestController
 public class ClientRestController {
 
+	@Autowired
+    private BonusRepository bonusRepository;
+	
     @Autowired
     private ClientRepository clientRepository;
 
@@ -134,8 +139,9 @@ public class ClientRestController {
             client.setPoints(client.getPoints() + getRechargePoints(punctuationRule, recharge.getAmount()));
             Integer newExperience = client.getExperience() + getRechargeExperience(experience, recharge.getAmount());
             client.setExperience(newExperience);
-
-            List<Level> levels = levelRepository.findAll();
+            Long statusId = (long) 1;
+            
+            List<Level> levels = levelRepository.findByStatusId(statusId);
             for (Level level : levels) {
                 Integer finalExperience = level.getFinalExperience();
                 if (finalExperience == null) {
@@ -147,6 +153,24 @@ public class ClientRestController {
                     client.setLevel(level);
                 }
             }
+            
+            List<Bonus> bonusList = bonusRepository.findByStatusId(statusId);
+            for (Bonus bonus : bonusList) {
+            	Long bonusId = (long) 0;
+            	Bonus bonusAux = new Bonus();
+            	int clientBonusExperience = 0;
+            	String bonusChange = "1";
+            	if ( client.getId_bonification() != null ){            	
+            		bonusId = client.getId_bonification();                
+            		bonusAux = bonusRepository.findOne(bonusId);
+            		clientBonusExperience = bonusAux.getExperienceAmount();
+            	}
+                if ( client.getExperience() >= bonus.getExperienceAmount() && bonusId != bonus.getId()  && bonus.getExperienceAmount() > clientBonusExperience ) {
+                	client.setId_bonification(bonus.getId());                	
+                	client.setBonus(bonusChange);
+                }
+            }
+            
         }
         Cash cash = new Cash();
         Ticket ticket = new Ticket();
@@ -191,6 +215,27 @@ public class ClientRestController {
         rentRepository.saveAndFlush(rent);
         return rent.getClient();
 
+    }
+    
+    @RequestMapping(value = "/put/changeBonification", method = RequestMethod.PUT, produces = { "application/json;charset=UTF-8" })
+    public Client changeBonification(@RequestParam(value = "rent_id", required = true) Long rentId, @RequestParam(value = "bonus", required = true) String bonus) {
+        
+    	Rent rent = rentRepository.findOne(rentId);
+    	System.out.println("Update bonification, clientId ::: " + rent.getClient().getId());        
+        Client client = clientRepository.findOne(rent.getClient().getId());
+        client.setBonus(bonus);
+        Bonus bonusAux = bonusRepository.findOne(client.getId_bonification());
+        Double bonification = bonusAux.getFractionToGive();
+    	client.setBalance( client.getBalance() + bonification);        
+        rent.setClient( clientRepository.saveAndFlush(client));
+        rentRepository.saveAndFlush(rent);
+        return rent.getClient();
+
+    }
+    
+    @RequestMapping(value = "/get/bonification", method = RequestMethod.GET, produces = { "application/json;charset=UTF-8" })
+    public Double getBonification(@RequestParam(value = "bonus_id", required = true) Long bonusId) {
+    	return bonusRepository.findOne(bonusId).getFractionToGive();
     }
     
     private String generatePassword() {

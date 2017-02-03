@@ -436,6 +436,7 @@ function addRechargeEvent() {
 	    		      		}
     		    		}); 
     		    	}
+    		    	fillArrayCliente();
                 },
                 error: function (xhr, status) {
                     console.log("Error, su solicitud no pudo ser atendida");
@@ -504,6 +505,7 @@ function addEventExpenses() {
                 success: function (data) {
                     console.log("expenses is done");
                     updateTips("Justificacion de gastos realizada satisfactoriamente.", $("#gastosValidation"));
+    		    	fillArrayCliente();
                 },
                 error: function (xhr, status) {
                     console.log("Error, su solicitud no pudo ser atendida");
@@ -1089,6 +1091,7 @@ function saveCliente(){
 	customer.level = {};
 	customer.docType = {};
 	customer.change_level = "0";
+	customer.bonus = "0";
 	console.log("Inside form-cliente " + idCustomer);
 	if (idCustomer !== "") {
 		customer.id = idCustomer;

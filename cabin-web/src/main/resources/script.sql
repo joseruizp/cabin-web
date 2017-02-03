@@ -97,10 +97,12 @@
 	  `puntos` int(11) DEFAULT NULL,
 	  `experiencia` int(11) DEFAULT NULL,
 	  `cambio_nivel` varchar(1) DEFAULT NULL,
+	  `bonificacion` varchar(1) DEFAULT NULL,
 	  `id_estado` bigint(20) DEFAULT NULL,
 	  `id_nivel` bigint(20) DEFAULT NULL,
 	  `id_tipo_documento` bigint(20) DEFAULT NULL,
 	  `id_usuario` bigint(20) DEFAULT NULL,
+	  `id_bonificacion` bigint(20) DEFAULT NULL,
 	  PRIMARY KEY (`id`),
 	  KEY `id_estado` (`id_estado`),
 	  KEY `id_nivel` (`id_nivel`),
@@ -119,7 +121,7 @@
 	
 	LOCK TABLES `cliente` WRITE;
 	/*!40000 ALTER TABLE `cliente` DISABLE KEYS */;
-	INSERT INTO `cliente` VALUES (1,'erick.gonzales@bbva.com','erick','Gonzales','M','2000-01-05',12345678,0,2,9,'0',1,2,1,5),(2,'ivan@pucp.pe','ivan','Gonzales','M','2000-01-01',12345678,12,10,10,'0',1,1,1,6),(3,'je@pucp.pe','Junior','Gonzales','M','2000-01-01',12345678,10,100,50,'0',1,1,1,7),(4,'userlab01@cabinas.com','userlab01','Gonzales','M','2000-01-01',12345678,0,0,0,'0',2,1,1,12),(5,'userlab02@cabinas.com','userlab02','Gonzales','M','2000-01-01',12345678,0,0,0,'0',2,1,1,13),(6,'userlab03@cabinas.com','userlab03','Gonzales','M','2000-01-01',12345678,0,0,0,'0',2,1,1,14),(7,'userlab04@cabinas.com','userlab04','Gonzales','M','2000-01-01',12345678,0,0,0,'0',2,1,1,15),(8,'userlab05@cabinas.com','userlab05','Gonzales','M','2000-01-01',12345678,0,0,0,'0',2,1,1,16),(9,'userlab06@cabinas.com','userlab06','Gonzales','M','2000-01-01',12345678,0,0,0,'0',2,1,1,17),(10,'userlab07@cabinas.com','userlab07','Gonzales','M','2000-01-01',12345678,0,0,0,'0',2,1,1,18),(11,'userlab08@cabinas.com','userlab08','Gonzales','M','2000-01-01',12345678,0,0,0,'0',2,1,1,19),(12,'userlab09@cabinas.com','userlab09','Gonzales','M','2000-01-01',12345678,0,0,0,'0',2,1,1,20),(13,'userlab10@cabinas.com','userlab10','Gonzales','M','2000-01-01',12345678,0,0,0,'0',2,1,1,21);
+	INSERT INTO `cliente` VALUES (1,'erick.gonzales@bbva.com','erick','Gonzales','M','2000-01-05',12345678,0,2,9,'0','0',1,2,1,5,0),(2,'ivan@pucp.pe','ivan','Gonzales','M','2000-01-01',12345678,12,10,10,'0','0',1,1,1,6,0),(3,'je@pucp.pe','Junior','Gonzales','M','2000-01-01',12345678,10,100,50,'0','0',1,1,1,7,0),(4,'userlab01@cabinas.com','userlab01','Gonzales','M','2000-01-01',12345678,0,0,0,'0','0',2,1,1,12,0),(5,'userlab02@cabinas.com','userlab02','Gonzales','M','2000-01-01',12345678,0,0,0,'0','0',2,1,1,13,0),(6,'userlab03@cabinas.com','userlab03','Gonzales','M','2000-01-01',12345678,0,0,0,'0','0',2,1,1,14,0),(7,'userlab04@cabinas.com','userlab04','Gonzales','M','2000-01-01',12345678,0,0,0,'0','0',2,1,1,15,0),(8,'userlab05@cabinas.com','userlab05','Gonzales','M','2000-01-01',12345678,0,0,0,'0','0',2,1,1,16,0),(9,'userlab06@cabinas.com','userlab06','Gonzales','M','2000-01-01',12345678,0,0,0,'0','0',2,1,1,17,0),(10,'userlab07@cabinas.com','userlab07','Gonzales','M','2000-01-01',12345678,0,0,0,'0','0',2,1,1,18,0),(11,'userlab08@cabinas.com','userlab08','Gonzales','M','2000-01-01',12345678,0,0,0,'0','0',2,1,1,19,0),(12,'userlab09@cabinas.com','userlab09','Gonzales','M','2000-01-01',12345678,0,0,0,'0','0',2,1,1,20,0),(13,'userlab10@cabinas.com','userlab10','Gonzales','M','2000-01-01',12345678,0,0,0,'0','0',2,1,1,21,0);
 	/*!40000 ALTER TABLE `cliente` ENABLE KEYS */;
 	UNLOCK TABLES;
 	
