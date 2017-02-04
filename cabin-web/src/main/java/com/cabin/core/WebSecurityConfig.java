@@ -96,7 +96,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
             System.out.println("currentUser: " + currentUser.getId());
             System.out.println("currentUser isAuthenticated: " + authentication.isAuthenticated());
 
-            HttpSession session = request.getSession();
+            HttpSession session = request.getSession();            
 
             validateProfile(currentUser.getProfile(), request, response);
 
@@ -111,7 +111,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
             session.setAttribute(SessionEnum.USER_PROFILE.name(), profileId);
             session.setAttribute(SessionEnum.USER_ID.name(), currentUser.getId());
             session.setAttribute(SessionEnum.USER_NAME.name(), currentUser.getUsername());
-
+            
+            session.setMaxInactiveInterval(-1);
+            
             redirect(profileId, request, response);
         }
 
@@ -212,7 +214,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
         @Override
         public void onLogoutSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
-            CurrentUser currentUser = (CurrentUser) authentication.getPrincipal();
+        	System.out.println("Ingresó al cierre de sesión");
+        	CurrentUser currentUser = (CurrentUser) authentication.getPrincipal();
             User user = currentUser.getUser();
 
             boolean isAnonymous = currentUser.isAnonymous();
@@ -235,7 +238,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
             userRepository.saveAndFlush(user);
 
             request.getSession().invalidate();
-
+            
+            System.out.println("Se cerró sesión satisfactoriamente");
+            
             redirectStrategy.sendRedirect(request, response, "/login");
         }
 

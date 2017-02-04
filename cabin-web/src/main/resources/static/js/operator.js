@@ -1255,3 +1255,28 @@ function checkDocCode( docCode, cad, div) {
 	    return false;	    
 	  }
 }
+
+$(document).ready(function()
+{
+    $(window).bind("beforeunload", function() {    	
+    	//window.location = ($("#logout").attr('href'));
+    	var hostname = window.location.protocol + "//" + window.location.host;
+    	var strUrl = hostname + $("#logout").attr('href');
+    	console.log("URL: " + strUrl);
+    	var validCode = 1;
+    	$.ajax({
+    		async:false,
+    		type: "POST",
+    	    url: strUrl,
+    	    crossDomain: true,
+    	    dataType: "json",
+    	    success: function (json) {	    	
+    	    	return true;
+    	    },
+    	    error: function (xhr, status) {    	
+    	    	console.log("Error, su solicitud no pudo ser atendida");
+    	    }
+    	});
+    });
+});
+
