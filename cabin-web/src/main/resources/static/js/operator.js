@@ -7,7 +7,8 @@ clienteValidation = "";
 cierreCajaValidation = "";
 totalAmount = 0;
 rechargeInfo = {};
-var cashId = 0;
+var cashId = 0; 
+var LOGOUT_BUTTON = 0; 
 
 $(document).ready(function() {
         cashId = $("#cashId").val();
@@ -240,6 +241,7 @@ function addCloseCashEvent(){
 	    		      			"1":
 	    		      			{ text: "Aceptar", click: function () {                	
 	    			                $(this).dialog('close');
+	    			                LOGOUT_BUTTON = 1;
 	    			                window.location = ($("#logout").attr('href'));   
 	    		      				}, "class":"btn btn-default"
 	    		      			}
@@ -1258,25 +1260,32 @@ function checkDocCode( docCode, cad, div) {
 
 $(document).ready(function()
 {
+	$('#logout2').on("click",function(){
+		LOGOUT_BUTTON = 1;
+		window.location = ($("#logout").attr('href'));		    	
+	});
+		
     $(window).bind("beforeunload", function() {    	
     	//window.location = ($("#logout").attr('href'));
     	var hostname = window.location.protocol + "//" + window.location.host;
     	var strUrl = hostname + $("#logout").attr('href');
     	console.log("URL: " + strUrl);
-    	var validCode = 1;
-    	$.ajax({
-    		async:false,
-    		type: "POST",
-    	    url: strUrl,
-    	    crossDomain: true,
-    	    dataType: "json",
-    	    success: function (json) {	    	
-    	    	return true;
-    	    },
-    	    error: function (xhr, status) {    	
-    	    	console.log("Error, su solicitud no pudo ser atendida");
-    	    }
-    	});
+    	if ( LOGOUT_BUTTON == 0) {
+	    	$.ajax({
+	    		async:false,
+	    		type: "POST",
+	    	    url: strUrl,
+	    	    crossDomain: true,
+	    	    dataType: "json",
+	    	    success: function (json) {	    	
+	    	    	
+	    	    },
+	    	    error: function (xhr, status) {    	
+	    	    	console.log("Error, su solicitud no pudo ser atendida");
+	    	    }
+	    	});
+    	}
+    	
     });
 });
 

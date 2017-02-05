@@ -111,8 +111,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
             session.setAttribute(SessionEnum.USER_PROFILE.name(), profileId);
             session.setAttribute(SessionEnum.USER_ID.name(), currentUser.getId());
             session.setAttribute(SessionEnum.USER_NAME.name(), currentUser.getUsername());
-            
-            session.setMaxInactiveInterval(-1);
+                        
             
             redirect(profileId, request, response);
         }
