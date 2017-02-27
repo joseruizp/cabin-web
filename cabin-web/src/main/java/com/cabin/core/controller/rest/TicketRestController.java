@@ -75,15 +75,16 @@ public class TicketRestController {
         Double balance = client.getBalance() - expenseCash.getAmount();        
         
         if ( !client.getUser().isAnonymous() ){
-        	PunctuationRule punctuationRule = punctuationRuleRepository.findByLevelId(client.getLevel().getId());
+            Long statusId = (long) 1;
+            
+        	PunctuationRule punctuationRule = punctuationRuleRepository.findByLevelIdAndStatusId(client.getLevel().getId(), statusId);
 
-            Experience experience = experienceRepository.findByLevelId(client.getLevel().getId());
+            Experience experience = experienceRepository.findByLevelIdAndStatusId(client.getLevel().getId(), statusId);
 
             client.setPoints(client.getPoints() - getRechargePoints(punctuationRule, expenseCash.getAmount()));
             Integer newExperience = client.getExperience() - getRechargeExperience(experience, expenseCash.getAmount());
             client.setExperience(newExperience);
 
-            Long statusId = (long) 1;
             
             List<Level> levels = levelRepository.findByStatusId(statusId);
             for (Level level : levels) {

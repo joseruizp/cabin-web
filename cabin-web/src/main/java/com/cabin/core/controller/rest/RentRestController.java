@@ -101,7 +101,7 @@ public class RentRestController {
         rent.setPrice(price);
 
         Client client = rent.getClient();
-        Double balance = client.getBalance() - price;
+        Double balance = round(client.getBalance() - price);
         if ( balance < 0 )
         	balance = 0.0;
         client.setBalance(balance);
@@ -145,7 +145,8 @@ public class RentRestController {
     }
 
     private Double getBonusBalance(Long idLevel, Integer points) {
-        PrizesRule rule = prizesRuleRepository.findByLevelId(idLevel);
+    	long statusId = 1;
+        PrizesRule rule = prizesRuleRepository.findByLevelIdAndStatusId(idLevel, statusId);
         return points * rule.getBalanceFraction() / rule.getPoints();
     }
 

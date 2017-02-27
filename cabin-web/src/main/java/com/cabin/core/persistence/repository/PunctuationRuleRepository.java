@@ -10,5 +10,6 @@ import com.cabin.core.persistence.domain.PunctuationRule;
 public interface PunctuationRuleRepository extends JpaRepository<PunctuationRule, Long> {
 
     PunctuationRule findByLevelId(@Param("id") Long idLevel);
+    PunctuationRule findByLevelIdAndStatusId(@Param("id") Long idLevel, @Param("status_id") Long statusId);
 
 }

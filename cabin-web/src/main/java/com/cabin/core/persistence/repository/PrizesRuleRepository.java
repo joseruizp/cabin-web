@@ -10,4 +10,5 @@ import com.cabin.core.persistence.domain.PrizesRule;
 public interface PrizesRuleRepository extends JpaRepository<PrizesRule, Long> {
 
 	PrizesRule findByLevelId(@Param("id") Long idLevel);
+	PrizesRule findByLevelIdAndStatusId(@Param("id") Long idLevel, @Param("status_id") Long statusId);
 }

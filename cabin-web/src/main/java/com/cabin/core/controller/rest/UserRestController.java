@@ -35,9 +35,16 @@ public class UserRestController {
         	return null;
         List<Client> clients = clientRepository.findByUserId(users.get(0).getId());
         Client client = clients.get(0);
-
+        
         if (Status.INACTIVE == client.getStatus().getId()) {
-            return null;
+        	if ( 0 == Integer.parseInt(client.getUser().getAnonymous()) ) 
+        		return null;
+        	else {
+        		Status status = new Status();
+        		status.setId(Status.ACTIVE);
+        		client.setStatus(status);
+        		clientRepository.save(client);
+        	}
         }
 
         return client;

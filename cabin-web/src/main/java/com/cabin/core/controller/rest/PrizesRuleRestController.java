@@ -25,7 +25,8 @@ public class PrizesRuleRestController {
 
     @RequestMapping(value = "/get/prizeByLevel", method = RequestMethod.GET, produces = { "application/json;charset=UTF-8" })
     public String getPrizeByLevel(@RequestParam(value = "id", required = true) Long idlevel, @RequestParam(value = "points", required = true) Integer points) {
-        PrizesRule rule = prizesRuleRepository.findByLevelId(idlevel);
+        long statusId = 1;
+    	PrizesRule rule = prizesRuleRepository.findByLevelIdAndStatusId(idlevel, statusId);
         Double bonification = round(points * rule.getBalanceFraction() / rule.getPoints());
         return DECIMAL_FORMAT.format(bonification);
     }

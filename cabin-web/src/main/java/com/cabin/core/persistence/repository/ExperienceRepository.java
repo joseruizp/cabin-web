@@ -10,4 +10,5 @@ import com.cabin.core.persistence.domain.Experience;
 public interface ExperienceRepository extends JpaRepository<Experience, Long> {
 
     Experience findByLevelId(@Param("id") Long idLevel);
+    Experience findByLevelIdAndStatusId(@Param("id") Long idLevel, @Param("status_id") Long statusId);
 }

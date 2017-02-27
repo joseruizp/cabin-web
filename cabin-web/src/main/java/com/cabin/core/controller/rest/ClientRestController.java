@@ -126,20 +126,23 @@ public class ClientRestController {
         client.setBalance(round(client.getBalance() + recharge.getAmount()));
         String change_level= "1";
         HttpSession session = request.getSession();
-        Boolean isAnonymous = (Boolean) session.getAttribute(SessionEnum.IS_ANONYMOUS.name());
-
+        //Boolean isAnonymous = (Boolean) session.getAttribute(SessionEnum.IS_ANONYMOUS.name());
+        Boolean isAnonymous = Integer.parseInt(client.getUser().getAnonymous()) == 1;
+        
         if (BooleanUtils.isTrue(isAnonymous)) {
             String password = generatePassword();
             client.getUser().setPass(password);
         } else {
-            PunctuationRule punctuationRule = punctuationRuleRepository.findByLevelId(client.getLevel().getId());
+        	Long statusId = (long) 1;
+        	
+            PunctuationRule punctuationRule = punctuationRuleRepository.findByLevelIdAndStatusId(client.getLevel().getId(), statusId );
 
-            Experience experience = experienceRepository.findByLevelId(client.getLevel().getId());
+            Experience experience = experienceRepository.findByLevelIdAndStatusId(client.getLevel().getId(), statusId );
 
             client.setPoints(client.getPoints() + getRechargePoints(punctuationRule, recharge.getAmount()));
             Integer newExperience = client.getExperience() + getRechargeExperience(experience, recharge.getAmount());
             client.setExperience(newExperience);
-            Long statusId = (long) 1;
+            
             
             List<Level> levels = levelRepository.findByStatusId(statusId);
             for (Level level : levels) {
@@ -240,7 +243,7 @@ public class ClientRestController {
     
     private String generatePassword() {
         SecureRandom random = new SecureRandom();
-        return new BigInteger(40, random).toString(32);
+        return new BigInteger(40, random).toString(32).substring(0, 6);
     }
 
     private Integer getRechargePoints(PunctuationRule rule, Double recharge) {
