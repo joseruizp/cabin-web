@@ -772,7 +772,7 @@ function fillCliente(idCliente, name, lastname, email, gender, birthDate, balanc
 function fillArrayCliente(){
 	var length = clientes.length;
 	clientes.splice(0, length);
-	var strUrl = window.location.protocol + "//" + window.location.host + "/cabin-web/cliente/";
+	var strUrl = window.location.protocol + "//" + window.location.host + "/cabin-web/cliente/?size=10000";
 	$.ajax({
 	    url:strUrl,
 	    crossDomain: true,

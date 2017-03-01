@@ -130,10 +130,12 @@ public class TicketRestController {
     }
     
     private Integer getRechargePoints(PunctuationRule rule, Double recharge) {
-        return Math.toIntExact( (long)(recharge * rule.getPoints() / rule.getRechargingFraction()));
+    	int fraction = (int) (recharge / rule.getRechargingFraction()) ;
+        return Math.toIntExact( (long)( fraction * rule.getPoints()));
     }
 
-    private Integer getRechargeExperience(Experience experience, Double recharge) {    	
-        return Math.toIntExact( (long)(recharge * experience.getExperienceToGive() / experience.getRechargeFraction()));
+    private Integer getRechargeExperience(Experience experience, Double recharge) {
+    	int fraction = (int) (recharge / experience.getRechargeFraction()) ;
+        return Math.toIntExact( (long)(fraction * experience.getExperienceToGive() ));
     }
 }

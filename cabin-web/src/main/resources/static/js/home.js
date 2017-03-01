@@ -2726,7 +2726,7 @@ function fillArraySede(){
 function fillArrayCliente(){
 	var length = clientes.length;
 	clientes.splice(0, length);
-	var strUrl = window.location.protocol + "//" + window.location.host + "/cabin-web/cliente/";
+	var strUrl = window.location.protocol + "//" + window.location.host + "/cabin-web/cliente/?size=10000";
 	$.ajax({
 	    url:strUrl,
 	    crossDomain: true,
@@ -2915,7 +2915,7 @@ function fillArrayParametro(){
 function fillArrayRegla(){
 	var length = reglas.length;
 	reglas.splice(0, length);
-	var strUrl = window.location.protocol + "//" + window.location.host + "/cabin-web/regla_puntuacion/";		
+	var strUrl = window.location.protocol + "//" + window.location.host + "/cabin-web/regla_puntuacion/?size=10000";		
 	$.ajax({
 		async:false,
 	    url:strUrl,
@@ -2968,7 +2968,7 @@ function fillNivel(idNivel,	name, initialExperience, finalExperience, question){
 function fillArrayNivel(){
 	var length = niveles.length;
 	niveles.splice(0, length);
-	var strUrl = window.location.protocol + "//" + window.location.host + "/cabin-web/nivel/";
+	var strUrl = window.location.protocol + "//" + window.location.host + "/cabin-web/nivel/?size=10000";
 	var ulRegla = $("#regla_nivel");
 	var ulExperience = $("#experience_nivel");
 	var ulCustomer = $("#nivelCustomer");
@@ -3065,7 +3065,7 @@ function fillStatus( ){
 }
 
 function fillTipoOperarios( ){
-	var strUrl = window.location.protocol + "//" + window.location.host + "/cabin-web/tipo_operario/";
+	var strUrl = window.location.protocol + "//" + window.location.host + "/cabin-web/tipo_operario/?size=10000";
 	var strLine = "";
 	var ulOperario = $("#operario");
 	$.ajax({
