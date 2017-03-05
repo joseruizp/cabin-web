@@ -116,7 +116,10 @@ public class RentRestController {
         if (Status.ACTIVE == rent.getComputer().getStatus().getId()) {
             computerWebSocketController.getComputersStatus(new ComputerStatus(rent.getComputer().getId(), ComputerStatus.AVALIABLE));
         }
-
+        client.getUser().setStatus(new Status());
+        client.getUser().getStatus().setId(Status.INACTIVE);
+        clientRepository.save(client);
+        rent.setClient(client);
         return rentRepository.saveAndFlush(rent);
     }
 

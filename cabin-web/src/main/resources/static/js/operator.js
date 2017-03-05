@@ -9,6 +9,7 @@ totalAmount = 0;
 rechargeInfo = {};
 var cashId = 0; 
 var LOGOUT_BUTTON = 0; 
+var INACTIVE = 2;
 
 $(document).ready(function() {
         cashId = $("#cashId").val();
@@ -1141,6 +1142,7 @@ function saveCliente(){
 	customer.experience = trim( $( "#experienceCustomer" ).val() );;
 	customer.user.pass = trim( $( "#passwordCustomer" ).val() );
 	customer.user.name = trim( $( "#emailCustomer" ).val() );
+	customer.user.status.id = INACTIVE;
 	
 	$( "#nameCustomer" ).val(""); 
 	$( "#passwordCustomer" ).val("");

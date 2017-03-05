@@ -43,10 +43,12 @@ public class UserRestController {
         		Status status = new Status();
         		status.setId(Status.ACTIVE);
         		client.setStatus(status);
-        		clientRepository.save(client);
+        		
         	}
         }
-
+        client.getUser().setStatus(new Status());
+        client.getUser().getStatus().setId(Status.ACTIVE);
+        clientRepository.save(client);
         return client;
     }
 
