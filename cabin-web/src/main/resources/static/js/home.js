@@ -23,7 +23,7 @@ empleadoValidation = ""; parametroValidation = ""
 recargaValidation = ""; 
 clienteIndex = -1; empleadoIndex = -1;
 daysTarifa = []; empleados = []; 
-rechargeInfo = {};
+rechargeInfo = {}; INACTIVO = 2;
 map = {
         "Lun" : 0,
         "Mar" : 1,
@@ -2232,13 +2232,13 @@ function saveCliente(){
 	var idCustomer = $("#idCliente").attr("value");
 	var idUser;	
 	var customer = {};
-	customer.user = {}; 
+	customer.user = {};
+	customer.user.status = {};
 	customer.status = {};	
 	customer.level = {};
 	customer.docType = {};
 	customer.change_level = CHANGE_LEVEL;
-	customer.bonus = BONUS;
-	BONUS = "0"; CHANGE_LEVEL = "0";
+	customer.bonus = BONUS;	
 	console.log("Inside form-cliente " + idCustomer);
 	if (idCustomer !== "") {
 		customer.id = idCustomer;
@@ -2286,7 +2286,7 @@ function saveCliente(){
 	customer.experience = trim( $( "#experienceCustomer" ).val() );;
 	customer.user.pass = trim( $( "#passwordCustomer" ).val() );
 	customer.user.name = trim( $( "#emailCustomer" ).val() );
-	
+	customer.user.status.id = INACTIVO;
 	$( "#nameCustomer" ).val(""); 
 	$( "#passwordCustomer" ).val("");
 	$( "#confirmPasswordCustomer" ).val("");
@@ -2343,6 +2343,7 @@ function saveEmpleado(){
 	employee.status = {};
 	employee.user = {};
 	employee.user.profile = {};
+	employee.user.status = {};
 	
 	var idEmpleado = $("#idEmpleado").attr("value");
 	if (idEmpleado !== "") {
@@ -2388,6 +2389,7 @@ function saveEmpleado(){
 	employee.user.pass = trim( $( "#passwordEmployee" ).val());
 	employee.user.name = trim( $( "#emailEmployee" ).val());
 	employee.user.profile.id = idPerfil;
+	employee.user.status.id = INACTIVO;
 	
 	$( "#nameEmployee" ).val("");
 	$( "#lastnameEmployee" ).val("");

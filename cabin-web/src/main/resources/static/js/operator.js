@@ -1090,6 +1090,7 @@ function saveCliente(){
 	var idUser;	
 	var customer = {};
 	customer.user = {}; 
+	customer.user.status = {};
 	customer.status = {};	
 	customer.level = {};
 	customer.docType = {};
