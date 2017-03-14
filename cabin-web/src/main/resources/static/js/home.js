@@ -612,25 +612,6 @@ function fillEmpleadotbl(){
     var date;
     t.clear();
 	for(i=0; i<size;i++){
-		/*
-		if ( jQuery.type( empleados[i].birthDate ) === "date" ){ 
-			var day = "" + (empleados[i].birthDate).getDate();
-			var month = (empleados[i].birthDate).getMonth() + 1;
-			var monthStr = "";
-			var year = (empleados[i].birthDate).getFullYear();			
-			if (day.length == 1)
-				day = "0"+day;
-			if (month.toString().length == 1)
-				monthStr = "0"+ month;
-			else
-				monthStr = "" + month;
-			date = ""+ day +"-"+monthStr+"-"+year;
-		}
-		else{
-			var arrayDate = empleados[i].birthDate.split("-");
-			date = ""+ arrayDate[0] +"-"+arrayDate[1]+"-"+arrayDate[2];
-		} 
-		*/
 		t.row.add( [
                 empleados[i].id,
                 empleados[i].name,
@@ -641,19 +622,11 @@ function fillEmpleadotbl(){
                 empleados[i].docCode,
                 empleados[i].perfil,
                 empleados[i].estado,
-                "",
-                "",
+                "<a onclick='editEmpleado("+ empleados[i].id +","+ i+")'><i class='fa fa-pencil icons' title='Editar'></i></a>"
+                + "&nbsp;&nbsp;&nbsp;" +
+                "<a onclick='fnOpenCloseDialog(7, "+ empleados[i].id +","+ i+")'><i class='fa fa-trash icons' title='Eliminar'></i></a>",
         ] ).draw( false );
 	};
-	if (size > 0 ){
-	    $('#empleadoTbl > tbody  > tr').each(function() {
-		    var edit = "<td><a onclick='editEmpleado("+ empleados[j].id +","+ j+")'><i class='fa fa-pencil icons' title='Editar'></i></a></td>";
-		    var remove = "<td><a onclick='fnOpenCloseDialog(7, "+ empleados[j].id +","+ j+")'><i class='fa fa-trash icons' title='Eliminar'></i></a></td>";	    
-		    j++; 
-		    var tr = $(this);	    
-		    tr.find('td:last').after(edit); tr.find('td:last').after(remove);
-	    });
-	}
 }
 
 
@@ -671,19 +644,13 @@ function fillSedetbl(  ){
                 sedes[i].maxAmountOperator,
                 sedes[i].status,
                 "",
+                "<a onclick='editSede("+ sedes[i].id +","+ i+")'><i class='fa fa-pencil icons' title='Editar'></i></a>"
+                + "&nbsp;&nbsp;&nbsp;" +
+                "<a onclick='fnOpenCloseDialog(1, "+ sedes[i].id +","+ i+")'><i class='fa fa-trash icons' title='Eliminar'></i></a>"
+                + "&nbsp;&nbsp;&nbsp;" +
+                "<form method='POST' id='formSede"+sedes[i].id+"'><a onclick='insideSede("+ sedes[i].id +")'><i class='fa fa-search-plus icons' title='Entrar'></i></a></form>"
         ] ).draw( false );
 	};
-	if (size > 0 ){
-	    $('#sedeTbl > tbody  > tr').each(function() {	    
-	    	var zoom = "<td><form method='POST' id='formSede"+sedes[j].id+"'><a onclick='insideSede("+ sedes[j].id +")'><i class='fa fa-search-plus icons' title='Entrar'></i></a></form></td>";
-		    var edit = "<td><a onclick='editSede("+ sedes[j].id +","+ j+")'><i class='fa fa-pencil icons' title='Editar'></i></a></td>";
-		    var remove = "<td><a onclick='fnOpenCloseDialog(1, "+ sedes[j].id +","+ j+")'><i class='fa fa-trash icons' title='Eliminar'></i></a></td>";	    
-		    j++; 
-		    var tr = $(this);	    
-		    tr.find('td:last').after(edit); tr.find('td:last').after(remove); 
-		    tr.find('td:last').after(zoom);
-	    });
-	}
 }
 
 function editSede( code, index ){
@@ -820,18 +787,11 @@ function fillTarifatbl(  ){
                 tarifas[i].description,
                 tarifas[i].price,                
                 tarifas[i].estado,
+                "<a onclick='editTarifa("+ tarifas[i].id +","+ i+")'><i class='fa fa-pencil icons' title='Editar'></i></a>"
+                + "&nbsp;&nbsp;&nbsp;" +
+                "<a onclick='fnOpenCloseDialog(2,"+ tarifas[i].id +","+ i+")'><i class='fa fa-trash icons' title='Eliminar'></i></a>"
         ] ).draw( false );
 	};
-	if (size > 0 ){
-	    $('#tarifaTbl > tbody  > tr').each(function() {	    
-	    	var edit = "<td><a onclick='editTarifa("+ tarifas[j].id +","+ j+")'><i class='fa fa-pencil icons' title='Editar'></i></a></td>";
-		    var remove = "<td><a onclick='fnOpenCloseDialog(2,"+ tarifas[j].id +","+ j+")'><i class='fa fa-trash icons' title='Eliminar'></i></a></td>";
-		    j++;
-		    var tr = $(this);
-		    tr.find('td:last').after(edit);
-		    tr.find('td:last').after(remove);
-	    });
-	}
 	var d = 0;
 	$('.tariff-detail').click(function (e) {
 		e.preventDefault();
@@ -867,15 +827,11 @@ function fillTariffDetailstbl(  ){
                 tariffDetails[i].price,
                 tariffDetails[i].startTime,
                 tariffDetails[i].endTime,
+                "<a onclick='editTariffDetail("+ tariffDetails[i].id +","+ i+")'><i class='fa fa-pencil icons' title='Editar'></i></a>"
+                + "&nbsp;&nbsp;&nbsp;" +
+                "<a onclick='fnOpenCloseDialog(11,"+ tariffDetails[i].id +","+ i+")'><i class='fa fa-trash icons' title='Eliminar'></i></a>"
         ] ).draw( false );
 	};
-    $('#tariffDetailTbl > tbody  > tr').each(function() {	    
-    	var edit = "<td><a onclick='editTariffDetail("+ tariffDetails[j].id +","+ j+")'><i class='fa fa-pencil icons' title='Editar'></i></a></td>";
-	    var remove = "<td><a onclick='fnOpenCloseDialog(11,"+ tariffDetails[j].id +","+ j+")'><i class='fa fa-trash icons' title='Eliminar'></i></a></td>";
-	    j++;
-	    var tr = $(this);
-	    tr.find('td:last').after(edit); tr.find('td:last').after(remove);
-    });
 }
 
 function fillViewTariffDetailstbl(tariffDetails){
@@ -1186,17 +1142,11 @@ function fillBonificaciontbl(  ){
                 bonificaciones[i].experienceAmount,                
                 bonificaciones[i].fractionToGive,
                 bonificaciones[i].status,
+                "<a onclick='editBonificacion("+ bonificaciones[i].id +","+ i+")'><i class='fa fa-pencil icons' title='Editar'></i></a>"
+                + "&nbsp;&nbsp;&nbsp;" +
+                "<a onclick='fnOpenCloseDialog(10,"+ bonificaciones[i].id +","+ i+")'><i class='fa fa-trash icons' title='Eliminar'></i></a>"
         ] ).draw( false );
 	};
-	if (size > 0 ){
-	    $('#bonificacionTbl > tbody  > tr').each(function() {	    
-		    var edit = "<td><a onclick='editBonificacion("+ bonificaciones[j].id +","+ j+")'><i class='fa fa-pencil icons' title='Editar'></i></a></td>";
-		    var remove = "<td><a onclick='fnOpenCloseDialog(10,"+ bonificaciones[j].id +","+ j+")'><i class='fa fa-trash icons' title='Eliminar'></i></a></td>";
-		    j++;
-		    var tr = $(this);
-		    tr.find('td:last').after(edit); tr.find('td:last').after(remove);
-	    });
-	}
 }
 
 
@@ -1212,17 +1162,11 @@ function fillParametrotbl(  ){
                 parametros[i].name,
                 parametros[i].value,                
                 parametros[i].status,
+                "<a onclick='editParametro("+ parametros[i].id +","+ i+")'><i class='fa fa-pencil icons' title='Editar'></i></a>"
+                + "&nbsp;&nbsp;&nbsp;" +
+                "<a onclick='fnOpenCloseDialog(9,"+ parametros[i].id +","+ i+")'><i class='fa fa-trash icons' title='Eliminar'></i></a>"
         ] ).draw( false );
 	};
-	if (size > 0 ){
-	    $('#parametroTbl > tbody  > tr').each(function() {	    
-		    var edit = "<td><a onclick='editParametro("+ parametros[j].id +","+ j+")'><i class='fa fa-pencil icons' title='Editar'></i></a></td>";
-		    var remove = "<td><a onclick='fnOpenCloseDialog(9,"+ parametros[j].id +","+ j+")'><i class='fa fa-trash icons' title='Eliminar'></i></a></td>";
-		    j++;
-		    var tr = $(this);
-		    tr.find('td:last').after(edit); tr.find('td:last').after(remove);
-	    });
-	}
 }
 
 
@@ -1239,17 +1183,11 @@ function fillReglatbl(  ){
                 reglas[i].points,                
                 reglas[i].level.name,
                 reglas[i].status.name,
+                "<a onclick='editRegla("+ reglas[i].id +","+ i+")'><i class='fa fa-pencil icons' title='Editar'></i></a>"
+                + "&nbsp;&nbsp;&nbsp;" +
+                "<a onclick='fnOpenCloseDialog(3,"+ reglas[i].id +","+ i+")'><i class='fa fa-trash icons' title='Eliminar'></i></a>"
         ] ).draw( false );
 	};
-	if (size > 0 ){
-	    $('#reglaTbl > tbody  > tr').each(function() {	    
-		    var edit = "<td><a onclick='editRegla("+ reglas[j].id +","+ j+")'><i class='fa fa-pencil icons' title='Editar'></i></a></td>";
-		    var remove = "<td><a onclick='fnOpenCloseDialog(3,"+ reglas[j].id +","+ j+")'><i class='fa fa-trash icons' title='Eliminar'></i></a></td>";
-		    j++;
-		    var tr = $(this);
-		    tr.find('td:last').after(edit); tr.find('td:last').after(remove);
-	    });
-	}
 }
 
 
@@ -1621,19 +1559,13 @@ function fillNiveltbl(  ){
                 niveles[i].finalExperience,                
                 niveles[i].question,
                 niveles[i].estado,
+                "<a onclick='editNivel("+ niveles[i].id +","+ i+")'><i class='fa fa-pencil icons' title='Editar'></i></a>"
+                + "&nbsp;&nbsp;&nbsp;" +
+                "<a onclick='fnOpenCloseDialog(4,"+ niveles[i].id +","+ i+")'><i class='fa fa-trash icons' title='Eliminar'></i></a>"
+                + "&nbsp;&nbsp;&nbsp;" +
+                "<a onclick='openImageNivel("+niveles[i].id+","+i+")'><i class='fa fa-search-plus icons' title='Ver'></i></a>"
         ] ).draw( false );
 	};
-	if (size > 0 ){
-	    $('#nivelTbl > tbody  > tr').each(function() {	  
-	    	var zoom = "<td><a onclick='openImageNivel("+niveles[j].id+","+j+")'><i class='fa fa-search-plus icons' title='Ver'></i></a></td>";
-	    	var edit = "<td><a onclick='editNivel("+ niveles[j].id +","+ j+")'><i class='fa fa-pencil icons' title='Editar'></i></a></td>";
-		    var remove = "<td><a onclick='fnOpenCloseDialog(4,"+ niveles[j].id +","+ j+")'><i class='fa fa-trash icons' title='Eliminar'></i></a></td>";
-		    j++;
-		    var tr = $(this);
-		    tr.find('td:last').after(edit); tr.find('td:last').after(remove);
-		    tr.find('td:last').after(zoom);
-	    });
-	}
 }
 
 function openImageNivel( code, index ){	
@@ -1791,17 +1723,11 @@ function fillPremiotbl(  ){
                 premios[i].balanceFraction,   
                 premios[i].level,
                 premios[i].status,
+                "<a onclick='editPremio("+ premios[i].id +","+ i+")'><i class='fa fa-pencil icons' title='Editar'></i></a>"
+                + "&nbsp;&nbsp;&nbsp;" +
+                "<a onclick='fnOpenCloseDialog(5,"+ premios[i].id +","+ i+")'><i class='fa fa-trash icons' title='Eliminar'></i></a>"
         ] ).draw( false );
 	};
-	if (size > 0 ){
-	    $('#premioTbl > tbody  > tr').each(function() {	    
-		    var edit = "<td><a onclick='editPremio("+ premios[j].id +","+ j+")'><i class='fa fa-pencil icons' title='Editar'></i></a></td>";
-		    var remove = "<td><a onclick='fnOpenCloseDialog(5,"+ premios[j].id +","+ j+")'><i class='fa fa-trash icons' title='Eliminar'></i></a></td>";
-		    j++;
-		    var tr = $(this);
-		    tr.find('td:last').after(edit); tr.find('td:last').after(remove);
-	    });
-	}
 }
 
 function editPremio( code, index ){
@@ -3212,17 +3138,11 @@ function fillExperiencetbl(  ){
                 experiences[i].experienceToGive,
                 experiences[i].level,
                 experiences[i].status,
+                "<a onclick='editExperience("+ experiences[i].id +","+ i+")'><i class='fa fa-pencil icons' title='Editar'></i></a>"
+                + "&nbsp;&nbsp;&nbsp;" +
+                "<a onclick='fnOpenCloseDialog(8,"+ experiences[i].id +","+ i+")'><i class='fa fa-trash icons' title='Eliminar'></i></a>"
         ] ).draw( false );
 	};
-	if (size > 0 ){
-	    $('#experienceTbl > tbody  > tr').each(function() {	    
-		    var edit = "<td><a onclick='editExperience("+ experiences[j].id +","+ j+")'><i class='fa fa-pencil icons' title='Editar'></i></a></td>";
-		    var remove = "<td><a onclick='fnOpenCloseDialog(8,"+ experiences[j].id +","+ j+")'><i class='fa fa-trash icons' title='Eliminar'></i></a></td>";
-		    j++;
-		    var tr = $(this);
-		    tr.find('td:last').after(edit); tr.find('td:last').after(remove);
-	    });
-	}
 }
 
 function saveExperience(){
