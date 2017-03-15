@@ -44,7 +44,7 @@ function checkPassword( ps1, ps2, cad, div) {
 function checkEmail( email, cad, div) {
 	var hostname = window.location.protocol + "//" + window.location.host;
 	var name = trim(email.val());
-	var strUrl = hostname + "/cabin-web/usuario/search/findByName?name=" + name;
+	var strUrl = hostname + "/usuario/search/findByName?name=" + name;
 	var validEmail = 1;
 	$.ajax({
 		async:false,
@@ -162,7 +162,7 @@ function saveCustomer(){
 	$(genderHtml).parents(".dropdown").find('.btn').html('Seleccionar <span class="caret"></span>');
 	$(genderHtml).parents(".dropdown").find('.btn').val("");
 	var idUser, idCustomer;
-	var strUrl = window.location.protocol + "//" + window.location.host + "/cabin-web/usuario";
+	var strUrl = window.location.protocol + "//" + window.location.host + "/usuario";
 	console.log(JSON.stringify(user));
 	$.ajax({
 		async: false,
@@ -183,7 +183,7 @@ function saveCustomer(){
 	    	idUser = hrefArray[hrefArray.length -1];	    	    	
 	    }
 	});		
-	strUrl = window.location.protocol + "//" + window.location.host + "/cabin-web/cliente";	
+	strUrl = window.location.protocol + "//" + window.location.host + "/cliente";	
 	console.log(JSON.stringify(customer));
 	$.ajax({
 		async: false,
@@ -205,11 +205,11 @@ function saveCustomer(){
 	    		    	
 	    }
 	});	
-	var strUrlStatus = window.location.protocol + "//" + window.location.host + "/cabin-web/estado/" + 1;
-	var strUrlNivel = window.location.protocol + "//" + window.location.host + "/cabin-web/nivel/" + 1;
-	var strUrlPerfil = window.location.protocol + "//" + window.location.host + "/cabin-web/perfil/" + 3;
-	var strUrlUser = window.location.protocol + "//" + window.location.host + "/cabin-web/usuario/"+idUser;
-	var strUrlCustomer = window.location.protocol + "//" + window.location.host + "/cabin-web/cliente/"+idCustomer+"/status";
+	var strUrlStatus = window.location.protocol + "//" + window.location.host + "/estado/" + 1;
+	var strUrlNivel = window.location.protocol + "//" + window.location.host + "/nivel/" + 1;
+	var strUrlPerfil = window.location.protocol + "//" + window.location.host + "/perfil/" + 3;
+	var strUrlUser = window.location.protocol + "//" + window.location.host + "/usuario/"+idUser;
+	var strUrlCustomer = window.location.protocol + "//" + window.location.host + "/cliente/"+idCustomer+"/status";
 	//Solo para cliente
 	
 	$.ajax({
@@ -225,7 +225,7 @@ function saveCustomer(){
 	    	console.log("Error, su solicitud no pudo ser atendida");
 	    },
 	    complete: function () {
-	    	strUrlCustomer = window.location.protocol + "//" + window.location.host + "/cabin-web/cliente/"+idCustomer+"/level";
+	    	strUrlCustomer = window.location.protocol + "//" + window.location.host + "/cliente/"+idCustomer+"/level";
 	    	$.ajax({
 	    		async: false,
 	    		type: "PUT",
@@ -239,7 +239,7 @@ function saveCustomer(){
 	    	    	console.log("Error, su solicitud no pudo ser atendida");
 	    	    },	    	
 	    	    complete: function(xhr){
-	    	    	strUrlCustomer = window.location.protocol + "//" + window.location.host + "/cabin-web/cliente/"+idCustomer+"/user";
+	    	    	strUrlCustomer = window.location.protocol + "//" + window.location.host + "/cliente/"+idCustomer+"/user";
 	    	    	$.ajax({
 	    	    		async: false,
 	    	    		type: "PUT",
@@ -258,7 +258,7 @@ function saveCustomer(){
 	    }
 	});	
 	//Para usuario	
-	strUrlUser = window.location.protocol + "//" + window.location.host + "/cabin-web/usuario/"+idUser+"/profile";	
+	strUrlUser = window.location.protocol + "//" + window.location.host + "/usuario/"+idUser+"/profile";	
 	$.ajax({
 		async: false,
 		type: "PUT",
@@ -273,7 +273,7 @@ function saveCustomer(){
 	    },
 	    complete: function(xhr){
 	    	var hostname = window.location.protocol + "//" + window.location.host;	
-	    	window.location.href = hostname + "/cabin-web/login";
+	    	window.location.href = hostname + "/login";
 	    }
 	});
 	

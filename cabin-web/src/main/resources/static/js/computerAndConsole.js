@@ -1,5 +1,5 @@
 function getComputers(headquarterId) {
-	var computerUrl = window.location.protocol + "//" + window.location.host + "/cabin-web/get/computersByHeadquarter";	
+	var computerUrl = window.location.protocol + "//" + window.location.host + "/get/computersByHeadquarter";	
 	console.log("Get pc" + computerUrl);
 	$('#computer-multiple').html("");
 	$.ajax({
@@ -35,7 +35,7 @@ function getComputers(headquarterId) {
 }
 
 function getConsoles(headquarterId) {
-	var consoleUrl = window.location.protocol + "//" + window.location.host + "/cabin-web/get/consolesByHeadquarter";	
+	var consoleUrl = window.location.protocol + "//" + window.location.host + "/get/consolesByHeadquarter";	
 	console.log("Get pc" + consoleUrl);
 	$('#console-multiple').html("");
 	$.ajax({

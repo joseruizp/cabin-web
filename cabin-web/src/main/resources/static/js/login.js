@@ -73,7 +73,7 @@
 	
 	function getHeadquarters() {
 		var hostname = window.location.protocol + "//" + window.location.host;
-		var strUrl = hostname + "/cabin-web/get/allHeadquarters";
+		var strUrl = hostname + "/get/allHeadquarters";
 		$.ajax({
 			type: "GET",
 		    url:strUrl,			    
@@ -93,7 +93,7 @@
 	
 	function newUser(){
 		var hostname = window.location.protocol + "//" + window.location.host;	
-		window.location.href = hostname + "/cabin-web/newUser";
+		window.location.href = hostname + "/newUser";
 	}
 	
 	function addEventAnonymous() {
@@ -104,7 +104,7 @@
 			user.headquarterId = headquarterId;
 			
 			var hostname = window.location.protocol + "//" + window.location.host;
-			var strUrl = hostname + "/cabin-web/get/anonymous";
+			var strUrl = hostname + "/get/anonymous";
 			
 			$.ajax({
 				type: "GET",
