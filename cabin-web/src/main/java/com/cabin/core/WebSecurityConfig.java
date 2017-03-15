@@ -77,7 +77,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         http.csrf().disable();
 
         http.formLogin().loginPage("/login").failureUrl("/login?error=E001").successHandler(new SuccessHandler()).usernameParameter("email").permitAll();
-        http.authorizeRequests().and().logout().logoutUrl("/logouttttttt").logoutSuccessHandler(new LogoutHandler()).permitAll().and().rememberMe();
+        http.authorizeRequests().and().logout().logoutUrl("/logout").logoutSuccessHandler(new LogoutHandler()).permitAll().and().rememberMe();
     }
 
     @Override
