@@ -73,7 +73,7 @@
 	
 	function getHeadquarters() {
 		var hostname = window.location.protocol + "//" + window.location.host;
-		var strUrl = hostname + "/get/allHeadquarters";
+		var strUrl = hostname + "/cabin-web/get/allHeadquarters";
 		$.ajax({
 			type: "GET",
 		    url:strUrl,			    
@@ -93,7 +93,7 @@
 	
 	function newUser(){
 		var hostname = window.location.protocol + "//" + window.location.host;	
-		window.location.href = hostname + "/newUser";
+		window.location.href = hostname + "/cabin-web/newUser";
 	}
 	
 	function addEventAnonymous() {

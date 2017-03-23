@@ -44,7 +44,7 @@ function checkPassword( ps1, ps2, cad, div) {
 function checkEmail( email, cad, div) {
 	var hostname = window.location.protocol + "//" + window.location.host;
 	var name = trim(email.val());
-	var strUrl = hostname + "/usuario/search/findByName?name=" + name;
+	var strUrl = hostname + "/cabin-web/usuario/search/findByName?name=" + name;
 	var validEmail = 1;
 	$.ajax({
 		async:false,
@@ -273,7 +273,7 @@ function saveCustomer(){
 	    },
 	    complete: function(xhr){
 	    	var hostname = window.location.protocol + "//" + window.location.host;	
-	    	window.location.href = hostname + "/login";
+	    	window.location.href = hostname + "/cabin-web/login";
 	    }
 	});
 	

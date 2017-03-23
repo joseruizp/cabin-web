@@ -22,7 +22,7 @@ $(function() {
     function getClientInformation() {
     	var clientId = $("#clientId").val();
     	var hostname = window.location.protocol + "//" + window.location.host;
-		var strUrl = hostname + "/get/client";
+		var strUrl = hostname + "/cabin-web/get/client";
 		$.ajax({
 			type: "GET",
 		    url:strUrl,			    
@@ -44,7 +44,7 @@ $(function() {
     
     function getRechargeInformation() {    	
     	var hostname = window.location.protocol + "//" + window.location.host;
-		var strUrl = hostname + "/get/parametersRecharge";
+		var strUrl = hostname + "/cabin-web/get/parametersRecharge";
 		$.ajax({
 			type: "GET",
 		    url:strUrl,			    
@@ -96,7 +96,7 @@ $(function() {
         	recharge.amount = amount;
         	        	
         	var hostname = window.location.protocol + "//" + window.location.host;
-    		var strUrl = hostname + "/post/recharge";
+    		var strUrl = hostname + "/cabin-web/post/recharge";
     		
         	$.ajax({
     			type: "POST",

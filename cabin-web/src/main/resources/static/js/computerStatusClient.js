@@ -7,7 +7,7 @@ $(function() {
 	STATUS.TURNING_OFF = {id:5, color:"#A4A4A4"};
 	STATUS.TURNED_OFF = {id:6, color:"#A4A4A4"};
 	
-    var socket = new SockJS('/gs-guide-websocket');
+    var socket = new SockJS('/cabin-web/gs-guide-websocket');
     var stompClient = Stomp.over(socket);
     stompClient.connect({}, function (frame) {
         stompClient.subscribe('/cabin/computer', function (computerStatus) {

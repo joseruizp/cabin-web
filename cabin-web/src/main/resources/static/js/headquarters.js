@@ -50,7 +50,7 @@
 		console.log(JSON.stringify(computerGroup));
 		
 		var hostname = window.location.protocol + "//" + window.location.host;
-		var strUrl = hostname + "/post/updateComputerGroup";
+		var strUrl = hostname + "/cabin-web/post/updateComputerGroup";
 		$.ajax({
 			async: false,
 			type: "POST",
@@ -68,7 +68,7 @@
 	
 	function fillComputers(idHeadquarter) {
 		var hostname = window.location.protocol + "//" + window.location.host;
-		var strUrl = hostname + "/get/computersByHeadquarter";
+		var strUrl = hostname + "/cabin-web/get/computersByHeadquarter";
 		$.ajax({
 			type: "GET",
 		    url:strUrl,			    
@@ -125,7 +125,7 @@
 		var dataTariffs = JSON.stringify(tariffByGroups);
 		console.log("saveTariffs, data: " + dataTariffs);
 		var hostname = window.location.protocol + "//" + window.location.host;
-		var strUrl = hostname + "/post/saveTariffByGroup";
+		var strUrl = hostname + "/cabin-web/post/saveTariffByGroup";
 		$.ajax({
 			type: "POST",
 		    url:strUrl,			    
@@ -144,7 +144,7 @@
 	
 	function fillTariffs(idHeadquarter) {
 		var hostname = window.location.protocol + "//" + window.location.host;
-		var strUrl = hostname + "/get/allTariff";
+		var strUrl = hostname + "/cabin-web/get/allTariff";
 		$.ajax({
 			type: "GET",
 		    url:strUrl,			    
@@ -181,7 +181,7 @@
 	
 	function fillDropDowns(idHeadquarter) {
 		var hostname = window.location.protocol + "//" + window.location.host;
-		var strUrl = hostname + "/get/tariffByHeadquarter";
+		var strUrl = hostname + "/cabin-web/get/tariffByHeadquarter";
 		$.ajax({
 			type: "GET",
 		    url:strUrl,			    
@@ -209,7 +209,7 @@
 	
 	function getOperators(idHeadquarter) {
 		var hostname = window.location.protocol + "//" + window.location.host;
-		var strUrl = hostname + "/get/operators";
+		var strUrl = hostname + "/cabin-web/get/operators";
 		var operators = "";
 		var ulOperator = $("#operatorsList");
 		var line = "";
