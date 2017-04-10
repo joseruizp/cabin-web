@@ -40,12 +40,12 @@
 
 							<!-- logo -->
 							<div class="logo smooth-scroll">
-								<a href="#banner"><img id="logo" th:src="@{images/logo.png}" alt="Worthy"></img></a>
+								<a href="/" onclick="return false;"><img id="logo" th:src="@{images/logo.png}" alt="Worthy"></img></a>
 							</div>
 
 							<!-- name-and-slogan -->
 							<div class="logo-section smooth-scroll">
-								<div class="brand"><a href="#banner" th:text="${headquarter.name + ' | ' + employee.name + ' ' + employee.lastname}" th:unless="${headquarter.name == null}" ></a></div>								
+								<div class="brand"><a href="/" onclick="return false;" th:text="${headquarter.name + ' | ' + employee.name + ' ' + employee.lastname}" th:unless="${headquarter.name == null}" ></a></div>								
 							</div>
 
 						</div>

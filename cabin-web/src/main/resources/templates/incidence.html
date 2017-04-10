@@ -39,19 +39,19 @@
 
 							<!-- logo -->
 							<div class="logo smooth-scroll">
-								<a href="#banner"><img id="logo" th:src="@{images/logo.png}" alt="Worthy"></img></a>
+								<a href="/" onclick="return false;"><img id="logo" th:src="@{images/logo.png}" alt="Worthy"></img></a>
 							</div>
 
 							<!-- name-and-slogan -->
 							<div class="logo-section smooth-scroll">
-								<div class="brand"><a href="#banner">Cabinas</a></div>								
+								<div class="brand"><a href="/" onclick="return false;">Cabinas</a></div>								
 							</div>
 
 						</div>
 						<!-- header-left end -->
 
 					</div>
-					<div class="col-md-8">
+					<div class="col-md-7">
 
 						<!-- header-right start --> 
 						<div class="header-right">
@@ -91,6 +91,15 @@
 						<!-- header-right end -->
 
 					</div>
+					<!-- Logout start -->
+					<div class="col-md-1">
+						<div class="header-right">
+							<div class="logo smooth-scroll">
+								<a th:href="@{/logout}"><img id="logo" th:src="@{images/logout_icon.png}" alt="Logout"></img></a>								
+							</div>
+						</div>
+					</div>
+					<!-- Logout end -->
 				</div>
 			</div>
 		</header>
@@ -123,7 +132,7 @@
 						<div class="form-group">
 							<label class="control-label col-sm-2" for="name">Nombre:</label>
 							<div class="col-sm-4">
-								<input class="form-control" id="name"
+								<input th:value="${ employee.name + ' ' + employee.lastname}" class="form-control" id="name"
 									placeholder="Nombre" maxlength="20" disabled="disabled"/>
 							</div>
 						</div>

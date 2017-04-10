@@ -125,7 +125,7 @@
 								<label class="control-label col-sm-5" >Usuario:</label>
 								<label class="control-label col-sm-2" id="clientName"></label>
 							</div>
-							<div class="form-group" th:if="${client.user.anonymous == 0}" >
+							<div class="form-group" th:if="${client.user.anonymous == '0'}" >
 								<label class="control-label col-sm-5">Nivel:</label>
 								<label class="control-label col-sm-2" id="level"></label>
 							</div>
@@ -137,7 +137,7 @@
 					</div>
 					<div class="col-md-3">
 						<form class="form-horizontal" role="form">
-							<div class="form-group" th:if="${client.user.anonymous == 0}">
+							<div class="form-group" th:if="${client.user.anonymous == '0'}">
 								<label class="control-label col-sm-5">Puntos:</label> <label
 									class="control-label col-sm-2" id="points"></label>
 							</div>
@@ -153,7 +153,7 @@
 					</div>
 					<div class="col-md-3">
 						<form class="form-horizontal" role="form">
-							<div class="form-group" th:if="${client.user.anonymous == 0}">
+							<div class="form-group" th:if="${client.user.id == '0'}">
 								<label class="control-label col-sm-5">Experiencia:</label> <label
 									class="control-label col-sm-2" id="experience"></label>
 							</div>
@@ -164,7 +164,7 @@
 						</form>
 					</div>					
 				</div>
-				<div class="row">					
+				<div class="row" th:if="${headquarter.operatorType.id == 1}">					
 					<div class="col-md-2"></div>
 					<div class="col-md-8">
 						<form class="form-horizontal" role="form">
@@ -174,7 +174,7 @@
 						</form>		
 					</div>			
 				</div>
-				<div class="row">					
+				<div class="row" th:if="${headquarter.operatorType.id == 1}">					
 					<div class="col-md-2"></div>
 					<div class="col-md-8" style="margin-left:90px;">
 						<form class="form-horizontal" role="form">
@@ -188,7 +188,7 @@
 						</form>		
 					</div>			
 				</div>
-				<div class="row" style="margin-left: 90px">
+				<div class="row" style="margin-left: 90px" th:if="${headquarter.operatorType.id == 1}">
 					<div class="form-group" style="margin-top: 10px">
 						<div class="col-md-2"></div>
 						<div class="col-md-6">

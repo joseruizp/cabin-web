@@ -864,11 +864,11 @@ function addCliente() {
 		docTypeHtml = $(docTypeHtml).parents(".dropdown").find('.btn');
 		valid = valid && checkRequired( docTypeHtml, "Debe seleccionar un tipo de documento.",1, clienteValidation);
 		//valid = valid && checkRegexp( $("#docCode"), /^[0-9]\d{0,15}$/i, "Debe ingresar número de documento correcto", empleadoValidation);
-		if ( $(docTypeHtml).val() == 1) //En caso DNI
+		if ( $(docTypeHtml).val() == tipo_doc[0].id) //En caso DNI
 			valid = valid && checkRegexp( $("#docCodeCustomer"), /^[0-9]\d{7}$/i, "El DNI ingresado no es válido" , clienteValidation);
-		else if( $(docTypeHtml).val() == 2) //En caso RUC
+		else if( $(docTypeHtml).val() == tipo_doc[1].id) //En caso RUC
 			valid = valid && checkRegexp( $("#docCodeCustomer"), /^[1-9]\d{10}$/i, "El RUC ingresado no es válido", clienteValidation );
-	    else if( $(docTypeHtml).val > 2) //En cualquier otro documento
+	    else if( $(docTypeHtml).val > tipo_doc[2].id) //En cualquier otro documento
 	    	valid = valid && checkRequired($("#docCodeCustomer"),"Debe ingresar el número de documento.",1, clienteValidation);		
 	}
 	var genderHtml = $("#genderCustomer li a");		
@@ -1182,6 +1182,7 @@ function saveCliente(){
 	    	}
 	    	fillArrayCliente();
 	    	fillArrayClients();
+	    	updateTips("Cliente registrado satisfactoriamente.", clienteValidation);
 	    },
 	    error: function (xhr, status) {	    	
 	    	console.log("Error, su solicitud no pudo ser atendida");

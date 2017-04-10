@@ -37,12 +37,12 @@
 
 							<!-- logo -->
 							<div class="logo smooth-scroll">
-								<a href="#banner"><img id="logo" th:src="@{images/logo.png}" alt="Worthy"></img></a>
+								<a th:href="@{/login}"><img id="logo" th:src="@{images/logo.png}" alt="Worthy"></img></a>
 							</div>
 
 							<!-- name-and-slogan -->
 							<div class="logo-section smooth-scroll">
-								<div class="brand"><a href="#banner">Sede: Local UNI</a></div>								
+								<div class="brand"><a href="/" onclick="return false;">Nuevo usuario</a></div>								
 							</div>
 
 						</div>
@@ -116,14 +116,56 @@
 								<input class="form-control" id="name"
 									placeholder="Nombre" maxlength="20"/>
 							</div>							
+					        <label class="control-label col-sm-2" for="lastname">Apellidos:</label>
+							<div class="col-sm-4">
+								<input class="form-control" id="lastname"
+									placeholder="Apellidos" maxlength="40"/> 
+							</div>
+						</div>	
+						<div class="form-group">
+							<label class="control-label col-sm-2" for="email">Email:</label>
+							<div class="col-sm-4">
+								<input class="form-control" id="email"
+									placeholder="Correo" maxlength="40"/> 
+							</div>						
 					        <label class="control-label col-sm-2" for="birthDate">Fecha nacimiento:</label>
 					        <div class="col-sm-4">
 					            <div class="input-group date">
-						            <input type="text" class="form-control input-date" name="birthDate" id="birthDate" placeholder="DD/MM/YYYY" value=""/>
+						            <input type="text" class="form-control input-date" name="birthDate" id="birthDate" placeholder="dd/mm/yyyy" value=""/>
 						            <span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
 					            </div>
 				         	</div>
-						</div>						
+						</div>		
+						<div class="form-group">														
+							<label class="control-label col-sm-2" for="docType">Tipo Documento:</label>
+							<div class="col-sm-4">
+								<div class="dropdown">
+									<button class="btn btn-primary dropdown-toggle" type="button"
+										data-toggle="dropdown" id="docTypeButton">
+										Seleccionar <span class="caret"></span>
+									</button>
+									<ul id="docType" class="dropdown-menu">																													
+									</ul>
+								</div>
+							</div>						
+							<label class="control-label col-sm-2" for="docCode">N. Documento:</label>
+							<div class="col-sm-4">
+								<input  class="form-control" id="docCode"
+									placeholder="N. Documento" maxlength="15"/>
+							</div>
+						</div>
+						<div class="form-group">
+							<label class="control-label col-sm-2" for="password">Contrase&ntilde;a:</label>
+							<div class="col-sm-4">
+								<input  type="password" class="form-control" id="password"
+									placeholder="Contraseña" maxlength="20"/>
+							</div>
+							<label class="control-label col-sm-2" for="confirmPassword">Confirmar Contrase&ntilde;a:</label>
+							<div class="col-sm-4">
+								<input  type="password" class="form-control" id="confirmPassword"
+									placeholder="Confirmar contrase&ntilde;a" maxlength="20"/>
+							</div>
+						</div>
 						<div class="form-group">
 							<label class="col-sm-2 control-label">Sexo:</label>
 						    <div class="col-sm-4">
@@ -137,25 +179,6 @@
 										<li><a href="/" onclick="return false;">Femenino</a></li>
 									</ul>
 								</div>
-							</div>
-						    
-						    <label class="control-label col-sm-2" for="email">Email:</label>
-							<div class="col-sm-4">
-								<input class="form-control" id="email"
-									placeholder="Correo" maxlength="40"/> 
-							</div>
-					        
-						</div>
-						<div class="form-group">
-							<label class="control-label col-sm-2" for="password">Contrase&ntilde;a:</label>
-							<div class="col-sm-4">
-								<input  type="password" class="form-control" id="password"
-									placeholder="Contraseña" maxlength="20"/>
-							</div>
-							<label class="control-label col-sm-2" for="confirmPassword">Confirmar Contrase&ntilde;a:</label>
-							<div class="col-sm-4">
-								<input  type="password" class="form-control" id="confirmPassword"
-									placeholder="Confirmar contrase&ntilde;a" maxlength="20"/>
 							</div>
 						</div>
 						<div class="form-group">

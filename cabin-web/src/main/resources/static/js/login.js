@@ -45,6 +45,14 @@
 		showFailureLoginMessage();
 	});
 	
+	$(document).on("click", "#newUser", function(e){
+		e.preventDefault();
+		console.log("Entro a la llamada");
+		var hostname = window.location.protocol + "//" + window.location.host;	
+		window.location.href = hostname + "/cabin-web/newUser";
+		console.log("" + window.location.href);
+	})
+	
 	function showMessage(text, divId) {
 		var div = $('#' + divId);
 		div.text(text).show(1000);
@@ -104,7 +112,7 @@
 			user.headquarterId = headquarterId;
 			
 			var hostname = window.location.protocol + "//" + window.location.host;
-			var strUrl = hostname + "/get/anonymous";
+			var strUrl = hostname + "/cabin-web/get/anonymous";
 			
 			$.ajax({
 				type: "GET",
