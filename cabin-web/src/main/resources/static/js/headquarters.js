@@ -7,9 +7,9 @@
 	var MAINTENANCE = 3;
 	
 	var ID_BY_GROUP = {}
-	ID_BY_GROUP[DEFAULT] = "#default-equipos";
-	ID_BY_GROUP[VIP] = "#vip-equipos";
-	ID_BY_GROUP[MAINTENANCE] = "#mantenimiento-equipos";
+	ID_BY_GROUP[DEFAULT] = "#default";
+	ID_BY_GROUP[VIP] = "#vip";
+	ID_BY_GROUP[MAINTENANCE] = "#mantenimiento";
 	
 
 	var idHeadquarter;
@@ -17,7 +17,8 @@
 	$(document).ready(function(){
 		addEventDragAndDrop();
 		idHeadquarter = $('#idHeadquarter').val();
-		fillComputers(idHeadquarter)
+		fillComputers(idHeadquarter);
+		fillConsoles(idHeadquarter);
 		addEventSaveTariff();
 		fillTariffs(idHeadquarter);
 		getOperators(idHeadquarter);
@@ -79,7 +80,29 @@
 		    	$.each(data, function(index, value) {
 		    		var classLi = ((value.rented) ? "equipo-activo" : "ui-state-default");
 		    		var li = '<li class="' +classLi + '" computerId="' + value.id + '">' + value.name + '</li>';
-		    		$(ID_BY_GROUP[value.group.id]).append(li);
+		    		$(ID_BY_GROUP[value.group.id] + '-equipos').append(li);
+		    	});
+		    },
+		    error: function (xhr, status) {	    	
+		    	console.log("Error, su solicitud no pudo ser atendida");
+		    }
+		});
+	}
+	
+	function fillConsoles(idHeadquarter) {
+		var hostname = window.location.protocol + "//" + window.location.host;
+		var strUrl = hostname + "/cabin-web/get/consolesByHeadquarter";
+		$.ajax({
+			type: "GET",
+		    url:strUrl,			    
+		    data: {id: idHeadquarter},
+		    dataType: 'json', 
+		    contentType: 'application/json',
+		    success: function (data) {
+		    	$.each(data, function(index, value) {
+		    		var classLi = ((value.rented) ? "equipo-activo" : "ui-state-default");
+		    		var li = '<li class="' +classLi + '" consoleId="' + value.id + '">' + value.name + '</li>';
+		    		$(ID_BY_GROUP[value.group.id] + '-consolas').append(li);
 		    	});
 		    },
 		    error: function (xhr, status) {	    	

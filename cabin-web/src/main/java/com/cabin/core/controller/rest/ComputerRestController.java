@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.cabin.core.persistence.domain.Computer;
 import com.cabin.core.persistence.domain.Group;
+import com.cabin.core.persistence.domain.Status;
 import com.cabin.core.persistence.repository.ComputerRepository;
 import com.cabin.core.persistence.repository.GroupRepository;
 import com.cabin.core.persistence.repository.RentRepository;
@@ -32,7 +33,7 @@ public class ComputerRestController {
     public List<Computer> getComputersByHeadquarter(@RequestParam(value = "id", required = true) Long id) {
         System.out.println("headquarterId ::: " + id);
         List<Computer> computers = computerRepository.findByHeadquarterId(id);
-        computers.forEach(c -> c.setRented(rentRepository.findByComputerId(c.getId()) != null));
+        computers.forEach(c -> c.setRented(rentRepository.findByComputerIdAndRentStatusId(c.getId(), Status.ACTIVE) != null));
         return computers;
     }
 
