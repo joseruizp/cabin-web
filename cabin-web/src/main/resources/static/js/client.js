@@ -1,3 +1,4 @@
+balance = 0;
 $(function() {
 	var rechargeInfo = {};
     $(".computer-multiple").click(function() {
@@ -34,6 +35,7 @@ $(function() {
 		    	$("#level").text(data.level.name);
 		    	$("#points").text(data.points);
 		    	$("#balance").text(data.balance);
+		    	balance = data.balance;
 		    	$("#experience").text(data.experience);
 		    },
 		    error: function (xhr, status) {	    	
@@ -112,7 +114,7 @@ $(function() {
     		    	$("#rechargeChange").text(change);
     		    	showMessage("Recarga realizada satisfactoriamente", "rechargeAlert");
     		    	var isAnonymous = "1" === data.user.anonymous;
-    		    	if (isAnonymous) {
+    		    	if (isAnonymous && balance > 0) {
     		    		$("#generatedEmail").text(data.user.name);
     		    		$("#generatedPassword").text(data.user.pass);
     		    		$( "#passwordDialog" ).dialog({

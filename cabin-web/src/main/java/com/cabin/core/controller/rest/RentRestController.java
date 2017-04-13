@@ -140,7 +140,7 @@ public class RentRestController {
     
     private Client updateBonusBalance(Client client, Integer bonusPoints) {
         if (bonusPoints != null) {
-            Double bonusBalance = getBonusBalance(client.getLevel().getId(), bonusPoints);
+            Double bonusBalance = round(getBonusBalance(client.getLevel().getId(), bonusPoints));
             client.setBalance(client.getBalance() + bonusBalance);
             client.setPoints(client.getPoints() - bonusPoints);
         }

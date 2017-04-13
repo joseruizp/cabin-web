@@ -589,6 +589,7 @@ function editCliente( code, index ){
 			$( "#experienceCustomer" ).val(json.experience);			
 			$("#birthDateCustomer").val(json.birthDate);			
 			$("#idCliente").attr('value', idCliente);
+			$("#idBonificationCustomer").attr('value', json.id_bonification);
 			$("#btnCliente").html("Actualizar Cliente");	
 			var genderHtml = $("#genderCustomer li a");
 			if ( json.gender == "M"){
@@ -1087,6 +1088,7 @@ function fillDocTypes( ){
 function saveCliente(){
 	var hostname = window.location.protocol + "//" + window.location.host;
 	var idCustomer = $("#idCliente").attr("value");
+	var idBonificationCustomer = $("#idBonificationCustomer").attr("value");
 	var idUser;	
 	var customer = {};
 	customer.user = {}; 
@@ -1099,6 +1101,7 @@ function saveCliente(){
 	console.log("Inside form-cliente " + idCustomer);
 	if (idCustomer !== "") {
 		customer.id = idCustomer;
+		customer.id_bonification = idBonificationCustomer;
 		var strUsuario = hostname + "/cabin-web/cliente/" + idCustomer+"/user";		
 		$.ajax({
 			async:false,
@@ -1179,6 +1182,7 @@ function saveCliente(){
 	    	if (data.id != ""){
 	    		$("#btnCliente").html("Nuevo Cliente");
 	    		$("#idCliente").attr("value", "");
+	    		$("#idBonificationCustomer").attr("value", "");
 	    	}
 	    	fillArrayCliente();
 	    	fillArrayClients();

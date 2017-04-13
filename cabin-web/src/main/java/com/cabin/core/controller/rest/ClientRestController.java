@@ -129,7 +129,7 @@ public class ClientRestController {
         //Boolean isAnonymous = (Boolean) session.getAttribute(SessionEnum.IS_ANONYMOUS.name());
         Boolean isAnonymous = Integer.parseInt(client.getUser().getAnonymous()) == 1;
         
-        if (BooleanUtils.isTrue(isAnonymous)) {
+        if (BooleanUtils.isTrue(isAnonymous) && client.getBalance() == 0 ) {
             String password = generatePassword();
             client.getUser().setPass(password);
         } else {
@@ -169,7 +169,7 @@ public class ClientRestController {
             		clientBonusExperience = bonusAux.getExperienceAmount();
             	}
                 if ( client.getExperience() >= bonus.getExperienceAmount() && bonusId != bonus.getId()  && bonus.getExperienceAmount() > clientBonusExperience ) {
-                	client.setId_bonification(bonus.getId());                	
+                	//client.setId_bonification(bonus.getId());                	
                 	client.setBonus(bonusChange);
                 }
             }
@@ -227,18 +227,49 @@ public class ClientRestController {
     	System.out.println("Update bonification, clientId ::: " + rent.getClient().getId());        
         Client client = clientRepository.findOne(rent.getClient().getId());
         client.setBonus(bonus);
-        Bonus bonusAux = bonusRepository.findOne(client.getId_bonification());
-        Double bonification = bonusAux.getFractionToGive();
+        Long statusId = (long) 1;
+        List<Bonus> bonusList = bonusRepository.findByStatusId(statusId);
+        Double bonification = 0.0;
+        for (Bonus bonusIterator : bonusList) {
+        	Long bonusId = (long) 0;
+        	Bonus bonusAux = new Bonus();
+        	int clientBonusExperience = 0;        	
+        	if ( client.getId_bonification() != null ){            	
+        		bonusId = client.getId_bonification();                
+        		bonusAux = bonusRepository.findOne(bonusId);
+        		clientBonusExperience = bonusAux.getExperienceAmount();
+        	}
+            if ( client.getExperience() >= bonusIterator.getExperienceAmount() && bonusId != bonusIterator.getId()  && bonusIterator.getExperienceAmount() > clientBonusExperience ) {
+            	client.setId_bonification(bonusIterator.getId());
+            	bonification += bonusIterator.getFractionToGive();
+            }
+        }        
     	client.setBalance( client.getBalance() + bonification);        
-        rent.setClient( clientRepository.saveAndFlush(client));
+        
+    	rent.setClient( clientRepository.saveAndFlush(client));       
         rentRepository.saveAndFlush(rent);
         return rent.getClient();
 
     }
     
     @RequestMapping(value = "/get/bonification", method = RequestMethod.GET, produces = { "application/json;charset=UTF-8" })
-    public Double getBonification(@RequestParam(value = "bonus_id", required = true) Long bonusId) {
-    	return bonusRepository.findOne(bonusId).getFractionToGive();
+    public Double getBonification(@RequestParam(value = "bonus_id_preview", required = true) Long bonusIdPreview, @RequestParam(value = "bonus_id", required = true) Long bonusId) {
+    	
+    	Long statusId = (long) 1;
+        List<Bonus> bonusList = bonusRepository.findByStatusId(statusId);
+        Double bonification = 0.0;
+        Integer experience = 0;
+        if ( bonusIdPreview > 0 ){            	
+    		experience = bonusRepository.getOne(bonusIdPreview).getExperienceAmount(); 
+    	}
+        Bonus bonusAux = bonusRepository.getOne(bonusId);
+        for (Bonus bonusIterator : bonusList) {
+            if (experience < bonusIterator.getExperienceAmount() && bonusIterator.getExperienceAmount() <= bonusAux.getExperienceAmount() ) {            	
+            	bonification += bonusIterator.getFractionToGive();
+            }
+        }
+    	
+    	return bonification;
     }
     
     private String generatePassword() {

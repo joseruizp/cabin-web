@@ -2129,6 +2129,7 @@ function fillCliente(idCliente, name, lastname, email, gender, birthDate, balanc
 function saveCliente(){
 	var hostname = window.location.protocol + "//" + window.location.host;
 	var idCustomer = $("#idCliente").attr("value");
+	var idBonificationCustomer = $("#idBonificationCustomer").attr("value");
 	var idUser;	
 	var customer = {};
 	customer.user = {};
@@ -2141,6 +2142,7 @@ function saveCliente(){
 	console.log("Inside form-cliente " + idCustomer);
 	if (idCustomer !== "") {
 		customer.id = idCustomer;
+		customer.id_bonification = idBonificationCustomer;
 		var strUsuario = hostname + "/cabin-web/cliente/" + idCustomer+"/user";		
 		$.ajax({
 			async:false,
@@ -2151,7 +2153,7 @@ function saveCliente(){
 		    	var hrefArray = json._links.self.href.split("/");
 		    	idUser = hrefArray[hrefArray.length -1];
 		    	customer.user.id = idUser;
-		    	updateTips("Cliente creado satisfactoriamente.", clienteValidation);
+		    	//updateTips("Cliente creado satisfactoriamente.", clienteValidation);
 		    },
 		    error: function (xhr, status) {    	
 		    	console.log("Error, su solicitud no pudo ser atendida");
@@ -2223,9 +2225,11 @@ function saveCliente(){
 	    	if (data.id != ""){
 	    		$("#btnCliente").html("Nuevo Cliente");
 	    		$("#idCliente").attr("value", "");
+	    		$("#idBonificationCustomer").attr("value", "");
 	    	}
 	    	fillArrayCliente();
 	    	fillArrayClients();
+	    	updateTips("Cliente creado satisfactoriamente.", clienteValidation);
 	    },
 	    error: function (xhr, status) {	    	
 	    	console.log("Error, su solicitud no pudo ser atendida");
@@ -2359,6 +2363,7 @@ function editCliente( code, index ){
 			$( "#experienceCustomer" ).val(json.experience);			
 			$("#birthDateCustomer").val(json.birthDate);			
 			$("#idCliente").attr('value', idCliente);
+			$("#idBonificationCustomer").attr('value', json.id_bonification);
 			BONUS = json.bonus;
 			CHANGE_LEVEL = json.change_level;
 			$("#btnCliente").html("Actualizar Cliente");	
