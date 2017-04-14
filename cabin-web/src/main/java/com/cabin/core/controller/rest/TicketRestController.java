@@ -70,44 +70,44 @@ public class TicketRestController {
     @RequestMapping(value = "/post/expenses", method = RequestMethod.POST, produces = { "application/json;charset=UTF-8" })
     public Ticket saveExpenses(@RequestBody ExpenseCash expenseCash) {
         Calendar now = Calendar.getInstance();
-        
-        Client client = clientRepository.findOne(expenseCash.getClientId());
-        Double balance = client.getBalance() - expenseCash.getAmount();        
-        
-        if ( !client.getUser().isAnonymous() ){
-            Long statusId = (long) 1;
+        Long clientId = expenseCash.getClientId();
+        if ( clientId != null){
+        	Client client = clientRepository.findOne(expenseCash.getClientId());
+            Double balance = client.getBalance() - expenseCash.getAmount();        
             
-        	PunctuationRule punctuationRule = punctuationRuleRepository.findByLevelIdAndStatusId(client.getLevel().getId(), statusId);
+            if ( !client.getUser().isAnonymous() ){
+                Long statusId = (long) 1;
+                
+            	PunctuationRule punctuationRule = punctuationRuleRepository.findByLevelIdAndStatusId(client.getLevel().getId(), statusId);
 
-            Experience experience = experienceRepository.findByLevelIdAndStatusId(client.getLevel().getId(), statusId);
+                Experience experience = experienceRepository.findByLevelIdAndStatusId(client.getLevel().getId(), statusId);
 
-            client.setPoints(client.getPoints() - getRechargePoints(punctuationRule, expenseCash.getAmount()));
-            Integer newExperience = client.getExperience() - getRechargeExperience(experience, expenseCash.getAmount());
-            client.setExperience(newExperience);
+                client.setPoints(client.getPoints() - getRechargePoints(punctuationRule, expenseCash.getAmount()));
+                Integer newExperience = client.getExperience() - getRechargeExperience(experience, expenseCash.getAmount());
+                client.setExperience(newExperience);
 
-            
-            List<Level> levels = levelRepository.findByStatusId(statusId);
-            for (Level level : levels) {
-                Integer finalExperience = level.getFinalExperience();
-                if (finalExperience == null) {
-                    finalExperience = Integer.MAX_VALUE;
-                }
-                if (newExperience >= level.getInitialExperience() && newExperience <= finalExperience) {
-                    client.setLevel(level);
-                }
-            }
-            
-        }
-        
-        if (balance <= 0)
-        	balance = 0.0;
-        client.setBalance(balance);
-        clientRepository.saveAndFlush(client);
+                
+                List<Level> levels = levelRepository.findByStatusId(statusId);
+                for (Level level : levels) {
+                    Integer finalExperience = level.getFinalExperience();
+                    if (finalExperience == null) {
+                        finalExperience = Integer.MAX_VALUE;
+                    }
+                    if (newExperience >= level.getInitialExperience() && newExperience <= finalExperience) {
+                        client.setLevel(level);
+                    }
+                }                
+            }            
+            if (balance <= 0)
+            	balance = 0.0;
+            client.setBalance(balance);
+            clientRepository.saveAndFlush(client);
+        }   	     
         
         Cash cash = cashRepository.findOne(expenseCash.getCashId());
         cash.setModificationDate(now);
         cashRepository.saveAndFlush(cash);
-
+        
         Ticket ticket = new Ticket();
         ticket.setExpenseAmount(expenseCash.getAmount());
         ticket.setCash(cash);

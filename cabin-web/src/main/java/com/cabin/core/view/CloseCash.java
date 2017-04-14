@@ -35,7 +35,7 @@ public class CloseCash implements Serializable {
     }
 
     public Double getRest() {
-        return this.justifiedAmount - this.enteredAmount;
+        return this.enteredAmount -this.justifiedAmount;
     }
 
 }
