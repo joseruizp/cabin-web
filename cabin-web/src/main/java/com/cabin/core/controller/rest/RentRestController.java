@@ -93,12 +93,14 @@ public class RentRestController {
             @RequestParam(value = "price", required = true) Double price) {
         System.out.println("rentId ::: " + rentId);
         System.out.println("rentTime ::: " + rentTime);
-        System.out.println("price ::: " + price);
-
+        System.out.println("price ::: " + price);         
         Rent rent = rentRepository.findOne(rentId);
+        Long longMinutes = Math.round(rentTime*60);
+        int minutes = longMinutes.intValue();
+        Double totalPrice = round( minutes * (price/60) ) ;
         rent.setModificationDate(Calendar.getInstance());
         rent.setRentTime(getHoursAsString(rentTime));
-        rent.setPrice(price);
+        rent.setPrice(totalPrice);
 
         Client client = rent.getClient();
         Double balance = round(client.getBalance() - price);
