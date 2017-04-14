@@ -1536,14 +1536,12 @@ function saveRegla(){
 	    	if (idRegla != ""){
 	    		$("#btnRegla").html("Nueva Regla");
 	    		$("#idRegla").attr("value", "");			    		
-	    	}	    	
+	    	}
+	    	fillArrayRegla();
+	    	updateTips("Regla creada satisfactoriamente.", reglaValidation);
 	    },
 	    error: function (xhr, status) {	    	
 	    	console.log("Error, su solicitud no pudo ser atendida");
-	    },
-	    complete: function(xhr) {
-	    	fillArrayRegla();
-	    	updateTips("Regla creada satisfactoriamente.", reglaValidation);
 	    }
 	});
 }

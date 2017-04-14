@@ -384,7 +384,7 @@ function addRechargeEvent() {
         e.preventDefault();
         if (addTicket()) {
             var idClient = $("#clientSelect").val();
-            var enterAmount = Number($("#enterAmount").val());
+            //var enterAmount = Number($("#enterAmount").val());
             var amount = Number($("#rechargingAmount").val());
             
             if (amount < rechargeInfo.minimumFraction) {
@@ -397,10 +397,10 @@ function addRechargeEvent() {
             
             amount = (amount - (amount % rechargeInfo.rechargeFraction).toFixed(1)).toFixed(1);
             
-            var change = (enterAmount - amount).toFixed(1);
+            //var change = (enterAmount - amount).toFixed(1);
             
             $("#rechargingAmount").val("");
-            $("#enterAmount").val("");
+            //$("#enterAmount").val("");
             
             var recharge = {};
             recharge.clientId = idClient;
@@ -422,7 +422,7 @@ function addRechargeEvent() {
                 success: function (data) {
                     console.log("recharge is done");
                     updateClientBalanceArray(data.id, data.balance);
-                    $("#rechargeChange").text(change);
+                    //$("#rechargeChange").text(change);
                     updateTips("Recarga realizada satisfactoriamente.", recargaValidation);
                     var isAnonymous = "1" === data.user.anonymous;
     		    	if (isAnonymous) {
