@@ -66,13 +66,14 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         http.authorizeRequests().antMatchers("/newUser/**", "/usuario/**", "/cliente/**", "/tipo_documento/**").permitAll();
         http.authorizeRequests().antMatchers("/get/computer", "/get/allFailures", "/get/prizeByLevel", "/put/startRentComputer", "/put/endRentComputer",
                 "/put/exchangePoints", "/put/changeLevel", "/put/changeBonification", "/get/tariffPrice", "/get/bonification").permitAll();
-        http.authorizeRequests().antMatchers("/get/allHeadquarters", "/get/anonymous").permitAll();
+        http.authorizeRequests().antMatchers("/get/allHeadquarters", "/get/anonymous").permitAll();        
         http.authorizeRequests().antMatchers("/css/**", "/images/**", "/bootstrap/**", "/fonts/**", "/plugins/**", "/js/**", "/sockjs-client/**", "/stomp-websocket/**")
                 .permitAll();
 
         http.authorizeRequests().antMatchers("/admin/**", "/headquarters/**").hasAuthority("ADMIN");
         http.authorizeRequests().antMatchers("/operator/**").hasAuthority("OPERATOR");
         http.authorizeRequests().antMatchers("/client/**").hasAuthority("USER");
+        http.authorizeRequests().antMatchers("/incidence/**").hasAuthority("INCIDENCE");
 
         http.authorizeRequests().anyRequest().fullyAuthenticated().and().httpBasic().disable();
         http.csrf().disable();
@@ -138,12 +139,13 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         if (currentUser.isAnonymous()) {
             client.setStatus(new Status());
             client.getStatus().setId(Status.ACTIVE);
-            client.setBalance(0.0);
+            /* Si el usuario anonimo aun tiene saldo y quiere recargar puede loguearse como cliente y hacerlo*/
+            /*client.setBalance(0.0);*/
             client.setPoints(0);
             client.setExperience(0);
             clientRepository.saveAndFlush(client);
         }
-
+		
         if (Status.ACTIVE != client.getStatus().getId()) {
             request.getSession().invalidate();
             redirectStrategy.sendRedirect(request, response, "/login?error=E003");

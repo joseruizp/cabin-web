@@ -33,6 +33,12 @@ public class HeadquarterRestController {
     public List<Headquarter> getAllHeadquarters() {
         return headquarterRepository.findAll();
     }
+    
+    @RequestMapping(value = "/get/allHeadquartersActives", method = RequestMethod.GET, produces = { "application/json;charset=UTF-8" })
+    public List<Headquarter> allHeadquartersActives() {
+    	long statusId = (long) 1;
+        return headquarterRepository.findByStatusId(statusId);
+    }
 
     @RequestMapping(value = "/get/headquarter", method = RequestMethod.GET, produces = { "application/json;charset=UTF-8" })
     public Headquarter getHeadquarter(@RequestParam(value = "id", required = true) Long idHeadquarter) {

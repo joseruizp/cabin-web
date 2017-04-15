@@ -11,6 +11,8 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 
 @Entity(name = "incidencia")
 public class Incidence implements Serializable {
@@ -20,8 +22,10 @@ public class Incidence implements Serializable {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long id;
-
+	
+	
 	@Column(name = "fecha")
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy")
 	private Calendar date;
 
 	@Column(name = "trabajo_realizado", length = 500)
