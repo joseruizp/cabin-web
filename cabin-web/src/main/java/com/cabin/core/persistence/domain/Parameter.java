@@ -20,6 +20,9 @@ public class Parameter implements Serializable {
     public static Long MAXIMUM_RECHARGE = 3L;
     public static Long MAXIMUM_NUMBER_OF_FAILURES = 4L;
     public static Long TARGET_REVENUE = 6L;
+    public static Long MAXIMUM_DISCONNECTION_TIME = 7L;
+    public static Long MAXIMUM_BLOCKED_TIME_TO_CLOSE_PROGRAMS = 8L;
+    public static Long MAXIMUM_BLOCKED_TIME_TO_SHUT_DOWN = 9L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)

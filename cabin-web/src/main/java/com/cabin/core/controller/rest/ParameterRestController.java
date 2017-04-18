@@ -1,7 +1,10 @@
 package com.cabin.core.controller.rest;
 
 import java.text.ParseException;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -23,6 +26,14 @@ public class ParameterRestController {
     @RequestMapping(value = "/get/allParameters", method = RequestMethod.GET, produces = { "application/json;charset=UTF-8" })
     public List<Parameter> getAllParameters() {
         return parameterRepository.findAll();
+    }
+    
+    @RequestMapping(value = "/get/conectionParameters", method = RequestMethod.GET, produces = { "application/json;charset=UTF-8" })
+    public Map<Long, Long> getConectionParameters() {
+    	List<Long> parametersToFilter = Arrays.asList(Parameter.MAXIMUM_DISCONNECTION_TIME, Parameter.MAXIMUM_BLOCKED_TIME_TO_CLOSE_PROGRAMS,
+    			Parameter.MAXIMUM_BLOCKED_TIME_TO_SHUT_DOWN);
+        return parameterRepository.findAll().stream().filter(p -> parametersToFilter.contains(p.getId()))
+        		.collect(Collectors.toMap(k -> k.getId(), v -> Long.parseLong(v.getValue())));
     }
 
     @RequestMapping(value = "/get/parametersRecharge", method = RequestMethod.GET, produces = { "application/json;charset=UTF-8" })
