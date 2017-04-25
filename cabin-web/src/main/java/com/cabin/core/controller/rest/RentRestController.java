@@ -103,7 +103,7 @@ public class RentRestController {
         rent.setPrice(totalPrice);
 
         Client client = rent.getClient();
-        Double balance = round(client.getBalance() - price);
+        Double balance = round(client.getBalance() - totalPrice);
         if ( balance < 0 )
         	balance = 0.0;
         client.setBalance(balance);
