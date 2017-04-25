@@ -4,12 +4,15 @@ import java.math.BigInteger;
 import java.security.SecureRandom;
 import java.text.ParseException;
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.transaction.Transactional;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.BooleanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -19,7 +22,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.cabin.core.enums.RentStatusEnum;
-import com.cabin.core.enums.SessionEnum;
 import com.cabin.core.persistence.domain.Bonus;
 import com.cabin.core.persistence.domain.Cash;
 import com.cabin.core.persistence.domain.Client;
@@ -42,7 +44,6 @@ import com.cabin.core.persistence.repository.RentRepository;
 import com.cabin.core.persistence.repository.TicketRepository;
 import com.cabin.core.persistence.repository.UserRepository;
 import com.cabin.core.view.Recharge;
-import com.cabin.core.websocket.ComputerStatus;
 import com.cabin.core.websocket.RechargeClientEndpoint;
 
 @RestController
@@ -270,6 +271,19 @@ public class ClientRestController {
         }
     	
     	return bonification;
+    }
+    
+    @RequestMapping(value = "/get/nextBonification", method = RequestMethod.GET, produces = { "application/json;charset=UTF-8" })
+    public Map<Integer, Double> getNextBonification(@RequestParam(value = "client_id", required = true) Long clientId) {
+    	Client client = clientRepository.getOne(clientId);
+    	List<Bonus> nextBonuses = bonusRepository.findNextBonusByExperience(client.getExperience());
+    	if (CollectionUtils.isEmpty(nextBonuses)) {
+    		return null;
+    	}
+    	
+    	Map<Integer, Double> result = new HashMap<>();
+    	result.put(nextBonuses.get(0).getExperienceAmount(), nextBonuses.get(0).getFractionToGive());
+    	return result;
     }
     
     private String generatePassword() {
