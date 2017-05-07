@@ -164,7 +164,7 @@ public class ClientRestController {
             	Bonus bonusAux = new Bonus();
             	int clientBonusExperience = 0;
             	String bonusChange = "1";
-            	if ( client.getId_bonification() != null ){            	
+            	if ( client.getId_bonification() != null && client.getId_bonification() != 0){            	
             		bonusId = client.getId_bonification();                
             		bonusAux = bonusRepository.findOne(bonusId);
             		clientBonusExperience = bonusAux.getExperienceAmount();
